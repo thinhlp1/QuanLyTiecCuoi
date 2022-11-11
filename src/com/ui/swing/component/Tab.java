@@ -117,9 +117,10 @@ public class Tab extends javax.swing.JPanel {
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         GradientPaint gra = new GradientPaint(0, 0, Color.decode(colorStart), 0, getHeight(), Color.decode(colorEnd));
         g2.setPaint(gra);
-        g2.fillRoundRect(0, 0, getWidth(), getHeight(), 15, 15);
-        g2.fillOval(getWidth() - (getHeight() / 2), 10, getHeight(), getHeight());
-        g2.fillOval(getWidth() - (getHeight() / 2) - 20, getHeight() / 2 + 20, getHeight(), getHeight());
+        g2.fillRoundRect(0, 0, getWidth(), getHeight(), 45, 45);
+        g2.drawRoundRect(0, 0, getWidth(), getHeight(), 45, 45);
+//        g2.fillOval(getWidth() - (getHeight() / 2), 10, getHeight(), getHeight());
+//        g2.fillOval(getWidth() - (getHeight() / 2) - 20, getHeight() / 2 + 20, getHeight(), getHeight());
         super.paintChildren(grphcs);
     }
 

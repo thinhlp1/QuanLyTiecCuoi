@@ -97,7 +97,7 @@
         <Component class="com.ui.swing.datechooser.Button" name="cmdForward">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/com/edusys/assets/forward.png"/>
+              <Image iconType="3" name="/com/happywedding/assets/forward.png"/>
             </Property>
             <Property name="focusable" type="boolean" value="true"/>
             <Property name="paintBackground" type="boolean" value="false"/>
@@ -229,7 +229,7 @@
         <Component class="com.ui.swing.datechooser.Button" name="cmdPrevious">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/com/edusys/assets/previous.png"/>
+              <Image iconType="3" name="/com/happywedding/assets/previous.png"/>
             </Property>
             <Property name="focusable" type="boolean" value="true"/>
             <Property name="paintBackground" type="boolean" value="false"/>

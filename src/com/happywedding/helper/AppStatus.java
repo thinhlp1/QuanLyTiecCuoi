@@ -5,6 +5,10 @@
  */
 package com.happywedding.helper;
 
+import com.happywedding.app.HappyWeddingApp;
+import com.ui.swing.component.Menu;
+import java.awt.Robot;
+
 
 
 /**
@@ -16,37 +20,36 @@ public class AppStatus {
 //    /**
 //     * Đối tượng này chứa thông tin người sử dụng sau khi đăng nhập
 //     */
-//    public static Employee USER = null;
-//    public static int STATUS = 0;
-//    public static EmployeeManager  employeeManager  = null;
-// 
-//    //0 is not load
-//    //1 is loading
-//    
-//    public static void loadApp(){
-//        STATUS = 1;
-//    }
-//    
-//    
-//    
-//    
-//    public static void logoff() {
-//        AppStatus.USER = null;
-//    }
-//    
-//    public static boolean isFirstStart(){
-//        return STATUS == 1;
-//    }
-//
-//    /**
-//     * Kiểm tra xem đăng nhập hay chưa
-//     *
-//     * @return đăng nhập hay chưa
-//     */
-//    public static boolean authenticated() {
-//        return AppStatus.USER != null;
-//    }
+    public static Object USER = null;
+    public static int STATUS = 0;
+    public static int ROLE = 0;
+
+   
+    public static HappyWeddingApp mainApp = null;
+    public static Menu menu = null;
+    public static Robot bot;
     
-//    public static String currentTask;
-//    public static String previousTask;
+    
+    public static  int menuQLHoaDonX = 250;
+    
+    
+    
+    //0 is not load
+    //1 is loading
+    public static void loadApp(){
+        try {
+               bot = new Robot();
+        } catch (Exception e) {
+        }
+//        STATUS = 1;
+    }
+
+    public static void logoff() {
+        AppStatus.USER = null;
+    }
+//    
+    public static boolean isFirstStart(){
+        return STATUS == 1;
+    }
+
 }

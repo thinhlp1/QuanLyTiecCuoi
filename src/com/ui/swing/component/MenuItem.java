@@ -24,6 +24,7 @@ public class MenuItem extends javax.swing.JPanel {
             lbName.setVisible(false);
         } else {
             lbName.setText(" ");
+           
         }
     }
 
@@ -58,12 +59,13 @@ public class MenuItem extends javax.swing.JPanel {
                 .addGap(20, 20, 20)
                 .addComponent(lbIcon)
                 .addGap(18, 18, 18)
-                .addComponent(lbName))
+                .addComponent(lbName)
+                .addContainerGap(17, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(lbIcon, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addComponent(lbName, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(lbIcon, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(lbName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -73,9 +75,9 @@ public class MenuItem extends javax.swing.JPanel {
             Graphics2D g2 = (Graphics2D) grphcs;
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             if (selected) {
-                g2.setColor(new Color(255, 255, 255, 80));
+                g2.setColor(Color.decode("#CB0606"));
             } else {
-                g2.setColor(new Color(255, 255, 255, 20));
+                g2.setColor(Color.decode("#FF5D5D"));
             }
             g2.fillRoundRect(10, 0, getWidth() - 20, getHeight(), 5, 5);
         }
