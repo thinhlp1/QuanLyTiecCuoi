@@ -1,9 +1,10 @@
 
-package com.model;
+package com.happywedding.model;
 
 
 public class DanhMucCon {
     private String maDMC;
+    
       private String maDM;
       private String tenDM;
 

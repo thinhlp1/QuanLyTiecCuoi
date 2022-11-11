@@ -1,5 +1,5 @@
 
-package com.model;
+package com.happywedding.model;
 
 public class TrangThaiHoaDon {
      private String maTT;

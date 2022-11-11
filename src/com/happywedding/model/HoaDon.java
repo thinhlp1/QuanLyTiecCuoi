@@ -1,6 +1,5 @@
 
-package com.model;
-
+package com.happywedding.model;
 import java.util.Date;
 
 

@@ -1,13 +1,15 @@
 
-package com.model;
+package com.happywedding.model;
 
 public class GoiDichvu {
-     private String maGoi;
-      private String maDV;
-       private String tenGoi;
-        private long chiPhi;
-         private String ghiChu;
-          private String hinhAnh;
+    private String maGoi;
+    private String maDV;
+    private String tenGoi;
+    private long chiPhi;
+    private String ghiChu;
+    private String hinhAnh;
+    private String abc; // them mới
+    
 
     public GoiDichvu(String maGoi, String maDV, String tenGoi, long chiPhi, String ghiChu, String hinhAnh) {
         this.maGoi = maGoi;
