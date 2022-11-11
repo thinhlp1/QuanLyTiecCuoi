@@ -41,6 +41,11 @@ public class QuanLyHopDong extends javax.swing.JPanel {
     }
     
     
+    public void load(){
+        
+    }
+    
+    
     
     public void showCalendar1() {
         dtChooser1.showPopup();
