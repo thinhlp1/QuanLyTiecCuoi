@@ -4,7 +4,7 @@ package com.model;
 import java.util.Date;
 
 
-public class HoaDon {
+public class HoaDon { // hoa don
      private int maHoaDon;
       private String MaHD;
        private Date ngayLap;
