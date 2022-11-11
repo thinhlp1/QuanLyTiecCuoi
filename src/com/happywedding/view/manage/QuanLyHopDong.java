@@ -45,7 +45,7 @@ public class QuanLyHopDong extends javax.swing.JPanel {
     }
     
     public void load(){
-        
+        System.out.println("load");
     }
     
     
