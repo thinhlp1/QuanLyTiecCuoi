@@ -40,6 +40,9 @@ public class QuanLyHopDong extends javax.swing.JPanel {
         txtNgayKetThuc.setText("");
     }
     
+    public void fillToTable(){
+        
+    }
     
     
     public void showCalendar1() {
