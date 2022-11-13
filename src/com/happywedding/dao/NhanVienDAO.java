@@ -6,18 +6,16 @@ import java.util.List;
 
 public class NhanVienDAO extends AbstractDAO<NhanVien> {
 
-    private final String INSERT_NHANVIEN = "INSERT NhanVien (MaNV, HoTen, NgaySinh, GioiTinh, SoDienThoai, CCCD_CMND, HinhAnh, MaPB, MaVT, TrangThai) \n"
-            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     @Override
     public boolean insert(NhanVien nhanVien) {
-        int rs =  JDBCHelper.executeUpdate(INSERT_NHANVIEN,nhanVien.getMaNV(),nhanVien.getHoTen(),nhanVien.getNgaySinh(),nhanVien.isGioiTinh(),nhanVien.getSoDienThoai(),nhanVien.getCMND_CCCD(),nhanVien.getHinhAnh(),nhanVien.getMaPB(),nhanVien.getTrangThai());
-        return rs > 0;
+           throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    
     }
 
     @Override
     public boolean update(NhanVien nhanVien) {
-
+           throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
@@ -27,12 +25,41 @@ public class NhanVienDAO extends AbstractDAO<NhanVien> {
 
     @Override
     public List<NhanVien> select() {
-
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public NhanVien findById(String id) {
-
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+ 
+     /*
+    Lấy danh sách nhân viên chua được phân công
+    */
+    public List<NhanVien> selectNhanVienChuaDuocPhanCong(String ngayPC){
+         throw new UnsupportedOperationException("Not supported yet.");
+    }
+    
+    /*
+    Kiểm tra xem email có tồn tại chưa
+    */
+    public boolean checkEmail(String email){
+         throw new UnsupportedOperationException("Not supported yet.");
+    }
+    
+     /*
+    Kiểm tra xem sdt có tồn tại chưa
+    */
+    public boolean checkSDT(String sdt){
+         throw new UnsupportedOperationException("Not supported yet.");
+    }
+    
+     /*
+    Kiểm tra xem cccd có tồn tại chưa
+    */
+    public boolean checkCCCD(String cccd){
+         throw new UnsupportedOperationException("Not supported yet.");
     }
     
     

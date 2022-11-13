@@ -2,12 +2,12 @@
 package com.happywedding.model;
 
 
-public class Dichvudikem {
+public class DichVuDiKem {
     private String maDV;
     private String tenDV;
     private long gia;
 
-    public Dichvudikem(String maDV, String tenDV, long gia) {
+    public DichVuDiKem(String maDV, String tenDV, long gia) {
         this.maDV = maDV;
         this.tenDV = tenDV;
         this.gia = gia;

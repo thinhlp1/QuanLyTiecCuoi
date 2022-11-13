@@ -10,13 +10,13 @@ public class HopDong {
     private Date ngayLap;
     private Date ngayDuyet;
     private String maND;
-     private String sanh;
+    private String sanh;
     private long soLuongBan;
-     private int maKH;
+    private int maKH;
     private Date ngayToChuc;
-     private String thoiGianBatDau;
+    private String thoiGianBatDau;
     private String thoiGianKetThuc;
-     private String TrangThai;
+    private String TrangThai;
     private long Thue;
     private long TienCoc;
     private long ChiPhiPhatSinh;

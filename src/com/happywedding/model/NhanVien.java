@@ -8,24 +8,57 @@ public class NhanVien {
     private Date ngaySinh;
     private boolean gioiTinh;
     private String soDienThoai;
+    private String email;
     private String CMND_CCCD;
     private String hinhAnh;
     private String MaPB;
+    private String tenPB;
+    private String tenVT;
     private String MaVT;
+
     private int TrangThai;
 
-    public NhanVien(String maNV, String hoTen, Date ngaySinh, boolean gioiTinh, String soDienThoai, String CMND_CCCD, String hinhAnh, String MaPB, String MaVT, int TrangThai) {
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getTenPB() {
+        return tenPB;
+    }
+
+    public void setTenPB(String tenPB) {
+        this.tenPB = tenPB;
+    }
+
+    public String getTenVT() {
+        return tenVT;
+    }
+
+    public void setTenVT(String tenVT) {
+        this.tenVT = tenVT;
+    }
+
+    public NhanVien(String maNV, String hoTen, Date ngaySinh, boolean gioiTinh, String soDienThoai, String email, String CMND_CCCD, String hinhAnh, String MaPB, String tenPB, String tenVT, String MaVT, int TrangThai) {
         this.maNV = maNV;
         this.hoTen = hoTen;
         this.ngaySinh = ngaySinh;
         this.gioiTinh = gioiTinh;
         this.soDienThoai = soDienThoai;
+        this.email = email;
         this.CMND_CCCD = CMND_CCCD;
         this.hinhAnh = hinhAnh;
         this.MaPB = MaPB;
+        this.tenPB = tenPB;
+        this.tenVT = tenVT;
         this.MaVT = MaVT;
         this.TrangThai = TrangThai;
     }
+
+    
 
     public String getMaNV() {
         return maNV;

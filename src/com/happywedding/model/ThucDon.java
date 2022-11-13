@@ -1,12 +1,11 @@
-
 package com.happywedding.model;
 
-
 public class ThucDon {
+
     private String maTD;
-      private String tenTD;
-       private long gia;
-        private int ghiChu;
+    private String tenTD;
+    private long gia;
+    private int ghiChu;
 
     public ThucDon(String maTD, String tenTD, long gia, int ghiChu) {
         this.maTD = maTD;

@@ -46,8 +46,9 @@ public class DuaDon extends javax.swing.JDialog {
         txtTongCPPS = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         txtTongChiPhi = new javax.swing.JTextField();
-        btnSave = new com.ui.swing.HoverButton();
         btnReset = new com.ui.swing.HoverButton();
+        btnSave1 = new com.ui.swing.HoverButton();
+        btnHuy = new com.ui.swing.HoverButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -133,24 +134,6 @@ public class DuaDon extends javax.swing.JDialog {
         });
         jPanel1.add(txtTongChiPhi, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 480, 240, 35));
 
-        btnSave.setBackground(new java.awt.Color(24, 153, 29));
-        btnSave.setForeground(new java.awt.Color(255, 255, 255));
-        btnSave.setText("Lưu");
-        btnSave.setBorderColor(new java.awt.Color(24, 153, 29));
-        btnSave.setColor(new java.awt.Color(24, 153, 29));
-        btnSave.setColorClick(new java.awt.Color(0, 204, 0));
-        btnSave.setColorOver(new java.awt.Color(0, 204, 0));
-        btnSave.setFocusPainted(false);
-        btnSave.setLabelColor(java.awt.Color.white);
-        btnSave.setLableColorClick(java.awt.Color.white);
-        btnSave.setRadius(15);
-        btnSave.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSaveActionPerformed(evt);
-            }
-        });
-        jPanel1.add(btnSave, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 540, -1, 30));
-
         btnReset.setBackground(new java.awt.Color(24, 37, 153));
         btnReset.setForeground(new java.awt.Color(255, 255, 255));
         btnReset.setText("Làm mới");
@@ -168,6 +151,41 @@ public class DuaDon extends javax.swing.JDialog {
             }
         });
         jPanel1.add(btnReset, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 540, -1, 30));
+
+        btnSave1.setBackground(new java.awt.Color(24, 153, 29));
+        btnSave1.setForeground(new java.awt.Color(255, 255, 255));
+        btnSave1.setText("Lưu");
+        btnSave1.setBorderColor(new java.awt.Color(24, 153, 29));
+        btnSave1.setColor(new java.awt.Color(24, 153, 29));
+        btnSave1.setColorClick(new java.awt.Color(0, 204, 0));
+        btnSave1.setColorOver(new java.awt.Color(0, 204, 0));
+        btnSave1.setFocusPainted(false);
+        btnSave1.setLabelColor(java.awt.Color.white);
+        btnSave1.setLableColorClick(java.awt.Color.white);
+        btnSave1.setRadius(15);
+        btnSave1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSave1ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(btnSave1, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 540, -1, 30));
+
+        btnHuy.setForeground(new java.awt.Color(255, 255, 255));
+        btnHuy.setText("Hủy");
+        btnHuy.setBorderColor(new java.awt.Color(153, 24, 24));
+        btnHuy.setColor(new java.awt.Color(153, 24, 24));
+        btnHuy.setColorClick(new java.awt.Color(255, 51, 51));
+        btnHuy.setColorOver(new java.awt.Color(255, 51, 51));
+        btnHuy.setFocusPainted(false);
+        btnHuy.setLabelColor(java.awt.Color.white);
+        btnHuy.setLableColorClick(java.awt.Color.white);
+        btnHuy.setRadius(15);
+        btnHuy.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnHuyActionPerformed(evt);
+            }
+        });
+        jPanel1.add(btnHuy, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 540, -1, 30));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -202,13 +220,17 @@ public class DuaDon extends javax.swing.JDialog {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtTongChiPhiActionPerformed
 
-    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnSaveActionPerformed
-
     private void btnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnResetActionPerformed
+
+    private void btnSave1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSave1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnSave1ActionPerformed
+
+    private void btnHuyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHuyActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnHuyActionPerformed
 
     /**
      * @param args the command line arguments
@@ -253,8 +275,9 @@ public class DuaDon extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private com.ui.swing.HoverButton btnHuy;
     private com.ui.swing.HoverButton btnReset;
-    private com.ui.swing.HoverButton btnSave;
+    private com.ui.swing.HoverButton btnSave1;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;

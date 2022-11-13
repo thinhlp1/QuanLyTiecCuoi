@@ -13,19 +13,23 @@ public class Sanh {
     private String maSanh;
     private String tenSanh;
     private String maPL;
-    private long sucChua;
+    private String tenPL;
+    private int sucChua;
     private long giaThueSanh;
     private long giaBan;
 
-    public Sanh(String maSanh, String tenSanh, String maPL, long sucChua, long giaThueSanh, long giaBan) {
+    public Sanh(String maSanh, String tenSanh, String maPL, String tenPL, int sucChua, long giaThueSanh, long giaBan) {
         this.maSanh = maSanh;
         this.tenSanh = tenSanh;
         this.maPL = maPL;
+        this.tenPL = tenPL;
         this.sucChua = sucChua;
         this.giaThueSanh = giaThueSanh;
         this.giaBan = giaBan;
     }
 
+    
+    
     public String getMaSanh() {
         return maSanh;
     }
@@ -54,10 +58,15 @@ public class Sanh {
         return sucChua;
     }
 
-    public void setSucChua(long sucChua) {
+    public void setTenPL(String tenPL) {
+        this.tenPL = tenPL;
+    }
+
+    public void setSucChua(int sucChua) {
         this.sucChua = sucChua;
     }
 
+   
     public long getGiaThueSanh() {
         return giaThueSanh;
     }
