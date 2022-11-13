@@ -2,9 +2,7 @@ package com.happywedding.app;
 
 
 import com.happywedding.helper.AppStatus;
-import com.happywedding.manager.DangNhap;
-import com.happywedding.manager.Loading;
-import com.happywedding.manager.QuanLyTaiKhoan;
+
 
 import com.happywedding.view.manage.*;
 
@@ -107,7 +105,7 @@ public class HappyWeddingApp extends javax.swing.JFrame {
 
         if (!AppStatus.isFirstStart()) {
             new DangNhap(this, true).setVisible(true);
-            new Loading(this, true).setVisible(true);
+            //new Loading(this, true).setVisible(true);
             AppStatus.loadApp();
         }
       // AppStatus.USER = new EmployeeDAO().findById("PheoNC");
@@ -118,7 +116,7 @@ public class HappyWeddingApp extends javax.swing.JFrame {
 
     }
     
-    
+    //load	d
     public void phanQuyen(){
         int role = AppStatus.ROLE;
         if (role == Role.QUANLY){
@@ -303,7 +301,7 @@ public class HappyWeddingApp extends javax.swing.JFrame {
         mainPane = new javax.swing.JLayeredPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("HỆ THỐNG QUẢN LÝ ĐÀO TẠO");
+        setTitle("Há»† THá»�NG QUáº¢N LÃ� Ä�Ã€O Táº O");
         setPreferredSize(new java.awt.Dimension(1920, 1080));
 
         mainPane.setBackground(new java.awt.Color(245, 245, 245));

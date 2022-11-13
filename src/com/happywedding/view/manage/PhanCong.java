@@ -51,6 +51,7 @@ public class PhanCong extends javax.swing.JDialog {
         btnXoa = new com.ui.swing.InkwellButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         tblNhanVien = new com.ui.swing.Table();
+        btnSua1 = new com.ui.swing.InkwellButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -140,15 +141,15 @@ public class PhanCong extends javax.swing.JDialog {
 
         btnSua.setBackground(new java.awt.Color(0, 153, 0));
         btnSua.setForeground(new java.awt.Color(255, 255, 255));
-        btnSua.setText("Sửa");
+        btnSua.setText("Thêm");
         btnSua.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        pnlUpdate3.add(btnSua, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 620, 80, -1));
+        pnlUpdate3.add(btnSua, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 620, 80, -1));
 
         btnXoa.setBackground(new java.awt.Color(153, 24, 24));
         btnXoa.setForeground(new java.awt.Color(255, 255, 255));
         btnXoa.setText("Xóa");
         btnXoa.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        pnlUpdate3.add(btnXoa, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 620, 80, -1));
+        pnlUpdate3.add(btnXoa, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 620, 80, -1));
 
         tblNhanVien.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -161,6 +162,12 @@ public class PhanCong extends javax.swing.JDialog {
         jScrollPane2.setViewportView(tblNhanVien);
 
         pnlUpdate3.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 110, 1200, 660));
+
+        btnSua1.setBackground(new java.awt.Color(0, 153, 0));
+        btnSua1.setForeground(new java.awt.Color(255, 255, 255));
+        btnSua1.setText("Sửa");
+        btnSua1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        pnlUpdate3.add(btnSua1, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 620, 80, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -237,6 +244,7 @@ public class PhanCong extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.ui.swing.InkwellButton btnSua;
+    private com.ui.swing.InkwellButton btnSua1;
     private com.ui.swing.InkwellButton btnXoa;
     private com.ui.swing.Combobox cbbXe;
     private javax.swing.JLabel jLabel14;

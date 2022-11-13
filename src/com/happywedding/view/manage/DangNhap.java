@@ -2,8 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
  */
-package com.happywedding.manager;
-
+package com.happywedding.view.manage;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 
@@ -132,7 +131,7 @@ public class DangNhap extends javax.swing.JDialog {
 
         jLabel1.setBackground(new java.awt.Color(255, 247, 244));
         jLabel1.setOpaque(true);
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1390, 600));
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1300, 600));
 
         setSize(new java.awt.Dimension(1323, 648));
         setLocationRelativeTo(null);

@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
-package com.happywedding.manager;
+package com.happywedding.view.manage;
 
 
 /**
@@ -100,11 +100,11 @@ public class QuanLyTaiKhoan extends javax.swing.JPanel {
         pnlEmplpyeeManager.add(txtMaNhanVien, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 180, 340, 35));
 
         jLabel25.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
-        jLabel25.setText("Mã nhân viên");
+        jLabel25.setText("MÃ£ nhÃ¢n viÃªn");
         pnlEmplpyeeManager.add(jLabel25, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 150, 92, -1));
 
         jLabel27.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
-        jLabel27.setText("Mật khẩu");
+        jLabel27.setText("Máº­t kháº©u");
         pnlEmplpyeeManager.add(jLabel27, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 300, 130, -1));
 
         txtMatKhau.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
@@ -116,14 +116,14 @@ public class QuanLyTaiKhoan extends javax.swing.JPanel {
         pnlEmplpyeeManager.add(txtMatKhau, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 330, 340, 35));
 
         jLabel28.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
-        jLabel28.setText("Xác nhận mật khẩu");
+        jLabel28.setText("XÃ¡c nháº­n máº­t kháº©u");
         pnlEmplpyeeManager.add(jLabel28, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 380, 130, -1));
 
         txtXacNhanMatKhau.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
         pnlEmplpyeeManager.add(txtXacNhanMatKhau, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 410, 340, 35));
 
         jLabel29.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
-        jLabel29.setText("Vai trò");
+        jLabel29.setText("Vai trÃ²");
         pnlEmplpyeeManager.add(jLabel29, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 480, 130, -1));
 
         cbbSapXepTheo.setSelectedIndex(-1);
@@ -135,7 +135,7 @@ public class QuanLyTaiKhoan extends javax.swing.JPanel {
         });
         pnlEmplpyeeManager.add(cbbSapXepTheo, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 510, 340, 35));
 
-        cbbSapXepTangGiam.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tăng dần", "Giảm dần" }));
+        cbbSapXepTangGiam.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "TÄƒng dáº§n", "Giáº£m dáº§n" }));
         cbbSapXepTangGiam.setLabeText("");
         cbbSapXepTangGiam.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -145,7 +145,7 @@ public class QuanLyTaiKhoan extends javax.swing.JPanel {
         pnlEmplpyeeManager.add(cbbSapXepTangGiam, new org.netbeans.lib.awtextra.AbsoluteConstraints(1240, 0, 120, 54));
 
         jLabel31.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
-        jLabel31.setText("Tên đăng nhập");
+        jLabel31.setText("TÃªn Ä‘Äƒng nháº­p");
         pnlEmplpyeeManager.add(jLabel31, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 230, 130, -1));
 
         txtTenDangNhap.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
@@ -158,7 +158,7 @@ public class QuanLyTaiKhoan extends javax.swing.JPanel {
 
         btnMoi.setBackground(new java.awt.Color(81, 194, 225));
         btnMoi.setForeground(new java.awt.Color(255, 255, 255));
-        btnMoi.setText("Mới");
+        btnMoi.setText("Má»›i");
         btnMoi.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         btnMoi.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -176,7 +176,7 @@ public class QuanLyTaiKhoan extends javax.swing.JPanel {
 
         btnThem.setBackground(new java.awt.Color(0, 153, 0));
         btnThem.setForeground(new java.awt.Color(255, 255, 255));
-        btnThem.setText("Thêm");
+        btnThem.setText("ThÃªm");
         btnThem.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         btnThem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -187,7 +187,7 @@ public class QuanLyTaiKhoan extends javax.swing.JPanel {
 
         btnSua.setBackground(new java.awt.Color(0, 153, 0));
         btnSua.setForeground(new java.awt.Color(255, 255, 255));
-        btnSua.setText("Sửa");
+        btnSua.setText("Sá»­a");
         btnSua.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         btnSua.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -198,7 +198,7 @@ public class QuanLyTaiKhoan extends javax.swing.JPanel {
 
         btnXoa.setBackground(new java.awt.Color(153, 24, 24));
         btnXoa.setForeground(new java.awt.Color(255, 255, 255));
-        btnXoa.setText("Xóa");
+        btnXoa.setText("XÃ³a");
         btnXoa.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         btnXoa.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -233,7 +233,7 @@ public class QuanLyTaiKhoan extends javax.swing.JPanel {
 
             },
             new String [] {
-                "Mã tài khoản", "Mã nhân viên", "Tên tài khoản", "Mật khẩu", "Vai trò"
+                "MÃ£ tÃ i khoáº£n", "MÃ£ nhÃ¢n viÃªn", "TÃªn tÃ i khoáº£n", "Máº­t kháº©u", "Vai trÃ²"
             }
         ));
         jScrollPane1.setViewportView(tblTaiKhoan);
@@ -246,7 +246,7 @@ public class QuanLyTaiKhoan extends javax.swing.JPanel {
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/happywedding/assets/filt.png"))); // NOI18N
         pnlEmplpyeeManager.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(890, 10, 40, 40));
 
-        cbbSapXepTheo1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Họ và Tên" }));
+        cbbSapXepTheo1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Há»� vÃ  TÃªn" }));
         cbbSapXepTheo1.setSelectedIndex(-1);
         cbbSapXepTheo1.setLabeText("Sort by");
         cbbSapXepTheo1.addActionListener(new java.awt.event.ActionListener() {
