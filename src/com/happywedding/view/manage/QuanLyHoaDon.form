@@ -124,18 +124,19 @@
             <Component class="com.ui.swing.Table" name="tblHopDong">
               <Properties>
                 <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                  <Table columnCount="11" rowCount="0">
+                  <Table columnCount="12" rowCount="0">
                     <Column editable="false" title="M&#xe3; h&#x1ee3;p &#x111;&#x1ed3;ng" type="java.lang.Object"/>
                     <Column editable="false" title="Ng&#xe0;y l&#x1ead;p" type="java.lang.Object"/>
                     <Column editable="false" title="Ng&#x1b0;&#x1edd;i l&#x1ead;p" type="java.lang.Object"/>
                     <Column editable="false" title="Trang tr&#xed; c&#x1ed5;ng" type="java.lang.Object"/>
-                    <Column editable="true" title="Trang tr&#xed; b&#xe0;n" type="java.lang.Object"/>
-                    <Column editable="true" title="Trang tr&#xed; s&#xe2;n kh&#x1ea5;u" type="java.lang.Object"/>
-                    <Column editable="true" title="&#x110;i k&#xe8;m" type="java.lang.Object"/>
-                    <Column editable="true" title="Ngh&#x1ec7; thu&#x1ead;t" type="java.lang.Object"/>
-                    <Column editable="true" title="&#x110;&#x1b0;a &#x111;&#xf3;n" type="java.lang.Object"/>
-                    <Column editable="true" title="Th&#x1ef1;c &#x111;&#x1a1;n" type="java.lang.Object"/>
-                    <Column editable="true" title="T&#x1ed5;ng ti&#x1ec1;n" type="java.lang.Object"/>
+                    <Column editable="false" title="Trang tr&#xed; b&#xe0;n" type="java.lang.Object"/>
+                    <Column editable="false" title="Trang tr&#xed; s&#xe2;n kh&#x1ea5;u" type="java.lang.Object"/>
+                    <Column editable="false" title="&#x110;i k&#xe8;m" type="java.lang.Object"/>
+                    <Column editable="false" title="Ngh&#x1ec7; thu&#x1ead;t" type="java.lang.Object"/>
+                    <Column editable="false" title="Th&#x1ef1;c &#x111;&#x1a1;n" type="java.lang.Object"/>
+                    <Column editable="false" title="Ti&#x1ec1;n c&#x1ecd;c" type="java.lang.Object"/>
+                    <Column editable="false" title="Ph&#xe1;t sinh " type="java.lang.Object"/>
+                    <Column editable="false" title="T&#x1ed5;ng ti&#x1ec1;n" type="java.lang.Object"/>
                   </Table>
                 </Property>
                 <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">

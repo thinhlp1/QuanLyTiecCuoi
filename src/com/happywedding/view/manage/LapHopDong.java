@@ -119,7 +119,6 @@ public class LapHopDong extends javax.swing.JPanel {
         btnTTSanKhau = new com.ui.swing.HoverButton();
         btnDatMon = new com.ui.swing.HoverButton();
         btnNgheThuat = new com.ui.swing.HoverButton();
-        btnDuaDon = new com.ui.swing.HoverButton();
         jLabel4 = new javax.swing.JLabel();
         btnSaveInfo = new com.ui.swing.HoverButton();
         pnlBtn = new javax.swing.JPanel();
@@ -128,6 +127,7 @@ public class LapHopDong extends javax.swing.JPanel {
         btnDanhDauXoa = new com.ui.swing.HoverButton();
         btnPhanCong = new com.ui.swing.HoverButton();
         btnXuatHoaDon = new com.ui.swing.HoverButton();
+        btnXuatHoaDon1 = new com.ui.swing.HoverButton();
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setPreferredSize(new java.awt.Dimension(1650, 980));
@@ -454,7 +454,7 @@ public class LapHopDong extends javax.swing.JPanel {
                 btnDVDKActionPerformed(evt);
             }
         });
-        pnlDichVu.add(btnDVDK, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 10, 130, 40));
+        pnlDichVu.add(btnDVDK, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 10, 130, 40));
 
         btnTTBan.setBackground(new java.awt.Color(251, 157, 144));
         btnTTBan.setForeground(new java.awt.Color(255, 255, 255));
@@ -535,22 +535,6 @@ public class LapHopDong extends javax.swing.JPanel {
             }
         });
         pnlDichVu.add(btnNgheThuat, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 10, 100, 40));
-
-        btnDuaDon.setBackground(new java.awt.Color(251, 157, 144));
-        btnDuaDon.setForeground(new java.awt.Color(255, 255, 255));
-        btnDuaDon.setText("Đưa đón");
-        btnDuaDon.setBorderColor(new java.awt.Color(251, 157, 144));
-        btnDuaDon.setColor(new java.awt.Color(251, 157, 144));
-        btnDuaDon.setColorClick(new java.awt.Color(251, 157, 144));
-        btnDuaDon.setColorOver(new java.awt.Color(251, 157, 144));
-        btnDuaDon.setFocusPainted(false);
-        btnDuaDon.setRadius(15);
-        btnDuaDon.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnDuaDonActionPerformed(evt);
-            }
-        });
-        pnlDichVu.add(btnDuaDon, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 10, 100, 40));
 
         jPanel1.add(pnlDichVu, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 790, 1590, 60));
 
@@ -652,7 +636,7 @@ public class LapHopDong extends javax.swing.JPanel {
 
         btnXuatHoaDon.setBackground(new java.awt.Color(77, 76, 125));
         btnXuatHoaDon.setForeground(new java.awt.Color(255, 255, 255));
-        btnXuatHoaDon.setText("Xuất hóa đơn");
+        btnXuatHoaDon.setText("Xuất phiếu tạm");
         btnXuatHoaDon.setBorderColor(new java.awt.Color(77, 76, 125));
         btnXuatHoaDon.setColor(new java.awt.Color(77, 76, 125));
         btnXuatHoaDon.setColorClick(new java.awt.Color(77, 0, 196));
@@ -666,9 +650,27 @@ public class LapHopDong extends javax.swing.JPanel {
                 btnXuatHoaDonActionPerformed(evt);
             }
         });
-        pnlBtn.add(btnXuatHoaDon, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 10, -1, 30));
+        pnlBtn.add(btnXuatHoaDon, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 10, -1, 30));
 
-        jPanel1.add(pnlBtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 870, 680, 50));
+        btnXuatHoaDon1.setBackground(new java.awt.Color(77, 76, 125));
+        btnXuatHoaDon1.setForeground(new java.awt.Color(255, 255, 255));
+        btnXuatHoaDon1.setText("Xuất hóa đơn");
+        btnXuatHoaDon1.setBorderColor(new java.awt.Color(77, 76, 125));
+        btnXuatHoaDon1.setColor(new java.awt.Color(77, 76, 125));
+        btnXuatHoaDon1.setColorClick(new java.awt.Color(77, 0, 196));
+        btnXuatHoaDon1.setColorOver(new java.awt.Color(77, 0, 196));
+        btnXuatHoaDon1.setFocusPainted(false);
+        btnXuatHoaDon1.setLabelColor(java.awt.Color.white);
+        btnXuatHoaDon1.setLableColorClick(java.awt.Color.white);
+        btnXuatHoaDon1.setRadius(15);
+        btnXuatHoaDon1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnXuatHoaDon1ActionPerformed(evt);
+            }
+        });
+        pnlBtn.add(btnXuatHoaDon1, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 10, -1, 30));
+
+        jPanel1.add(pnlBtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 870, 770, 50));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -751,10 +753,6 @@ public class LapHopDong extends javax.swing.JPanel {
          new NgheThuat(new JFrame(), true).setVisible(true);
     }//GEN-LAST:event_btnNgheThuatActionPerformed
 
-    private void btnDuaDonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDuaDonActionPerformed
-         new DuaDon(new JFrame(), true).setVisible(true);
-    }//GEN-LAST:event_btnDuaDonActionPerformed
-
     private void btnXuatHoaDonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXuatHoaDonActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnXuatHoaDonActionPerformed
@@ -808,13 +806,16 @@ public class LapHopDong extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_btnSaveActionPerformed
 
+    private void btnXuatHoaDon1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXuatHoaDon1ActionPerformed
+       new ChiPhiPhatSinh().setVisible(true);
+    }//GEN-LAST:event_btnXuatHoaDon1ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.ui.swing.InkwellButton btnBack;
     private com.ui.swing.HoverButton btnDVDK;
     private com.ui.swing.HoverButton btnDanhDauXoa;
     private com.ui.swing.HoverButton btnDatMon;
-    private com.ui.swing.HoverButton btnDuaDon;
     private com.ui.swing.HoverButton btnDuyet;
     private com.ui.swing.HoverButton btnNgheThuat;
     private com.ui.swing.HoverButton btnPhanCong;
@@ -824,6 +825,7 @@ public class LapHopDong extends javax.swing.JPanel {
     private com.ui.swing.HoverButton btnTTSanKhau;
     private com.ui.swing.HoverButton btnTrangTriCong;
     private com.ui.swing.HoverButton btnXuatHoaDon;
+    private com.ui.swing.HoverButton btnXuatHoaDon1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;

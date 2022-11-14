@@ -81,11 +81,11 @@ public class QuanLyHoaDon extends javax.swing.JPanel {
 
             },
             new String [] {
-                "Mã hợp đồng", "Ngày lập", "Người lập", "Trang trí cổng", "Trang trí bàn", "Trang trí sân khấu", "Đi kèm", "Nghệ thuật", "Đưa đón", "Thực đơn", "Tổng tiền"
+                "Mã hợp đồng", "Ngày lập", "Người lập", "Trang trí cổng", "Trang trí bàn", "Trang trí sân khấu", "Đi kèm", "Nghệ thuật", "Thực đơn", "Tiền cọc", "Phát sinh ", "Tổng tiền"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, true, true, true, true, true, true, true
+                false, false, false, false, false, false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
