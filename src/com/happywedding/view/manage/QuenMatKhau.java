@@ -33,7 +33,8 @@ public class QuenMatKhau extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel2 = new javax.swing.JLabel();
+        pictureBox2 = new com.ui.swing.PictureBox();
+        pictureBox1 = new com.ui.swing.PictureBox();
         txtMatKhauMoi = new javax.swing.JPasswordField();
         jLabel8 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -44,42 +45,44 @@ public class QuenMatKhau extends javax.swing.JDialog {
         jLabel7 = new javax.swing.JLabel();
         btnTroVeDangNhap = new com.ui.swing.component.Tab();
         jLabel6 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Quên mật khẩu");
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/happywedding/assets/QuenMatKhau.png"))); // NOI18N
-        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 10, -1, 90));
+        pictureBox2.setImage(new javax.swing.ImageIcon(getClass().getResource("/com/happywedding/assets/QuenMatKhau.png"))); // NOI18N
+        getContentPane().add(pictureBox2, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 50, 420, 170));
+
+        pictureBox1.setImage(new javax.swing.ImageIcon(getClass().getResource("/com/happywedding/assets/HappyWedding.png"))); // NOI18N
+        getContentPane().add(pictureBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 170, 640, 410));
 
         txtMatKhauMoi.setBackground(new java.awt.Color(255, 247, 244));
         txtMatKhauMoi.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         txtMatKhauMoi.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 1, 1, 0, new java.awt.Color(0, 0, 0)));
-        getContentPane().add(txtMatKhauMoi, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 420, 400, 50));
+        getContentPane().add(txtMatKhauMoi, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 450, 400, 50));
 
         jLabel8.setFont(new java.awt.Font("Times New Roman", 0, 24)); // NOI18N
         jLabel8.setText("Mật khẩu mới");
-        getContentPane().add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 370, -1, -1));
+        getContentPane().add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 400, -1, -1));
 
         jLabel3.setFont(new java.awt.Font("Times New Roman", 0, 24)); // NOI18N
         jLabel3.setText("Email");
-        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 80, -1, -1));
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 110, -1, -1));
 
         txtMaXacNhan.setBackground(new java.awt.Color(255, 247, 244));
         txtMaXacNhan.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         txtMaXacNhan.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 1, 1, 0, new java.awt.Color(0, 0, 0)));
-        getContentPane().add(txtMaXacNhan, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 280, 400, 50));
+        getContentPane().add(txtMaXacNhan, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 310, 400, 50));
 
         txtEmail.setBackground(new java.awt.Color(255, 247, 244));
         txtEmail.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         txtEmail.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 1, 1, 0, new java.awt.Color(0, 0, 0)));
-        getContentPane().add(txtEmail, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 140, 400, 50));
+        getContentPane().add(txtEmail, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 170, 400, 50));
 
         jLabel4.setFont(new java.awt.Font("Times New Roman", 0, 24)); // NOI18N
         jLabel4.setText("Mã xác nhận");
-        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 230, -1, -1));
+        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 260, -1, -1));
 
         btnXacNhan.setEndColor("#FFB9B9");
         btnXacNhan.setStartColor("#E9D5CA");
@@ -102,7 +105,7 @@ public class QuenMatKhau extends javax.swing.JDialog {
             .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
         );
 
-        getContentPane().add(btnXacNhan, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 500, 200, 50));
+        getContentPane().add(btnXacNhan, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 560, 200, 50));
 
         btnTroVeDangNhap.setEndColor("#FFB9B9");
         btnTroVeDangNhap.setStartColor("#E9D5CA");
@@ -114,7 +117,7 @@ public class QuenMatKhau extends javax.swing.JDialog {
 
         jLabel6.setFont(new java.awt.Font("Times New Roman", 0, 24)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(102, 102, 102));
-        jLabel6.setText("Trở đăng nhập");
+        jLabel6.setText("Trở về đăng nhập");
 
         javax.swing.GroupLayout btnTroVeDangNhapLayout = new javax.swing.GroupLayout(btnTroVeDangNhap);
         btnTroVeDangNhap.setLayout(btnTroVeDangNhapLayout);
@@ -123,23 +126,20 @@ public class QuenMatKhau extends javax.swing.JDialog {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, btnTroVeDangNhapLayout.createSequentialGroup()
                 .addContainerGap(32, Short.MAX_VALUE)
                 .addComponent(jLabel6)
-                .addGap(28, 28, 28))
+                .addGap(19, 19, 19))
         );
         btnTroVeDangNhapLayout.setVerticalGroup(
             btnTroVeDangNhapLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
         );
 
-        getContentPane().add(btnTroVeDangNhap, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 500, 200, 50));
-
-        jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/happywedding/assets/logoWedding.png"))); // NOI18N
-        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 110, 630, 390));
+        getContentPane().add(btnTroVeDangNhap, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 560, 220, 50));
 
         jLabel1.setBackground(new java.awt.Color(255, 247, 244));
         jLabel1.setOpaque(true);
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1270, 620));
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1270, 660));
 
-        setSize(new java.awt.Dimension(1289, 667));
+        setSize(new java.awt.Dimension(1289, 698));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -194,13 +194,13 @@ public class QuenMatKhau extends javax.swing.JDialog {
     private com.ui.swing.component.Tab btnTroVeDangNhap;
     private com.ui.swing.component.Tab btnXacNhan;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private com.ui.swing.PictureBox pictureBox1;
+    private com.ui.swing.PictureBox pictureBox2;
     private javax.swing.JTextField txtEmail;
     private javax.swing.JTextField txtMaXacNhan;
     private javax.swing.JPasswordField txtMatKhauMoi;
