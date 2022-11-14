@@ -5,10 +5,38 @@
  */
 package com.happywedding.dao;
 
+import com.happywedding.model.HoaDon;
+import java.util.List;
+
 /**
  *
  * @author ADMIN
  */
-public class HoaDonDAO {
+public class HoaDonDAO extends AbstractDAO<HoaDon>{
+
+    @Override
+    public boolean insert(HoaDon entity) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean update(HoaDon entity) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void delete(String id) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<HoaDon> select() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public HoaDon findById(String id) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

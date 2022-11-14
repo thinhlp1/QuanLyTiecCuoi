@@ -13,15 +13,16 @@ public class HoaDon { // hoa don
     private long trangTriSanKhau;
     private long trangTriBanTiec;
     private long ngheThuat;
-    private long duaDon;
     private long diKem;
     private long thucDon;
-    private long TongTien;
-    private String maTT;
-    private String tenTT;
+    private long tienCoc;
+   private long phatSinh;
+    private int trangTha;
     private long tongTien;
 
-    public HoaDon(int maHoaDon, String MaHD, Date ngayLap, String maNV, String tenNV, long trangTriCong, long trangTriSanKhau, long trangTriBanTiec, long ngheThuat, long duaDon, long diKem, long thucDon, long TongTien, String maTT, String tenTT, long tongTien) {
+    
+    
+     public HoaDon(int maHoaDon, String MaHD, Date ngayLap, String maNV, String tenNV, long trangTriCong, long trangTriSanKhau, long trangTriBanTiec, long ngheThuat, long diKem, long thucDon, long tienCoc, long phatSinh, int trangTha, long tongTien) {
         this.maHoaDon = maHoaDon;
         this.MaHD = MaHD;
         this.ngayLap = ngayLap;
@@ -31,15 +32,42 @@ public class HoaDon { // hoa don
         this.trangTriSanKhau = trangTriSanKhau;
         this.trangTriBanTiec = trangTriBanTiec;
         this.ngheThuat = ngheThuat;
-        this.duaDon = duaDon;
         this.diKem = diKem;
         this.thucDon = thucDon;
-        this.TongTien = TongTien;
-        this.maTT = maTT;
-        this.tenTT = tenTT;
+        this.tienCoc = tienCoc;
+        this.phatSinh = phatSinh;
+        this.trangTha = trangTha;
         this.tongTien = tongTien;
     }
+    
+    public long getTienCoc() {
+        return tienCoc;
+    }
 
+    public void setTienCoc(long tienCoc) {
+        this.tienCoc = tienCoc;
+    }
+
+    public long getPhatSinh() {
+        return phatSinh;
+    }
+
+    public void setPhatSinh(long phatSinh) {
+        this.phatSinh = phatSinh;
+    }
+
+    public int getTrangTha() {
+        return trangTha;
+    }
+
+    public void setTrangTha(int trangTha) {
+        this.trangTha = trangTha;
+    }
+
+   
+
+
+    
     
     
     public long getTrangTriCong() {
@@ -74,13 +102,7 @@ public class HoaDon { // hoa don
         this.ngheThuat = ngheThuat;
     }
 
-    public long getDuaDon() {
-        return duaDon;
-    }
-
-    public void setDuaDon(long duaDon) {
-        this.duaDon = duaDon;
-    }
+ 
 
     public long getDiKem() {
         return diKem;
@@ -108,14 +130,7 @@ public class HoaDon { // hoa don
         this.tenNV = tenNV;
     }
 
-    public String getTenTT() {
-        return tenTT;
-    }
-
-    public void setTenTT(String tenTT) {
-        this.tenTT = tenTT;
-    }
-
+ 
     public int getMaHoaDon() {
         return maHoaDon;
     }
@@ -148,13 +163,6 @@ public class HoaDon { // hoa don
         this.maNV = maNV;
     }
 
-    public String getMaTT() {
-        return maTT;
-    }
-
-    public void setMaTT(String maTT) {
-        this.maTT = maTT;
-    }
 
     public long getTongTien() {
         return tongTien;

@@ -15,6 +15,12 @@ public class QuanLyHoaDon extends javax.swing.JPanel {
      */
     public QuanLyHoaDon() {
         initComponents();
+        init();
+    }
+    
+    public void init(){
+        tblHoaDon.fixTable(jScrollPane1);
+        tblHoaDon.setAutoscrolls(true);
     }
 
     /**
@@ -31,7 +37,7 @@ public class QuanLyHoaDon extends javax.swing.JPanel {
         btnChiTiet = new com.ui.swing.InkwellButton();
         btnDanhDauXoa = new com.ui.swing.InkwellButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tblHopDong = new com.ui.swing.Table();
+        tblHoaDon = new com.ui.swing.Table();
         jLabel1 = new javax.swing.JLabel();
         txtTimKiem = new javax.swing.JTextField();
         cbbTangDanGiamDan = new com.ui.swing.Combobox();
@@ -76,23 +82,23 @@ public class QuanLyHoaDon extends javax.swing.JPanel {
         });
         pnlEmplpyeeManager.add(btnDanhDauXoa, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 900, 120, -1));
 
-        tblHopDong.setModel(new javax.swing.table.DefaultTableModel(
+        tblHoaDon.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Mã hợp đồng", "Ngày lập", "Người lập", "Trang trí cổng", "Trang trí bàn", "Trang trí sân khấu", "Đi kèm", "Nghệ thuật", "Thực đơn", "Tiền cọc", "Phát sinh ", "Tổng tiền"
+                "Mã hợp đồng", "Ngày lập", "Người lập", "Trang trí cổng", "Trang trí bàn", "Trang trí sân khấu", "Đi kèm", "Nghệ thuật", "Thực đơn", "Tiền cọc", "Phát sinh ", "Tổng tiền", "Trạng thái"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(tblHopDong);
+        jScrollPane1.setViewportView(tblHoaDon);
 
         pnlEmplpyeeManager.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 90, 1610, 790));
 
@@ -191,7 +197,7 @@ public class QuanLyHoaDon extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblSearch;
     private javax.swing.JPanel pnlEmplpyeeManager;
-    private com.ui.swing.Table tblHopDong;
+    private com.ui.swing.Table tblHoaDon;
     private javax.swing.JTextField txtTimKiem;
     // End of variables declaration//GEN-END:variables
 }

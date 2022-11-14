@@ -16,10 +16,14 @@ public class QuanLyKho extends javax.swing.JPanel {
      */
     public QuanLyKho() {
         initComponents();
+      
+    }
+        
+    public void init(){
         tblCoSoVatChat.fixTable(jScrollPane1);
         tblCoSoVatChat.setAutoscrolls(true);
     }
-
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

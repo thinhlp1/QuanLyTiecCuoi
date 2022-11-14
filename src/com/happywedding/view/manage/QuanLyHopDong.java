@@ -34,10 +34,10 @@ public class QuanLyHopDong extends javax.swing.JPanel {
         tblModel = (DefaultTableModel) tblHopDong.getModel();
         tblHopDong.setAutoscrolls(true);
         dtChooser1.setTextRefernce(txtNgayBatDau);
-        dtChooser2.setTextRefernce(txtNgayKetThuc);
+       
         
         txtNgayBatDau.setText("");
-        txtNgayKetThuc.setText("");
+     
     }
     
     public void fillToTable(){
@@ -78,7 +78,6 @@ public class QuanLyHopDong extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        txtNgayKetThuc = new javax.swing.JTextField();
         txtNgayBatDau = new javax.swing.JTextField();
         cbbSanh = new com.ui.swing.Combobox();
         cbbSortBy = new com.ui.swing.Combobox();
@@ -87,7 +86,7 @@ public class QuanLyHopDong extends javax.swing.JPanel {
         jLabel4 = new javax.swing.JLabel();
         rdBtnDaThucHien = new javax.swing.JRadioButton();
         rdBtnDangCho = new javax.swing.JRadioButton();
-        rdBtnDangThucHien = new javax.swing.JRadioButton();
+        rdBtnChoKyKet = new javax.swing.JRadioButton();
 
         setPreferredSize(new java.awt.Dimension(1620, 990));
 
@@ -182,14 +181,6 @@ public class QuanLyHopDong extends javax.swing.JPanel {
         jLabel3.setText("Ngày tổ chức");
         pnlQuanLyHopDong.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 40, -1, 20));
 
-        txtNgayKetThuc.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
-        txtNgayKetThuc.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtNgayKetThucActionPerformed(evt);
-            }
-        });
-        pnlQuanLyHopDong.add(txtNgayKetThuc, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 40, 200, 35));
-
         txtNgayBatDau.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         txtNgayBatDau.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -205,7 +196,7 @@ public class QuanLyHopDong extends javax.swing.JPanel {
                 cbbSanhActionPerformed(evt);
             }
         });
-        pnlQuanLyHopDong.add(cbbSanh, new org.netbeans.lib.awtextra.AbsoluteConstraints(1090, 10, 270, 54));
+        pnlQuanLyHopDong.add(cbbSanh, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 20, 270, 54));
 
         cbbSortBy.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Họ và Tên" }));
         cbbSortBy.setSelectedIndex(-1);
@@ -274,16 +265,16 @@ public class QuanLyHopDong extends javax.swing.JPanel {
         });
         pnlQuanLyHopDong.add(rdBtnDangCho, new org.netbeans.lib.awtextra.AbsoluteConstraints(1020, 930, -1, -1));
 
-        btnGrpStatus.add(rdBtnDangThucHien);
-        rdBtnDangThucHien.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
-        rdBtnDangThucHien.setText("Đang thực hiện ");
-        rdBtnDangThucHien.setContentAreaFilled(false);
-        rdBtnDangThucHien.addActionListener(new java.awt.event.ActionListener() {
+        btnGrpStatus.add(rdBtnChoKyKet);
+        rdBtnChoKyKet.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        rdBtnChoKyKet.setText("Chờ ký kết");
+        rdBtnChoKyKet.setContentAreaFilled(false);
+        rdBtnChoKyKet.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rdBtnDangThucHienActionPerformed(evt);
+                rdBtnChoKyKetActionPerformed(evt);
             }
         });
-        pnlQuanLyHopDong.add(rdBtnDangThucHien, new org.netbeans.lib.awtextra.AbsoluteConstraints(1170, 930, -1, -1));
+        pnlQuanLyHopDong.add(rdBtnChoKyKet, new org.netbeans.lib.awtextra.AbsoluteConstraints(1190, 930, -1, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -326,7 +317,7 @@ public class QuanLyHopDong extends javax.swing.JPanel {
     }//GEN-LAST:event_cbbSanhActionPerformed
 
     private void btnLapHopDongActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLapHopDongActionPerformed
-        AppStatus.mainApp.showForm(new LapHopDong(true));
+        AppStatus.mainApp.showForm(new LapHopDong(true,""));
     }//GEN-LAST:event_btnLapHopDongActionPerformed
 
     private void txtNgayBatDauActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNgayBatDauActionPerformed
@@ -334,21 +325,17 @@ public class QuanLyHopDong extends javax.swing.JPanel {
         
     }//GEN-LAST:event_txtNgayBatDauActionPerformed
 
-    private void txtNgayKetThucActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNgayKetThucActionPerformed
-        showCalendar2();
-    }//GEN-LAST:event_txtNgayKetThucActionPerformed
-
     private void btnChiTietActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChiTietActionPerformed
-        // TODO add your handling code here:
+        AppStatus.mainApp.showForm(new LapHopDong(false,""));
     }//GEN-LAST:event_btnChiTietActionPerformed
 
     private void rdBtnDangChoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdBtnDangChoActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_rdBtnDangChoActionPerformed
 
-    private void rdBtnDangThucHienActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdBtnDangThucHienActionPerformed
+    private void rdBtnChoKyKetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdBtnChoKyKetActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_rdBtnDangThucHienActionPerformed
+    }//GEN-LAST:event_rdBtnChoKyKetActionPerformed
 
     private void rdBtnDaThucHienActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdBtnDaThucHienActionPerformed
         // TODO add your handling code here:
@@ -375,12 +362,11 @@ public class QuanLyHopDong extends javax.swing.JPanel {
     private javax.swing.JLabel lblSort;
     private javax.swing.JLabel lblSort1;
     private javax.swing.JPanel pnlQuanLyHopDong;
+    private javax.swing.JRadioButton rdBtnChoKyKet;
     private javax.swing.JRadioButton rdBtnDaThucHien;
     private javax.swing.JRadioButton rdBtnDangCho;
-    private javax.swing.JRadioButton rdBtnDangThucHien;
     private com.ui.swing.Table tblHopDong;
     private javax.swing.JTextField txtNgayBatDau;
-    private javax.swing.JTextField txtNgayKetThuc;
     private javax.swing.JTextField txtSearch;
     // End of variables declaration//GEN-END:variables
 }

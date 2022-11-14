@@ -21,12 +21,15 @@ public class QuanLyNhanVien extends javax.swing.JPanel {
      */
     public QuanLyNhanVien() {
         initComponents();
-        
+     
+    }
+    
+    public void init(){
+           
         dtChooser1.setTextRefernce(txtNgaySinh);
         tblNhanVien.fixTable(jScrollPane1);
         tblNhanVien.setAutoscrolls(true);
     }
-    
     
      public void showCalendar1() {
         dtChooser1.showPopup();

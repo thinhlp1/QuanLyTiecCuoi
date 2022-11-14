@@ -6,8 +6,14 @@
 package com.happywedding.helper;
 
 import com.happywedding.app.HappyWeddingApp;
+import com.happywedding.model.CoSoVatChat;
+import com.happywedding.model.PhanLoaiMonAn;
+import com.happywedding.model.PhanLoaiSanh;
+import com.happywedding.model.PhongBan;
+import com.happywedding.model.VaiTro;
 import com.ui.swing.component.Menu;
 import java.awt.Robot;
+import java.util.List;
 
 
 
@@ -22,25 +28,16 @@ public class AppStatus {
 //     */
     public static Object USER = null;
     public static int STATUS = 0;
-    public static int ROLE = 0;
+    public static String ROLE = "QLCC" ;
 
    
     public static HappyWeddingApp mainApp = null;
     public static Menu menu = null;
-    public static Robot bot;
-    
-    
-    public static  int menuQLHoaDonX = 250;
-    
-    
     
     //0 is not load
     //1 is loading
     public static void loadApp(){
-        try {
-               bot = new Robot();
-        } catch (Exception e) {
-        }
+      
 //        STATUS = 1;
     }
 
