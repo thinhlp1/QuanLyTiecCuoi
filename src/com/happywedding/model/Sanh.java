@@ -28,6 +28,10 @@ public class Sanh {
         this.giaBan = giaBan;
     }
 
+    public Sanh() {
+        
+    }
+
     
     
     public String getMaSanh() {

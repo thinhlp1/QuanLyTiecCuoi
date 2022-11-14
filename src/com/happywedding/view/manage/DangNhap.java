@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
  */
 package com.happywedding.view.manage;
+import java.awt.Color;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 
@@ -31,21 +32,27 @@ public class DangNhap extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        pictureBox2 = new com.ui.swing.PictureBox();
+        pictureBox1 = new com.ui.swing.PictureBox();
         btnQuenMatKhau = new com.ui.swing.component.Tab();
         jLabel7 = new javax.swing.JLabel();
         btnDangNhap = new com.ui.swing.component.Tab();
         jLabel6 = new javax.swing.JLabel();
         txtTenDangNhap = new javax.swing.JTextField();
         txtMatKhau = new javax.swing.JPasswordField();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel1 = new javax.swing.JLabel();
+        lblMatKhau = new javax.swing.JLabel();
+        lblTenDangNhap = new javax.swing.JLabel();
+        lblMauNen = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Đăng nhập");
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        pictureBox2.setImage(new javax.swing.ImageIcon(getClass().getResource("/com/happywedding/assets/dangNhap.png"))); // NOI18N
+        getContentPane().add(pictureBox2, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 20, 430, 140));
+
+        pictureBox1.setImage(new javax.swing.ImageIcon(getClass().getResource("/com/happywedding/assets/HappyWedding.png"))); // NOI18N
+        getContentPane().add(pictureBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 120, 640, 410));
 
         btnQuenMatKhau.setEndColor("#FFB9B9");
         btnQuenMatKhau.setStartColor("#E9D5CA");
@@ -73,7 +80,7 @@ public class DangNhap extends javax.swing.JDialog {
             .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
         );
 
-        getContentPane().add(btnQuenMatKhau, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 460, 200, 50));
+        getContentPane().add(btnQuenMatKhau, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 560, 200, 50));
 
         btnDangNhap.setEndColor("#FFB9B9");
         btnDangNhap.setStartColor("#E9D5CA");
@@ -101,39 +108,31 @@ public class DangNhap extends javax.swing.JDialog {
             .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
         );
 
-        getContentPane().add(btnDangNhap, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 460, 200, 50));
+        getContentPane().add(btnDangNhap, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 560, 200, 50));
 
         txtTenDangNhap.setBackground(new java.awt.Color(255, 247, 244));
         txtTenDangNhap.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         txtTenDangNhap.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 1, 1, 0, new java.awt.Color(0, 0, 0)));
-        getContentPane().add(txtTenDangNhap, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 210, 400, 50));
+        getContentPane().add(txtTenDangNhap, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 260, 400, 50));
 
         txtMatKhau.setBackground(new java.awt.Color(255, 247, 244));
         txtMatKhau.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         txtMatKhau.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 1, 1, 0, new java.awt.Color(0, 0, 0)));
-        getContentPane().add(txtMatKhau, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 370, 400, 50));
+        getContentPane().add(txtMatKhau, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 420, 400, 50));
 
-        jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/happywedding/assets/logoWedding.png"))); // NOI18N
-        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 120, 640, 420));
+        lblMatKhau.setFont(new java.awt.Font("Times New Roman", 0, 24)); // NOI18N
+        lblMatKhau.setText("Mật khẩu");
+        getContentPane().add(lblMatKhau, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 370, -1, -1));
 
-        jLabel4.setFont(new java.awt.Font("Times New Roman", 0, 24)); // NOI18N
-        jLabel4.setText("Mật khẩu");
-        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 300, -1, -1));
+        lblTenDangNhap.setFont(new java.awt.Font("Times New Roman", 0, 24)); // NOI18N
+        lblTenDangNhap.setText("Tên đăng nhập");
+        getContentPane().add(lblTenDangNhap, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 220, -1, -1));
 
-        jLabel3.setFont(new java.awt.Font("Times New Roman", 0, 24)); // NOI18N
-        jLabel3.setText("Tên đăng nhập");
-        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 150, -1, -1));
+        lblMauNen.setBackground(new java.awt.Color(255, 247, 244));
+        lblMauNen.setOpaque(true);
+        getContentPane().add(lblMauNen, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1310, 660));
 
-        jLabel2.setFont(new java.awt.Font("Yu Gothic UI Semilight", 0, 48)); // NOI18N
-        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/happywedding/assets/dangNhap.png"))); // NOI18N
-        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 20, 350, 100));
-
-        jLabel1.setBackground(new java.awt.Color(255, 247, 244));
-        jLabel1.setOpaque(true);
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1300, 600));
-
-        setSize(new java.awt.Dimension(1323, 648));
+        setSize(new java.awt.Dimension(1323, 694));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -199,13 +198,13 @@ public class DangNhap extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.ui.swing.component.Tab btnDangNhap;
     private com.ui.swing.component.Tab btnQuenMatKhau;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel lblMatKhau;
+    private javax.swing.JLabel lblMauNen;
+    private javax.swing.JLabel lblTenDangNhap;
+    private com.ui.swing.PictureBox pictureBox1;
+    private com.ui.swing.PictureBox pictureBox2;
     private javax.swing.JPasswordField txtMatKhau;
     private javax.swing.JTextField txtTenDangNhap;
     // End of variables declaration//GEN-END:variables
