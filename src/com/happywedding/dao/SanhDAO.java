@@ -74,6 +74,9 @@ public class SanhDAO extends AbstractDAO<Sanh>{
                 while (rs.next()) {
                     //Sanh sanh = readFromResultSet(rs);
                  //   list.add(sanh);
+                 //fdsfsdfsdfsdfds
+                 //sdfdsfdsfsfsd
+                 /sdfdsfdsfdsfds
                 }
             } finally {
                 rs.getStatement().getConnection().close();
