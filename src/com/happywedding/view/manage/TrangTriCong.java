@@ -5,17 +5,23 @@
  */
 package com.happywedding.view.manage;
 
+import com.happywedding.helper.AppStatus;
+
 /**
  *
  * @author ADMIN
  */
 public class TrangTriCong extends javax.swing.JDialog {
-
+    
+   private String maHD;
+    
     /**
      * Creates new form TrangTriCong
      */
-    public TrangTriCong(java.awt.Frame parent, boolean modal) {
+    public TrangTriCong(java.awt.Frame parent, boolean modal, String maHD) {
         super(parent, modal);
+        this.maHD = maHD;
+        
         initComponents();
     }
 
@@ -67,6 +73,13 @@ public class TrangTriCong extends javax.swing.JDialog {
         jLabel9 = new javax.swing.JLabel();
         btnSave = new com.ui.swing.HoverButton();
         btnReset = new com.ui.swing.HoverButton();
+        jLabel10 = new javax.swing.JLabel();
+        txtCPCong = new javax.swing.JTextField();
+        txtCPHoaChuDao = new javax.swing.JTextField();
+        txtCPHoaPhuDao = new javax.swing.JTextField();
+        txtCPTham = new javax.swing.JTextField();
+        txtCPBangTen = new javax.swing.JTextField();
+        jLabel11 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -182,10 +195,10 @@ public class TrangTriCong extends javax.swing.JDialog {
                 txtGCCongActionPerformed(evt);
             }
         });
-        jPanel1.add(txtGCCong, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 230, 360, 35));
+        jPanel1.add(txtGCCong, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 230, 360, 35));
 
         txtGCHoaChuDao.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
-        jPanel1.add(txtGCHoaChuDao, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 290, 360, 35));
+        jPanel1.add(txtGCHoaChuDao, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 290, 360, 35));
 
         txtGCHoaPhuDao.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         txtGCHoaPhuDao.addActionListener(new java.awt.event.ActionListener() {
@@ -193,7 +206,7 @@ public class TrangTriCong extends javax.swing.JDialog {
                 txtGCHoaPhuDaoActionPerformed(evt);
             }
         });
-        jPanel1.add(txtGCHoaPhuDao, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 350, 360, 35));
+        jPanel1.add(txtGCHoaPhuDao, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 350, 360, 35));
 
         txtGCTham.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         txtGCTham.addActionListener(new java.awt.event.ActionListener() {
@@ -201,7 +214,7 @@ public class TrangTriCong extends javax.swing.JDialog {
                 txtGCThamActionPerformed(evt);
             }
         });
-        jPanel1.add(txtGCTham, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 420, 360, 35));
+        jPanel1.add(txtGCTham, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 420, 360, 35));
 
         txtChiPhi.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         txtChiPhi.addActionListener(new java.awt.event.ActionListener() {
@@ -217,7 +230,7 @@ public class TrangTriCong extends javax.swing.JDialog {
 
         jLabel7.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel7.setText("Chi phí phát sinh");
-        jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(1010, 170, -1, -1));
+        jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(1220, 170, -1, -1));
 
         txtCPPSCong.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         txtCPPSCong.addActionListener(new java.awt.event.ActionListener() {
@@ -225,10 +238,10 @@ public class TrangTriCong extends javax.swing.JDialog {
                 txtCPPSCongActionPerformed(evt);
             }
         });
-        jPanel1.add(txtCPPSCong, new org.netbeans.lib.awtextra.AbsoluteConstraints(1010, 230, 360, 35));
+        jPanel1.add(txtCPPSCong, new org.netbeans.lib.awtextra.AbsoluteConstraints(1220, 230, 190, 35));
 
         txtCPPSHoaChuDao.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
-        jPanel1.add(txtCPPSHoaChuDao, new org.netbeans.lib.awtextra.AbsoluteConstraints(1010, 290, 360, 35));
+        jPanel1.add(txtCPPSHoaChuDao, new org.netbeans.lib.awtextra.AbsoluteConstraints(1220, 290, 190, 35));
 
         txtCPPSHoaPhuDao.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         txtCPPSHoaPhuDao.addActionListener(new java.awt.event.ActionListener() {
@@ -236,7 +249,7 @@ public class TrangTriCong extends javax.swing.JDialog {
                 txtCPPSHoaPhuDaoActionPerformed(evt);
             }
         });
-        jPanel1.add(txtCPPSHoaPhuDao, new org.netbeans.lib.awtextra.AbsoluteConstraints(1010, 350, 360, 35));
+        jPanel1.add(txtCPPSHoaPhuDao, new org.netbeans.lib.awtextra.AbsoluteConstraints(1220, 350, 190, 35));
 
         txtCPPSTham.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         txtCPPSTham.addActionListener(new java.awt.event.ActionListener() {
@@ -244,7 +257,7 @@ public class TrangTriCong extends javax.swing.JDialog {
                 txtCPPSThamActionPerformed(evt);
             }
         });
-        jPanel1.add(txtCPPSTham, new org.netbeans.lib.awtextra.AbsoluteConstraints(1010, 420, 360, 35));
+        jPanel1.add(txtCPPSTham, new org.netbeans.lib.awtextra.AbsoluteConstraints(1220, 420, 190, 35));
 
         txtCPPSBangTen.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         txtCPPSBangTen.addActionListener(new java.awt.event.ActionListener() {
@@ -252,7 +265,7 @@ public class TrangTriCong extends javax.swing.JDialog {
                 txtCPPSBangTenActionPerformed(evt);
             }
         });
-        jPanel1.add(txtCPPSBangTen, new org.netbeans.lib.awtextra.AbsoluteConstraints(1010, 490, 360, 35));
+        jPanel1.add(txtCPPSBangTen, new org.netbeans.lib.awtextra.AbsoluteConstraints(1220, 490, 190, 35));
 
         lblMaNH8.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         lblMaNH8.setText("Ghi chú");
@@ -270,7 +283,7 @@ public class TrangTriCong extends javax.swing.JDialog {
                 txtGCBangTenActionPerformed(evt);
             }
         });
-        jPanel1.add(txtGCBangTen, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 490, 360, 35));
+        jPanel1.add(txtGCBangTen, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 490, 360, 35));
 
         lblMaNH26.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         lblMaNH26.setText("Bảng tên");
@@ -294,7 +307,7 @@ public class TrangTriCong extends javax.swing.JDialog {
 
         jLabel8.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel8.setText("Ghi chú");
-        jPanel1.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 170, -1, -1));
+        jPanel1.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, -30, -1, -1));
 
         jLabel9.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel9.setText("Tổng chi phát phát sinh");
@@ -335,6 +348,49 @@ public class TrangTriCong extends javax.swing.JDialog {
             }
         });
         jPanel1.add(btnReset, new org.netbeans.lib.awtextra.AbsoluteConstraints(1280, 730, -1, 30));
+
+        jLabel10.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel10.setText("Ghi chú");
+        jPanel1.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 170, -1, -1));
+
+        txtCPCong.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        txtCPCong.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtCPCongActionPerformed(evt);
+            }
+        });
+        jPanel1.add(txtCPCong, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 230, 190, 35));
+
+        txtCPHoaChuDao.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        jPanel1.add(txtCPHoaChuDao, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 290, 190, 35));
+
+        txtCPHoaPhuDao.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        txtCPHoaPhuDao.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtCPHoaPhuDaoActionPerformed(evt);
+            }
+        });
+        jPanel1.add(txtCPHoaPhuDao, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 350, 190, 35));
+
+        txtCPTham.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        txtCPTham.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtCPThamActionPerformed(evt);
+            }
+        });
+        jPanel1.add(txtCPTham, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 420, 190, 35));
+
+        txtCPBangTen.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        txtCPBangTen.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtCPBangTenActionPerformed(evt);
+            }
+        });
+        jPanel1.add(txtCPBangTen, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 490, 190, 35));
+
+        jLabel11.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel11.setText("Chi phí");
+        jPanel1.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 170, -1, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -424,54 +480,30 @@ public class TrangTriCong extends javax.swing.JDialog {
     }//GEN-LAST:event_txtTongChiPhiActionPerformed
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
-        // TODO add your handling code here:
+        AppStatus.lapHopDong.reloadHopDong();
     }//GEN-LAST:event_btnSaveActionPerformed
 
     private void btnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnResetActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(TrangTriCong.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(TrangTriCong.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(TrangTriCong.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(TrangTriCong.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
+    private void txtCPCongActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCPCongActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtCPCongActionPerformed
 
-        /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                TrangTriCong dialog = new TrangTriCong(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
-    }
+    private void txtCPHoaPhuDaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCPHoaPhuDaoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtCPHoaPhuDaoActionPerformed
+
+    private void txtCPThamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCPThamActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtCPThamActionPerformed
+
+    private void txtCPBangTenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCPBangTenActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtCPBangTenActionPerformed
+
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.ui.swing.HoverButton btnEdit;
@@ -483,6 +515,8 @@ public class TrangTriCong extends javax.swing.JDialog {
     private com.ui.swing.Combobox cbbHoaChuDao;
     private com.ui.swing.Combobox cbbHoaPhuDao;
     private com.ui.swing.Combobox cbbTham;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
@@ -500,11 +534,16 @@ public class TrangTriCong extends javax.swing.JDialog {
     private javax.swing.JLabel lblMaNH26;
     private javax.swing.JLabel lblMaNH8;
     private javax.swing.JTextArea taGhiChu;
+    private javax.swing.JTextField txtCPBangTen;
+    private javax.swing.JTextField txtCPCong;
+    private javax.swing.JTextField txtCPHoaChuDao;
+    private javax.swing.JTextField txtCPHoaPhuDao;
     private javax.swing.JTextField txtCPPSBangTen;
     private javax.swing.JTextField txtCPPSCong;
     private javax.swing.JTextField txtCPPSHoaChuDao;
     private javax.swing.JTextField txtCPPSHoaPhuDao;
     private javax.swing.JTextField txtCPPSTham;
+    private javax.swing.JTextField txtCPTham;
     private javax.swing.JTextField txtChiPhi;
     private javax.swing.JTextField txtGCBangTen;
     private javax.swing.JTextField txtGCCong;

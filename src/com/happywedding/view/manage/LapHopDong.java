@@ -5,20 +5,15 @@
  */
 package com.happywedding.view.manage;
 
-import com.happywedding.dao.HoaDonDAO;
 import com.happywedding.dao.HopDongDAO;
 import com.happywedding.dao.KhachHangDAO;
 import com.happywedding.dao.SanhDAO;
-import com.happywedding.dao.TrangThaiHopDongDAO;
 import com.happywedding.helper.AppStatus;
 import com.happywedding.model.HopDong;
 import com.happywedding.model.KhachHang;
 import com.happywedding.model.Sanh;
-import com.happywedding.model.TrangThaiHopDong;
 import java.awt.Frame;
-import java.awt.event.InputEvent;
 import java.util.List;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFrame;
 
 /**
@@ -46,8 +41,12 @@ public class LapHopDong extends javax.swing.JPanel {
         static String XOA ="XOA";
     }
     
+    
+    
+    
    
     private HopDong hopDong;
+    private KhachHang khachHang;
     private String maHD;
     
     
@@ -90,21 +89,20 @@ public class LapHopDong extends javax.swing.JPanel {
         
     }
     
-    
-    
     public void initCreate(){
         disableFeature();
         
     } 
     
     public void initView(){
-        isView();
+        hopDong = hopDongDAO.findById(maHD);
+        khachHang = khachHangDAO.findById(hopDong.getMaKH()+"");
         btnSaveInfo.setVisible(false);
+        fillFormHopDong(khachHang,hopDong);
+        isView();
     }
     
-    public void loadCbbTrangThai(List<TrangThaiHopDong> list){
-      
-    }
+
    
 
     // các hàm để thêm sửa xóa
@@ -157,30 +155,29 @@ public class LapHopDong extends javax.swing.JPanel {
         }
     }
     
+   
      // các hàm lấy thông tin từ database
     
-    /*
-    Lấy thông tin khách hàng
-    */
-    public KhachHang getKhachHang(String maKH){
-       
-        KhachHang khachHang = khachHangDAO.findById(maKH);
-        
-        return khachHang;
-    }
-     
-    
+   
     /*
     Lấy danh sách các sảnh chưa đặt trong ngày tổ chức
     */
-    public List<Sanh> getSanh(){
+    public List<Sanh> loadSanh(){
         List<Sanh> list = null;
         //List<Sanh> list = sanhDAO.selectSanhConTrong();
         
         return list;
     }
     
-    
+  
+    /*
+    Chỉ cần quan tâm thông tin các khoản chi phí. 
+    Khi dịch vụ đc cập nhật thì thông tin chi phí trên form LapHopDong cũng phải reload
+    */
+    public void reloadHopDong(){
+        hopDong = hopDongDAO.findById(maHD); 
+        fillChiPhi(hopDong.getTienCoc(),hopDong.getChiPhi() , hopDong.getChiPhiPhatSinh(), hopDong.getTongTien());
+    }
     
     // các hàm lấy dữ liệu từ form
     
@@ -207,6 +204,23 @@ public class LapHopDong extends javax.swing.JPanel {
         HopDong hopDong = null;
         return hopDong;
     }
+    
+    
+    // các hàm hiển thị thông tin lên form
+    
+    /*
+    Hiển thị tất cả thông tin lên form
+    */
+    public void fillFormHopDong(KhachHang khachHang,HopDong hopDong ){
+        // hiển thị thông tin lên form
+    }
+    
+    
+    public void fillChiPhi(long tienCoc, long chiPhi,long chiPhiPhatSinh, long tongTien){
+        // hiển thị lên txt chi phí
+    }
+    
+    
     
     
     // các hàm điều chỉnh trạng thái
@@ -1064,7 +1078,7 @@ public class LapHopDong extends javax.swing.JPanel {
     }//GEN-LAST:event_btnBackActionPerformed
 
     private void btnDVDKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDVDKActionPerformed
-         new DichVuDiKem(new JFrame(), true).setVisible(true);
+         new DichVuDiKem(new JFrame(), true,maHD).setVisible(true);
         
     }//GEN-LAST:event_btnDVDKActionPerformed
 
@@ -1074,23 +1088,23 @@ public class LapHopDong extends javax.swing.JPanel {
     }//GEN-LAST:event_btnKyKetActionPerformed
 
     private void btnTTBanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTTBanActionPerformed
-        new TrangTriBanTiec(new JFrame(), true).setVisible(true);
+        new TrangTriBanTiec(new JFrame(), true,maHD).setVisible(true);
     }//GEN-LAST:event_btnTTBanActionPerformed
 
     private void btnTrangTriCongActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTrangTriCongActionPerformed
-      new TrangTriCong(new Frame(),true).setVisible(true);
+      new TrangTriCong(new Frame(),true,maHD).setVisible(true);
     }//GEN-LAST:event_btnTrangTriCongActionPerformed
 
     private void btnTTSanKhauActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTTSanKhauActionPerformed
-         new TrangTriSanKhau(new JFrame(), true).setVisible(true);
+         new TrangTriSanKhau(new JFrame(), true,maHD).setVisible(true);
     }//GEN-LAST:event_btnTTSanKhauActionPerformed
 
     private void btnDatMonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDatMonActionPerformed
-        new DatMon(new JFrame(), true).setVisible(true);
+        new DatMon(new JFrame(), true,maHD).setVisible(true);
     }//GEN-LAST:event_btnDatMonActionPerformed
 
     private void btnNgheThuatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNgheThuatActionPerformed
-         new NgheThuat(new JFrame(), true).setVisible(true);
+         new NgheThuat(new JFrame(), true,maHD).setVisible(true);
     }//GEN-LAST:event_btnNgheThuatActionPerformed
 
     private void btnXuatHoaDonTamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXuatHoaDonTamActionPerformed
@@ -1098,7 +1112,7 @@ public class LapHopDong extends javax.swing.JPanel {
     }//GEN-LAST:event_btnXuatHoaDonTamActionPerformed
 
     private void btnPhanCongActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPhanCongActionPerformed
-        new PhanCong(new JFrame(), true).setVisible(true);
+        new PhanCong(new JFrame(), true,maHD).setVisible(true);
     }//GEN-LAST:event_btnPhanCongActionPerformed
 
     private void txtNgayToChucActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNgayToChucActionPerformed
@@ -1150,7 +1164,7 @@ public class LapHopDong extends javax.swing.JPanel {
     }//GEN-LAST:event_btnSaveActionPerformed
 
     private void btnXuatHoaDonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXuatHoaDonActionPerformed
-       new ChiPhiPhatSinh().setVisible(true);
+       new ChiPhiPhatSinh(maHD).setVisible(true);
     }//GEN-LAST:event_btnXuatHoaDonActionPerformed
 
     private void btnDuyetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDuyetActionPerformed

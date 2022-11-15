@@ -5,7 +5,7 @@
  */
 package com.happywedding.dao;
 
-import com.happywedding.model.ChiTietCSVC;
+import com.happywedding.model.ChiTietDichVu;
 import com.happywedding.model.DichVuDuaDon;
 import com.happywedding.model.HopDong;
 import java.util.List;
