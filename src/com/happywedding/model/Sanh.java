@@ -57,6 +57,14 @@ public class Sanh {
     public void setMaPL(String maPL) {
         this.maPL = maPL;
     }
+    
+    public String getTenPL(){
+        return tenPL;
+    }
+    
+    public void setTenPL(){
+        this.maPL = maPL;
+    }
 
     public long getSucChua() {
         return sucChua;

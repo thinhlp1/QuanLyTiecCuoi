@@ -5,13 +5,17 @@ public class ThucDon {
     private String maTD;
     private String tenTD;
     private long gia;
-    private int ghiChu;
+    private String ghiChu;
 
-    public ThucDon(String maTD, String tenTD, long gia, int ghiChu) {
+    public ThucDon(String maTD, String tenTD, long gia, String ghiChu) {
         this.maTD = maTD;
         this.tenTD = tenTD;
         this.gia = gia;
         this.ghiChu = ghiChu;
+    }
+
+    public ThucDon() {
+   
     }
 
     public String getMaTD() {
@@ -38,11 +42,11 @@ public class ThucDon {
         this.gia = gia;
     }
 
-    public int getGhiChu() {
+    public String getGhiChu() {
         return ghiChu;
     }
 
-    public void setGhiChu(int ghiChu) {
+    public void setGhiChu(String ghiChu) {
         this.ghiChu = ghiChu;
     }
 

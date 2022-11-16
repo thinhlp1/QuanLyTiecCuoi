@@ -53,10 +53,10 @@ public class HopDong {
         this.chiPhi = chiPhi;
     }
 
-    
-
-    public HopDong() {
+    public HopDong(){
+        
     }
+
 
     public String getMaHD() {
         return maHD;
