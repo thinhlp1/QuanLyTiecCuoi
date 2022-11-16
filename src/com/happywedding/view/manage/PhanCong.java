@@ -46,8 +46,6 @@ public class PhanCong extends javax.swing.JDialog {
         txtBatDau = new javax.swing.JTextField();
         jLabel23 = new javax.swing.JLabel();
         txtKetThuc = new javax.swing.JTextField();
-        jLabel14 = new javax.swing.JLabel();
-        cbbXe = new com.ui.swing.Combobox();
         btnSua = new com.ui.swing.InkwellButton();
         btnXoa = new com.ui.swing.InkwellButton();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -133,13 +131,6 @@ public class PhanCong extends javax.swing.JDialog {
         txtKetThuc.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
         pnlUpdate3.add(txtKetThuc, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 430, 160, 35));
 
-        jLabel14.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
-        jLabel14.setText("Xe");
-        pnlUpdate3.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 490, -1, -1));
-
-        cbbXe.setLabeText("");
-        pnlUpdate3.add(cbbXe, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 520, 340, -1));
-
         btnSua.setBackground(new java.awt.Color(0, 153, 0));
         btnSua.setForeground(new java.awt.Color(255, 255, 255));
         btnSua.setText("Thêm");
@@ -157,7 +148,7 @@ public class PhanCong extends javax.swing.JDialog {
 
             },
             new String [] {
-                "Mã nhân viên", "Họ tên nhân viên", "Vai trò", "Ngày phân công", "Bắt đầu", "Kết thúc", "Xe"
+                "Mã nhân viên", "Họ tên nhân viên", "Vai trò", "Ngày phân công", "Bắt đầu", "Kết thúc"
             }
         ));
         jScrollPane2.setViewportView(tblNhanVien);
@@ -207,8 +198,6 @@ public class PhanCong extends javax.swing.JDialog {
     private com.ui.swing.InkwellButton btnSua;
     private com.ui.swing.InkwellButton btnSua1;
     private com.ui.swing.InkwellButton btnXoa;
-    private com.ui.swing.Combobox cbbXe;
-    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;

@@ -18,7 +18,7 @@ public class DatMon extends javax.swing.JDialog {
      */
     public DatMon(java.awt.Frame parent, boolean modal, String maHD) {
         super(parent, modal);
-          this.maHD = maHD;
+        this.maHD = maHD;
         initComponents();
     }
 
@@ -63,14 +63,14 @@ public class DatMon extends javax.swing.JDialog {
 
         tblThucDon.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-
+                {null, null, null, null, null}
             },
             new String [] {
-                "STT", "Tên món", "Giá", "Ghi chú"
+                "STT", "Tên món", "Giá", "Ghi chú", "Phát sinh"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, true
+                false, false, false, true, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {

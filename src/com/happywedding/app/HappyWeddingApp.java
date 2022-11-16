@@ -16,6 +16,7 @@ import com.ui.swing.component.Header;
 import com.ui.swing.component.Menu;
 
 import java.awt.Component;
+import javax.swing.JFrame;
 import net.miginfocom.swing.MigLayout;
 
 public class HappyWeddingApp extends javax.swing.JFrame {
@@ -129,6 +130,7 @@ public class HappyWeddingApp extends javax.swing.JFrame {
     }
 
     private void init() {
+        this.setExtendedState(JFrame.MAXIMIZED_BOTH); 
         layout = new MigLayout("fill", "0[]0[100%, fill]0", "0[fill, top]0");
         mainPane.setLayout(layout);
         menu = new Menu();

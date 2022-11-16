@@ -52,7 +52,7 @@ public class LapHopDong extends javax.swing.JPanel {
     private SanhDAO sanhDAO = new SanhDAO();
     private KhachHangDAO khachHangDAO = new KhachHangDAO();
 
-    private String statusHopDong = StatusHopDong.CHODUYET;
+    private String statusHopDong = StatusHopDong.DATHUCHIEN;
     private boolean isCreate;
 
     /**
@@ -1163,7 +1163,7 @@ public class LapHopDong extends javax.swing.JPanel {
 
     private void btnDanhDauXoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDanhDauXoaActionPerformed
         //hopDongDAO.delete();
-        //DAO TODO khi xóa cần tự xóa thử công các dịch vụ và chi tiết các dịch vụ
+       
     }//GEN-LAST:event_btnDanhDauXoaActionPerformed
 
 

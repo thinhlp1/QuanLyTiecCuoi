@@ -41,10 +41,7 @@ public class HopDong {
         this.ChiPhiPhatSinh = ChiPhiPhatSinh;
         this.TongTien = TongTien;
     }
-    
-    public HopDong(){
-        
-    }
+  
     
     
     
@@ -54,6 +51,9 @@ public class HopDong {
 
     public void setChiPhi(long chiPhi) {
         this.chiPhi = chiPhi;
+    }
+
+    public HopDong() {
     }
 
     

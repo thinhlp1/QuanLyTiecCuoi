@@ -5,7 +5,11 @@
  */
 package com.happywedding.view.manage;
 
+import com.happywedding.dao.ChiTietDichVuDAO;
 import com.happywedding.helper.AppStatus;
+import com.happywedding.model.ChiTietDichVu;
+import com.happywedding.model.HopDongDichVu;
+import java.util.List;
 
 /**
  *
@@ -13,15 +17,128 @@ import com.happywedding.helper.AppStatus;
  */
 public class TrangTriBanTiec extends javax.swing.JDialog {
 
-     private String maHD;
     
+    private String maHD;
+    private ChiTietDichVuDAO chiTietDVDAO = new ChiTietDichVuDAO();
+    
+    
+    static class VatTrangTri{
+        static final String TRAIBAN = "TRAIBAN";
+        static final String AOGHE = "AOGHE";
+        static final String HOACHUDAO = "HOACHUDAO";
+    }
+    
+    private final String maDV = "TTBANTIEC";
+
     /**
      * Creates new form TrangTriCong
      */
     public TrangTriBanTiec(java.awt.Frame parent, boolean modal, String maHD) {
         super(parent, modal);
-          this.maHD = maHD;
+        this.maHD = maHD;
         initComponents();
+        init();
+    }
+    
+    public void init(){
+        List<ChiTietDichVu> listChiTietDichVu = chiTietDVDAO.selectAllChiTietDichVu(maHD, "TTBANTIEC");
+        for (int i = 0; i < listChiTietDichVu.size(); i++) {
+            System.out.println(listChiTietDichVu.get(i).getTenCSVC());
+        }
+    }
+
+    public void insertHopDongDichVu() {
+        HopDongDichVu hddv = new HopDongDichVu();
+
+        hddv.setMaHD(maHD);
+        hddv.setMaDV(maDV);
+        hddv.setMaGoi(null);
+        hddv.setChiPhi(5000000);
+        hddv.setChiPhiPhatSinh(300000);
+        hddv.setGhiChu("test hợp đồng 3");
+
+        chiTietDVDAO.insertDichVu(hddv);
+    }
+
+    public void updateHopDongDichVu() {
+        HopDongDichVu hddv = new HopDongDichVu();
+
+        hddv.setMaHD(maHD);
+        hddv.setMaDV(maDV);
+        hddv.setMaGoi(null);
+        hddv.setChiPhi(5000000);
+        hddv.setChiPhiPhatSinh(300000);
+        hddv.setGhiChu("test hợp đồng 3");
+
+        chiTietDVDAO.updateDichVu(hddv);
+    }
+
+    public void insertChiTietDichVu() {
+       
+        ChiTietDichVu ctdv = new ChiTietDichVu();
+        ctdv.setMaHD(maHD);
+        ctdv.setMaDV(maDV);
+        ctdv.setMaCSVC("HOAHONGDO");
+        ctdv.setChiPhi(3000000);
+        ctdv.setChiPhiPhatSinh(500000);
+        ctdv.setGhiChu("");
+        chiTietDVDAO.insertChiTietDichVy(ctdv);
+        
+        
+     
+        ctdv = new ChiTietDichVu();
+       ctdv.setMaHD(maHD);
+        ctdv.setMaDV(maDV);
+        ctdv.setMaCSVC("HOACUCDO");
+        ctdv.setChiPhi(1000000);
+        ctdv.setChiPhiPhatSinh(100000);
+        ctdv.setGhiChu("");
+        chiTietDVDAO.insertChiTietDichVy(ctdv);
+
+        
+        ctdv = new ChiTietDichVu();
+         ctdv.setMaHD(maHD);
+        ctdv.setMaDV(maDV);
+        ctdv.setMaCSVC("THAMDO");
+        ctdv.setChiPhi(5000000);
+        ctdv.setChiPhiPhatSinh(0);
+        ctdv.setGhiChu("");
+        chiTietDVDAO.insertChiTietDichVy(ctdv);
+        
+      
+
+    }
+
+    public void updateChiTietDichVu() {
+        ChiTietDichVu ctdv = new ChiTietDichVu();
+        ctdv.setMaHD(maHD);
+        ctdv.setMaDV(maDV);
+        ctdv.setMaCSVC("AOGHEDO");
+        ctdv.setChiPhi(3500000);
+        ctdv.setChiPhiPhatSinh(500000);
+        ctdv.setGhiChu("update");
+        chiTietDVDAO.updateChiTietDichVu(ctdv, VatTrangTri.AOGHE);
+
+        ctdv = new ChiTietDichVu();
+        ctdv.setMaHD(maHD);
+        ctdv.setMaDV(maDV);
+        ctdv.setMaCSVC("HOAHONGDO");
+        ctdv.setChiPhi(1000000);
+        ctdv.setChiPhiPhatSinh(100000);
+        ctdv.setGhiChu("");
+        chiTietDVDAO.updateChiTietDichVu(ctdv, VatTrangTri.HOACHUDAO);
+
+        ctdv = new ChiTietDichVu();
+        ctdv.setMaHD(maHD);
+        ctdv.setMaDV(maDV);
+        ctdv.setMaCSVC("THAMDO");
+        ctdv.setChiPhi(5000000);
+        ctdv.setChiPhiPhatSinh(0);
+        ctdv.setGhiChu("");
+        chiTietDVDAO.updateChiTietDichVu(ctdv, VatTrangTri.TRAIBAN);
+
+      
+
     }
 
     /**
@@ -42,19 +159,19 @@ public class TrangTriBanTiec extends javax.swing.JDialog {
         lblMaNH19 = new javax.swing.JLabel();
         cbbAoGhe = new com.ui.swing.Combobox();
         lblMaNH22 = new javax.swing.JLabel();
-        cbbVatTT = new com.ui.swing.Combobox();
+        cbbHoaTT = new com.ui.swing.Combobox();
         lblMaNH24 = new javax.swing.JLabel();
         lblMaNH25 = new javax.swing.JLabel();
         cbbThamTraiban = new com.ui.swing.Combobox();
         txtGCThamTraiBan = new javax.swing.JTextField();
         txtGCAoGhe = new javax.swing.JTextField();
-        txtGCVatTT = new javax.swing.JTextField();
+        txtGCHoaTT = new javax.swing.JTextField();
         txtChiPhi = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         txtCPPSThamTraiBan = new javax.swing.JTextField();
         txtCPPSAoGhe = new javax.swing.JTextField();
-        txtCPPSVatTT = new javax.swing.JTextField();
+        txtCPPSHoaTT = new javax.swing.JTextField();
         lblMaNH8 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         taGhiChu = new javax.swing.JTextArea();
@@ -126,17 +243,17 @@ public class TrangTriBanTiec extends javax.swing.JDialog {
         jPanel1.add(cbbAoGhe, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 290, 330, 35));
 
         lblMaNH22.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
-        lblMaNH22.setText("Vật trang trí");
+        lblMaNH22.setText("Hoa trang trí");
         jPanel1.add(lblMaNH22, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 360, 90, 30));
 
-        cbbVatTT.setToolTipText("");
-        cbbVatTT.setLabeText("");
-        cbbVatTT.addActionListener(new java.awt.event.ActionListener() {
+        cbbHoaTT.setToolTipText("");
+        cbbHoaTT.setLabeText("");
+        cbbHoaTT.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbbVatTTActionPerformed(evt);
+                cbbHoaTTActionPerformed(evt);
             }
         });
-        jPanel1.add(cbbVatTT, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 360, 330, 35));
+        jPanel1.add(cbbHoaTT, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 360, 330, 35));
 
         lblMaNH24.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         lblMaNH24.setText("Chi phí");
@@ -166,13 +283,13 @@ public class TrangTriBanTiec extends javax.swing.JDialog {
         txtGCAoGhe.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         jPanel1.add(txtGCAoGhe, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 280, 360, 35));
 
-        txtGCVatTT.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
-        txtGCVatTT.addActionListener(new java.awt.event.ActionListener() {
+        txtGCHoaTT.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        txtGCHoaTT.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtGCVatTTActionPerformed(evt);
+                txtGCHoaTTActionPerformed(evt);
             }
         });
-        jPanel1.add(txtGCVatTT, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 350, 360, 35));
+        jPanel1.add(txtGCHoaTT, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 350, 360, 35));
 
         txtChiPhi.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         txtChiPhi.addActionListener(new java.awt.event.ActionListener() {
@@ -201,13 +318,13 @@ public class TrangTriBanTiec extends javax.swing.JDialog {
         txtCPPSAoGhe.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         jPanel1.add(txtCPPSAoGhe, new org.netbeans.lib.awtextra.AbsoluteConstraints(1210, 280, 210, 35));
 
-        txtCPPSVatTT.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
-        txtCPPSVatTT.addActionListener(new java.awt.event.ActionListener() {
+        txtCPPSHoaTT.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        txtCPPSHoaTT.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtCPPSVatTTActionPerformed(evt);
+                txtCPPSHoaTTActionPerformed(evt);
             }
         });
-        jPanel1.add(txtCPPSVatTT, new org.netbeans.lib.awtextra.AbsoluteConstraints(1210, 350, 210, 35));
+        jPanel1.add(txtCPPSHoaTT, new org.netbeans.lib.awtextra.AbsoluteConstraints(1210, 350, 210, 35));
 
         lblMaNH8.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         lblMaNH8.setText("Ghi chú");
@@ -329,9 +446,9 @@ public class TrangTriBanTiec extends javax.swing.JDialog {
         // TODO add your handling code here:
     }//GEN-LAST:event_cbbAoGheActionPerformed
 
-    private void cbbVatTTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbbVatTTActionPerformed
+    private void cbbHoaTTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbbHoaTTActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_cbbVatTTActionPerformed
+    }//GEN-LAST:event_cbbHoaTTActionPerformed
 
     private void cbbThamTraibanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbbThamTraibanActionPerformed
         // TODO add your handling code here:
@@ -341,9 +458,9 @@ public class TrangTriBanTiec extends javax.swing.JDialog {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtGCThamTraiBanActionPerformed
 
-    private void txtGCVatTTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtGCVatTTActionPerformed
+    private void txtGCHoaTTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtGCHoaTTActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtGCVatTTActionPerformed
+    }//GEN-LAST:event_txtGCHoaTTActionPerformed
 
     private void txtChiPhiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtChiPhiActionPerformed
         // TODO add your handling code here:
@@ -353,9 +470,9 @@ public class TrangTriBanTiec extends javax.swing.JDialog {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtCPPSThamTraiBanActionPerformed
 
-    private void txtCPPSVatTTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCPPSVatTTActionPerformed
+    private void txtCPPSHoaTTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCPPSHoaTTActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtCPPSVatTTActionPerformed
+    }//GEN-LAST:event_txtCPPSHoaTTActionPerformed
 
     private void txtTongCPPSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTongCPPSActionPerformed
         // TODO add your handling code here:
@@ -366,7 +483,16 @@ public class TrangTriBanTiec extends javax.swing.JDialog {
     }//GEN-LAST:event_txtTongChiPhiActionPerformed
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
-         AppStatus.lapHopDong.reloadHopDong();
+        if (!chiTietDVDAO.checkHopDongDichVu("HD003", "TTSANKHAU")) {
+            System.out.println("INSERT");
+            insertHopDongDichVu();
+            insertChiTietDichVu();
+        } else {
+            System.out.println("UPDATE");
+            updateHopDongDichVu();
+            updateChiTietDichVu();
+        }
+        //AppStatus.lapHopDong.reloadHopDong();
     }//GEN-LAST:event_btnSaveActionPerformed
 
     private void btnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetActionPerformed
@@ -388,8 +514,8 @@ public class TrangTriBanTiec extends javax.swing.JDialog {
     private com.ui.swing.HoverButton btnSave;
     private com.ui.swing.Combobox cbbAoGhe;
     private com.ui.swing.Combobox cbbGoiDV;
+    private com.ui.swing.Combobox cbbHoaTT;
     private com.ui.swing.Combobox cbbThamTraiban;
-    private com.ui.swing.Combobox cbbVatTT;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -408,14 +534,14 @@ public class TrangTriBanTiec extends javax.swing.JDialog {
     private javax.swing.JTextArea taGhiChu;
     private javax.swing.JTextField txtCPAoGhe;
     private javax.swing.JTextField txtCPPSAoGhe;
+    private javax.swing.JTextField txtCPPSHoaTT;
     private javax.swing.JTextField txtCPPSThamTraiBan;
-    private javax.swing.JTextField txtCPPSVatTT;
     private javax.swing.JTextField txtCPVatTT;
     private javax.swing.JTextField txtChiPhi;
     private javax.swing.JTextField txtChiPhiTham;
     private javax.swing.JTextField txtGCAoGhe;
+    private javax.swing.JTextField txtGCHoaTT;
     private javax.swing.JTextField txtGCThamTraiBan;
-    private javax.swing.JTextField txtGCVatTT;
     private javax.swing.JTextField txtTongCPPS;
     private javax.swing.JTextField txtTongChiPhi;
     // End of variables declaration//GEN-END:variables

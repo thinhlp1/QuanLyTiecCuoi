@@ -15,11 +15,11 @@ public class ChiTietDichVu {
     private String tenCSVC;
     private String maDV;
     private String tenDV;
-    private long chiPhi;
+    private long chiPhi;    
     private long ChiPhiPhatSinh;
-    private long ghiChu;
+    private String ghiChu;
 
-    public ChiTietDichVu(String maHD, String maCSVC, String tenCSVC, String maDV, String tenDV, long chiPhi, long ChiPhiPhatSinh, long ghiChu) {
+    public ChiTietDichVu(String maHD, String maCSVC, String tenCSVC, String maDV, String tenDV, long chiPhi, long ChiPhiPhatSinh, String ghiChu) {
         this.maHD = maHD;
         this.maCSVC = maCSVC;
         this.tenCSVC = tenCSVC;
@@ -29,7 +29,19 @@ public class ChiTietDichVu {
         this.ChiPhiPhatSinh = ChiPhiPhatSinh;
         this.ghiChu = ghiChu;
     }
+    
+     public ChiTietDichVu(String maHD, String maCSVC, String tenCSVC, String maDV, long chiPhi, long ChiPhiPhatSinh, String ghiChu) {
+        this.maHD = maHD;
+        this.maCSVC = maCSVC;
+        this.tenCSVC = tenCSVC;
+        this.maDV = maDV;
+        this.chiPhi = chiPhi;
+        this.ChiPhiPhatSinh = ChiPhiPhatSinh;
+        this.ghiChu = ghiChu;
+    }
 
+    public ChiTietDichVu() {
+    }
     
     
     
@@ -94,11 +106,11 @@ public class ChiTietDichVu {
         this.ChiPhiPhatSinh = ChiPhiPhatSinh;
     }
 
-    public long getGhiChu() {
+    public String getGhiChu() {
         return ghiChu;
     }
 
-    public void setGhiChu(long ghiChu) {
+    public void setGhiChu(String ghiChu) {
         this.ghiChu = ghiChu;
     }
     
