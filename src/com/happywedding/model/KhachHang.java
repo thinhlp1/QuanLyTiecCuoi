@@ -21,6 +21,10 @@ public class KhachHang {
         this.hoTenChuRe = hoTenChuRe;
     }
 
+    public KhachHang() {
+  
+    }
+
     public int getMaKH() {
         return maKH;
     }
