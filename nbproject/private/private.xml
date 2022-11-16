@@ -5,6 +5,7 @@
 <<<<<<< HEAD
         <group>
 <<<<<<< HEAD
+<<<<<<< HEAD
             <file>file:/D:/FPT%20POLYTECHNIC/KY%20IIII/Du%20An%201/Project/HappyWedding/src/com/happywedding/dao/ChiTietDatMonDAO.java</file>
             <file>file:/D:/FPT%20POLYTECHNIC/KY%20IIII/Du%20An%201/Project/HappyWedding/src/com/happywedding/app/HappyWeddingApp.java</file>
             <file>file:/D:/FPT%20POLYTECHNIC/KY%20IIII/Du%20An%201/Project/HappyWedding/src/com/happywedding/view/manage/DatMon.java</file>
@@ -28,6 +29,14 @@
             <file>file:/D:/FPT%20POLYTECHNIC/KY%20IIII/Du%20An%201/Project/HappyWedding/src/com/happywedding/dao/HoaDonDAO.java</file>
             <file>file:/D:/FPT%20POLYTECHNIC/KY%20IIII/Du%20An%201/Project/HappyWedding/src/com/happywedding/helper/AppStatus.java</file>
 >>>>>>> origin/main
+>>>>>>> origin/dev_vinh
+=======
+            <file>file:/C:/Users/ACER/Desktop/QuanLyTiecCuoi/src/com/happywedding/dao/PhanCongDAO.java</file>
+            <file>file:/C:/Users/ACER/Desktop/QuanLyTiecCuoi/src/com/happywedding/app/HappyWeddingApp.java</file>
+            <file>file:/C:/Users/ACER/Desktop/QuanLyTiecCuoi/src/com/happywedding/model/ChiTietPhanCong.java</file>
+            <file>file:/C:/Users/ACER/Desktop/QuanLyTiecCuoi/src/com/happywedding/view/manage/QuanLyHopDong.java</file>
+            <file>file:/C:/Users/ACER/Desktop/QuanLyTiecCuoi/src/com/happywedding/dao/HopDongDAO.java</file>
+            <file>file:/C:/Users/ACER/Desktop/QuanLyTiecCuoi/src/com/happywedding/model/PhanCong.java</file>
 >>>>>>> origin/dev_vinh
         </group>
 =======
