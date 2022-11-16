@@ -306,8 +306,7 @@ public class HappyWeddingApp extends javax.swing.JFrame {
         mainPane = new javax.swing.JLayeredPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Há»† THá»�NG QUáº¢N LÃ� Ä�Ã€O Táº O");
-        setPreferredSize(new java.awt.Dimension(1920, 1080));
+        setTitle("HỆ THỐNG QUẢN LÝ ĐÀO TẠO");
 
         mainPane.setBackground(new java.awt.Color(245, 245, 245));
         mainPane.setMaximumSize(new java.awt.Dimension(1920, 1080));
