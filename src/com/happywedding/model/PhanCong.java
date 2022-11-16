@@ -1,8 +1,7 @@
-
 package com.happywedding.model;
 
-
 public class PhanCong {
+
     private int maPC;
     private String maHD;
     private String maNguoiPC;
@@ -11,6 +10,9 @@ public class PhanCong {
         this.maPC = maPC;
         this.maHD = maHD;
         this.maNguoiPC = maNguoiPC;
+    }
+
+    public PhanCong() {
     }
 
     public int getMaPC() {
@@ -37,6 +39,4 @@ public class PhanCong {
         this.maNguoiPC = maNguoiPC;
     }
 
-  
-    
 }

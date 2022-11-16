@@ -3,22 +3,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-<<<<<<< HEAD
-            <file>file:/C:/Users/ACER/Desktop/QuanLyTiecCuoi/src/com/happywedding/dao/AbstractDAO.java</file>
+            <file>file:/C:/Users/ACER/Desktop/QuanLyTiecCuoi/src/com/happywedding/dao/PhanCongDAO.java</file>
+            <file>file:/C:/Users/ACER/Desktop/QuanLyTiecCuoi/src/com/happywedding/app/HappyWeddingApp.java</file>
+            <file>file:/C:/Users/ACER/Desktop/QuanLyTiecCuoi/src/com/happywedding/model/ChiTietPhanCong.java</file>
+            <file>file:/C:/Users/ACER/Desktop/QuanLyTiecCuoi/src/com/happywedding/view/manage/QuanLyHopDong.java</file>
             <file>file:/C:/Users/ACER/Desktop/QuanLyTiecCuoi/src/com/happywedding/dao/HopDongDAO.java</file>
-=======
-            <file>file:/D:/FPT%20POLYTECHNIC/KY%20IIII/Du%20An%201/Project/HappyWedding/src/com/happywedding/dao/KhachHangDAO.java</file>
-            <file>file:/D:/FPT%20POLYTECHNIC/KY%20IIII/Du%20An%201/Project/HappyWedding/src/com/ui/swing/component/Menu.java</file>
-            <file>file:/D:/FPT%20POLYTECHNIC/KY%20IIII/Du%20An%201/Project/HappyWedding/src/com/happywedding/model/DichVuDiKem.java</file>
-            <file>file:/D:/FPT%20POLYTECHNIC/KY%20IIII/Du%20An%201/Project/HappyWedding/src/com/happywedding/app/HappyWeddingApp.java</file>
-            <file>file:/D:/FPT%20POLYTECHNIC/KY%20IIII/Du%20An%201/Project/HappyWedding/src/com/happywedding/model/HoaDon.java</file>
-            <file>file:/D:/FPT%20POLYTECHNIC/KY%20IIII/Du%20An%201/Project/HappyWedding/src/com/happywedding/view/manage/QuanLyHoaDon.java</file>
-            <file>file:/D:/FPT%20POLYTECHNIC/KY%20IIII/Du%20An%201/Project/HappyWedding/src/com/happywedding/view/manage/LapHopDong.java</file>
-            <file>file:/D:/FPT%20POLYTECHNIC/KY%20IIII/Du%20An%201/Project/HappyWedding/src/com/happywedding/dao/HopDongDAO.java</file>
-            <file>file:/D:/FPT%20POLYTECHNIC/KY%20IIII/Du%20An%201/Project/HappyWedding/src/com/happywedding/view/manage/QuanLyHopDong.java</file>
-            <file>file:/D:/FPT%20POLYTECHNIC/KY%20IIII/Du%20An%201/Project/HappyWedding/src/com/happywedding/dao/HoaDonDAO.java</file>
-            <file>file:/D:/FPT%20POLYTECHNIC/KY%20IIII/Du%20An%201/Project/HappyWedding/src/com/happywedding/helper/AppStatus.java</file>
->>>>>>> origin/main
+            <file>file:/C:/Users/ACER/Desktop/QuanLyTiecCuoi/src/com/happywedding/model/PhanCong.java</file>
         </group>
     </open-files>
 </project-private>

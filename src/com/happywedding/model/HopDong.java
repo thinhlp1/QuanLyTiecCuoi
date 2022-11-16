@@ -58,8 +58,6 @@ public class HopDong {
 
     
 
-    public HopDong() {
-    }
 
     public String getMaHD() {
         return maHD;

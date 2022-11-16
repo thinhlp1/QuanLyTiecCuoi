@@ -22,7 +22,7 @@ public class HopDongDAO extends AbstractDAO<HopDong> {
 
     private final String INSERT = "INSERT INTO dbo.HopDong ( MaHD,MaNL,SoLuongBan,Sanh,NgayLap,NgayDuyet,MaND,MaKH,NgayToChuc,ThoiGianBatDau,ThoiGianKetThuc,TrangThai,The,TienCoc,ChiPhiPhatSinh,TongTien) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
     private final String DELETE = "DELETE dbo.HopDong WHERE MaHD = ?";
-    private final String UPDATE = "UPDATE dbo.HopDong SET MaNL = ?,SoLuongBan = ?,Sanh = ?, NgayLap = ?, NgayDuyet = ?, MaND = ?, MaKH = ?, NgayToChuc = ?,ThoiGianBatDau = ?, ThoiGianKetThuc = ?, TrangThai = ?, the = ?, TienCoc = ?,ChiPhiPhatSinh = ?, TongTien = ?";
+    private final String UPDATE = "UPDATE dbo.HopDong SET MaNL = ?,SoLuongBan = ?,Sanh = ?, NgayLap = ?, NgayDuyet = ?, MaND = ?, MaKH = ?, NgayToChuc = ?,ThoiGianBatDau = ?, ThoiGianKetThuc = ?, TrangThai = ?, the = ?, TienCoc = ?,ChiPhiPhatSinh = ?, TongTien = ? where MaHD = ? ";
     private final String SECLECT_ALL = "SELECT * FROM dbo.HopDong";
     private final String SECLECT_BY_ID = "SELECT * FROM dbo.HopDong WHERE MaHD = ? ";
     private final String UPDATE_TRANGTHAI = "UPDATE dbo.HopDong SET TrangThai = ? WHERE MaHD = ?";
