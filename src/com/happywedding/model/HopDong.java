@@ -1,10 +1,9 @@
-
 package com.happywedding.model;
 
 import java.util.Date;
 
-
 public class HopDong {
+
     private String maHD;
     private String maNL;
     private Date ngayLap;
@@ -42,10 +41,7 @@ public class HopDong {
         this.ChiPhiPhatSinh = ChiPhiPhatSinh;
         this.TongTien = TongTien;
     }
-    
-    public HopDong(){
-        
-    }
+  
     
     
     
@@ -58,6 +54,9 @@ public class HopDong {
     }
 
     
+
+    public HopDong() {
+    }
 
     public String getMaHD() {
         return maHD;
@@ -187,5 +186,4 @@ public class HopDong {
         this.TongTien = TongTien;
     }
 
-    
 }

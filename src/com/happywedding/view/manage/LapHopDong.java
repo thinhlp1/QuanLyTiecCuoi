@@ -12,6 +12,7 @@ import com.happywedding.helper.AppStatus;
 import com.happywedding.model.HopDong;
 import com.happywedding.model.KhachHang;
 import com.happywedding.model.Sanh;
+import com.happywedding.model.TrangThaiHopDong;
 import java.awt.Frame;
 import java.util.List;
 import javax.swing.JFrame;
@@ -21,42 +22,38 @@ import javax.swing.JFrame;
  * @author ADMIN
  */
 public class LapHopDong extends javax.swing.JPanel {
-    
-    
-    static class StatusView{
+
+    static class StatusView {
+
         static int DANG_TAO = 0; // đang lập hợp đồng
         static int DANG_XEM = 1; // đang xem chi tiết 
     }
-    
-    static class Role{
+
+    static class Role {
+
         static String QUANLY = "QLCC";
         static String TIEPTAN = "TIEPTAN";
     }
-    
-    static class StatusHopDong{
+
+    static class StatusHopDong {
+
         static String CHODUYET = "CHODUYET";
         static String CHOKYKET = "CHOKYKET";
         static String THUCHIEN = "THUCHIEN";
         static String DATHUCHIEN = "DATHUCHIEN";
-        static String XOA ="XOA";
+        static String XOA = "XOA";
     }
-    
-    
-    
-    
-   
+
     private HopDong hopDong;
     private KhachHang khachHang;
     private String maHD;
-    
-    
+
     private HopDongDAO hopDongDAO = new HopDongDAO();
-    private SanhDAO sanhDAO = new SanhDAO(); 
+    private SanhDAO sanhDAO = new SanhDAO();
     private KhachHangDAO khachHangDAO = new KhachHangDAO();
-     
-    private String statusHopDong = StatusHopDong.CHODUYET;
+
+    private String statusHopDong = StatusHopDong.DATHUCHIEN;
     private boolean isCreate;
-    
 
     /**
      * Creates new form LapHopDong
@@ -65,198 +62,192 @@ public class LapHopDong extends javax.swing.JPanel {
         initComponents();
         this.isCreate = isCreate;
         this.maHD = maHD;
-       
+
         init();
         phanQuyen();
-       
+
     }
-    
-     public LapHopDong(String MaHD) {
+
+    public LapHopDong(String MaHD) {
         initComponents();
-       
+
     }
-     
-    public void init(){
-         if (isCreate == true){
-             txtMaHD.setEditable(true);
+
+    public void init() {
+        if (isCreate == true) {
+            txtMaHD.setEditable(true);
             initCreate();
-        }else{
+        } else {
             initView();
         }
-  
-       // hopDong = hopDongDAO.findById(maHD);
-       // statusHopDong = hopDong.getTrangThai();
-        
+
+        // hopDong = hopDongDAO.findById(maHD);
+        // statusHopDong = hopDong.getTrangThai();
     }
-    
-    public void initCreate(){
+
+    public void initCreate() {
         disableFeature();
-        
-    } 
-    
-    public void initView(){
+
+    }
+
+    public void initView() {
         hopDong = hopDongDAO.findById(maHD);
-        khachHang = khachHangDAO.findById(hopDong.getMaKH()+"");
+        khachHang = khachHangDAO.findById(hopDong.getMaKH() + "");
+
         btnSaveInfo.setVisible(false);
-        fillFormHopDong(khachHang,hopDong);
+        fillFormHopDong(khachHang, hopDong);
         isView();
     }
-    
 
-   
+    public void loadCbbTrangThai(List<TrangThaiHopDong> list) {
+
+    }
 
     // các hàm để thêm sửa xóa
-    public void insertKhachHang(){
+    public void insertKhachHang() {
         KhachHang khacHang = getModelKhachHang();
-        if (khacHang != null){
+        if (khacHang != null) {
             boolean rs = khachHangDAO.insert(khacHang);
         }
-    
+
     }
-    
-    
-    public void insertHopDong(){
+
+    public void insertHopDong() {
         insertKhachHang();
-        
+
         HopDong hopDong = getModelHopDong();
-        if (hopDong != null){
+        if (hopDong != null) {
             boolean rs = hopDongDAO.insert(hopDong);
         }
     }
-    
-    
-    public void updateHopDong(){
+
+    public void updateHopDong() {
         updateKhacHang();
-        
+
         HopDong hopDong = getModelHopDong();
-        if (hopDong != null){
+        if (hopDong != null) {
             boolean rs = hopDongDAO.update(hopDong);
         }
     }
-    
-    public void updateKhacHang(){
-           KhachHang khacHang = getModelKhachHang();
-        if (khacHang != null){
+
+    public void updateKhacHang() {
+        KhachHang khacHang = getModelKhachHang();
+        if (khacHang != null) {
             boolean rs = khachHangDAO.update(khacHang);
         }
     }
-    
-    
-    public void updateTrangThaiHopDong(String trangThai){
-     
-     
-        
-        if (trangThai.endsWith(StatusHopDong.CHODUYET)){
+
+    public void updateTrangThaiHopDong(String trangThai) {
+
+        if (trangThai.endsWith(StatusHopDong.CHODUYET)) {
             statusHopDong = StatusHopDong.CHOKYKET;
+            // hopDongDAO.danhDauXoa( maHD,  statusHopDong);    //DAO TODO   // hàm update trạng thái hợp đồng
+        } else if (trangThai.equals(StatusHopDong.CHOKYKET)) {
+            statusHopDong = StatusHopDong.THUCHIEN;
             //hopDongDAO.updateTrangThai(String maHD, String TrangThai);    //DAO TODO   // hàm update trạng thái hợp đồng
-        }else if (trangThai.equals(StatusHopDong.CHOKYKET)){
-             statusHopDong = StatusHopDong.THUCHIEN;
-              //hopDongDAO.updateTrangThai(String maHD, String TrangThai);    //DAO TODO   // hàm update trạng thái hợp đồng
         }
     }
-    
-   
-     // các hàm lấy thông tin từ database
-    
-   
+    // các hàm lấy thông tin từ database
+
+    /*
+    Lấy thông tin khách hàng
+     */
+    public KhachHang getKhachHang(String maKH) {
+
+        KhachHang khachHang = khachHangDAO.findById(maKH);
+
+        return khachHang;
+    }
+
     /*
     Lấy danh sách các sảnh chưa đặt trong ngày tổ chức
-    */
-    public List<Sanh> loadSanh(){
+     */
+   
+    // các hàm lấy thông tin từ database
+
+    /*
+    Lấy danh sách các sảnh chưa đặt trong ngày tổ chức
+     */
+
+    public List<Sanh> loadSanh() {
         List<Sanh> list = null;
         //List<Sanh> list = sanhDAO.selectSanhConTrong();
-        
+
         return list;
     }
-    
-  
+
     /*
     Chỉ cần quan tâm thông tin các khoản chi phí. 
     Khi dịch vụ đc cập nhật thì thông tin chi phí trên form LapHopDong cũng phải reload
-    */
-    public void reloadHopDong(){
-        hopDong = hopDongDAO.findById(maHD); 
-        fillChiPhi(hopDong.getTienCoc(),hopDong.getChiPhi() , hopDong.getChiPhiPhatSinh(), hopDong.getTongTien());
+     */
+    public void reloadHopDong() {
+        hopDong = hopDongDAO.findById(maHD);
+        fillChiPhi(hopDong.getTienCoc(), hopDong.getChiPhi(), hopDong.getChiPhiPhatSinh(), hopDong.getTongTien());
     }
-    
+
     // các hàm lấy dữ liệu từ form
-    
     /*
     Lấy thông tin khách hàng từ form
-    */
-    public KhachHang getModelKhachHang(){
+     */
+    public KhachHang getModelKhachHang() {
         // valid thông tin
-        
+
         // lấy thông tin từ form;
-        
-        
         KhachHang modelKhacHang = null;
         return modelKhacHang;
     }
-    
+
     /*
     Lấy thông tin hợp đồng từ form
-    */
-    public HopDong getModelHopDong(){
-          // valid thông tin
-        
+     */
+    public HopDong getModelHopDong() {
+        // valid thông tin
+
         // lấy thông tin từ form;
         HopDong hopDong = null;
         return hopDong;
     }
-    
-    
+
     // các hàm hiển thị thông tin lên form
-    
     /*
     Hiển thị tất cả thông tin lên form
-    */
-    public void fillFormHopDong(KhachHang khachHang,HopDong hopDong ){
+     */
+    public void fillFormHopDong(KhachHang khachHang, HopDong hopDong) {
         // hiển thị thông tin lên form
     }
-    
-    
-    public void fillChiPhi(long tienCoc, long chiPhi,long chiPhiPhatSinh, long tongTien){
+
+    public void fillChiPhi(long tienCoc, long chiPhi, long chiPhiPhatSinh, long tongTien) {
         // hiển thị lên txt chi phí
     }
-    
-    
-    
-    
+
     // các hàm điều chỉnh trạng thái
-     
-    
-    
-    
-    
     /*
     Khi không hợp đồng chưa được lưu lần 1 sẽ ko đc chọn dịch vụ.
-    */
-    public void disableFeature(){
+     */
+    public void disableFeature() {
         pnlDichVu.setVisible(false);
         lbldv.setVisible(false);
         pnlBtn.setVisible(false);
     }
-    
+
     /*
     * lấy thông tin trên hợp đồng lưu trước lần 1 và cho chọn dịch vụ
-    */
-    public void saveInfo(){
-        
-        
+     */
+    public void saveInfo() {
+
         pnlDichVu.setVisible(true);
         lbldv.setVisible(true);
         pnlBtn.setVisible(true);
         txtMaHD.setEditable(false);
     }
-    
-    public void saveHopDong(){
+
+    public void saveHopDong() {
         btnDanhDauXoa.setVisible(true);
         txtMaHD.setEditable(false);
     }
-    
-    public void isView(){
-        
+
+    public void isView() {
+
         txtHoTenKhachHang.setEditable(false);
         txtHoTenChuRe.setEditable(false);
         txtHoTenCoDau.setEditable(false);
@@ -264,7 +255,7 @@ public class LapHopDong extends javax.swing.JPanel {
         txtCMND.setEditable(false);
         taDiaChi.setEditable(false);
         txtMaHD.setEditable(false);
-        
+
         txtNgayToChuc.setEditable(false);
         txtBatDau.setEditable(false);
         txtKetThuc.setEditable(false);
@@ -272,9 +263,7 @@ public class LapHopDong extends javax.swing.JPanel {
         cbbSanh.setEditable(false);
         txtHoTenKhachHang.setEditable(false);
     }
-    
- 
-    
+
     /*
     TH1: Người dùng là quản lý"
     - Khi đang lập hợp đồng, được lưu, duyệt, xóa
@@ -288,93 +277,86 @@ public class LapHopDong extends javax.swing.JPanel {
        khi có hóa đơn thì ko thể xuất lại, trừ khi xóa hóa đơn thì sẽ được xuất lại.
     - Khi đã thực hiện thì chỉ có thể xem 
     
-    */
-    public void phanQuyen(){
-        if (AppStatus.ROLE.equals(Role.QUANLY)){ 
-           if (statusHopDong.equals(StatusHopDong.CHODUYET)){
-               btnSave.setVisible(true);
-              
-               btnDuyet.setVisible(true);
-               btnKyKet.setVisible(false);
-               btnDanhDauXoa.setVisible(false);
-               btnPhanCong.setVisible(false);
-               btnXuatHoaDon.setVisible(false);
-               btnXuatHoaDonTam.setVisible(false);
-           }else if (statusHopDong.equals(StatusHopDong.CHOKYKET)){
-               btnSave.setVisible(true);          
-               btnKyKet.setVisible(true);
-               btnDuyet.setVisible(false);
-               btnDanhDauXoa.setVisible(true);
-               btnPhanCong.setVisible(false);
-               btnXuatHoaDon.setVisible(false);
-               btnXuatHoaDonTam.setVisible(false);
-           }else if (statusHopDong.equals(StatusHopDong.THUCHIEN)){
-               isView();
-               btnSave.setVisible(false);          
-               btnKyKet.setVisible(false);
-               btnDuyet.setVisible(false);
-               btnDanhDauXoa.setVisible(true);
-               btnPhanCong.setVisible(true);
-               btnXuatHoaDon.setVisible(false);
-               btnXuatHoaDonTam.setVisible(true);
-           }
-           else if (statusHopDong.equals(StatusHopDong.DATHUCHIEN)){
-               isView();
-               btnSave.setVisible(false);          
-               btnKyKet.setVisible(false);
-               btnDuyet.setVisible(false);
-               btnDanhDauXoa.setVisible(false);
-               btnPhanCong.setVisible(false);
-               btnXuatHoaDon.setVisible(true);
-               btnXuatHoaDonTam.setVisible(false);
-           }
-               
-        }else if (AppStatus.ROLE.equals(Role.TIEPTAN)){
-             if (statusHopDong.equals(StatusHopDong.CHODUYET)){
-               btnSave.setVisible(false);
-               btnDuyet.setVisible(false);
-               btnKyKet.setVisible(false);
-               btnDanhDauXoa.setVisible(false);
-               btnPhanCong.setVisible(false);
-               btnXuatHoaDon.setVisible(false);
-               btnXuatHoaDonTam.setVisible(false);
-               
-           }else if (statusHopDong.equals(StatusHopDong.CHOKYKET)){
-               btnSave.setVisible(false);          
-               btnKyKet.setVisible(true);
-               btnDuyet.setVisible(false);
-               btnDanhDauXoa.setVisible(false);
-               btnPhanCong.setVisible(false);
-               btnXuatHoaDon.setVisible(false);
-               btnXuatHoaDonTam.setVisible(false);
-           }else if (statusHopDong.equals(StatusHopDong.THUCHIEN)){
-               isView();
-               btnSave.setVisible(false);          
-               btnKyKet.setVisible(false);
-               btnDuyet.setVisible(false);
-               btnDanhDauXoa.setVisible(false);
-               btnPhanCong.setVisible(false);
-               btnXuatHoaDon.setVisible(false);
-               btnXuatHoaDonTam.setVisible(true);
-           }
-           else if (statusHopDong.equals(StatusHopDong.DATHUCHIEN)){
-               isView();
-               btnSave.setVisible(false);          
-               btnKyKet.setVisible(false);
-               btnDuyet.setVisible(false);
-               btnDanhDauXoa.setVisible(false);
-               btnPhanCong.setVisible(false);
-               btnXuatHoaDon.setVisible(true);
-               btnXuatHoaDonTam.setVisible(false);
-           }
+     */
+    public void phanQuyen() {
+        if (AppStatus.ROLE.equals(Role.QUANLY)) {
+            if (statusHopDong.equals(StatusHopDong.CHODUYET)) {
+                btnSave.setVisible(true);
+
+                btnDuyet.setVisible(true);
+                btnKyKet.setVisible(false);
+                btnDanhDauXoa.setVisible(false);
+                btnPhanCong.setVisible(false);
+                btnXuatHoaDon.setVisible(false);
+                btnXuatHoaDonTam.setVisible(false);
+            } else if (statusHopDong.equals(StatusHopDong.CHOKYKET)) {
+                btnSave.setVisible(true);
+                btnKyKet.setVisible(true);
+                btnDuyet.setVisible(false);
+                btnDanhDauXoa.setVisible(true);
+                btnPhanCong.setVisible(false);
+                btnXuatHoaDon.setVisible(false);
+                btnXuatHoaDonTam.setVisible(false);
+            } else if (statusHopDong.equals(StatusHopDong.THUCHIEN)) {
+                isView();
+                btnSave.setVisible(false);
+                btnKyKet.setVisible(false);
+                btnDuyet.setVisible(false);
+                btnDanhDauXoa.setVisible(true);
+                btnPhanCong.setVisible(true);
+                btnXuatHoaDon.setVisible(false);
+                btnXuatHoaDonTam.setVisible(true);
+            } else if (statusHopDong.equals(StatusHopDong.DATHUCHIEN)) {
+                isView();
+                btnSave.setVisible(false);
+                btnKyKet.setVisible(false);
+                btnDuyet.setVisible(false);
+                btnDanhDauXoa.setVisible(false);
+                btnPhanCong.setVisible(false);
+                btnXuatHoaDon.setVisible(true);
+                btnXuatHoaDonTam.setVisible(false);
+            }
+
+        } else if (AppStatus.ROLE.equals(Role.TIEPTAN)) {
+            if (statusHopDong.equals(StatusHopDong.CHODUYET)) {
+                btnSave.setVisible(false);
+                btnDuyet.setVisible(false);
+                btnKyKet.setVisible(false);
+                btnDanhDauXoa.setVisible(false);
+                btnPhanCong.setVisible(false);
+                btnXuatHoaDon.setVisible(false);
+                btnXuatHoaDonTam.setVisible(false);
+
+            } else if (statusHopDong.equals(StatusHopDong.CHOKYKET)) {
+                btnSave.setVisible(false);
+                btnKyKet.setVisible(true);
+                btnDuyet.setVisible(false);
+                btnDanhDauXoa.setVisible(false);
+                btnPhanCong.setVisible(false);
+                btnXuatHoaDon.setVisible(false);
+                btnXuatHoaDonTam.setVisible(false);
+            } else if (statusHopDong.equals(StatusHopDong.THUCHIEN)) {
+                isView();
+                btnSave.setVisible(false);
+                btnKyKet.setVisible(false);
+                btnDuyet.setVisible(false);
+                btnDanhDauXoa.setVisible(false);
+                btnPhanCong.setVisible(false);
+                btnXuatHoaDon.setVisible(false);
+                btnXuatHoaDonTam.setVisible(true);
+            } else if (statusHopDong.equals(StatusHopDong.DATHUCHIEN)) {
+                isView();
+                btnSave.setVisible(false);
+                btnKyKet.setVisible(false);
+                btnDuyet.setVisible(false);
+                btnDanhDauXoa.setVisible(false);
+                btnPhanCong.setVisible(false);
+                btnXuatHoaDon.setVisible(true);
+                btnXuatHoaDonTam.setVisible(false);
+            }
         }
-        
+
     }
-    
-    
-    
-    
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -1038,7 +1020,7 @@ public class LapHopDong extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnBackMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnBackMouseClicked
-      
+
     }//GEN-LAST:event_btnBackMouseClicked
 
     private void txtHoTenKhachHangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtHoTenKhachHangActionPerformed
@@ -1078,8 +1060,8 @@ public class LapHopDong extends javax.swing.JPanel {
     }//GEN-LAST:event_btnBackActionPerformed
 
     private void btnDVDKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDVDKActionPerformed
-         new DichVuDiKem(new JFrame(), true,maHD).setVisible(true);
-        
+
+        new DichVuDiKem(new JFrame(), true, maHD).setVisible(true);
     }//GEN-LAST:event_btnDVDKActionPerformed
 
     private void btnKyKetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKyKetActionPerformed
@@ -1088,23 +1070,26 @@ public class LapHopDong extends javax.swing.JPanel {
     }//GEN-LAST:event_btnKyKetActionPerformed
 
     private void btnTTBanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTTBanActionPerformed
-        new TrangTriBanTiec(new JFrame(), true,maHD).setVisible(true);
+        new TrangTriBanTiec(new JFrame(), true, maHD).setVisible(true);
     }//GEN-LAST:event_btnTTBanActionPerformed
 
     private void btnTrangTriCongActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTrangTriCongActionPerformed
-      new TrangTriCong(new Frame(),true,maHD).setVisible(true);
+
+        new TrangTriCong(new Frame(), true,maHD).setVisible(true);
     }//GEN-LAST:event_btnTrangTriCongActionPerformed
 
+
     private void btnTTSanKhauActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTTSanKhauActionPerformed
-         new TrangTriSanKhau(new JFrame(), true,maHD).setVisible(true);
+        new TrangTriSanKhau(new JFrame(), true, maHD).setVisible(true);
     }//GEN-LAST:event_btnTTSanKhauActionPerformed
 
     private void btnDatMonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDatMonActionPerformed
-        new DatMon(new JFrame(), true,maHD).setVisible(true);
+        new DatMon(new JFrame(), true, maHD).setVisible(true);
     }//GEN-LAST:event_btnDatMonActionPerformed
 
     private void btnNgheThuatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNgheThuatActionPerformed
-         new NgheThuat(new JFrame(), true,maHD).setVisible(true);
+
+        new NgheThuat(new JFrame(), true, maHD).setVisible(true);
     }//GEN-LAST:event_btnNgheThuatActionPerformed
 
     private void btnXuatHoaDonTamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXuatHoaDonTamActionPerformed
@@ -1112,7 +1097,7 @@ public class LapHopDong extends javax.swing.JPanel {
     }//GEN-LAST:event_btnXuatHoaDonTamActionPerformed
 
     private void btnPhanCongActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPhanCongActionPerformed
-        new PhanCong(new JFrame(), true,maHD).setVisible(true);
+        new PhanCong(new JFrame(), true, maHD).setVisible(true);
     }//GEN-LAST:event_btnPhanCongActionPerformed
 
     private void txtNgayToChucActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNgayToChucActionPerformed
@@ -1150,7 +1135,7 @@ public class LapHopDong extends javax.swing.JPanel {
     private void btnSaveInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveInfoActionPerformed
         saveInfo();
         btnSaveInfo.setVisible(false);
-        
+
         // thêm khách hàng và hợp đồng vào csdl
         //insertHopDong();
     }//GEN-LAST:event_btnSaveInfoActionPerformed
@@ -1160,18 +1145,19 @@ public class LapHopDong extends javax.swing.JPanel {
         phanQuyen();
         saveHopDong();
         // update thong tin hop dong 
-       // updateHopDong();
+        // updateHopDong();
     }//GEN-LAST:event_btnSaveActionPerformed
 
     private void btnXuatHoaDonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXuatHoaDonActionPerformed
-       new ChiPhiPhatSinh(maHD).setVisible(true);
+
+        new ChiPhiPhatSinh(maHD).setVisible(true);
     }//GEN-LAST:event_btnXuatHoaDonActionPerformed
 
     private void btnDuyetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDuyetActionPerformed
-    updateTrangThaiHopDong(StatusHopDong.CHODUYET);
-       phanQuyen(); 
-       saveHopDong();
-       // update trạng thái hợp đồng sang chờ ký kết
+        updateTrangThaiHopDong(StatusHopDong.CHODUYET);
+        phanQuyen();
+        saveHopDong();
+        // update trạng thái hợp đồng sang chờ ký kết
         //updateHopDong();
     }//GEN-LAST:event_btnDuyetActionPerformed
 
