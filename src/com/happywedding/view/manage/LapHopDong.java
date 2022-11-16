@@ -52,7 +52,7 @@ public class LapHopDong extends javax.swing.JPanel {
     private SanhDAO sanhDAO = new SanhDAO();
     private KhachHangDAO khachHangDAO = new KhachHangDAO();
 
-    private String statusHopDong = StatusHopDong.DATHUCHIEN;
+    private String statusHopDong = StatusHopDong.CHODUYET;
     private boolean isCreate;
 
     /**
