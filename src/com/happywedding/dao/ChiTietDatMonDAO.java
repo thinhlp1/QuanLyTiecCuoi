@@ -13,58 +13,67 @@ import java.util.List;
  * @author ADMIN
  */
 public class ChiTietDatMonDAO {
-     /*
+
+    private final String INSERT_DICHVUDATMON = "INSERT DichVuDatMon (MaHD,MaTD,ChiPhi, GhiChu) VALUES (?,?,?,?)";
+    private final String UPDATE_DICHVUDATMON = "UPDATE DichVuDatMon\n"
+            + "SET MaTD = ?, ChiPhi = ?, GhiChu = ?\n"
+            + "WHERE MaHD = ?";
+    private final String SELECT_DICHVUDATMON = "SELECT MaHD,MaTD,ChiPhi, \n"
+            + "( SELECT SUM(ChiPhiPhatSinh)  FROM ChiTietDatMon WHERE MaHD = ?) AS ChiPhiPhatSinh,\n"
+            + "GhiChu FROM DichVuDatMon WHERE MaHD = ?";
+    
+    /*
     thêm vào bảng dịch vụ đặt món
-    */
-    public boolean insertDichVuDatMon(String maHD, long ChiPhi){
-         throw new UnsupportedOperationException("Not supported yet.");
+     */
+    public boolean insertDichVuDatMon(String maHD, long ChiPhi) {
+        
     }
-    
-    public boolean updateDichVuDatMon(String maHD, long ChiPhi){
-         throw new UnsupportedOperationException("Not supported yet.");
+
+    public boolean updateDichVuDatMon(String maHD, long ChiPhi) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
-    
-    public boolean insertChiTietDatMon(String maHD, String maMA, String thuTu,String ghiChu ){       
-        throw new UnsupportedOperationException("Not supported yet."); 
+
+    public boolean insertChiTietDatMon(String maHD, String maMA, String thuTu, String ghiChu) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
-    
-    public boolean updateChiTietDatMon(String maHD, String maMA, String thuTu,String ghiChu ){       
-        throw new UnsupportedOperationException("Not supported yet."); 
+
+    public boolean updateChiTietDatMon(String maHD, String maMA, String thuTu, String ghiChu) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
-    
+
     /*
     reset lại các món ăn trong ChiTietDatMon
-    */
-    public boolean removeAllChiTietDatMon(String maHD){
-         throw new UnsupportedOperationException("Not supported yet."); 
+     */
+    public boolean removeAllChiTietDatMon(String maHD) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
-    
+
     /*
     lấy các món ăn có trong thực đơn
-    */
-    public List<MonAn> selectByMaThucDon(String maTD){
-        throw new UnsupportedOperationException("Not supported yet."); 
+     */
+    public List<MonAn> selectByMaThucDon(String maTD) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
-    
+
     /*
     lấy các món ăn người dùng đặt
-    */
-    public List<MonAn> selectByMaHD(String maHD){
-        throw new UnsupportedOperationException("Not supported yet."); 
+     */
+    public List<MonAn> selectByMaHD(String maHD) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
-    
+
     /*
     lấy các món ăn ko có trong thực đơn
-    */
-    public List<MonAn> selectNotinHopDong(String maTD){
-        throw new UnsupportedOperationException("Not supported yet."); 
+     */
+    public List<MonAn> selectNotinHopDong(String maTD) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
-    
+
     /*
     lấy các món ăn ko có trong thực đơn
-    */
-    public List<MonAn> selectNotinThucDon(String maHD){
-        throw new UnsupportedOperationException("Not supported yet."); 
+     */
+    public List<MonAn> selectNotinThucDon(String maHD) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
-    
+
 }

@@ -19,7 +19,8 @@ public class PhanCongDAO {
     public boolean insertPhanCong(PhanCong pc){
         throw new UnsupportedOperationException("Not supported yet.");
     }
-        
+    
+    
     
     public boolean insert(ChiTietPhanCong entity) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

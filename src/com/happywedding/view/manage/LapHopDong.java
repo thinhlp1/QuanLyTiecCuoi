@@ -1177,7 +1177,7 @@ public class LapHopDong extends javax.swing.JPanel {
 
     private void btnDanhDauXoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDanhDauXoaActionPerformed
         //hopDongDAO.delete();
-        //DAO TODO khi xóa cần tự xóa thử công các dịch vụ và chi tiết các dịch vụ
+       
     }//GEN-LAST:event_btnDanhDauXoaActionPerformed
 
 

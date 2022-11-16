@@ -12,15 +12,43 @@ package com.happywedding.model;
 public class HopDongDichVu {
     private String maHD;
     private String maDV;
+    private String maGoi;
+    
     private String ghiChu;
+    private long chiPhiPhatSinh;
     private long chiPhi;
 
-    public HopDongDichVu(String maHD, String maDV, String ghiChu, long chiPhi) {
+    public HopDongDichVu(String maHD, String maDV, String maGoi, String ghiChu, long chiPhiPhatSinh, long chiPhi) {
         this.maHD = maHD;
         this.maDV = maDV;
+        this.maGoi = maGoi;
         this.ghiChu = ghiChu;
+        this.chiPhiPhatSinh = chiPhiPhatSinh;
         this.chiPhi = chiPhi;
     }
+    public HopDongDichVu(){
+        
+    }
+    
+    
+    
+    public String getMaGoi() {
+        return maGoi;
+    }
+
+    public void setMaGoi(String maGoi) {
+        this.maGoi = maGoi;
+    }
+
+    public long getChiPhiPhatSinh() {
+        return chiPhiPhatSinh;
+    }
+
+    public void setChiPhiPhatSinh(long chiPhiPhatSinh) {
+        this.chiPhiPhatSinh = chiPhiPhatSinh;
+    }
+
+    
 
     public String getMaHD() {
         return maHD;
