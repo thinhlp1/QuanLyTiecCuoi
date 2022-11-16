@@ -19,13 +19,13 @@ import java.util.List;
  */
 public class SanhDAO extends AbstractDAO<Sanh>{
     
-    private final String INSERT_SANH = "INSERT INTO Sanh (MaSanh, , ThoiLuong, NgayKG, GhiChu, MaNV) VALUES (?, ?, ?, ?, ?, ?)";
+    private final String INSERT_SANH = "INSERT INTO Sanh (MaSanh, TenSanh, MaPL, TenPL, SucChua, GiaThueSanh, GiaBan) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-    private final String UPDATE_SANH = "UPDATE Sanh SET MaCD=?, HocPhi=?, ThoiLuong=?, NgayKG=?, GhiChu=?, MaNV=? WHERE\n"
-            + "MaKH=?";
-    private final String DELELTE_SANH = "DELETE FROM Sanh WHERE MaKH=?";
+    private final String UPDATE_SANH = "UPDATE Sanh SET MaSanh=?, TenSanh=?, MaPL=?, TenPL=?, SucChua=?, GiaThueSanh=?, GiaBan=? WHERE\n"
+            + "MaSanh=?";
+    private final String DELELTE_SANH = "DELETE FROM Sanh WHERE MaSanh=?";
     private final String SELECT_ALL = "SELECT * FROM Sanh";
-    private final String SELECT_BY_ID = "SELECT * FROM Sanh WHERE MaKH=?";
+    private final String SELECT_BY_ID = "SELECT * FROM Sanh WHERE MaSanh=?";
    
 
     public boolean insert(Sanh sanh) {
@@ -33,6 +33,7 @@ public class SanhDAO extends AbstractDAO<Sanh>{
                 sanh.getMaSanh(),
                 sanh.getTenSanh(),
                 sanh.getMaPL(),
+                sanh.getTenPL(),
                 sanh.getSucChua(),
                 sanh.getGiaThueSanh(),
                 sanh.getGiaBan());
@@ -44,6 +45,7 @@ public class SanhDAO extends AbstractDAO<Sanh>{
                 sanh.getMaSanh(),
                 sanh.getTenSanh(),
                 sanh.getMaPL(),
+                sanh.getTenPL(),
                 sanh.getSucChua(),
                 sanh.getGiaThueSanh(),
                 sanh.getGiaBan());
@@ -55,7 +57,7 @@ public class SanhDAO extends AbstractDAO<Sanh>{
     }
 
     @Override
-    public List select() {
+    public List<Sanh> select() {
         return select(SELECT_ALL);
     }
 
@@ -72,11 +74,8 @@ public class SanhDAO extends AbstractDAO<Sanh>{
             try {
                 rs = JDBCHelper.executeQuery(sql, args);
                 while (rs.next()) {
-                    //Sanh sanh = readFromResultSet(rs);
-                 //   list.add(sanh);
-                 //fdsfsdfsdfsdfds
-                 //sdfdsfdsfsfsd
-                 //sdfdsfdsfdsfds
+                    Sanh sanh = readFromResultSet(rs);
+                    list.add(sanh);
                 }
             } finally {
                 rs.getStatement().getConnection().close();
@@ -89,29 +88,20 @@ public class SanhDAO extends AbstractDAO<Sanh>{
 
     
     // sửa lại
-//    private Sanh readFromResultSet(ResultSet rs) throws SQLException {
-//        Sanh sanh = new Sanh();
+    private Sanh readFromResultSet(ResultSet rs) throws SQLException {
+        
+        Sanh sanh = new Sanh();
+
+        sanh.setMaSanh(rs.getString("MaSanh"));
+        sanh.setTenSanh(rs.getString("TenSanh"));
+        sanh.setMaPL(rs.getString("MaPL"));
+        sanh.setTenPL(rs.getString("TenPL"));
+        sanh.setSucChua(rs.getInt("SucChua"));
+        sanh.setGiaThueSanh(rs.getLong("GiaThueSanh"));
+        sanh.setGiaBan(rs.getLong("GiaBan"));
+
+        return sanh;
 //
-//        sanh.setMaSanh(rs.getInt("MaKH"));
-//        sanh.setFee(rs.getDouble("HocPhi"));
-//        sanh.setDuration(rs.getInt("ThoiLuong"));
-//        sanh.setOpeningDay(rs.getDate("NgayKG"));
-//        sanh.setNote(rs.getString("GhiChu"));
-//       
-//        sanh.setMaNV(rs.getString("MaNV"));
-//        sanh.setCreateDay(rs.getDate("NgayTao"));
-//        sanh.setMaCD(rs.getString("MaCD"));
-//
-//        return sanh;
-//
-//    }
-    
-//    public List<Sanh> select() {
-//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//    }
-//
-//    public Sanh findById(String id) {
-//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//    }
-//    
+    }
 }
+    

@@ -12,7 +12,7 @@ import java.util.Date;
  * @author ADMIN
  */
 public class ChiTietPhanCong {
-  private String maNV;
+  private String maNV;  
   private String tenNV;
   private String maVT;
   private Date ngayPhanCong;
