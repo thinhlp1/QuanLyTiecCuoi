@@ -5,17 +5,20 @@
  */
 package com.happywedding.view.manage;
 
+import com.happywedding.helper.AppStatus;
+
 /**
  *
  * @author ADMIN
  */
 public class DichVuDiKem extends javax.swing.JDialog {
-
+     private String maHD;
     /**
      * Creates new form DichVuDiKem
      */
-    public DichVuDiKem(java.awt.Frame parent, boolean modal) {
+    public DichVuDiKem(java.awt.Frame parent, boolean modal, String maHD) {
         super(parent, modal);
+          this.maHD = maHD;
         initComponents();
     }
 
@@ -111,6 +114,11 @@ public class DichVuDiKem extends javax.swing.JDialog {
         btnSave.setLabelColor(java.awt.Color.white);
         btnSave.setLableColorClick(java.awt.Color.white);
         btnSave.setRadius(15);
+        btnSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSaveActionPerformed(evt);
+            }
+        });
         jPanel1.add(btnSave, new org.netbeans.lib.awtextra.AbsoluteConstraints(950, 800, -1, 30));
 
         btnReset.setBackground(new java.awt.Color(24, 37, 153));
@@ -206,47 +214,11 @@ public class DichVuDiKem extends javax.swing.JDialog {
       
     }//GEN-LAST:event_listDichVuMouseClicked
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(DichVuDiKem.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(DichVuDiKem.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(DichVuDiKem.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(DichVuDiKem.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+         AppStatus.lapHopDong.reloadHopDong();
+    }//GEN-LAST:event_btnSaveActionPerformed
 
-        /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                DichVuDiKem dialog = new DichVuDiKem(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
-    }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.ui.swing.InkwellButton btnBack;

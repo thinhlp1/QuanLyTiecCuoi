@@ -5,17 +5,22 @@
  */
 package com.happywedding.view.manage;
 
+import com.happywedding.helper.AppStatus;
+
 /**
  *
  * @author ADMIN
  */
 public class TrangTriBanTiec extends javax.swing.JDialog {
 
+     private String maHD;
+    
     /**
      * Creates new form TrangTriCong
      */
-    public TrangTriBanTiec(java.awt.Frame parent, boolean modal) {
+    public TrangTriBanTiec(java.awt.Frame parent, boolean modal, String maHD) {
         super(parent, modal);
+          this.maHD = maHD;
         initComponents();
     }
 
@@ -59,6 +64,10 @@ public class TrangTriBanTiec extends javax.swing.JDialog {
         jLabel9 = new javax.swing.JLabel();
         btnSave = new com.ui.swing.HoverButton();
         btnReset = new com.ui.swing.HoverButton();
+        jLabel10 = new javax.swing.JLabel();
+        txtChiPhiTham = new javax.swing.JTextField();
+        txtCPAoGhe = new javax.swing.JTextField();
+        txtCPVatTT = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -152,10 +161,10 @@ public class TrangTriBanTiec extends javax.swing.JDialog {
                 txtGCThamTraiBanActionPerformed(evt);
             }
         });
-        jPanel1.add(txtGCThamTraiBan, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 230, 360, 35));
+        jPanel1.add(txtGCThamTraiBan, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 220, 360, 35));
 
         txtGCAoGhe.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
-        jPanel1.add(txtGCAoGhe, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 290, 360, 35));
+        jPanel1.add(txtGCAoGhe, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 280, 360, 35));
 
         txtGCVatTT.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         txtGCVatTT.addActionListener(new java.awt.event.ActionListener() {
@@ -163,7 +172,7 @@ public class TrangTriBanTiec extends javax.swing.JDialog {
                 txtGCVatTTActionPerformed(evt);
             }
         });
-        jPanel1.add(txtGCVatTT, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 360, 360, 35));
+        jPanel1.add(txtGCVatTT, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 350, 360, 35));
 
         txtChiPhi.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         txtChiPhi.addActionListener(new java.awt.event.ActionListener() {
@@ -179,7 +188,7 @@ public class TrangTriBanTiec extends javax.swing.JDialog {
 
         jLabel7.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel7.setText("Chi phí phát sinh");
-        jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(1010, 170, -1, -1));
+        jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(1210, 160, -1, -1));
 
         txtCPPSThamTraiBan.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         txtCPPSThamTraiBan.addActionListener(new java.awt.event.ActionListener() {
@@ -187,10 +196,10 @@ public class TrangTriBanTiec extends javax.swing.JDialog {
                 txtCPPSThamTraiBanActionPerformed(evt);
             }
         });
-        jPanel1.add(txtCPPSThamTraiBan, new org.netbeans.lib.awtextra.AbsoluteConstraints(1010, 230, 360, 35));
+        jPanel1.add(txtCPPSThamTraiBan, new org.netbeans.lib.awtextra.AbsoluteConstraints(1210, 220, 210, 35));
 
         txtCPPSAoGhe.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
-        jPanel1.add(txtCPPSAoGhe, new org.netbeans.lib.awtextra.AbsoluteConstraints(1010, 290, 360, 35));
+        jPanel1.add(txtCPPSAoGhe, new org.netbeans.lib.awtextra.AbsoluteConstraints(1210, 280, 210, 35));
 
         txtCPPSVatTT.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         txtCPPSVatTT.addActionListener(new java.awt.event.ActionListener() {
@@ -198,7 +207,7 @@ public class TrangTriBanTiec extends javax.swing.JDialog {
                 txtCPPSVatTTActionPerformed(evt);
             }
         });
-        jPanel1.add(txtCPPSVatTT, new org.netbeans.lib.awtextra.AbsoluteConstraints(1010, 360, 360, 35));
+        jPanel1.add(txtCPPSVatTT, new org.netbeans.lib.awtextra.AbsoluteConstraints(1210, 350, 210, 35));
 
         lblMaNH8.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         lblMaNH8.setText("Ghi chú");
@@ -228,7 +237,7 @@ public class TrangTriBanTiec extends javax.swing.JDialog {
 
         jLabel8.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel8.setText("Ghi chú");
-        jPanel1.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 170, -1, -1));
+        jPanel1.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 170, -1, -1));
 
         jLabel9.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel9.setText("Tổng chi phát phát sinh");
@@ -269,6 +278,29 @@ public class TrangTriBanTiec extends javax.swing.JDialog {
             }
         });
         jPanel1.add(btnReset, new org.netbeans.lib.awtextra.AbsoluteConstraints(1280, 610, -1, 30));
+
+        jLabel10.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel10.setText("Chi phí");
+        jPanel1.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 160, -1, -1));
+
+        txtChiPhiTham.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        txtChiPhiTham.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtChiPhiThamActionPerformed(evt);
+            }
+        });
+        jPanel1.add(txtChiPhiTham, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 220, 210, 35));
+
+        txtCPAoGhe.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        jPanel1.add(txtCPAoGhe, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 280, 210, 35));
+
+        txtCPVatTT.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        txtCPVatTT.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtCPVatTTActionPerformed(evt);
+            }
+        });
+        jPanel1.add(txtCPVatTT, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 350, 210, 35));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -334,55 +366,21 @@ public class TrangTriBanTiec extends javax.swing.JDialog {
     }//GEN-LAST:event_txtTongChiPhiActionPerformed
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
-        // TODO add your handling code here:
+         AppStatus.lapHopDong.reloadHopDong();
     }//GEN-LAST:event_btnSaveActionPerformed
 
     private void btnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnResetActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(TrangTriBanTiec.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(TrangTriBanTiec.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(TrangTriBanTiec.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(TrangTriBanTiec.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
+    private void txtChiPhiThamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtChiPhiThamActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtChiPhiThamActionPerformed
 
-        /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                TrangTriBanTiec dialog = new TrangTriBanTiec(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
-    }
+    private void txtCPVatTTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCPVatTTActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtCPVatTTActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.ui.swing.HoverButton btnEdit;
@@ -392,6 +390,7 @@ public class TrangTriBanTiec extends javax.swing.JDialog {
     private com.ui.swing.Combobox cbbGoiDV;
     private com.ui.swing.Combobox cbbThamTraiban;
     private com.ui.swing.Combobox cbbVatTT;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
@@ -407,10 +406,13 @@ public class TrangTriBanTiec extends javax.swing.JDialog {
     private javax.swing.JLabel lblMaNH25;
     private javax.swing.JLabel lblMaNH8;
     private javax.swing.JTextArea taGhiChu;
+    private javax.swing.JTextField txtCPAoGhe;
     private javax.swing.JTextField txtCPPSAoGhe;
     private javax.swing.JTextField txtCPPSThamTraiBan;
     private javax.swing.JTextField txtCPPSVatTT;
+    private javax.swing.JTextField txtCPVatTT;
     private javax.swing.JTextField txtChiPhi;
+    private javax.swing.JTextField txtChiPhiTham;
     private javax.swing.JTextField txtGCAoGhe;
     private javax.swing.JTextField txtGCThamTraiBan;
     private javax.swing.JTextField txtGCVatTT;

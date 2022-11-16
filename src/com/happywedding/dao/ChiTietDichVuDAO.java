@@ -5,8 +5,8 @@
  */
 package com.happywedding.dao;
 
-import com.happywedding.model.ChiTietCSVC;
 import com.happywedding.model.ChiTietDichVu;
+import com.happywedding.model.HopDongDichVu;
 import java.util.List;
 
 /**
@@ -15,32 +15,35 @@ import java.util.List;
  */
 public class ChiTietDichVuDAO {
      /*
-    thêm vào ChiTietDichVu
+    thêm vào HopDongDichVu
     */
-    public boolean insertDichVu(ChiTietDichVu ctdv){
+    public boolean insertDichVu(HopDongDichVu ctdv){
         throw new UnsupportedOperationException("Not supported yet.");
     }
     
-    public boolean updateDichVu(ChiTietDichVu ctdv ){
+    public boolean updateDichVu(HopDongDichVu ctdv ){
         throw new UnsupportedOperationException("Not supported yet.");
     }
     
-    public ChiTietDichVu selectDichVu(String maHD, String maDV ){
+    public HopDongDichVu selectDichVu(String maHD, String maDV ){
         throw new UnsupportedOperationException("Not supported yet.");
     }
     
+    public void removeAllHopDongDichVu(String maHD){
+        
+    }
     /*
-    thêm vào bảng ChiTietCSVC
+    thêm vào bảng ChiTietDichVu
     */
-    public boolean insertChiTietCSCV(ChiTietCSVC csvc){
+    public boolean insertChiTietDichVy(ChiTietDichVu csvc){
         throw new UnsupportedOperationException("Not supported yet.");
     }
     
-    public boolean updateChiTietCSVC(ChiTietCSVC cscv){
+    public boolean updateChiTietDichVu(ChiTietDichVu cscv){
         throw new UnsupportedOperationException("Not supported yet.");
     }
     
-    public List<ChiTietCSVC> selectAllChiTietCSVC(String maHD, String maDV){
+    public List<ChiTietDichVu> selectAllChiTietDichVu(String maHD, String maDV){
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }

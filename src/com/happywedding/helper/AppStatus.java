@@ -11,6 +11,7 @@ import com.happywedding.model.PhanLoaiMonAn;
 import com.happywedding.model.PhanLoaiSanh;
 import com.happywedding.model.PhongBan;
 import com.happywedding.model.VaiTro;
+import com.happywedding.view.manage.LapHopDong;
 import com.ui.swing.component.Menu;
 import java.awt.Robot;
 import java.util.List;
@@ -32,6 +33,7 @@ public class AppStatus {
 
    
     public static HappyWeddingApp mainApp = null;
+    public static LapHopDong lapHopDong = null;
     public static Menu menu = null;
     
     //0 is not load

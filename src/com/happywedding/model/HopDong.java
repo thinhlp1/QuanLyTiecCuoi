@@ -18,10 +18,11 @@ public class HopDong {
     private String TrangThai;
     private long Thue;
     private long TienCoc;
+    private long chiPhi;
     private long ChiPhiPhatSinh;
     private long TongTien;
 
-    public HopDong(String maHD, String maNL, Date ngayLap, Date ngayDuyet, String maND, String sanh, long soLuongBan, int maKH, Date ngayToChuc, String thoiGianBatDau, String thoiGianKetThuc, String TrangThai, long Thue, long TienCoc, long ChiPhiPhatSinh, long TongTien) {
+    public HopDong(String maHD, String maNL, Date ngayLap, Date ngayDuyet, String maND, String sanh, long soLuongBan, int maKH, Date ngayToChuc, String thoiGianBatDau, String thoiGianKetThuc, String TrangThai, long Thue, long TienCoc, long chiPhi, long ChiPhiPhatSinh, long TongTien) {
         this.maHD = maHD;
         this.maNL = maNL;
         this.ngayLap = ngayLap;
@@ -36,9 +37,26 @@ public class HopDong {
         this.TrangThai = TrangThai;
         this.Thue = Thue;
         this.TienCoc = TienCoc;
+        this.chiPhi = chiPhi;
         this.ChiPhiPhatSinh = ChiPhiPhatSinh;
         this.TongTien = TongTien;
     }
+    
+    public HopDong(){
+        
+    }
+    
+    
+    
+    public long getChiPhi() {
+        return chiPhi;
+    }
+
+    public void setChiPhi(long chiPhi) {
+        this.chiPhi = chiPhi;
+    }
+
+    
 
     public HopDong() {
     }

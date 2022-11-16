@@ -5,17 +5,20 @@
  */
 package com.happywedding.view.manage;
 
+import com.happywedding.helper.AppStatus;
+
 /**
  *
  * @author ADMIN
  */
 public class NgheThuat extends javax.swing.JDialog {
-
+    private String maHD;
     /**
      * Creates new form NgheThuat
      */
-    public NgheThuat(java.awt.Frame parent, boolean modal) {
+    public NgheThuat(java.awt.Frame parent, boolean modal, String maHD) {
         super(parent, modal);
+          this.maHD = maHD;
         initComponents();
     }
 
@@ -59,6 +62,10 @@ public class NgheThuat extends javax.swing.JDialog {
         jLabel9 = new javax.swing.JLabel();
         btnSave = new com.ui.swing.HoverButton();
         btnReset = new com.ui.swing.HoverButton();
+        jLabel10 = new javax.swing.JLabel();
+        txtCPAmNhac = new javax.swing.JTextField();
+        txtCPVuDao = new javax.swing.JTextField();
+        txtCPCaSi = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -152,10 +159,10 @@ public class NgheThuat extends javax.swing.JDialog {
                 txtGCAmNhacActionPerformed(evt);
             }
         });
-        jPanel1.add(txtGCAmNhac, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 230, 360, 35));
+        jPanel1.add(txtGCAmNhac, new org.netbeans.lib.awtextra.AbsoluteConstraints(990, 260, 360, 35));
 
         txtGCVuDao.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
-        jPanel1.add(txtGCVuDao, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 290, 360, 35));
+        jPanel1.add(txtGCVuDao, new org.netbeans.lib.awtextra.AbsoluteConstraints(990, 320, 360, 35));
 
         txtGCCaSi.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         txtGCCaSi.addActionListener(new java.awt.event.ActionListener() {
@@ -163,7 +170,7 @@ public class NgheThuat extends javax.swing.JDialog {
                 txtGCCaSiActionPerformed(evt);
             }
         });
-        jPanel1.add(txtGCCaSi, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 360, 360, 35));
+        jPanel1.add(txtGCCaSi, new org.netbeans.lib.awtextra.AbsoluteConstraints(990, 390, 360, 35));
 
         txtChiPhi.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         txtChiPhi.addActionListener(new java.awt.event.ActionListener() {
@@ -179,7 +186,7 @@ public class NgheThuat extends javax.swing.JDialog {
 
         jLabel7.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel7.setText("Chi phí phát sinh");
-        jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(1010, 170, -1, -1));
+        jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(780, 200, -1, -1));
 
         txtCPPSAmNhac.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         txtCPPSAmNhac.addActionListener(new java.awt.event.ActionListener() {
@@ -187,10 +194,10 @@ public class NgheThuat extends javax.swing.JDialog {
                 txtCPPSAmNhacActionPerformed(evt);
             }
         });
-        jPanel1.add(txtCPPSAmNhac, new org.netbeans.lib.awtextra.AbsoluteConstraints(1010, 230, 360, 35));
+        jPanel1.add(txtCPPSAmNhac, new org.netbeans.lib.awtextra.AbsoluteConstraints(780, 260, 170, 35));
 
         txtCPPSVuDao.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
-        jPanel1.add(txtCPPSVuDao, new org.netbeans.lib.awtextra.AbsoluteConstraints(1010, 290, 360, 35));
+        jPanel1.add(txtCPPSVuDao, new org.netbeans.lib.awtextra.AbsoluteConstraints(780, 320, 170, 35));
 
         txtCPPSCaSi.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         txtCPPSCaSi.addActionListener(new java.awt.event.ActionListener() {
@@ -198,7 +205,7 @@ public class NgheThuat extends javax.swing.JDialog {
                 txtCPPSCaSiActionPerformed(evt);
             }
         });
-        jPanel1.add(txtCPPSCaSi, new org.netbeans.lib.awtextra.AbsoluteConstraints(1010, 360, 360, 35));
+        jPanel1.add(txtCPPSCaSi, new org.netbeans.lib.awtextra.AbsoluteConstraints(780, 390, 170, 35));
 
         lblMaNH8.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         lblMaNH8.setText("Ghi chú");
@@ -228,7 +235,7 @@ public class NgheThuat extends javax.swing.JDialog {
 
         jLabel8.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel8.setText("Ghi chú");
-        jPanel1.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 170, -1, -1));
+        jPanel1.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(990, 200, -1, -1));
 
         jLabel9.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel9.setText("Tổng chi phát phát sinh");
@@ -269,6 +276,29 @@ public class NgheThuat extends javax.swing.JDialog {
             }
         });
         jPanel1.add(btnReset, new org.netbeans.lib.awtextra.AbsoluteConstraints(1280, 610, -1, 30));
+
+        jLabel10.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel10.setText("Chi phí");
+        jPanel1.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 200, -1, -1));
+
+        txtCPAmNhac.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        txtCPAmNhac.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtCPAmNhacActionPerformed(evt);
+            }
+        });
+        jPanel1.add(txtCPAmNhac, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 260, 170, 35));
+
+        txtCPVuDao.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        jPanel1.add(txtCPVuDao, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 320, 170, 35));
+
+        txtCPCaSi.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        txtCPCaSi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtCPCaSiActionPerformed(evt);
+            }
+        });
+        jPanel1.add(txtCPCaSi, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 390, 170, 35));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -334,55 +364,22 @@ public class NgheThuat extends javax.swing.JDialog {
     }//GEN-LAST:event_txtTongChiPhiActionPerformed
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
-        // TODO add your handling code here:
+         AppStatus.lapHopDong.reloadHopDong();
     }//GEN-LAST:event_btnSaveActionPerformed
 
     private void btnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnResetActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(NgheThuat.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(NgheThuat.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(NgheThuat.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(NgheThuat.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
+    private void txtCPAmNhacActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCPAmNhacActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtCPAmNhacActionPerformed
 
-        /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                NgheThuat dialog = new NgheThuat(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
-    }
+    private void txtCPCaSiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCPCaSiActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtCPCaSiActionPerformed
 
+ 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.ui.swing.HoverButton btnEdit;
     private com.ui.swing.HoverButton btnReset;
@@ -391,6 +388,7 @@ public class NgheThuat extends javax.swing.JDialog {
     private com.ui.swing.Combobox cbbCaSi;
     private com.ui.swing.Combobox cbbGoiDV;
     private com.ui.swing.Combobox cbbVuDao;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
@@ -406,9 +404,12 @@ public class NgheThuat extends javax.swing.JDialog {
     private javax.swing.JLabel lblMaNH25;
     private javax.swing.JLabel lblMaNH8;
     private javax.swing.JTextArea taGhiChu;
+    private javax.swing.JTextField txtCPAmNhac;
+    private javax.swing.JTextField txtCPCaSi;
     private javax.swing.JTextField txtCPPSAmNhac;
     private javax.swing.JTextField txtCPPSCaSi;
     private javax.swing.JTextField txtCPPSVuDao;
+    private javax.swing.JTextField txtCPVuDao;
     private javax.swing.JTextField txtChiPhi;
     private javax.swing.JTextField txtGCAmNhac;
     private javax.swing.JTextField txtGCCaSi;
