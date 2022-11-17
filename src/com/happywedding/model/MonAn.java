@@ -19,7 +19,9 @@ public class MonAn {
         this.tenPL = tenPL;
     }
 
-  
+    public MonAn() {
+     
+    }
     
     public String getTenPL() {
         return tenPL;

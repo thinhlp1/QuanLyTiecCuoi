@@ -41,10 +41,7 @@ public class HopDong {
         this.ChiPhiPhatSinh = ChiPhiPhatSinh;
         this.TongTien = TongTien;
     }
-  
-    
-    
-    
+
     public long getChiPhi() {
         return chiPhi;
     }
@@ -54,10 +51,8 @@ public class HopDong {
     }
 
     public HopDong() {
+
     }
-
-    
-
 
     public String getMaHD() {
         return maHD;

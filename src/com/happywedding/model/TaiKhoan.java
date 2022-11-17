@@ -1,7 +1,7 @@
-
 package com.happywedding.model;
 
 public class TaiKhoan {
+
     private int maTaiKhoan;
     private String maNhanVien;
     private String tenDangNhap;
@@ -14,6 +14,9 @@ public class TaiKhoan {
         this.tenDangNhap = tenDangNhap;
         this.matKhau = matKhau;
         this.vaiTro = vaiTro;
+    }
+
+    public TaiKhoan() {
     }
 
     public int getMaTaiKhoan() {
@@ -56,5 +59,4 @@ public class TaiKhoan {
         this.vaiTro = vaiTro;
     }
 
-    
 }

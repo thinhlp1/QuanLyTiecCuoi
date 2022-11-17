@@ -9,7 +9,7 @@ import com.happywedding.dao.HopDongDAO;
 import com.happywedding.dao.KhachHangDAO;
 import com.happywedding.dao.SanhDAO;
 import com.happywedding.helper.AppStatus;
-import com.happywedding.model.HopDong;
+import com.happywedding.model.HopDong;  
 import com.happywedding.model.KhachHang;
 import com.happywedding.model.Sanh;
 import com.happywedding.model.TrangThaiHopDong;
@@ -52,7 +52,7 @@ public class LapHopDong extends javax.swing.JPanel {
     private SanhDAO sanhDAO = new SanhDAO();
     private KhachHangDAO khachHangDAO = new KhachHangDAO();
 
-    private String statusHopDong = StatusHopDong.DATHUCHIEN;
+    private String statusHopDong = StatusHopDong.CHODUYET;
     private boolean isCreate;
 
     /**

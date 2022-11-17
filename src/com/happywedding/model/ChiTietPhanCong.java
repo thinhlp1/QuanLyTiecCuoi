@@ -13,6 +13,7 @@ import java.util.Date;
  */
 public class ChiTietPhanCong {
 
+
     private int maPC;
     private String maNV;
     private String tenNV;

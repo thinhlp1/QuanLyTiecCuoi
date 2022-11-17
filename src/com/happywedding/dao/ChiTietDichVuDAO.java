@@ -73,25 +73,9 @@ public class ChiTietDichVuDAO {
         return list.size() > 0 ? list.get(0) : null;
     }
     
-    public boolean checkHopDongDichVu(String maHD,String maDV){
-        System.out.println("Check");
-        try {
-            ResultSet rs = null;
-            try {
-                rs = JDBCHelper.executeQuery(CHECK_HOPDONGDICHVU, maHD,maDV);
-                while (rs.next()) {
-                    System.out.println("đã lưu 1 lần");
-                    return true;
-                   
-                }
-            } finally {
-                rs.getStatement().getConnection().close();
-            }
-        } catch (SQLException ex) {
-            throw new RuntimeException(ex);
-        }
-        System.out.println("chưa lưu lần nào");
-        return false;
+    public boolean checkHopDongDichVu(String maHD,String maDV){ 
+        List<HopDongDichVu> list = selectDichVu(CHECK_HOPDONGDICHVU, maHD, maDV);
+        return list.size() > 0;
     }
 
     /*
@@ -164,9 +148,9 @@ public class ChiTietDichVuDAO {
         ctdv.setMaDV(rs.getString("MaDV"));
         ctdv.setMaCSVC(rs.getString("MaCSVC"));
         ctdv.setTenCSVC(rs.getString("TenCSVC"));
-        ctdv.setChiPhi(rs.getInt("ChiPhi"));
-        ctdv.setChiPhiPhatSinh(rs.getInt("ChiPhiPhatSinh"));
-
+        ctdv.setChiPhi(rs.getLong("ChiPhi"));
+        ctdv.setChiPhiPhatSinh(rs.getLong("ChiPhiPhatSinh"));
+        ctdv.setGhiChu(rs.getString("GhiChu"));
         return ctdv;
 
     }
@@ -177,9 +161,9 @@ public class ChiTietDichVuDAO {
         hdvc.setMaHD(rs.getString("MaHD"));
         hdvc.setMaDV(rs.getString("MaDV"));
         hdvc.setMaGoi(rs.getString("MaGoi"));
-        hdvc.setChiPhi(rs.getInt("ChiPhi"));
-        hdvc.setChiPhiPhatSinh(rs.getInt("ChiPhiPhatSinh"));
-
+        hdvc.setChiPhi(rs.getLong("ChiPhi"));
+        hdvc.setChiPhiPhatSinh(rs.getLong("ChiPhiPhatSinh"));
+        hdvc.setGhiChu(rs.getString("GhiChu"));
         return hdvc;
 
     }

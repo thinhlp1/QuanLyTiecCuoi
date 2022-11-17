@@ -11,15 +11,30 @@ package com.happywedding.model;
  */
 public class ChiTietDatMon {
     private String maHD;
-    private long chiPhi;
+    private String maMA;
+    private String tenMA;
+    private long gia;
+   
+    private long chiPhiPhatSinh;
+    private int thuTu;
     private String ghiChu;
 
-    public ChiTietDatMon(String maHD, long chiPhi, String ghiChu) {
+    public ChiTietDatMon(String maHD, String maMA, String tenMA, long gia, long chiPhiPhatSinh, int thuTu, String ghiChu) {
         this.maHD = maHD;
-        this.chiPhi = chiPhi;
+        this.maMA = maMA;
+        this.tenMA = tenMA;
+        this.gia = gia;
+        this.chiPhiPhatSinh = chiPhiPhatSinh;
+        this.thuTu = thuTu;
         this.ghiChu = ghiChu;
     }
 
+    public ChiTietDatMon() {
+    }
+    
+    
+    
+    
     public String getMaHD() {
         return maHD;
     }
@@ -28,12 +43,44 @@ public class ChiTietDatMon {
         this.maHD = maHD;
     }
 
-    public long getChiPhi() {
-        return chiPhi;
+    public String getMaMA() {
+        return maMA;
     }
 
-    public void setChiPhi(long chiPhi) {
-        this.chiPhi = chiPhi;
+    public void setMaMA(String maMA) {
+        this.maMA = maMA;
+    }
+
+    public String getTenMA() {
+        return tenMA;
+    }
+
+    public void setTenMA(String tenMA) {
+        this.tenMA = tenMA;
+    }
+
+    public long getGia() {
+        return gia;
+    }
+
+    public void setGia(long gia) {
+        this.gia = gia;
+    }
+
+    public long getChiPhiPhatSinh() {
+        return chiPhiPhatSinh;
+    }
+
+    public void setChiPhiPhatSinh(long chiPhiPhatSinh) {
+        this.chiPhiPhatSinh = chiPhiPhatSinh;
+    }
+
+    public int getThuTu() {
+        return thuTu;
+    }
+
+    public void setThuTu(int thuTu) {
+        this.thuTu = thuTu;
     }
 
     public String getGhiChu() {
@@ -43,6 +90,7 @@ public class ChiTietDatMon {
     public void setGhiChu(String ghiChu) {
         this.ghiChu = ghiChu;
     }
+  
     
     
 }

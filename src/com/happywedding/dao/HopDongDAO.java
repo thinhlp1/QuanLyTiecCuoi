@@ -51,6 +51,16 @@ public class HopDongDAO extends AbstractDAO<HopDong> {
 
     }
 
+    @Override
+    public HopDong findById(String id) {
+        List<HopDong> list = select(SECLECT_BY_ID, id);
+        return list.size() > 0 ? list.get(0) : null;
+    }
+
+    public void danhDauXoa(String maHD, String MaTT) {
+        int rs = JDBCHelper.executeUpdate(UPDATE_TRANGTHAI, MaTT);
+    }
+
     private List select(String sql, Object... args) {
         List<HopDong> list = new ArrayList<>();
         try {
@@ -68,16 +78,6 @@ public class HopDongDAO extends AbstractDAO<HopDong> {
             throw new RuntimeException(ex);
         }
         return list;
-    }
-
-    @Override
-    public HopDong findById(String id) {
-        List<HopDong> list = select(SECLECT_BY_ID, id);
-        return list.size() > 0 ? list.get(0) : null;
-    }
-
-    public void danhDauXoa(String maHD, String MaTT) {
-        int rs = JDBCHelper.executeUpdate(UPDATE_TRANGTHAI, MaTT);
     }
 
     private HopDong readFromResultSet(ResultSet rs) throws SQLException {

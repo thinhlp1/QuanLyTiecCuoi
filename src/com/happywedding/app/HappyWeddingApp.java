@@ -1,8 +1,6 @@
 package com.happywedding.app;
 
-
 import com.happywedding.helper.AppStatus;
-
 
 import com.happywedding.view.manage.*;
 
@@ -24,8 +22,7 @@ public class HappyWeddingApp extends javax.swing.JFrame {
     private MigLayout layout;
     private Menu menu;
     private Header header;
-    
-    
+
     private QuanLyHopDong quanlyHopDong;
     private QuanLyHoaDon quanLyHoaDon;
     private QuanLyNhanVien quanLyNhanVien;
@@ -33,13 +30,12 @@ public class HappyWeddingApp extends javax.swing.JFrame {
     private QuanLySanh quanLySanh;
     private QuanLyTaiKhoan quanLyTaiKhoan;
     private ThongKe thongKe;
-    
-   
 
     private int menuIndex;
     private int subMenuIndex;
-    
-       static class Role{
+
+    static class Role {
+
         static String QUANLY = "QLCC";
         static String TIEPTAN = "TIEPTAN";
         static String KHO = "KHO";
@@ -54,7 +50,7 @@ public class HappyWeddingApp extends javax.swing.JFrame {
         static int QLKHO = 3;
         static int QLSANH = 4;
         static int THONGKE = 5;
-        
+
         static int GIOITHIEU = 7;
         static int HUONGDAN = 8;
         static int DOIMATKHAU = 10;
@@ -62,13 +58,12 @@ public class HappyWeddingApp extends javax.swing.JFrame {
         static int EXIT = 12;
 
     }
-    
-     static class MAIN_MENU_TIEPTAN {
+
+    static class MAIN_MENU_TIEPTAN {
 
         static int QLHOPDONG = 0;
         static int QLHOADON = 1;
-       
-        
+
         static int GIOITHIEU = 3;
         static int HUONGDAN = 4;
         static int DOIMATKHAU = 6;
@@ -76,26 +71,23 @@ public class HappyWeddingApp extends javax.swing.JFrame {
         static int EXIT = 8;
 
     }
-     
+
     static class MAIN_MENU_QLKHO {
 
         static int QLKHO = 0;
-       
-        
+
         static int GIOITHIEU = 2;
         static int HUONGDAN = 3;
         static int DOIMATKHAU = 5;
-        static int DANGXUAT =6;
+        static int DANGXUAT = 6;
         static int EXIT = 7;
 
     }
-    
-    
-        static class MAIN_MENU_ADMIN {
+
+    static class MAIN_MENU_ADMIN {
 
         static int QLTAIKHOAN = 0;
-        static  int QLSANH = 1;
-        
+        static int QLSANH = 1;
 
         static int EXIT = 3;
     }
@@ -104,33 +96,32 @@ public class HappyWeddingApp extends javax.swing.JFrame {
 
 //        if (!AppStatus.isFirstStart()) {
 //            new DangNhap(this, true).setVisible(true);
-//            //new Loading(this, true).setVisible(true);
+//            new Loading(this, true).setVisible(true);
 //            AppStatus.loadApp();
 //        }
-      // AppStatus.USER = new EmployeeDAO().findById("PheoNC");
-        
+//       AppStatus.USER = new EmployeeDAO().findById("PheoNC");
         AppStatus.loadApp();
         initComponents();
         init();
 
     }
-    
+
     //load	d
-    public void phanQuyen(){
+    public void phanQuyen() {
         String role = AppStatus.ROLE;
-        if (role.equals(Role.QUANLY)){
+        if (role.equals(Role.QUANLY)) {
             menu.addEventMenuSelected(new MenuQLListener());
-        }else if (role.equals(Role.TIEPTAN)){
-             menu.addEventMenuSelected(new MenuTiepTanListener());
-        }else if (role.equals(Role.KHO)){
-             menu.addEventMenuSelected(new MenuQLKhoListener());
-        }else if (role.equals(Role.ADMIN)){
-             menu.addEventMenuSelected(new MenuAdminListener());
+        } else if (role.equals(Role.TIEPTAN)) {
+            menu.addEventMenuSelected(new MenuTiepTanListener());
+        } else if (role.equals(Role.KHO)) {
+            menu.addEventMenuSelected(new MenuQLKhoListener());
+        } else if (role.equals(Role.ADMIN)) {
+            menu.addEventMenuSelected(new MenuAdminListener());
         }
     }
 
     private void init() {
-        this.setExtendedState(JFrame.MAXIMIZED_BOTH); 
+        this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         layout = new MigLayout("fill", "0[]0[100%, fill]0", "0[fill, top]0");
         mainPane.setLayout(layout);
         menu = new Menu();
@@ -143,149 +134,146 @@ public class HappyWeddingApp extends javax.swing.JFrame {
         mainPane.add(header, "h 50!, wrap");
         mainPane.add(new AboutForm());
         showForm(new AboutForm());
-        
+
         AppStatus.mainApp = this;
         AppStatus.menu = menu;
-        
+
         // menu.initMoving(this);
     }
-    
 
     class MenuQLListener implements EventMenuSelected {
 
         @Override
         public void selected(int index) {
-           if (index == MAIN_MENU_QL.QLHOPDONG){
-               if (quanlyHopDong == null){
-                   quanlyHopDong = new QuanLyHopDong();
-              
-               }
-                 showForm(quanlyHopDong);
-           }else if (index == MAIN_MENU_QL.QLHOADON){
-               if (quanLyHoaDon == null){
-                   quanLyHoaDon = new QuanLyHoaDon();
-               }
-               showForm(quanLyHoaDon);
-               
-           }else if (index == MAIN_MENU_QL.QLNHANVIEN){
-                
-                 if (quanLyNhanVien == null){
-                   quanLyNhanVien = new QuanLyNhanVien();
-              
-               }
-                 showForm(quanLyNhanVien);
-           }else if (index == MAIN_MENU_QL.QLKHO){
-                 if (quanLyKho == null){
-                   quanLyKho = new QuanLyKho();
-              
-               }
-                 showForm(quanLyKho);
-               
-           }else if (index == MAIN_MENU_QL.QLSANH){
-                 if (quanLySanh == null){
-                   quanLySanh = new QuanLySanh();
-              
-               }
-                 showForm(quanLySanh);
-               
-           }else if (index == MAIN_MENU_QL.THONGKE){
-               if (thongKe == null){
-                   thongKe = new ThongKe();
-               }
-               showForm(thongKe);
-           }else if (index == MAIN_MENU_QL.GIOITHIEU){
-               
-           }else if (index == MAIN_MENU_QL.HUONGDAN){
-               
-           }else if (index == MAIN_MENU_QL.DOIMATKHAU){
-               
-           }else if (index == MAIN_MENU_QL.DANGXUAT){
-               
-           }else if (index == MAIN_MENU_QL.EXIT){
-               System.exit(1);
-               
-           }
+            if (index == MAIN_MENU_QL.QLHOPDONG) {
+                if (quanlyHopDong == null) {
+                    quanlyHopDong = new QuanLyHopDong();
+
+                }
+                showForm(quanlyHopDong);
+            } else if (index == MAIN_MENU_QL.QLHOADON) {
+                if (quanLyHoaDon == null) {
+                    quanLyHoaDon = new QuanLyHoaDon();
+                }
+                showForm(quanLyHoaDon);
+
+            } else if (index == MAIN_MENU_QL.QLNHANVIEN) {
+
+                if (quanLyNhanVien == null) {
+                    quanLyNhanVien = new QuanLyNhanVien();
+
+                }
+                showForm(quanLyNhanVien);
+            } else if (index == MAIN_MENU_QL.QLKHO) {
+                if (quanLyKho == null) {
+                    quanLyKho = new QuanLyKho();
+
+                }
+                showForm(quanLyKho);
+
+            } else if (index == MAIN_MENU_QL.QLSANH) {
+                if (quanLySanh == null) {
+                    quanLySanh = new QuanLySanh();
+
+                }
+                showForm(quanLySanh);
+
+            } else if (index == MAIN_MENU_QL.THONGKE) {
+                if (thongKe == null) {
+                    thongKe = new ThongKe();
+                }
+                showForm(thongKe);
+            } else if (index == MAIN_MENU_QL.GIOITHIEU) {
+
+            } else if (index == MAIN_MENU_QL.HUONGDAN) {
+
+            } else if (index == MAIN_MENU_QL.DOIMATKHAU) {
+
+            } else if (index == MAIN_MENU_QL.DANGXUAT) {
+
+            } else if (index == MAIN_MENU_QL.EXIT) {
+                System.exit(1);
+
+            }
         }
     }
 
- class MenuTiepTanListener implements EventMenuSelected {
-
-        @Override
-        public void selected(int index) {
-           if (index == MAIN_MENU_QL.QLHOPDONG){
-               if (quanlyHopDong == null){
-                   quanlyHopDong = new QuanLyHopDong();
-              
-               }
-                 showForm(quanlyHopDong);
-           }else if (index == MAIN_MENU_QL.QLHOADON){
-               if (quanLyHoaDon == null){
-                   quanLyHoaDon = new QuanLyHoaDon();
-               }
-               showForm(quanLyHoaDon);
-               
-           }else if (index == MAIN_MENU_QL.GIOITHIEU){
-               
-           }else if (index == MAIN_MENU_QL.HUONGDAN){
-               
-           }else if (index == MAIN_MENU_QL.DOIMATKHAU){
-               
-           }else if (index == MAIN_MENU_QL.DANGXUAT){
-               
-           }else if (index == MAIN_MENU_QL.EXIT){
-               System.exit(1);
-               
-           }
-        }
-    }
-    
-     class MenuQLKhoListener implements EventMenuSelected {
+    class MenuTiepTanListener implements EventMenuSelected {
 
         @Override
         public void selected(int index) {
-           if (index == MAIN_MENU_QLKHO.QLKHO){
-               if (quanLyKho == null){
-                   quanLyKho = new QuanLyKho();
-               }
-               showForm(quanLyKho);
-           }else if (index == MAIN_MENU_QLKHO.GIOITHIEU){
-               
-           }else if (index == MAIN_MENU_QLKHO.HUONGDAN){
-               
-           }else if (index == MAIN_MENU_QLKHO.DOIMATKHAU){
-               
-           }else if (index == MAIN_MENU_QLKHO.DANGXUAT){
-               
-           }else if (index == MAIN_MENU_QLKHO.EXIT){
-               
-           }
+            if (index == MAIN_MENU_QL.QLHOPDONG) {
+                if (quanlyHopDong == null) {
+                    quanlyHopDong = new QuanLyHopDong();
+
+                }
+                showForm(quanlyHopDong);
+            } else if (index == MAIN_MENU_QL.QLHOADON) {
+                if (quanLyHoaDon == null) {
+                    quanLyHoaDon = new QuanLyHoaDon();
+                }
+                showForm(quanLyHoaDon);
+
+            } else if (index == MAIN_MENU_QL.GIOITHIEU) {
+
+            } else if (index == MAIN_MENU_QL.HUONGDAN) {
+
+            } else if (index == MAIN_MENU_QL.DOIMATKHAU) {
+
+            } else if (index == MAIN_MENU_QL.DANGXUAT) {
+
+            } else if (index == MAIN_MENU_QL.EXIT) {
+                System.exit(1);
+
+            }
         }
     }
-     
-      class MenuAdminListener implements EventMenuSelected {
+
+    class MenuQLKhoListener implements EventMenuSelected {
 
         @Override
         public void selected(int index) {
-           if (index == MAIN_MENU_ADMIN.QLTAIKHOAN){
-               if (quanLyTaiKhoan == null){
-                   quanLyTaiKhoan = new QuanLyTaiKhoan();
-                   
-               }
-               showForm(quanLyTaiKhoan);
-               
-           }else if (index == MAIN_MENU_ADMIN.QLSANH){
-                 if (quanLySanh == null){
-                   quanLySanh = new QuanLySanh();
-               }
-               showForm(quanLySanh);
-           }
-           else if (index == MAIN_MENU_ADMIN.EXIT){
-               
-           }
+            if (index == MAIN_MENU_QLKHO.QLKHO) {
+                if (quanLyKho == null) {
+                    quanLyKho = new QuanLyKho();
+                }
+                showForm(quanLyKho);
+            } else if (index == MAIN_MENU_QLKHO.GIOITHIEU) {
+
+            } else if (index == MAIN_MENU_QLKHO.HUONGDAN) {
+
+            } else if (index == MAIN_MENU_QLKHO.DOIMATKHAU) {
+
+            } else if (index == MAIN_MENU_QLKHO.DANGXUAT) {
+
+            } else if (index == MAIN_MENU_QLKHO.EXIT) {
+
+            }
         }
     }
-    
-    
+
+    class MenuAdminListener implements EventMenuSelected {
+
+        @Override
+        public void selected(int index) {
+            if (index == MAIN_MENU_ADMIN.QLTAIKHOAN) {
+                if (quanLyTaiKhoan == null) {
+                    quanLyTaiKhoan = new QuanLyTaiKhoan();
+
+                }
+                showForm(quanLyTaiKhoan);
+
+            } else if (index == MAIN_MENU_ADMIN.QLSANH) {
+                if (quanLySanh == null) {
+                    quanLySanh = new QuanLySanh();
+                }
+                showForm(quanLySanh);
+            } else if (index == MAIN_MENU_ADMIN.EXIT) {
+
+            }
+        }
+    }
+
     public void showForm(Component form) {
         System.out.println("AA");
         mainPane.remove(mainPane.getComponentCount() - 1);
