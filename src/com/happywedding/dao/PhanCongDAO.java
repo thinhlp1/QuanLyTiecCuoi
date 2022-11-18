@@ -24,7 +24,7 @@ import java.util.List;
 public class PhanCongDAO {
 
 
-    private final String INSERT_PHANCONG = "INSERT INTO dbo.PhanCong (MaHD,MaNguoiPC)VALUES( ?,?)";
+    private final String INSERT_PHANCONG = "INSERT INTO dbo.PhanCong (MaHD,MaNguoiPC)VALUES(?,?)";
     private final String DELETE_PHANCONG = "DELETE dbo.PhanCong WHERE MaPC = ?";
     private final String UPDATE_PHANCONG = "UPDATE dbo.PhanCong SET MaHD = ?, MaNguoiPC = ? WHERE MaPC = ? ";
     private final String SECLECT_ALL_PHANCONG = "SELECT * FROM dbo.PhanCong";
@@ -72,7 +72,7 @@ public class PhanCongDAO {
                     list.add(phanCong);
                 }
             } finally {
-                rs.getStatement().getConnection().close();
+rs.getStatement().getConnection().close();
             }
         } catch (SQLException ex) {
             throw new RuntimeException(ex);

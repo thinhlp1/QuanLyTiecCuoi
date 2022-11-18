@@ -1,4 +1,3 @@
-
 package com.happywedding.model;
 
 public class PhanLoaiSanh{
@@ -10,6 +9,11 @@ public class PhanLoaiSanh{
         this.tenPL = tenPL;
     }
 
+    public PhanLoaiSanh() {
+    }
+    
+    
+    
     public String getMaPL() {
         return maPL;
     }

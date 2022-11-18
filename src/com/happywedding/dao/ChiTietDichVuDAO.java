@@ -31,11 +31,8 @@ public class ChiTietDichVuDAO {
             + "\n"
             + "GhiChu FROM HopDongDichVu hddv  \n"
             + "WHERE hddv.MaHD = ? AND hddv.MaDV = ?";
-    
+
     private final String CHECK_HOPDONGDICHVU = "SELECT * FROM HopDongDichVu WHERE MaHD = ? AND MaDV = ?";
-    
-    
-    
 
     private final String INSERT_CHITIETDICHVU = "INSERT ChiTietDichVu (MaHD,MaDV, MaCSVC,ChiPhi ,ChiPhiPhatSinh, GhiChu) VALUES (?, ?, ?, ? ,?, ?)";
     private final String UPDATE_CHITIETDICHVU = "UPDATE ctdv SET MaCSVC = ?, ChiPhi = ?, ChiPhiPhatSinh = ?, GhiChu = ?\n"
@@ -46,12 +43,19 @@ public class ChiTietDichVuDAO {
             + "INNER JOIN ChiTietDichVu ct ON hddv.MaHD = ct.MaHD\n"
             + "INNER JOIN CoSoVatChat csvc ON csvc.MaCSVC = ct.MaCSVC \n"
             + "WHERE ct.MaHD = ? AND  hddv.MaDV = ? AND ct.MaDV = ? ";
-    
-    private final String SELECT_CHITIETDIVU = "SELECT hddv.MaHD,csvc.MaCSVC,csvc.TenCSVC, hddv.MaDV,ct.ChiPhi,ct.ChiPhiPhatSinh,ct.GhiChu FROM HopDongDichVu hddv \n"
+
+    private final String SELECT_CHITIETDIVU_CUSTOM = "SELECT hddv.MaHD,csvc.MaCSVC,csvc.TenCSVC, hddv.MaDV,ct.ChiPhi,ct.ChiPhiPhatSinh,ct.GhiChu FROM HopDongDichVu hddv \n"
             + "INNER JOIN ChiTietDichVu ct ON hddv.MaHD = ct.MaHD\n"
             + "INNER JOIN CoSoVatChat csvc ON csvc.MaCSVC = ct.MaCSVC \n"
-            + "WHERE ct.MaHD = ? AND  hddv.MaDV = ? AND ct.MaDV = ? AND ct.MaDMC = ?";
-    
+            + "INNER JOIN DanhMucCon dmc ON dmc.MaDMC = csvc.MaDMC \n"
+            + "WHERE ct.MaHD = ? AND  hddv.MaDV = ? AND ct.MaDV = ? AND csvc.MaDMC = ? ";
+
+    private final String SELECT_CHITIEDICHVU_NOCUSTOM = "SELECT hddv.MaHD,csvc.MaCSVC,csvc.TenCSVC, hddv.MaDV,csvc.GiaThue AS ChiPhi,ct.ChiPhiPhatSinh,ct.GhiChu FROM HopDongDichVu hddv \n"
+            + "INNER JOIN ChiTietDichVu ct ON hddv.MaHD = ct.MaHD\n"
+            + "INNER JOIN CoSoVatChat csvc ON csvc.MaCSVC = ct.MaCSVC \n"
+            + "INNER JOIN DanhMucCon dmc ON dmc.MaDMC = csvc.MaDMC \n"
+             + "WHERE ct.MaHD = ? AND  hddv.MaDV = ? AND ct.MaDV = ? AND csvc.MaDMC = ? ";
+
     /*
     thêm vào HopDongDichVu
      */
@@ -65,15 +69,13 @@ public class ChiTietDichVuDAO {
         int rs = JDBCHelper.executeUpdate(UPDATE_HOPDONGDICHVU, ctdv.getMaGoi(), ctdv.getChiPhi(), ctdv.getGhiChu(), ctdv.getMaHD(), ctdv.getMaDV());
         return rs > 0;
     }
-    
-    
 
     public HopDongDichVu selectDichVu(String maHD, String maDV) {
         List<HopDongDichVu> list = selectDichVu(SELECT_DICHVU, maHD, maDV, maDV, maHD, maDV);
         return list.size() > 0 ? list.get(0) : null;
     }
-    
-    public boolean checkHopDongDichVu(String maHD,String maDV){ 
+
+    public boolean checkHopDongDichVu(String maHD, String maDV) {
         List<HopDongDichVu> list = selectDichVu(CHECK_HOPDONGDICHVU, maHD, maDV);
         return list.size() > 0;
     }
@@ -93,14 +95,19 @@ public class ChiTietDichVuDAO {
     }
 
     public List<ChiTietDichVu> selectAllChiTietDichVu(String maHD, String maDV) {
-        return selectChiTietDichVu(SELECT_ALL_CHITIETDICHVU,maHD,maDV,maDV);
+        return selectChiTietDichVu(SELECT_ALL_CHITIETDICHVU, maHD, maDV, maDV);
     }
-    
-    
-    public ChiTietDichVu selectChiTietDichVu(String maHD, String maDV, String maDMC){
-       List<ChiTietDichVu> list = selectChiTietDichVu(SELECT_ALL_CHITIETDICHVU,maHD,maDV,maDV,maDMC);
-       return list.size() > 0 ? list.get(0) : null; 
-         
+
+    public ChiTietDichVu selectChiTietDichVuCustom(String maHD, String maDV,String maDMC) {
+        List<ChiTietDichVu> list = selectChiTietDichVu(SELECT_CHITIETDIVU_CUSTOM, maHD, maDV, maDV,maDMC);
+        return list.size() > 0 ? list.get(0) : null;
+
+    }
+
+    public ChiTietDichVu selectChiTietDichVuNoCustom(String maHD, String maDV, String maDMC) {
+        List<ChiTietDichVu> list = selectChiTietDichVu(SELECT_CHITIEDICHVU_NOCUSTOM, maHD, maDV, maDV, maDMC);
+        return list.size() > 0 ? list.get(0) : null;
+
     }
 
     private List selectDichVu(String sql, Object... args) {

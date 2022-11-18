@@ -14,7 +14,7 @@ public class ChiTietDichVu {
     private String maCSVC;
     private String tenCSVC;
     private String maDV;
-    private String tenDV;
+    private String tenDV;   
     private long chiPhi;    
     private long ChiPhiPhatSinh;
     private String ghiChu;

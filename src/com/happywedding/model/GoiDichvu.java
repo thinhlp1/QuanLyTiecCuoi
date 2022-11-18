@@ -20,6 +20,9 @@ public class GoiDichVu {
         this.hinhAnh = hinhAnh;
     }
 
+    public GoiDichVu() {
+    }
+
     
     
     public String getTenDV() {

@@ -41,10 +41,7 @@ public class HopDong {
         this.ChiPhiPhatSinh = ChiPhiPhatSinh;
         this.TongTien = TongTien;
     }
-  
-    
-    
-    
+
     public long getChiPhi() {
         return chiPhi;
     }
@@ -53,10 +50,9 @@ public class HopDong {
         this.chiPhi = chiPhi;
     }
 
-    public HopDong(){
-        
-    }
+    public HopDong() {
 
+    }
 
     public String getMaHD() {
         return maHD;
@@ -135,7 +131,7 @@ public class HopDong {
     }
 
     public void setThoiGianBatDau(String thoiGianBatDau) {
-        this.thoiGianBatDau = thoiGianBatDau;
+this.thoiGianBatDau = thoiGianBatDau;
     }
 
     public String getThoiGianKetThuc() {

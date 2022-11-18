@@ -48,7 +48,7 @@ public class DichVuDiKem extends javax.swing.JDialog {
         lblSearch = new javax.swing.JLabel();
         txtSearch = new javax.swing.JTextField();
         jScrollPane3 = new javax.swing.JScrollPane();
-        listDichVu = new javax.swing.JList<>();
+        tbDichVuDiKem = new com.ui.swing.Table();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -57,14 +57,14 @@ public class DichVuDiKem extends javax.swing.JDialog {
 
         tblDichVu.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-
+                {null, null, null, null}
             },
             new String [] {
-                "Dịch vụ", "Ghi chú", "Chi phí"
+                "Dịch vụ", "Chi phí", "Ghi chú", "Chi phí phát sinh"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false
+                false, false, true, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -77,7 +77,7 @@ public class DichVuDiKem extends javax.swing.JDialog {
 
         btnBack.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/happywedding/assets/back.png"))); // NOI18N
         btnBack.setFocusPainted(false);
-        jPanel1.add(btnBack, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 340, -1, -1));
+        jPanel1.add(btnBack, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 340, -1, -1));
 
         lblMaNH8.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         lblMaNH8.setText("Ghi chú");
@@ -163,15 +163,25 @@ public class DichVuDiKem extends javax.swing.JDialog {
         });
         jPanel1.add(txtSearch, new org.netbeans.lib.awtextra.AbsoluteConstraints(890, 70, 280, 35));
 
-        listDichVu.setFixedCellHeight(30);
-        listDichVu.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                listDichVuMouseClicked(evt);
+        tbDichVuDiKem.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null}
+            },
+            new String [] {
+                "Dịch vụ", "Chi phí"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
             }
         });
-        jScrollPane3.setViewportView(listDichVu);
+        jScrollPane3.setViewportView(tbDichVuDiKem);
 
-        jPanel1.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 120, 310, 540));
+        jPanel1.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(870, 130, 310, 520));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -209,11 +219,6 @@ public class DichVuDiKem extends javax.swing.JDialog {
 
     }//GEN-LAST:event_txtSearchKeyReleased
 
-    private void listDichVuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listDichVuMouseClicked
-
-      
-    }//GEN-LAST:event_listDichVuMouseClicked
-
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
          AppStatus.lapHopDong.reloadHopDong();
     }//GEN-LAST:event_btnSaveActionPerformed
@@ -233,8 +238,8 @@ public class DichVuDiKem extends javax.swing.JDialog {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JLabel lblMaNH8;
     private javax.swing.JLabel lblSearch;
-    private javax.swing.JList<Object> listDichVu;
     private javax.swing.JTextArea taGhiChu;
+    private com.ui.swing.Table tbDichVuDiKem;
     private com.ui.swing.Table tblDichVu;
     private javax.swing.JTextField txtSearch;
     private javax.swing.JTextField txtTongCPPS;

@@ -14,7 +14,6 @@ public class ChiTietDatMon {
     private String maMA;
     private String tenMA;
     private long gia;
-   
     private long chiPhiPhatSinh;
     private int thuTu;
     private String ghiChu;
