@@ -18,13 +18,12 @@ import java.util.List;
  */
 public class MonAnDAO extends AbstractDAO<MonAn>{
 
-    private final String INSERT_SANH = "INSERT INTO MonAn (MaMA, TenMA, HinhAnh, GiaTien, MaPL, TenPL) VALUES (?, ?, ?, ?, ?, ?)";
+    private final String INSERT_SANH = "INSERT INTO MonAn (MaMA, TenMA, HinhAnh, GiaTien, MaPL) VALUES (?, ?, ?, ?, ?)";
 
-    private final String UPDATE_SANH = "UPDATE MonAn SET MaMA=?, TenMA=?, HinhAnh=?, GiaTien=?, MaPL=?, TenPL=? WHERE\n"
-            + "MaMA=?";
+    private final String UPDATE_SANH = "UPDATE MonAn SET MaMA=?, TenMA=?, HinhAnh=?, GiaTien=?, MaPL=? WHERE\n" + "MaMA=?";
     private final String DELELTE_SANH = "DELETE FROM MonAn WHERE MaMA=?";
-    private final String SELECT_ALL = "SELECT * FROM MonAn";
-    private final String SELECT_BY_ID = "SELECT * FROM MonAn WHERE MaMA=?";
+    private final String SELECT_ALL = "SELECT MaMA, TenMA, HinhAnh, GiaTien, MonAn.MaPL, TenPL from MonAn inner join PhanLoaiMonAn on MonAn.MaPL = PhanLoaiMonAn.MaPL";
+    private final String SELECT_BY_ID = "SELECT MaMA, TenMA, HinhAnh, GiaTien, MonAn.MaPL, TenPL from MonAn inner join PhanLoaiMonAn on MonAn.MaPL = PhanLoaiMonAn.MaPL WHERE MaMA=?";
    
 
     public boolean insert(MonAn monAn) {
