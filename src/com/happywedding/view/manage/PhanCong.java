@@ -5,7 +5,10 @@
  */
 package com.happywedding.view.manage;
 
+import com.ui.swing.Combobox;
+import java.awt.Component;
 import javax.swing.JFrame;
+import javax.swing.JTextField;
 
 /**
  *
@@ -13,13 +16,29 @@ import javax.swing.JFrame;
  */
 public class PhanCong extends javax.swing.JDialog {
      private String maHD;
+     private boolean isCreate;
     /**
      * Creates new form PhanCong
      */
     public PhanCong(java.awt.Frame parent, boolean modal, String maHD) {
         super(parent, modal);
-          this.maHD = maHD;
+         this.isCreate = modal;
         initComponents();
+        init();
+    }
+
+    public void init() {
+        isView(isCreate);
+    }
+
+    public void isView(boolean isCreate) {
+       txtMaNV.setEnabled(isCreate);
+       txtBatDau.setEditable(isCreate);
+       txtNgayPhanCong.setEditable(isCreate);
+       txtKetThuc.setEditable(isCreate);
+       btnThem.setVisible(isCreate);
+       btnSua.setVisible(isCreate);
+       btnXoa.setVisible(isCreate);
     }
 
     /**
@@ -46,11 +65,11 @@ public class PhanCong extends javax.swing.JDialog {
         txtBatDau = new javax.swing.JTextField();
         jLabel23 = new javax.swing.JLabel();
         txtKetThuc = new javax.swing.JTextField();
-        btnSua = new com.ui.swing.InkwellButton();
+        btnThem = new com.ui.swing.InkwellButton();
         btnXoa = new com.ui.swing.InkwellButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         tblNhanVien = new com.ui.swing.Table();
-        btnSua1 = new com.ui.swing.InkwellButton();
+        btnSua = new com.ui.swing.InkwellButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -131,11 +150,11 @@ public class PhanCong extends javax.swing.JDialog {
         txtKetThuc.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
         pnlUpdate3.add(txtKetThuc, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 430, 160, 35));
 
-        btnSua.setBackground(new java.awt.Color(0, 153, 0));
-        btnSua.setForeground(new java.awt.Color(255, 255, 255));
-        btnSua.setText("Thêm");
-        btnSua.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        pnlUpdate3.add(btnSua, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 620, 80, -1));
+        btnThem.setBackground(new java.awt.Color(0, 153, 0));
+        btnThem.setForeground(new java.awt.Color(255, 255, 255));
+        btnThem.setText("Thêm");
+        btnThem.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        pnlUpdate3.add(btnThem, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 620, 80, -1));
 
         btnXoa.setBackground(new java.awt.Color(153, 24, 24));
         btnXoa.setForeground(new java.awt.Color(255, 255, 255));
@@ -155,11 +174,11 @@ public class PhanCong extends javax.swing.JDialog {
 
         pnlUpdate3.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 110, 1180, 660));
 
-        btnSua1.setBackground(new java.awt.Color(0, 153, 0));
-        btnSua1.setForeground(new java.awt.Color(255, 255, 255));
-        btnSua1.setText("Sửa");
-        btnSua1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        pnlUpdate3.add(btnSua1, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 620, 80, -1));
+        btnSua.setBackground(new java.awt.Color(0, 153, 0));
+        btnSua.setForeground(new java.awt.Color(255, 255, 255));
+        btnSua.setText("Sửa");
+        btnSua.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        pnlUpdate3.add(btnSua, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 620, 80, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -196,7 +215,7 @@ public class PhanCong extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.ui.swing.InkwellButton btnSua;
-    private com.ui.swing.InkwellButton btnSua1;
+    private com.ui.swing.InkwellButton btnThem;
     private com.ui.swing.InkwellButton btnXoa;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel17;

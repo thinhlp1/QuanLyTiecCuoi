@@ -1,5 +1,5 @@
 ﻿--Tạo CSDL
-CREATE DATABASE QuanLyTrungTamTiecCuoi
+--CREATE DATABASE QuanLyTrungTamTiecCuoi
 --DROP DATABASE QuanLyTrungTamTiecCuoi
 GO
 --Gọi CSDL
@@ -55,8 +55,9 @@ CREATE TABLE ChiTietDichVuDiKem(
 	MaHD varchar(5) NOT NULL,
 	MaDV varchar(25) NOT NULL,
 	GhiChu nvarchar(255) NULL,
+	ChiPhi BIGINT NULL,
 	ChiPhiPhatSinh bigint NULL,
-	TenCongTy nvarchar(50) NULL,
+	
  CONSTRAINT PK_ChiTietDichVuDiKem PRIMARY KEY CLUSTERED 
 (
 	MaHD ASC,
@@ -99,7 +100,8 @@ CREATE TABLE ChiTietPhanCong(
  CONSTRAINT PK_ChiTietPhanCong PRIMARY KEY CLUSTERED 
 (
 	MaPC ASC,
-	MaNV ASC
+	MaNV ASC,
+	NgayPC ASC
 )
 )
 GO
@@ -500,12 +502,12 @@ INSERT HopDongDichVu (MaHD, MaDV, MaGoi ,ChiPhi, GhiChu) VALUES (N'HD002', N'TTB
 INSERT HopDongDichVu (MaHD, MaDV, MaGoi ,ChiPhi, GhiChu) VALUES (N'HD002', N'TTCONG',NULL , 1000000, NULL)
 INSERT HopDongDichVu (MaHD, MaDV, MaGoi ,ChiPhi, GhiChu) VALUES (N'HD002', N'TTSANKHAU',NULL , 3000000, NULL)
 GO
-INSERT ChiTietDichVuDiKem (MaHD, MaDV, GhiChu, ChiPhiPhatSinh, TenCongTy) VALUES (N'HD001', N'BANHKEM', N'3 tầng', 120000, NULL)
-INSERT ChiTietDichVuDiKem (MaHD, MaDV, GhiChu, ChiPhiPhatSinh, TenCongTy) VALUES (N'HD001', N'MAYTAOKHOI', NULL, NULL, NULL)
-INSERT ChiTietDichVuDiKem (MaHD, MaDV, GhiChu, ChiPhiPhatSinh, TenCongTy) VALUES (N'HD001', N'PHAOKIMTUYEN', N'100 cái', 1000000, NULL)
-INSERT ChiTietDichVuDiKem (MaHD, MaDV, GhiChu, ChiPhiPhatSinh, TenCongTy) VALUES (N'HD002', N'BANHKEM', N'4 tầng', 1000000, NULL)
-INSERT ChiTietDichVuDiKem (MaHD, MaDV, GhiChu, ChiPhiPhatSinh, TenCongTy) VALUES (N'HD002', N'PHAOKIMTUYEN', N'54 cái', 479999, NULL)
-INSERT ChiTietDichVuDiKem (MaHD, MaDV, GhiChu, ChiPhiPhatSinh, TenCongTy) VALUES (N'HD002', N'THIENNGABANG', N'2 con màu xanh', 400000, NULL)
+INSERT ChiTietDichVuDiKem (MaHD, MaDV, GhiChu, ChiPhiPhatSinh, ChiPhi) VALUES (N'HD001', N'BANHKEM', N'3 tầng', 120000, 0)
+INSERT ChiTietDichVuDiKem (MaHD, MaDV, GhiChu, ChiPhiPhatSinh, ChiPhi) VALUES (N'HD001', N'MAYTAOKHOI', NULL, NULL, 0)
+INSERT ChiTietDichVuDiKem (MaHD, MaDV, GhiChu, ChiPhiPhatSinh, ChiPhi) VALUES (N'HD001', N'PHAOKIMTUYEN', N'100 cái', 1000000, 0)
+INSERT ChiTietDichVuDiKem (MaHD, MaDV, GhiChu, ChiPhiPhatSinh, ChiPhi) VALUES (N'HD002', N'BANHKEM', N'4 tầng', 1000000, 0)
+INSERT ChiTietDichVuDiKem (MaHD, MaDV, GhiChu, ChiPhiPhatSinh, ChiPhi) VALUES (N'HD002', N'PHAOKIMTUYEN', N'54 cái', 479999, 0)
+INSERT ChiTietDichVuDiKem (MaHD, MaDV, GhiChu, ChiPhiPhatSinh, ChiPhi) VALUES (N'HD002', N'THIENNGABANG', N'2 con màu xanh', 400000, 0)
 GO
 INSERT ChiTietDVDuaDon (MaHD, MaNV, LoaiXe) VALUES (N'HD001', N'NV002', N'XE17CHO')
 INSERT ChiTietDVDuaDon (MaHD, MaNV, LoaiXe) VALUES (N'HD001', N'NV006', N'XE17CHO')

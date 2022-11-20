@@ -6,6 +6,9 @@
 package com.happywedding.view.manage;
 
 import com.happywedding.helper.AppStatus;
+import com.ui.swing.Combobox;
+import java.awt.Component;
+import javax.swing.JTextField;
 
 /**
  *
@@ -13,13 +16,32 @@ import com.happywedding.helper.AppStatus;
  */
 public class DatMon extends javax.swing.JDialog {
      private String maHD;
+     private boolean isCreate;
     /**
      * Creates new form DatMon
      */
     public DatMon(java.awt.Frame parent, boolean modal, String maHD) {
         super(parent, modal);
         this.maHD = maHD;
+         this.isCreate = modal;
         initComponents();
+        init();
+    }
+
+    public void init() {
+        isView(isCreate);
+    }
+
+    public void isView(boolean isCreate) {
+       
+        btnSave.setVisible(isCreate);
+        btnReset.setVisible(isCreate);
+        cbbThucDon.setEnabled(isCreate);
+        cbbLoaiMon.setEnabled(isCreate);
+        taGhiChu.setEnabled(isCreate);
+        txtSearch.setEditable(isCreate);
+        tblMonAn.setEnabled(isCreate);
+        tblThucDon.setEnabled(isCreate);
     }
 
     /**
@@ -119,6 +141,7 @@ public class DatMon extends javax.swing.JDialog {
         jLabel9.setText("Tổng chi phát phát sinh");
         jPanel1.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 690, -1, -1));
 
+        txtTongCPPS.setEditable(false);
         txtTongCPPS.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         jPanel1.add(txtTongCPPS, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 730, 300, 35));
 
@@ -126,6 +149,7 @@ public class DatMon extends javax.swing.JDialog {
         jLabel4.setText("Tổng chi phí phải trả");
         jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(900, 690, -1, -1));
 
+        txtTongChiPhi.setEditable(false);
         txtTongChiPhi.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         jPanel1.add(txtTongChiPhi, new org.netbeans.lib.awtextra.AbsoluteConstraints(900, 730, 280, 35));
 

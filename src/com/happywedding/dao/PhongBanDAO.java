@@ -5,7 +5,12 @@
  */
 package com.happywedding.dao;
 
+import com.happywedding.helper.JDBCHelper;
 import com.happywedding.model.PhongBan;
+import com.happywedding.model.VaiTroTaiKhoan;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -13,11 +18,37 @@ import java.util.List;
  * @author ADMIN
  */
 public class PhongBanDAO {
-       public List<PhongBan> select() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
+    private final String SELECT_VaiTroTaiKhoan = "SELECT * FROM PhongBan";
+
+    public List<PhongBan> select() {
+        return select(SELECT_VaiTroTaiKhoan);
     }
 
-    public PhongBan findById(String id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private List select(String sql, Object... args) {
+        List<PhongBan> list = new ArrayList<>();
+        try {
+            ResultSet rs = null;
+            try {
+                rs = JDBCHelper.executeQuery(sql, args);
+                while (rs.next()) {
+                    PhongBan pb = readFromResultSet(rs);
+                    list.add(pb);
+                }
+            } finally {
+                rs.getStatement().getConnection().close();
+            }
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
+        return list;
+    }
+
+    private PhongBan readFromResultSet(ResultSet rs) throws SQLException {
+        PhongBan pb = new PhongBan();
+        pb.setMaPB(rs.getString("MaPB"));
+        pb.setTenPB(rs.getString("TenPB"));
+        return pb;
+
     }
 }

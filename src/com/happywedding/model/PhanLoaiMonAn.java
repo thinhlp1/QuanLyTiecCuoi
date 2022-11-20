@@ -11,6 +11,11 @@ public class PhanLoaiMonAn {
         this.tenPL = tenPL;
     }
 
+    public PhanLoaiMonAn() {
+    }
+    
+    
+
     public String getMaPL() {
         return maPL;
     }

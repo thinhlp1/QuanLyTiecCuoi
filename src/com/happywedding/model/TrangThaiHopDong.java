@@ -11,6 +11,11 @@ public class TrangThaiHopDong {
         this.tenTT = tenTT;
     }
 
+    public TrangThaiHopDong() {
+    }
+    
+    
+
     public String getMaTT() {
         return maTT;
     }

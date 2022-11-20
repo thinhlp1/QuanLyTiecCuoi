@@ -6,12 +6,17 @@ public class HopDong {
 
     private String maHD;
     private String maNL;
+    private String tenNguoiLap;
+    private String tenNguoiDuyet;
     private Date ngayLap;
     private Date ngayDuyet;
     private String maND;
     private String sanh;
     private long soLuongBan;
     private int maKH;
+    private String tenKhachHang;
+    private String sdtKhachHang;
+    private String tenTrangThai;
     private Date ngayToChuc;
     private String thoiGianBatDau;
     private String thoiGianKetThuc;
@@ -42,6 +47,48 @@ public class HopDong {
         this.TongTien = TongTien;
     }
 
+    public String getTenNguoiLap() {
+        return tenNguoiLap;
+    }
+
+    public void setTenNguoiLap(String tenNguoiLap) {
+        this.tenNguoiLap = tenNguoiLap;
+    }
+
+    public String getTenNguoiDuyet() {
+        return tenNguoiDuyet;
+    }
+
+    public void setTenNguoiDuyet(String tenNguoiDuyet) {
+        this.tenNguoiDuyet = tenNguoiDuyet;
+    }
+
+    public String getTenKhachHang() {
+        return tenKhachHang;
+    }
+
+    public void setTenKhachHang(String tenKhachHang) {
+        this.tenKhachHang = tenKhachHang;
+    }
+
+    public String getSdtKhachHang() {
+        return sdtKhachHang;
+    }
+
+    public void setSdtKhachHang(String sdtKhachHang) {
+        this.sdtKhachHang = sdtKhachHang;
+    }
+
+    public String getTenTrangThai() {
+        return tenTrangThai;
+    }
+
+    public void setTenTrangThai(String tenTrangThai) {
+        this.tenTrangThai = tenTrangThai;
+    }
+
+    
+    
     public long getChiPhi() {
         return chiPhi;
     }

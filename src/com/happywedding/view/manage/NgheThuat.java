@@ -6,20 +6,58 @@
 package com.happywedding.view.manage;
 
 import com.happywedding.helper.AppStatus;
+import com.ui.swing.Combobox;
+import java.awt.Component;
+import javax.swing.JTextField;
+
+
+
 
 /**
  *
  * @author ADMIN
  */
 public class NgheThuat extends javax.swing.JDialog {
-    private String maHD;
+     private String maHD;
+     private boolean isCreate;
+     private final String maDV = "NGHETHUAT";
+     
+      static class VatTrangTri {
+
+        static final String VUDAO = "VUDAO";
+        static final String LIENKHUC = "LIENKHUC";
+        
+
+    }
+     
     /**
      * Creates new form NgheThuat
      */
     public NgheThuat(java.awt.Frame parent, boolean modal, String maHD) {
-        super(parent, modal);
-          this.maHD = maHD;
+       super(parent, modal);
+        this.maHD = maHD;
+        this.isCreate = modal;
         initComponents();
+        init();
+    }
+
+    public void init() {
+        isView(isCreate);
+    }
+
+    public void isView(boolean isCreate) {
+        for (Component cp : pnlNgheThuat.getComponents()) {
+            if (cp instanceof JTextField) {
+                cp.setEnabled(isCreate);
+            } else if (cp instanceof Combobox) {
+                cp.setEnabled(isCreate);
+            }
+
+        }
+        btnSave.setVisible(isCreate);
+        btnReset.setVisible(isCreate);
+        btnEdit.setVisible(isCreate);
+        taGhiChu.setEnabled(isCreate);
     }
 
     /**
@@ -31,7 +69,7 @@ public class NgheThuat extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
+        pnlNgheThuat = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         lblMaNH18 = new javax.swing.JLabel();
         cbbGoiDV = new com.ui.swing.Combobox();
@@ -39,20 +77,16 @@ public class NgheThuat extends javax.swing.JDialog {
         jLabel5 = new javax.swing.JLabel();
         lblMaNH19 = new javax.swing.JLabel();
         cbbVuDao = new com.ui.swing.Combobox();
-        lblMaNH22 = new javax.swing.JLabel();
-        cbbCaSi = new com.ui.swing.Combobox();
         lblMaNH24 = new javax.swing.JLabel();
         lblMaNH25 = new javax.swing.JLabel();
         cbbAmNhac = new com.ui.swing.Combobox();
         txtGCAmNhac = new javax.swing.JTextField();
         txtGCVuDao = new javax.swing.JTextField();
-        txtGCCaSi = new javax.swing.JTextField();
         txtChiPhi = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         txtCPPSAmNhac = new javax.swing.JTextField();
         txtCPPSVuDao = new javax.swing.JTextField();
-        txtCPPSCaSi = new javax.swing.JTextField();
         lblMaNH8 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         taGhiChu = new javax.swing.JTextArea();
@@ -65,20 +99,19 @@ public class NgheThuat extends javax.swing.JDialog {
         jLabel10 = new javax.swing.JLabel();
         txtCPAmNhac = new javax.swing.JTextField();
         txtCPVuDao = new javax.swing.JTextField();
-        txtCPCaSi = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        pnlNgheThuat.setBackground(new java.awt.Color(255, 255, 255));
+        pnlNgheThuat.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel4.setText("Tổng chi phí phải trả");
-        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(1010, 480, -1, -1));
+        pnlNgheThuat.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(1010, 420, -1, -1));
 
         lblMaNH18.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         lblMaNH18.setText("Gói");
-        jPanel1.add(lblMaNH18, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 90, 50, 30));
+        pnlNgheThuat.add(lblMaNH18, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 90, 50, 30));
 
         cbbGoiDV.setToolTipText("");
         cbbGoiDV.setLabeText("");
@@ -87,7 +120,7 @@ public class NgheThuat extends javax.swing.JDialog {
                 cbbGoiDVActionPerformed(evt);
             }
         });
-        jPanel1.add(cbbGoiDV, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 90, 320, 35));
+        pnlNgheThuat.add(cbbGoiDV, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 90, 320, 35));
 
         btnEdit.setForeground(new java.awt.Color(255, 255, 255));
         btnEdit.setText("Tùy chỉnh");
@@ -104,15 +137,15 @@ public class NgheThuat extends javax.swing.JDialog {
                 btnEditActionPerformed(evt);
             }
         });
-        jPanel1.add(btnEdit, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 100, -1, 30));
+        pnlNgheThuat.add(btnEdit, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 100, -1, 30));
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        jLabel5.setText("Trang trí bàn tiệc");
-        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 30, -1, -1));
+        jLabel5.setText("Nghệ thuật");
+        pnlNgheThuat.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 30, -1, -1));
 
         lblMaNH19.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         lblMaNH19.setText("Vũ đạo");
-        jPanel1.add(lblMaNH19, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 290, 90, 30));
+        pnlNgheThuat.add(lblMaNH19, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 290, 90, 30));
 
         cbbVuDao.setToolTipText("");
         cbbVuDao.setLabeText("");
@@ -121,28 +154,15 @@ public class NgheThuat extends javax.swing.JDialog {
                 cbbVuDaoActionPerformed(evt);
             }
         });
-        jPanel1.add(cbbVuDao, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 290, 330, 35));
-
-        lblMaNH22.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
-        lblMaNH22.setText("Ca sĩ hát");
-        jPanel1.add(lblMaNH22, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 360, 90, 30));
-
-        cbbCaSi.setToolTipText("");
-        cbbCaSi.setLabeText("");
-        cbbCaSi.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbbCaSiActionPerformed(evt);
-            }
-        });
-        jPanel1.add(cbbCaSi, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 360, 330, 35));
+        pnlNgheThuat.add(cbbVuDao, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 290, 330, 35));
 
         lblMaNH24.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         lblMaNH24.setText("Chi phí");
-        jPanel1.add(lblMaNH24, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 530, 90, 30));
+        pnlNgheThuat.add(lblMaNH24, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 470, 90, 30));
 
         lblMaNH25.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         lblMaNH25.setText("Âm nhạc");
-        jPanel1.add(lblMaNH25, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 220, 100, 30));
+        pnlNgheThuat.add(lblMaNH25, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 220, 100, 30));
 
         cbbAmNhac.setToolTipText("");
         cbbAmNhac.setLabeText("");
@@ -151,7 +171,7 @@ public class NgheThuat extends javax.swing.JDialog {
                 cbbAmNhacActionPerformed(evt);
             }
         });
-        jPanel1.add(cbbAmNhac, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 220, 330, 35));
+        pnlNgheThuat.add(cbbAmNhac, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 220, 330, 35));
 
         txtGCAmNhac.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         txtGCAmNhac.addActionListener(new java.awt.event.ActionListener() {
@@ -159,34 +179,27 @@ public class NgheThuat extends javax.swing.JDialog {
                 txtGCAmNhacActionPerformed(evt);
             }
         });
-        jPanel1.add(txtGCAmNhac, new org.netbeans.lib.awtextra.AbsoluteConstraints(990, 260, 360, 35));
+        pnlNgheThuat.add(txtGCAmNhac, new org.netbeans.lib.awtextra.AbsoluteConstraints(780, 230, 360, 35));
 
         txtGCVuDao.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
-        jPanel1.add(txtGCVuDao, new org.netbeans.lib.awtextra.AbsoluteConstraints(990, 320, 360, 35));
+        pnlNgheThuat.add(txtGCVuDao, new org.netbeans.lib.awtextra.AbsoluteConstraints(780, 290, 360, 35));
 
-        txtGCCaSi.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
-        txtGCCaSi.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtGCCaSiActionPerformed(evt);
-            }
-        });
-        jPanel1.add(txtGCCaSi, new org.netbeans.lib.awtextra.AbsoluteConstraints(990, 390, 360, 35));
-
+        txtChiPhi.setEditable(false);
         txtChiPhi.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         txtChiPhi.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtChiPhiActionPerformed(evt);
             }
         });
-        jPanel1.add(txtChiPhi, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 530, 330, 35));
+        pnlNgheThuat.add(txtChiPhi, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 470, 330, 35));
 
         jLabel6.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel6.setText("Tiết mục");
-        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 170, -1, -1));
+        pnlNgheThuat.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 170, -1, -1));
 
         jLabel7.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel7.setText("Chi phí phát sinh");
-        jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(780, 200, -1, -1));
+        pnlNgheThuat.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(1170, 170, -1, -1));
 
         txtCPPSAmNhac.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         txtCPPSAmNhac.addActionListener(new java.awt.event.ActionListener() {
@@ -194,52 +207,46 @@ public class NgheThuat extends javax.swing.JDialog {
                 txtCPPSAmNhacActionPerformed(evt);
             }
         });
-        jPanel1.add(txtCPPSAmNhac, new org.netbeans.lib.awtextra.AbsoluteConstraints(780, 260, 170, 35));
+        pnlNgheThuat.add(txtCPPSAmNhac, new org.netbeans.lib.awtextra.AbsoluteConstraints(1170, 230, 170, 35));
 
         txtCPPSVuDao.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
-        jPanel1.add(txtCPPSVuDao, new org.netbeans.lib.awtextra.AbsoluteConstraints(780, 320, 170, 35));
-
-        txtCPPSCaSi.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
-        txtCPPSCaSi.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtCPPSCaSiActionPerformed(evt);
-            }
-        });
-        jPanel1.add(txtCPPSCaSi, new org.netbeans.lib.awtextra.AbsoluteConstraints(780, 390, 170, 35));
+        pnlNgheThuat.add(txtCPPSVuDao, new org.netbeans.lib.awtextra.AbsoluteConstraints(1170, 290, 170, 35));
 
         lblMaNH8.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         lblMaNH8.setText("Ghi chú");
-        jPanel1.add(lblMaNH8, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 440, 60, -1));
+        pnlNgheThuat.add(lblMaNH8, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 380, 60, -1));
 
         taGhiChu.setColumns(20);
         taGhiChu.setRows(5);
         jScrollPane1.setViewportView(taGhiChu);
 
-        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 430, 330, 80));
+        pnlNgheThuat.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 370, 330, 80));
 
+        txtTongCPPS.setEditable(false);
         txtTongCPPS.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         txtTongCPPS.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtTongCPPSActionPerformed(evt);
             }
         });
-        jPanel1.add(txtTongCPPS, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 530, 360, 35));
+        pnlNgheThuat.add(txtTongCPPS, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 470, 360, 35));
 
+        txtTongChiPhi.setEditable(false);
         txtTongChiPhi.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         txtTongChiPhi.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtTongChiPhiActionPerformed(evt);
             }
         });
-        jPanel1.add(txtTongChiPhi, new org.netbeans.lib.awtextra.AbsoluteConstraints(1010, 530, 360, 35));
+        pnlNgheThuat.add(txtTongChiPhi, new org.netbeans.lib.awtextra.AbsoluteConstraints(1010, 470, 360, 35));
 
         jLabel8.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel8.setText("Ghi chú");
-        jPanel1.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(990, 200, -1, -1));
+        pnlNgheThuat.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(780, 170, -1, -1));
 
         jLabel9.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel9.setText("Tổng chi phát phát sinh");
-        jPanel1.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 490, -1, -1));
+        pnlNgheThuat.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 430, -1, -1));
 
         btnSave.setBackground(new java.awt.Color(24, 153, 29));
         btnSave.setForeground(new java.awt.Color(255, 255, 255));
@@ -257,7 +264,7 @@ public class NgheThuat extends javax.swing.JDialog {
                 btnSaveActionPerformed(evt);
             }
         });
-        jPanel1.add(btnSave, new org.netbeans.lib.awtextra.AbsoluteConstraints(1200, 610, -1, 30));
+        pnlNgheThuat.add(btnSave, new org.netbeans.lib.awtextra.AbsoluteConstraints(1200, 550, -1, 30));
 
         btnReset.setBackground(new java.awt.Color(24, 37, 153));
         btnReset.setForeground(new java.awt.Color(255, 255, 255));
@@ -275,40 +282,34 @@ public class NgheThuat extends javax.swing.JDialog {
                 btnResetActionPerformed(evt);
             }
         });
-        jPanel1.add(btnReset, new org.netbeans.lib.awtextra.AbsoluteConstraints(1280, 610, -1, 30));
+        pnlNgheThuat.add(btnReset, new org.netbeans.lib.awtextra.AbsoluteConstraints(1280, 550, -1, 30));
 
         jLabel10.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel10.setText("Chi phí");
-        jPanel1.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 200, -1, -1));
+        pnlNgheThuat.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 170, -1, -1));
 
+        txtCPAmNhac.setEditable(false);
         txtCPAmNhac.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         txtCPAmNhac.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtCPAmNhacActionPerformed(evt);
             }
         });
-        jPanel1.add(txtCPAmNhac, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 260, 170, 35));
+        pnlNgheThuat.add(txtCPAmNhac, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 230, 170, 35));
 
+        txtCPVuDao.setEditable(false);
         txtCPVuDao.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
-        jPanel1.add(txtCPVuDao, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 320, 170, 35));
-
-        txtCPCaSi.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
-        txtCPCaSi.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtCPCaSiActionPerformed(evt);
-            }
-        });
-        jPanel1.add(txtCPCaSi, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 390, 170, 35));
+        pnlNgheThuat.add(txtCPVuDao, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 290, 170, 35));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 1446, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(pnlNgheThuat, javax.swing.GroupLayout.PREFERRED_SIZE, 1446, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 671, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(pnlNgheThuat, javax.swing.GroupLayout.PREFERRED_SIZE, 609, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
@@ -327,10 +328,6 @@ public class NgheThuat extends javax.swing.JDialog {
         // TODO add your handling code here:
     }//GEN-LAST:event_cbbVuDaoActionPerformed
 
-    private void cbbCaSiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbbCaSiActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cbbCaSiActionPerformed
-
     private void cbbAmNhacActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbbAmNhacActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_cbbAmNhacActionPerformed
@@ -339,10 +336,6 @@ public class NgheThuat extends javax.swing.JDialog {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtGCAmNhacActionPerformed
 
-    private void txtGCCaSiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtGCCaSiActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtGCCaSiActionPerformed
-
     private void txtChiPhiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtChiPhiActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtChiPhiActionPerformed
@@ -350,10 +343,6 @@ public class NgheThuat extends javax.swing.JDialog {
     private void txtCPPSAmNhacActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCPPSAmNhacActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtCPPSAmNhacActionPerformed
-
-    private void txtCPPSCaSiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCPPSCaSiActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtCPPSCaSiActionPerformed
 
     private void txtTongCPPSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTongCPPSActionPerformed
         // TODO add your handling code here:
@@ -375,17 +364,12 @@ public class NgheThuat extends javax.swing.JDialog {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtCPAmNhacActionPerformed
 
-    private void txtCPCaSiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCPCaSiActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtCPCaSiActionPerformed
-
  
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.ui.swing.HoverButton btnEdit;
     private com.ui.swing.HoverButton btnReset;
     private com.ui.swing.HoverButton btnSave;
     private com.ui.swing.Combobox cbbAmNhac;
-    private com.ui.swing.Combobox cbbCaSi;
     private com.ui.swing.Combobox cbbGoiDV;
     private com.ui.swing.Combobox cbbVuDao;
     private javax.swing.JLabel jLabel10;
@@ -395,24 +379,20 @@ public class NgheThuat extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblMaNH18;
     private javax.swing.JLabel lblMaNH19;
-    private javax.swing.JLabel lblMaNH22;
     private javax.swing.JLabel lblMaNH24;
     private javax.swing.JLabel lblMaNH25;
     private javax.swing.JLabel lblMaNH8;
+    private javax.swing.JPanel pnlNgheThuat;
     private javax.swing.JTextArea taGhiChu;
     private javax.swing.JTextField txtCPAmNhac;
-    private javax.swing.JTextField txtCPCaSi;
     private javax.swing.JTextField txtCPPSAmNhac;
-    private javax.swing.JTextField txtCPPSCaSi;
     private javax.swing.JTextField txtCPPSVuDao;
     private javax.swing.JTextField txtCPVuDao;
     private javax.swing.JTextField txtChiPhi;
     private javax.swing.JTextField txtGCAmNhac;
-    private javax.swing.JTextField txtGCCaSi;
     private javax.swing.JTextField txtGCVuDao;
     private javax.swing.JTextField txtTongCPPS;
     private javax.swing.JTextField txtTongChiPhi;

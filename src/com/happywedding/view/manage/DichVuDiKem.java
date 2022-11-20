@@ -13,13 +13,30 @@ import com.happywedding.helper.AppStatus;
  */
 public class DichVuDiKem extends javax.swing.JDialog {
      private String maHD;
+     private boolean isCreate;
     /**
      * Creates new form DichVuDiKem
-     */
+     */ 
     public DichVuDiKem(java.awt.Frame parent, boolean modal, String maHD) {
         super(parent, modal);
           this.maHD = maHD;
+        this.isCreate = modal;
         initComponents();
+        init();
+    }
+
+    public void init() {
+        isView(isCreate);
+    }
+
+    public void isView(boolean isCreate) {
+       
+        btnSave.setVisible(isCreate);
+        btnReset.setVisible(isCreate);  
+        taGhiChu.setEnabled(isCreate);
+        txtSearch.setEditable(isCreate);
+        tblDichVu.setEnabled(isCreate);
+        tbDichVuDiKem.setEnabled(isCreate);
     }
 
     /**

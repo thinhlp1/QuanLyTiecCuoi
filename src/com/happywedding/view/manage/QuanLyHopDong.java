@@ -4,10 +4,17 @@
  * and open the template in the editor.
  */
 package com.happywedding.view.manage;
+import com.happywedding.dao.HopDongDAO;
 import com.happywedding.helper.AppStatus;
+import com.happywedding.helper.DateHelper;
+import com.happywedding.helper.DialogHelper;
+import com.happywedding.model.HopDong;
+import com.happywedding.model.Sanh;
 import com.ui.swing.Table;
 import com.ui.swing.datechooser.DateChooser;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -21,6 +28,11 @@ public class QuanLyHopDong extends javax.swing.JPanel {
     private DateChooser dtChooser1 = new DateChooser();
     private DateChooser dtChooser2 = new DateChooser();
     
+    private List<Sanh> listSanh = new ArrayList<>();
+    private List<HopDong> listHopDong = new ArrayList<>();
+    private HopDongDAO dao = new HopDongDAO();
+   
+    
     /**
      * Creates new form QuanLyHopDong
      */
@@ -33,15 +45,39 @@ public class QuanLyHopDong extends javax.swing.JPanel {
         tblHopDong.fixTable(jScrollPane2);
         tblModel = (DefaultTableModel) tblHopDong.getModel();
         tblHopDong.setAutoscrolls(true);
-        dtChooser1.setTextRefernce(txtNgayBatDau);
+        dtChooser1.setTextRefernce(txtNgayToChuc);
        
         
-        txtNgayBatDau.setText("");
+        txtNgayToChuc.setText("");
+        listHopDong = dao.select();
+        fillToTable(listHopDong);
+        
      
     }
     
-    public void fillToTable(){
-        
+    public void fillToTable(List<HopDong> listHopDong){
+          tblModel.setRowCount(0);
+        try {
+          
+
+            for (HopDong hd : listHopDong) {
+                Object[] row = {
+                    hd.getMaHD(),
+                    hd.getTenNguoiLap(),
+                    hd.getSoLuongBan(),
+                    hd.getSanh(),
+                    DateHelper.toString(hd.getNgayDuyet(), "dd/MM/yyyy"),
+                    hd.getTenKhachHang(),
+                    DateHelper.toString(hd.getNgayToChuc(), "dd/MM/yyyy"),
+                    hd.getThoiGianBatDau().substring(0, 5),
+                    hd.getThoiGianKetThuc().substring(0, 5),
+                    hd.getTenTrangThai()
+                };
+                tblModel.addRow(row);
+            }
+        } catch (Exception e) {
+            DialogHelper.alertError(this, "Lỗi truy vấn dữ liệu!");
+        }
     }
     
     public void load(){
@@ -78,7 +114,7 @@ public class QuanLyHopDong extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        txtNgayBatDau = new javax.swing.JTextField();
+        txtNgayToChuc = new javax.swing.JTextField();
         cbbSanh = new com.ui.swing.Combobox();
         cbbSortBy = new com.ui.swing.Combobox();
         btnChiTiet = new com.ui.swing.HoverButton();
@@ -166,9 +202,14 @@ public class QuanLyHopDong extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
+        tblHopDong.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblHopDongMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(tblHopDong);
 
-        pnlQuanLyHopDong.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 170, 1590, 730));
+        pnlQuanLyHopDong.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 170, 1590, 710));
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/happywedding/assets/filt.png"))); // NOI18N
         pnlQuanLyHopDong.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 40, -1, -1));
@@ -181,13 +222,18 @@ public class QuanLyHopDong extends javax.swing.JPanel {
         jLabel3.setText("Ngày tổ chức");
         pnlQuanLyHopDong.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 40, -1, 20));
 
-        txtNgayBatDau.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
-        txtNgayBatDau.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtNgayBatDauActionPerformed(evt);
+        txtNgayToChuc.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        txtNgayToChuc.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                txtNgayToChucMouseClicked(evt);
             }
         });
-        pnlQuanLyHopDong.add(txtNgayBatDau, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 40, 200, 35));
+        txtNgayToChuc.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtNgayToChucActionPerformed(evt);
+            }
+        });
+        pnlQuanLyHopDong.add(txtNgayToChuc, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 40, 200, 35));
 
         cbbSanh.setToolTipText("");
         cbbSanh.setLabeText("Sảnh");
@@ -218,7 +264,7 @@ public class QuanLyHopDong extends javax.swing.JPanel {
                 btnChiTietActionPerformed(evt);
             }
         });
-        pnlQuanLyHopDong.add(btnChiTiet, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 920, 80, 30));
+        pnlQuanLyHopDong.add(btnChiTiet, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 890, 80, 30));
 
         btnLapHopDong.setBackground(new java.awt.Color(77, 76, 125));
         btnLapHopDong.setForeground(new java.awt.Color(255, 255, 255));
@@ -235,11 +281,11 @@ public class QuanLyHopDong extends javax.swing.JPanel {
                 btnLapHopDongActionPerformed(evt);
             }
         });
-        pnlQuanLyHopDong.add(btnLapHopDong, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 920, 110, 30));
+        pnlQuanLyHopDong.add(btnLapHopDong, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 890, 110, 30));
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 1, 15)); // NOI18N
         jLabel4.setText("Trạng thái");
-        pnlQuanLyHopDong.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(900, 930, -1, -1));
+        pnlQuanLyHopDong.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(910, 900, -1, -1));
 
         btnGrpStatus.add(rdBtnDaThucHien);
         rdBtnDaThucHien.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
@@ -251,7 +297,7 @@ public class QuanLyHopDong extends javax.swing.JPanel {
                 rdBtnDaThucHienActionPerformed(evt);
             }
         });
-        pnlQuanLyHopDong.add(rdBtnDaThucHien, new org.netbeans.lib.awtextra.AbsoluteConstraints(1320, 930, -1, -1));
+        pnlQuanLyHopDong.add(rdBtnDaThucHien, new org.netbeans.lib.awtextra.AbsoluteConstraints(1330, 900, -1, -1));
 
         btnGrpStatus.add(rdBtnDangCho);
         rdBtnDangCho.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
@@ -263,7 +309,7 @@ public class QuanLyHopDong extends javax.swing.JPanel {
                 rdBtnDangChoActionPerformed(evt);
             }
         });
-        pnlQuanLyHopDong.add(rdBtnDangCho, new org.netbeans.lib.awtextra.AbsoluteConstraints(1020, 930, -1, -1));
+        pnlQuanLyHopDong.add(rdBtnDangCho, new org.netbeans.lib.awtextra.AbsoluteConstraints(1030, 900, -1, -1));
 
         btnGrpStatus.add(rdBtnChoKyKet);
         rdBtnChoKyKet.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
@@ -274,7 +320,7 @@ public class QuanLyHopDong extends javax.swing.JPanel {
                 rdBtnChoKyKetActionPerformed(evt);
             }
         });
-        pnlQuanLyHopDong.add(rdBtnChoKyKet, new org.netbeans.lib.awtextra.AbsoluteConstraints(1190, 930, -1, -1));
+        pnlQuanLyHopDong.add(rdBtnChoKyKet, new org.netbeans.lib.awtextra.AbsoluteConstraints(1200, 900, -1, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -284,7 +330,7 @@ public class QuanLyHopDong extends javax.swing.JPanel {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(pnlQuanLyHopDong, javax.swing.GroupLayout.PREFERRED_SIZE, 950, Short.MAX_VALUE)
+            .addComponent(pnlQuanLyHopDong, javax.swing.GroupLayout.DEFAULT_SIZE, 950, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -320,13 +366,21 @@ public class QuanLyHopDong extends javax.swing.JPanel {
         AppStatus.mainApp.showForm(new LapHopDong(true,""));
     }//GEN-LAST:event_btnLapHopDongActionPerformed
 
-    private void txtNgayBatDauActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNgayBatDauActionPerformed
+    private void txtNgayToChucActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNgayToChucActionPerformed
         showCalendar1();
         
-    }//GEN-LAST:event_txtNgayBatDauActionPerformed
+    }//GEN-LAST:event_txtNgayToChucActionPerformed
 
     private void btnChiTietActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChiTietActionPerformed
-        AppStatus.mainApp.showForm(new LapHopDong(false,""));
+       currentIndex = tblHopDong.getSelectedRow();
+         if (currentIndex >= 0){
+                   String maHD = (String) tblHopDong.getValueAt(this.currentIndex, 0);
+                   LapHopDong lapHopDong = new LapHopDong(false, maHD);
+                   AppStatus.mainApp.showForm(lapHopDong);
+            
+         }else{
+             DialogHelper.alertError(this, "Vui lòng chọn hợp đồng");
+         }
     }//GEN-LAST:event_btnChiTietActionPerformed
 
     private void rdBtnDangChoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdBtnDangChoActionPerformed
@@ -344,6 +398,21 @@ public class QuanLyHopDong extends javax.swing.JPanel {
     private void cbbSortItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbbSortItemStateChanged
         // TODO add your handling code here:
     }//GEN-LAST:event_cbbSortItemStateChanged
+
+    private void txtNgayToChucMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtNgayToChucMouseClicked
+        showCalendar1();
+    }//GEN-LAST:event_txtNgayToChucMouseClicked
+
+    private void tblHopDongMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblHopDongMouseClicked
+         currentIndex = tblHopDong.rowAtPoint(evt.getPoint());
+         if (currentIndex > 0){
+               if (evt.getClickCount() == 2) {
+                   String maHD = (String) tblHopDong.getValueAt(this.currentIndex, 0);
+                   LapHopDong lapHopDong = new LapHopDong(false, maHD);
+                   AppStatus.mainApp.showForm(lapHopDong);
+            }
+         }
+    }//GEN-LAST:event_tblHopDongMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -366,7 +435,7 @@ public class QuanLyHopDong extends javax.swing.JPanel {
     private javax.swing.JRadioButton rdBtnDaThucHien;
     private javax.swing.JRadioButton rdBtnDangCho;
     private com.ui.swing.Table tblHopDong;
-    private javax.swing.JTextField txtNgayBatDau;
+    private javax.swing.JTextField txtNgayToChuc;
     private javax.swing.JTextField txtSearch;
     // End of variables declaration//GEN-END:variables
 }

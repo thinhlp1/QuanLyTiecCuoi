@@ -61,8 +61,10 @@ public class ChiTietDatMonDAO {
         return list.size() > 0 ? list.get(0) : null;
     }
 
+
     public List<ChiTietDatMon> selectChiTietDatMon(String maHD) {
         return selectChiTietDatMon(SELECT_CHITIETDATMON, maHD);
+
 
     }
 
