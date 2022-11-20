@@ -47,6 +47,38 @@ public class QuanLyHopDong extends javax.swing.JPanel {
         tblHopDong.setAutoscrolls(true);
         dtChooser1.setTextRefernce(txtNgayToChuc);
        
+       
+        Sanh s = new Sanh();
+        s.setMaSanh("SANH01");
+        s.setTenSanh("Sảnh 01");
+        s.setMaPL("DONGIAN");
+        s.setTenPL("Đơn Giản");
+        s.setSucChua(100);
+        s.setGiaThueSanh(5000000);
+        s.setGiaBan(300000);
+        
+         Sanh s2 = new Sanh();
+         s2.setMaSanh("SANH02");
+        s2.setTenSanh("Sảnh 02");
+        s2.setMaPL("TRUNGBINH");
+        s2.setTenPL("Trung Bình");
+        s2.setSucChua(150);
+        s2.setGiaThueSanh(7000000);
+        s2.setGiaBan(435000);
+        
+         Sanh s3 = new Sanh();
+        s3.setMaSanh("SANH03");
+        s3.setTenSanh("Sảnh 03");
+        s3.setMaPL("CAOCAP");
+        s3.setTenPL("Cao cấp");
+        s3.setSucChua(200);
+        s3.setGiaThueSanh(18000000);
+        s3.setGiaBan(840000);
+        
+        listSanh.add(s);
+        listSanh.add(s2);
+        listSanh.add(s3);
+        
         
         txtNgayToChuc.setText("");
         listHopDong = dao.select();
@@ -202,6 +234,7 @@ public class QuanLyHopDong extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
+        tblHopDong.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         tblHopDong.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tblHopDongMouseClicked(evt);

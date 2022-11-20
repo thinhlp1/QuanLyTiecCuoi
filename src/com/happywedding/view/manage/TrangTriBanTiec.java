@@ -6,15 +6,19 @@
 package com.happywedding.view.manage;
 
 import com.happywedding.dao.ChiTietDichVuDAO;
+import com.happywedding.dao.CoSoVatChatDAO;
+import com.happywedding.dao.GoiDichVuDAO;
 import com.happywedding.helper.AppStatus;
 import com.happywedding.model.ChiTietDichVu;
 import com.happywedding.model.CoSoVatChat;
 import com.happywedding.model.GoiDichVu;
 import com.happywedding.model.HopDongDichVu;
+import com.happywedding.model.Sanh;
 import com.ui.swing.Combobox;
 import java.awt.Component;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComponent;
 import javax.swing.JTextField;
 
@@ -26,6 +30,7 @@ public class TrangTriBanTiec extends javax.swing.JDialog {
 
     private String maHD;
     private ChiTietDichVuDAO chiTietDVDAO = new ChiTietDichVuDAO();
+    private CoSoVatChatDAO csvcDAO = new CoSoVatChatDAO();
     private boolean isCreate;
 
     private List<CoSoVatChat> listTraiBan = new ArrayList<>();
@@ -55,20 +60,27 @@ public class TrangTriBanTiec extends javax.swing.JDialog {
         this.maHD = maHD;
         this.soLuongBan = soLuongBan;
         this.isCreate = modal;
+        
+        
         initComponents();
+       
         init();
     }
 
     public void init() {
         //ITODO load combobox lên tất cả các vật trang trí và gói dịch vụ
+        
+        loadGoiDichVu();
+        loadCoSoVatChat();
         ttBanTiec = chiTietDVDAO.selectDichVu(maHD, maDV);
         if (ttBanTiec != null) {
            if (ttBanTiec.getMaGoi() != null){
                for (GoiDichVu goi : listGoiDichVu) {
                 if (goi.getMaGoi().equals(ttBanTiec.getMaDV())) {
-                    cbbAoGhe.setSelectedItem(goi);
+                    cbbGoiDV.setSelectedItem(goi);
                 }
             }
+               cbbGoiDV.setSelectedIndex(-1);
            }
            fillForm();
         }
@@ -93,6 +105,46 @@ public class TrangTriBanTiec extends javax.swing.JDialog {
 
     }
     
+    // các hàm lấy dữ liệu từ cơ sở dữ liệu
+    public void loadGoiDichVu(){
+        listGoiDichVu = new GoiDichVuDAO().selectGoiDichVu(maDV);
+        DefaultComboBoxModel cbbModel = (DefaultComboBoxModel) cbbGoiDV.getModel();
+        cbbModel.removeAllElements();
+        for (GoiDichVu s : listGoiDichVu ){
+            cbbModel.addElement(s);
+        }
+    }
+    
+    public void loadCoSoVatChat(){
+        listAoGhe = csvcDAO.selectByMaDMC(VatTrangTri.AOGHE);
+        listHoa = csvcDAO.selectByMaDMC(VatTrangTri.HOACHUDAO);
+        listTraiBan = csvcDAO.selectByMaDMC(VatTrangTri.TRAIBAN);
+        
+         DefaultComboBoxModel cbbAoGheModel = (DefaultComboBoxModel) cbbAoGhe.getModel();
+         cbbAoGheModel.removeAllElements();
+         
+         for (CoSoVatChat csvc : listAoGhe){
+             cbbAoGheModel.addElement(csvc);
+         }
+         
+        DefaultComboBoxModel cbbThamTraiModel = (DefaultComboBoxModel) cbbTham.getModel();
+        cbbAoGheModel.removeAllElements();
+         
+         for (CoSoVatChat csvc : listTraiBan){
+            cbbThamTraiModel.addElement(csvc);
+         }
+         
+        DefaultComboBoxModel cbbHoaModel = (DefaultComboBoxModel) cbbAoGhe.getModel();
+        cbbAoGheModel.removeAllElements();
+         
+         for (CoSoVatChat csvc : listHoa){
+            cbbHoaModel.addElement(csvc);
+         }
+        
+    }
+    
+    
+    // các hàm xử lý form
     public void tinhTien(){
         long tongCPPS = Integer.parseInt(txtCPPSAoGhe.getText()) + Integer.parseInt(txtCPPSHoaTT.getText()) + Integer.parseInt(txtCPPSTham.getText()) ;
         long chiPhi = Integer.parseInt(txtCPAoGhe.getText()) + Integer.parseInt(txtCPHoaTT.getText()) + Integer.parseInt(txtCPTham.getText()) ;
@@ -219,13 +271,14 @@ public class TrangTriBanTiec extends javax.swing.JDialog {
         pnlTTBanTiec.add(lblMaNH18, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 90, 50, 30));
 
         cbbGoiDV.setToolTipText("");
+        cbbGoiDV.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         cbbGoiDV.setLabeText("");
         cbbGoiDV.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cbbGoiDVActionPerformed(evt);
             }
         });
-        pnlTTBanTiec.add(cbbGoiDV, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 90, 320, 35));
+        pnlTTBanTiec.add(cbbGoiDV, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 80, 320, 40));
 
         btnEdit.setForeground(new java.awt.Color(255, 255, 255));
         btnEdit.setText("Tùy chỉnh");
@@ -253,6 +306,7 @@ public class TrangTriBanTiec extends javax.swing.JDialog {
         pnlTTBanTiec.add(lblMaNH19, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 290, 90, 30));
 
         cbbAoGhe.setToolTipText("");
+        cbbAoGhe.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         cbbAoGhe.setLabeText("");
         cbbAoGhe.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -264,13 +318,14 @@ public class TrangTriBanTiec extends javax.swing.JDialog {
                 cbbAoGheActionPerformed(evt);
             }
         });
-        pnlTTBanTiec.add(cbbAoGhe, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 290, 330, 35));
+        pnlTTBanTiec.add(cbbAoGhe, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 270, 330, 45));
 
         lblMaNH22.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         lblMaNH22.setText("Hoa trang trí");
         pnlTTBanTiec.add(lblMaNH22, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 360, 90, 30));
 
         cbbHoaTT.setToolTipText("");
+        cbbHoaTT.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         cbbHoaTT.setLabeText("");
         cbbHoaTT.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -282,7 +337,7 @@ public class TrangTriBanTiec extends javax.swing.JDialog {
                 cbbHoaTTActionPerformed(evt);
             }
         });
-        pnlTTBanTiec.add(cbbHoaTT, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 360, 330, 35));
+        pnlTTBanTiec.add(cbbHoaTT, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 340, 330, 45));
 
         lblMaNH24.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         lblMaNH24.setText("Chi phí");
@@ -293,6 +348,7 @@ public class TrangTriBanTiec extends javax.swing.JDialog {
         pnlTTBanTiec.add(lblMaNH25, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 220, 100, 30));
 
         cbbTham.setToolTipText("");
+        cbbTham.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         cbbTham.setLabeText("");
         cbbTham.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -304,7 +360,7 @@ public class TrangTriBanTiec extends javax.swing.JDialog {
                 cbbThamActionPerformed(evt);
             }
         });
-        pnlTTBanTiec.add(cbbTham, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 220, 330, 35));
+        pnlTTBanTiec.add(cbbTham, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 200, 330, 45));
 
         txtGCTham.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         txtGCTham.addActionListener(new java.awt.event.ActionListener() {
@@ -497,15 +553,18 @@ public class TrangTriBanTiec extends javax.swing.JDialog {
     }//GEN-LAST:event_btnEditActionPerformed
 
     private void cbbAoGheActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbbAoGheActionPerformed
-     
+//          txtCPPSAoGhe.setText(listAoGhe.get(cbbAoGhe.getSelectedIndex()).getGiaThue() * soLuongBan * 10  + "");
+//        tinhTien();
     }//GEN-LAST:event_cbbAoGheActionPerformed
 
     private void cbbHoaTTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbbHoaTTActionPerformed
-        // TODO add your handling code here:
+        txtCPHoaTT.setText("0");
+        tinhTien();
     }//GEN-LAST:event_cbbHoaTTActionPerformed
 
     private void cbbThamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbbThamActionPerformed
-        // TODO add your handling code here:
+        txtCPTham.setText(listTraiBan.get(cbbTham.getSelectedIndex()).getGiaThue() * soLuongBan  + "");
+        tinhTien();
     }//GEN-LAST:event_cbbThamActionPerformed
 
     private void txtGCThamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtGCThamActionPerformed
@@ -563,19 +622,16 @@ public class TrangTriBanTiec extends javax.swing.JDialog {
     }//GEN-LAST:event_txtCPHoaTTActionPerformed
 
     private void cbbThamItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbbThamItemStateChanged
-        txtCPTham.setText(listTraiBan.get(cbbTham.getSelectedIndex()).getGiaThue() * soLuongBan  + "");
-        tinhTien();
+    
        
     }//GEN-LAST:event_cbbThamItemStateChanged
 
     private void cbbAoGheItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbbAoGheItemStateChanged
-          txtCPPSAoGhe.setText(listAoGhe.get(cbbAoGhe.getSelectedIndex()).getGiaThue() * soLuongBan * 10  + "");
-        tinhTien();
+        
     }//GEN-LAST:event_cbbAoGheItemStateChanged
 
     private void cbbHoaTTItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbbHoaTTItemStateChanged
-        txtCPHoaTT.setText("0");
-        tinhTien();
+      
     }//GEN-LAST:event_cbbHoaTTItemStateChanged
 
     private void txtCPPSThamKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCPPSThamKeyReleased

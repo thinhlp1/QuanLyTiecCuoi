@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFrame;
 
 /**
@@ -63,8 +64,7 @@ public class LapHopDong extends javax.swing.JPanel {
     private boolean isEdit;
 
     private boolean checkIsDichVu = false;
-    
-    
+
     private List<Sanh> listSanh = new ArrayList<>();
 
     /**
@@ -83,6 +83,39 @@ public class LapHopDong extends javax.swing.JPanel {
         AppStatus.lapHopDong = this;
         dateChooser.setTextRefernce(txtNgayToChuc);
 
+        Sanh s = new Sanh();
+        s.setMaSanh("SANH01");
+        s.setTenSanh("Sảnh 01");
+        s.setMaPL("DONGIAN");
+        s.setTenPL("Đơn Giản");
+        s.setSucChua(100);
+        s.setGiaThueSanh(5000000);
+        s.setGiaBan(300000);
+
+        Sanh s2 = new Sanh();
+        s2.setMaSanh("SANH02");
+        s2.setTenSanh("Sảnh 02");
+        s2.setMaPL("TRUNGBINH");
+        s2.setTenPL("Trung Bình");
+        s2.setSucChua(150);
+        s2.setGiaThueSanh(7000000);
+        s2.setGiaBan(435000);
+
+        Sanh s3 = new Sanh();
+        s3.setMaSanh("SANH03");
+        s3.setTenSanh("Sảnh 03");
+        s3.setMaPL("CAOCAP");
+        s3.setTenPL("Cao cấp");
+        s3.setSucChua(200);
+        s3.setGiaThueSanh(18000000);
+        s3.setGiaBan(840000);
+
+        listSanh.add(s);
+        listSanh.add(s2);
+        listSanh.add(s3);
+        
+        loadSanh();
+
     }
 
     public LapHopDong(String MaHD) {
@@ -98,7 +131,7 @@ public class LapHopDong extends javax.swing.JPanel {
         } else {
             initView();
         }
-        
+
         //ITODO   Load list sanh và add vào combobox
     }
 
@@ -192,11 +225,16 @@ public class LapHopDong extends javax.swing.JPanel {
     /*
     Lấy danh sách các sảnh chưa đặt trong ngày tổ chức
      */
-    public List<Sanh> loadSanh() {
-        List<Sanh> list = null;
-        //List<Sanh> list = sanhDAO.selectSanhConTrong();
+    public void loadSanh() {
 
-        return list;
+        //listSanh = sanhDAO.selectSanhConTrong();
+        DefaultComboBoxModel cbbModel = (DefaultComboBoxModel) cbbSanh.getModel();
+        cbbModel.removeAllElements();
+        for (Sanh s : listSanh ){
+            cbbModel.addElement(s);
+        }
+        cbbSanh.setSelectedIndex(-1);
+
     }
 
     /*
@@ -206,15 +244,15 @@ public class LapHopDong extends javax.swing.JPanel {
     public void reloadHopDong() {
         System.out.println("reload");
         hopDong = hopDongDAO.findById("HD001");
-        
+
         List<Long> chiPhi = hopDongDAO.tinhToan(maHD);
-        txtChiPhi.setText(chiPhi.get(0)+"");
-        txtChiPhiPhatSinh.setText(chiPhi.get(1)+"");
-        long tongTien = (long) (( chiPhi.get(0) + chiPhi.get(1)  )* ((Integer.parseInt(txtThue.getText() ))/100.0)) ;
+        txtChiPhi.setText(chiPhi.get(0) + "");
+        txtChiPhiPhatSinh.setText(chiPhi.get(1) + "");
+        long tongTien = (long) ((chiPhi.get(0) + chiPhi.get(1)) * ((Integer.parseInt(txtThue.getText())) / 100.0));
         long tienCoc = (long) (tongTien * 0.5);
-        txtTongTien.setText( tongTien  + ""  );
-        txtTienCoc.setText(tienCoc + "" );
-        
+        txtTongTien.setText(tongTien + "");
+        txtTienCoc.setText(tienCoc + "");
+
         hopDongDAO.updateChiPhi(tienCoc, tongTien, maHD);
     }
 
@@ -251,39 +289,37 @@ public class LapHopDong extends javax.swing.JPanel {
         txtCMND.setText(khachHang.getCCCD());
         txtSDT.setText(khachHang.getSoDienThoai());
         taDiaChi.setText(khachHang.getDiaChi());
-        
+
         txtHoTenChuRe.setText(khachHang.getHoTenChuRe());
         txtHoTenCoDau.setText(khachHang.getHoTenCoDau());
-        
+
         txtMaHD.setText(hopDong.getMaHD());
         txtNguoiLap.setText(hopDong.getTenNguoiLap());
         txtNgayLap.setText(DateHelper.toString(hopDong.getNgayLap(), "dd/MM/yyyy"));
         txtTrangThai.setText(hopDong.getTenTrangThai());
-        
+
         txtNgayToChuc.setText(DateHelper.toString(hopDong.getNgayToChuc(), "dd/MM/yyyy"));
         txtBatDau.setText(hopDong.getThoiGianBatDau().substring(0, 5));
         txtKetThuc.setText(hopDong.getThoiGianKetThuc().substring(0, 5));
         txtSLBan.setText(hopDong.getSoLuongBan() + "");
-        
-        for (Sanh s : listSanh){
-            if (s.getTenSanh().equals(hopDong.getSanh())){
+
+        for (Sanh s : listSanh) {
+            if (s.getTenSanh().equals(hopDong.getSanh())) {
                 cbbSanh.setSelectedItem(s);
             }
         }
-        
-        txtThue.setText(hopDong.getThue()+"");
-        txtTienCoc.setText(hopDong.getTienCoc()+"");
+
+        txtThue.setText(hopDong.getThue() + "");
+        txtTienCoc.setText(hopDong.getTienCoc() + "");
         List<Long> chiPhi = hopDongDAO.tinhToan(maHD);
-        txtChiPhi.setText(chiPhi.get(0)+"");
-        txtChiPhiPhatSinh.setText(chiPhi.get(1)+"");
-        
-        txtTongTien.setText(hopDong.getTongTien()+"");
-        
+        txtChiPhi.setText(chiPhi.get(0) + "");
+        txtChiPhiPhatSinh.setText(chiPhi.get(1) + "");
+
+        txtTongTien.setText(hopDong.getTongTien() + "");
+
         txtNgayDuyet.setText(DateHelper.toString(hopDong.getNgayDuyet(), "dd/MM/yyyy"));
         txtNguoiDuyet.setText(hopDong.getTenNguoiDuyet());
     }
-
-   
 
     // các hàm điều chỉnh trạng thái
     /*
@@ -828,6 +864,7 @@ public class LapHopDong extends javax.swing.JPanel {
         jPanel4.add(txtKetThuc, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 70, 140, 35));
 
         cbbSanh.setToolTipText("");
+        cbbSanh.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         cbbSanh.setLabeText("");
         cbbSanh.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1361,15 +1398,14 @@ public class LapHopDong extends javax.swing.JPanel {
         saveInfo();
         btnSaveInfo.setVisible(false);
 
-       
         statusHopDong = StatusHopDong.XOA;
         // thêm khách hàng và hợp đồng vào csdl với trạng thái là dã xóa
         //insertHopDong()
-        
+
         this.maHD = txtMaHD.getText();
         hopDong = hopDongDAO.findById(maHD);
-   ;
-        
+        ;
+
         phanQuyen();
         isEdit();
         btnSave.setVisible(true);

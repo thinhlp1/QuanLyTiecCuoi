@@ -23,6 +23,11 @@ public class GoiDichVu {
     public GoiDichVu() {
     }
 
+    @Override
+    public String toString() {
+       return tenGoi;
+    }
+
     
     
     public String getTenDV() {

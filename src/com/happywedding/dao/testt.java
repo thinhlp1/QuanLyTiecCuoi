@@ -7,6 +7,7 @@ package com.happywedding.dao;
 
 import com.happywedding.model.ChiTietDatMon;
 import com.happywedding.model.ChiTietDichVuDiKem;
+import com.happywedding.model.CoSoVatChat;
 import com.happywedding.model.DichVuDatMon;
 import com.happywedding.model.GoiDichVu;
 import com.happywedding.model.HoaDon;
@@ -84,21 +85,33 @@ public class testt {
 //                  System.out.println( i+ "-" + ma.getTenMA() + " " + ma.getGiaTien() + " "  );
 //              }
 
-                HoaDonDAO dao = new HoaDonDAO();
-                HoaDon hd = dao.selectHoaDon("HD002");
-              
-                hd.setMaHD("HD003");
-             hd.setMaNV("NV002");
-//                hd.setTongTien(1234254254);
-                dao.insertHoaDon(hd);
-                hd = dao.selectHoaDon("HD003");
-                 System.out.println( hd.getMaHoaDon() + "  "+hd.getMaHD() + " "  + hd.getNgayLap()+ " "+ hd.getTenNV()+ " " 
-                       + hd.getTienCoc()+ " "+ hd.getPhatSinh()+ " "+ hd.getTongTien()+ " "+ hd.getTrangTha()+ " ");
+//                HoaDonDAO dao = new HoaDonDAO();
+//                HoaDon hd = dao.selectHoaDon("HD002");
+//              
+//                hd.setMaHD("HD003");
+//             hd.setMaNV("NV002");
+////                hd.setTongTien(1234254254);
+//                dao.insertHoaDon(hd);
+//                hd = dao.selectHoaDon("HD003");
+//                 System.out.println( hd.getMaHoaDon() + "  "+hd.getMaHD() + " "  + hd.getNgayLap()+ " "+ hd.getTenNV()+ " " 
+//                       + hd.getTienCoc()+ " "+ hd.getPhatSinh()+ " "+ hd.getTongTien()+ " "+ hd.getTrangTha()+ " ");
                 //dao.updateHoaDon(999999,"HD003");
                 
               //  dao.insertChiPhiPhatSinh("HD003", "TTBANTIEC",199090, "them");
                 
-     
+              CoSoVatChatDAO dao = new CoSoVatChatDAO();
+              
+               CoSoVatChat csvc = dao.findById("AOGHETIM");
+               csvc.setMaCSVC("AOGHEHONG");
+               csvc.setTenCSVC("Áo ghế hong");
+               dao.insert(csvc);
+              
+              List<CoSoVatChat> list = dao.selectByMaDMC("AOGHE");
+//              
+              for (CoSoVatChat c : list){
+                  System.out.println( c.getMaCSVC() + "- " + c.getTenCSVC()+ "- " + c.getMaDanhMuc()+ "- "+ c.getMaDanhMucCon()+ "- "
+                  + c.getGiaThue()+ "- "+ c.getSoLuong()+ "- "+ c.getGhiChu());
+              }
      
      }          
      

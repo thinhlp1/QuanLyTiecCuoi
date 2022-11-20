@@ -8,6 +8,7 @@ public class CoSoVatChat {
     private String maCSVC;
     private String tenCSVC;
     private String maDanhMuc;
+    private String maDanhMucCon;
     private String tenDanhMuc;
     private long soLuong;
     private long giaThue;
@@ -22,6 +23,24 @@ public class CoSoVatChat {
         this.giaThue = giaThue;
         this.ghiChu = ghiChu;
     }
+
+    public CoSoVatChat() {
+    }
+
+    public String getMaDanhMucCon() {
+        return maDanhMucCon;
+    }
+
+    public void setMaDanhMucCon(String maDanhMucCon) {
+        this.maDanhMucCon = maDanhMucCon;
+    }
+
+    @Override
+    public String toString() {
+       return tenCSVC;
+    }
+    
+    
 
     
         
