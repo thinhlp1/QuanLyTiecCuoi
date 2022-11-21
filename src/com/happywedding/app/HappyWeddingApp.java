@@ -105,7 +105,7 @@ public class HappyWeddingApp extends javax.swing.JFrame {
 
         if (!AppStatus.isFirstStart()) {
             new DangNhap(this, true).setVisible(true);
-            //new Loading(this, true).setVisible(true);
+            new Loading(this, true).setVisible(true);
             AppStatus.loadApp();
         }
       // AppStatus.USER = new EmployeeDAO().findById("PheoNC");
@@ -381,6 +381,7 @@ public class HappyWeddingApp extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
+                
                 new HappyWeddingApp().setVisible(true);
             }
         });

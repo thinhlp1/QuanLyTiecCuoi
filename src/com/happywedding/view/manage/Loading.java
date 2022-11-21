@@ -3,12 +3,13 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
  */
 package com.happywedding.view.manage;
+import java.awt.Frame;
 
 /**
  *
  * @author ACER
  */
-public class Loading extends javax.swing.JDialog {
+public class Loading extends javax.swing.JDialog implements Runnable{
 
     /**
      * Creates new form Loading
@@ -16,6 +17,32 @@ public class Loading extends javax.swing.JDialog {
     public Loading(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        
+        Thread t1 = new Thread(this);
+        t1.start();
+    }
+    
+    int giaTri = 0;
+    public void tuDongChay(){
+        giaTri = giaTri + 10;
+        prbTienTrinh.setValue(giaTri);
+    }
+    
+    @Override
+    public void run(){
+        while(true){
+            if(giaTri == 100){
+               this.dispose();
+            }
+            try {
+                // … mã lấy thời gian hệ thống hiển thị lên nút
+                tuDongChay();
+                Thread.sleep(500);
+                
+            } catch (InterruptedException e) {
+                break;
+            }
+        }
     }
 
     /**
@@ -27,24 +54,25 @@ public class Loading extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jProgressBar1 = new javax.swing.JProgressBar();
-        jLabel5 = new javax.swing.JLabel();
+        pictureBox1 = new com.ui.swing.PictureBox();
+        prbTienTrinh = new javax.swing.JProgressBar();
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jProgressBar1.setForeground(new java.awt.Color(255, 247, 244));
-        jProgressBar1.setBorder(new javax.swing.border.MatteBorder(null));
-        jProgressBar1.setOpaque(true);
-        getContentPane().add(jProgressBar1, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 510, 950, 30));
+        pictureBox1.setImage(new javax.swing.ImageIcon(getClass().getResource("/com/happywedding/assets/HappyWedding.png"))); // NOI18N
+        getContentPane().add(pictureBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 10, 650, 490));
 
-        jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/happywedding/assets/logoWedding.png"))); // NOI18N
-        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 20, 610, 390));
+        prbTienTrinh.setForeground(new java.awt.Color(255, 247, 244));
+        prbTienTrinh.setBorder(new javax.swing.border.MatteBorder(null));
+        prbTienTrinh.setOpaque(true);
+        prbTienTrinh.setStringPainted(true);
+        getContentPane().add(prbTienTrinh, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 510, 950, 30));
 
         jLabel1.setBackground(new java.awt.Color(255, 247, 244));
         jLabel1.setOpaque(true);
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1090, 580));
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1090, 590));
 
         pack();
         setLocationRelativeTo(null);
@@ -94,7 +122,7 @@ public class Loading extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JProgressBar jProgressBar1;
+    private com.ui.swing.PictureBox pictureBox1;
+    private javax.swing.JProgressBar prbTienTrinh;
     // End of variables declaration//GEN-END:variables
 }

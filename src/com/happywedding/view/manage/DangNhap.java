@@ -52,7 +52,7 @@ public class DangNhap extends javax.swing.JDialog {
         getContentPane().add(pictureBox2, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 20, 430, 140));
 
         pictureBox1.setImage(new javax.swing.ImageIcon(getClass().getResource("/com/happywedding/assets/HappyWedding.png"))); // NOI18N
-        getContentPane().add(pictureBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 120, 640, 410));
+        getContentPane().add(pictureBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 120, 640, 410));
 
         btnQuenMatKhau.setEndColor("#FFB9B9");
         btnQuenMatKhau.setStartColor("#E9D5CA");
@@ -112,12 +112,12 @@ public class DangNhap extends javax.swing.JDialog {
 
         txtTenDangNhap.setBackground(new java.awt.Color(255, 247, 244));
         txtTenDangNhap.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        txtTenDangNhap.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 1, 1, 0, new java.awt.Color(0, 0, 0)));
+        txtTenDangNhap.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(0, 0, 0)));
         getContentPane().add(txtTenDangNhap, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 260, 400, 50));
 
         txtMatKhau.setBackground(new java.awt.Color(255, 247, 244));
         txtMatKhau.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        txtMatKhau.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 1, 1, 0, new java.awt.Color(0, 0, 0)));
+        txtMatKhau.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(0, 0, 0)));
         getContentPane().add(txtMatKhau, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 420, 400, 50));
 
         lblMatKhau.setFont(new java.awt.Font("Times New Roman", 0, 24)); // NOI18N
