@@ -94,11 +94,11 @@ public class HappyWeddingApp extends javax.swing.JFrame {
 
     public HappyWeddingApp() {
 
-//        if (!AppStatus.isFirstStart()) {
-//            new DangNhap(this, true).setVisible(true);
-//            new Loading(this, true).setVisible(true);
-//            AppStatus.loadApp();
-//        }
+        if (!AppStatus.isFirstStart()) {
+            new DangNhap(this, true).setVisible(true);
+            new Loading(this, true).setVisible(true);
+            AppStatus.loadApp();
+        }
 //       AppStatus.USER = new EmployeeDAO().findById("PheoNC");
         AppStatus.loadApp();
         initComponents();

@@ -5,6 +5,7 @@
  */
 package com.happywedding.dao;
 
+import com.happywedding.helper.ShareHelper;
 import com.happywedding.model.ChiTietDatMon;
 import com.happywedding.model.ChiTietDichVuDiKem;
 import com.happywedding.model.CoSoVatChat;
@@ -99,19 +100,21 @@ public class testt {
                 
               //  dao.insertChiPhiPhatSinh("HD003", "TTBANTIEC",199090, "them");
                 
-              CoSoVatChatDAO dao = new CoSoVatChatDAO();
-              
-               CoSoVatChat csvc = dao.findById("AOGHETIM");
-               csvc.setMaCSVC("AOGHEHONG");
-               csvc.setTenCSVC("Áo ghế hong");
-               dao.insert(csvc);
-              
-              List<CoSoVatChat> list = dao.selectByMaDMC("AOGHE");
+//              CoSoVatChatDAO dao = new CoSoVatChatDAO();
 //              
-              for (CoSoVatChat c : list){
-                  System.out.println( c.getMaCSVC() + "- " + c.getTenCSVC()+ "- " + c.getMaDanhMuc()+ "- "+ c.getMaDanhMucCon()+ "- "
-                  + c.getGiaThue()+ "- "+ c.getSoLuong()+ "- "+ c.getGhiChu());
-              }
+//               CoSoVatChat csvc = dao.findById("AOGHETIM");
+//               csvc.setMaCSVC("AOGHEHONG");
+//               csvc.setTenCSVC("Áo ghế hong");
+//               dao.insert(csvc);
+//              
+//              List<CoSoVatChat> list = dao.selectByMaDMC("AOGHE");
+////              
+//              for (CoSoVatChat c : list){
+//                  System.out.println( c.getMaCSVC() + "- " + c.getTenCSVC()+ "- " + c.getMaDanhMuc()+ "- "+ c.getMaDanhMucCon()+ "- "
+//                  + c.getGiaThue()+ "- "+ c.getSoLuong()+ "- "+ c.getGhiChu());
+//              }
+                
+                System.out.println(ShareHelper.toMoney(100000));
      
      }          
      

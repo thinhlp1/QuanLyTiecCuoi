@@ -31,6 +31,8 @@ public class ChiTietDichVuDAO {
             + "\n"
             + "GhiChu FROM HopDongDichVu hddv  \n"
             + "WHERE hddv.MaHD = ? AND hddv.MaDV = ?";
+    
+   
 
     private final String CHECK_HOPDONGDICHVU = "SELECT * FROM HopDongDichVu WHERE MaHD = ? AND MaDV = ?";
 
@@ -65,6 +67,8 @@ public class ChiTietDichVuDAO {
             + "INNER JOIN HopDong hd ON hd.MaHD = ctdv.MaHD\n"
             + "WHERE csvc.MaCSVC = ? AND NgayToChuc = ?\n"
             + "GROUP BY csvc.MaCSVC";
+    
+     public final String DELETE_ALL_CHITIETDICHVU = "DELETE ChiTietDichVu WHERE MaHD = ? AND MaDV = ?";
 
     /*
     thêm vào HopDongDichVu
@@ -86,7 +90,7 @@ public class ChiTietDichVuDAO {
     }
 
     public boolean checkHopDongDichVu(String maHD, String maDV) {
-        List<HopDongDichVu> list = selectDichVu(CHECK_HOPDONGDICHVU, maHD, maDV);
+        List<HopDongDichVu> list = selectDichVu(SELECT_DICHVU, maHD, maDV, maDV, maHD, maDV);
         return list.size() > 0;
     }
 
@@ -102,6 +106,11 @@ public class ChiTietDichVuDAO {
         int rs = JDBCHelper.executeUpdate(UPDATE_CHITIETDICHVU, ctdv.getMaCSVC(), ctdv.getChiPhi(), ctdv.getChiPhiPhatSinh(), ctdv.getGhiChu(), ctdv.getMaHD(), ctdv.getMaDV(), maDMC);
         return rs > 0;
 
+    }
+    
+    
+    public void deleteAllChiTietDichVu(String maHD,String maDV){
+        JDBCHelper.executeUpdate(DELETE_ALL_CHITIETDICHVU, maHD,maDV);
     }
 
     public List<ChiTietDichVu> selectAllChiTietDichVu(String maHD, String maDV) {

@@ -11,6 +11,7 @@ import com.happywedding.dao.SanhDAO;
 import com.happywedding.dao.TrangThaiHopDongDAO;
 import com.happywedding.helper.AppStatus;
 import com.happywedding.helper.DateHelper;
+import com.happywedding.helper.ShareHelper;
 import com.happywedding.model.HopDong;
 import com.happywedding.model.KhachHang;
 import com.happywedding.model.Sanh;
@@ -74,6 +75,8 @@ public class LapHopDong extends javax.swing.JPanel {
         initComponents();
         this.isCreate = isCreate;
         this.maHD = maHD;
+          
+        loadSanh();
         init();
         phanQuyen();
         if (isCreate) {
@@ -83,38 +86,8 @@ public class LapHopDong extends javax.swing.JPanel {
         AppStatus.lapHopDong = this;
         dateChooser.setTextRefernce(txtNgayToChuc);
 
-        Sanh s = new Sanh();
-        s.setMaSanh("SANH01");
-        s.setTenSanh("Sảnh 01");
-        s.setMaPL("DONGIAN");
-        s.setTenPL("Đơn Giản");
-        s.setSucChua(100);
-        s.setGiaThueSanh(5000000);
-        s.setGiaBan(300000);
-
-        Sanh s2 = new Sanh();
-        s2.setMaSanh("SANH02");
-        s2.setTenSanh("Sảnh 02");
-        s2.setMaPL("TRUNGBINH");
-        s2.setTenPL("Trung Bình");
-        s2.setSucChua(150);
-        s2.setGiaThueSanh(7000000);
-        s2.setGiaBan(435000);
-
-        Sanh s3 = new Sanh();
-        s3.setMaSanh("SANH03");
-        s3.setTenSanh("Sảnh 03");
-        s3.setMaPL("CAOCAP");
-        s3.setTenPL("Cao cấp");
-        s3.setSucChua(200);
-        s3.setGiaThueSanh(18000000);
-        s3.setGiaBan(840000);
-
-        listSanh.add(s);
-        listSanh.add(s2);
-        listSanh.add(s3);
-        
-        loadSanh();
+       
+      
 
     }
 
@@ -148,7 +121,7 @@ public class LapHopDong extends javax.swing.JPanel {
         statusHopDong = hopDong.getTrangThai();
         btnSaveInfo.setVisible(false);
         fillFormHopDong(khachHang, hopDong);
-        isView();
+        
     }
 
     public void loadCbbTrangThai(List<TrangThaiHopDong> list) {
@@ -226,12 +199,42 @@ public class LapHopDong extends javax.swing.JPanel {
     Lấy danh sách các sảnh chưa đặt trong ngày tổ chức
      */
     public void loadSanh() {
+         Sanh s = new Sanh();
+        s.setMaSanh("SANH01");
+        s.setTenSanh("Sảnh 01");
+        s.setMaPL("DONGIAN");
+        s.setTenPL("Đơn Giản");
+        s.setSucChua(100);
+        s.setGiaThueSanh(5000000);
+        s.setGiaBan(300000);
 
+        Sanh s2 = new Sanh();
+        s2.setMaSanh("SANH02");
+        s2.setTenSanh("Sảnh 02");
+        s2.setMaPL("TRUNGBINH");
+        s2.setTenPL("Trung Bình");
+        s2.setSucChua(150);
+        s2.setGiaThueSanh(7000000);
+        s2.setGiaBan(435000);
+
+        Sanh s3 = new Sanh();
+        s3.setMaSanh("SANH03");
+        s3.setTenSanh("Sảnh 03");
+        s3.setMaPL("CAOCAP");
+        s3.setTenPL("Cao cấp");
+        s3.setSucChua(200);
+        s3.setGiaThueSanh(18000000);
+        s3.setGiaBan(840000);
+
+        listSanh.add(s);
+        listSanh.add(s2);
+        listSanh.add(s3);
+        
         //listSanh = sanhDAO.selectSanhConTrong();
         DefaultComboBoxModel cbbModel = (DefaultComboBoxModel) cbbSanh.getModel();
         cbbModel.removeAllElements();
-        for (Sanh s : listSanh ){
-            cbbModel.addElement(s);
+        for (Sanh ss : listSanh ){
+            cbbModel.addElement(ss);
         }
         cbbSanh.setSelectedIndex(-1);
 
@@ -243,15 +246,15 @@ public class LapHopDong extends javax.swing.JPanel {
      */
     public void reloadHopDong() {
         System.out.println("reload");
-        hopDong = hopDongDAO.findById("HD001");
+        hopDong = hopDongDAO.findById(maHD);
 
         List<Long> chiPhi = hopDongDAO.tinhToan(maHD);
-        txtChiPhi.setText(chiPhi.get(0) + "");
-        txtChiPhiPhatSinh.setText(chiPhi.get(1) + "");
-        long tongTien = (long) ((chiPhi.get(0) + chiPhi.get(1)) * ((Integer.parseInt(txtThue.getText())) / 100.0));
+        txtChiPhi.setText(ShareHelper.toMoney(chiPhi.get(0)) );
+        txtChiPhiPhatSinh.setText(ShareHelper.toMoney(chiPhi.get(1)) );
+        long tongTien = (long) ((chiPhi.get(0) + chiPhi.get(1)) + ((chiPhi.get(0) + chiPhi.get(1)) * ((Integer.parseInt(txtThue.getText())) / 100.0)));
         long tienCoc = (long) (tongTien * 0.5);
-        txtTongTien.setText(tongTien + "");
-        txtTienCoc.setText(tienCoc + "");
+        txtTongTien.setText(ShareHelper.toMoney(tongTien));
+        txtTienCoc.setText(ShareHelper.toMoney(tienCoc));
 
         hopDongDAO.updateChiPhi(tienCoc, tongTien, maHD);
     }
@@ -310,14 +313,18 @@ public class LapHopDong extends javax.swing.JPanel {
         }
 
         txtThue.setText(hopDong.getThue() + "");
-        txtTienCoc.setText(hopDong.getTienCoc() + "");
+        txtTienCoc.setText(ShareHelper.toMoney(hopDong.getTienCoc()));
         List<Long> chiPhi = hopDongDAO.tinhToan(maHD);
-        txtChiPhi.setText(chiPhi.get(0) + "");
-        txtChiPhiPhatSinh.setText(chiPhi.get(1) + "");
+        txtChiPhi.setText(ShareHelper.toMoney(chiPhi.get(0)) );
+        txtChiPhiPhatSinh.setText(ShareHelper.toMoney(chiPhi.get(1)));
 
-        txtTongTien.setText(hopDong.getTongTien() + "");
+        txtTongTien.setText(ShareHelper.toMoney(hopDong.getTongTien()) );
 
-        txtNgayDuyet.setText(DateHelper.toString(hopDong.getNgayDuyet(), "dd/MM/yyyy"));
+        if (hopDong.getNgayDuyet() != null){
+            txtNgayDuyet.setText(DateHelper.toString(hopDong.getNgayDuyet(), "dd/MM/yyyy"));
+        }else{
+              txtNgayDuyet.setText("");
+        }
         txtNguoiDuyet.setText(hopDong.getTenNguoiDuyet());
     }
 
@@ -448,7 +455,7 @@ public class LapHopDong extends javax.swing.JPanel {
                         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
                         Date d1 = sdf.parse(timeNow);
                         Date d2 = sdf.parse(timeEnd);
-                        if (d1.getTime() > d2.getTime()) {
+                        if (d1.getTime() < d2.getTime()) {
                             btnComfimHoanThanh.setVisible(true);
                         } else {
                             btnComfimHoanThanh.setVisible(false);

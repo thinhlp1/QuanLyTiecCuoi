@@ -9,6 +9,8 @@ import com.happywedding.dao.ChiTietDichVuDAO;
 import com.happywedding.dao.CoSoVatChatDAO;
 import com.happywedding.dao.GoiDichVuDAO;
 import com.happywedding.helper.AppStatus;
+import com.happywedding.helper.DialogHelper;
+import com.happywedding.helper.ShareHelper;
 import com.happywedding.model.ChiTietDichVu;
 import com.happywedding.model.CoSoVatChat;
 import com.happywedding.model.GoiDichVu;
@@ -16,8 +18,11 @@ import com.happywedding.model.HopDongDichVu;
 import com.happywedding.model.Sanh;
 import com.ui.swing.Combobox;
 import java.awt.Component;
+import java.awt.event.KeyAdapter;
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.List;
+import javafx.scene.control.ComboBox;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComponent;
 import javax.swing.JTextField;
@@ -31,6 +36,8 @@ public class TrangTriBanTiec extends javax.swing.JDialog {
     private String maHD;
     private ChiTietDichVuDAO chiTietDVDAO = new ChiTietDichVuDAO();
     private CoSoVatChatDAO csvcDAO = new CoSoVatChatDAO();
+    private GoiDichVuDAO goiDichVuDAO = new GoiDichVuDAO();
+
     private boolean isCreate;
 
     private List<CoSoVatChat> listTraiBan = new ArrayList<>();
@@ -39,8 +46,6 @@ public class TrangTriBanTiec extends javax.swing.JDialog {
     private List<GoiDichVu> listGoiDichVu = new ArrayList<>();
 
     HopDongDichVu ttBanTiec;
-    
-
 
     static class VatTrangTri {
 
@@ -51,6 +56,8 @@ public class TrangTriBanTiec extends javax.swing.JDialog {
 
     private final String maDV = "TTBANTIEC";
     private int soLuongBan;
+    private boolean isLoad = false;
+
     /**
      * Creates new form TrangTriCong
      */
@@ -60,143 +67,291 @@ public class TrangTriBanTiec extends javax.swing.JDialog {
         this.maHD = maHD;
         this.soLuongBan = soLuongBan;
         this.isCreate = modal;
-        
-        
+
         initComponents();
-       
+
         init();
     }
 
     public void init() {
         //ITODO load combobox lên tất cả các vật trang trí và gói dịch vụ
-        
+
         loadGoiDichVu();
         loadCoSoVatChat();
+
         ttBanTiec = chiTietDVDAO.selectDichVu(maHD, maDV);
-        if (ttBanTiec != null) {
-           if (ttBanTiec.getMaGoi() != null){
-               for (GoiDichVu goi : listGoiDichVu) {
-                if (goi.getMaGoi().equals(ttBanTiec.getMaDV())) {
-                    cbbGoiDV.setSelectedItem(goi);
-                }
-            }
-               cbbGoiDV.setSelectedIndex(-1);
-           }
-           fillForm();
-        }
 
         isView(isCreate);
 
+        if (ttBanTiec != null) {
+            if (ttBanTiec.getMaGoi() != null) {
+                for (GoiDichVu goi : listGoiDichVu) {
+                    if (goi.getMaGoi().equals(ttBanTiec.getMaGoi())) {
+                        cbbGoiDV.setSelectedItem(goi);
+                        isTuyChinhGoiDichVu(false);
+                        fillForm();
+                    }
+
+//                isTuyChinhGoiDichVu(true);
+                }
+
+            } else {
+                cbbGoiDV.setSelectedIndex(-1);
+                fillForm();
+            }
+
+        }
+        isLoad = true;
+
     }
 
-    public void insertHopDongDichVu() {
+    // các hàm lấy dữ liệu từ form 
+    public List<ChiTietDichVu> getChiTietDichVu() {
+
+        List<ChiTietDichVu> list = new ArrayList<>();
+
+        ChiTietDichVu ctAoGoi = new ChiTietDichVu();
+        ChiTietDichVu ctTham = new ChiTietDichVu();
+        ChiTietDichVu ctHoaTT = new ChiTietDichVu();
+
+        ctAoGoi.setMaHD(maHD);
+        ctAoGoi.setMaDV(maDV);
+        ctAoGoi.setMaCSVC(((CoSoVatChat) cbbAoGhe.getSelectedItem()).getMaCSVC());
+        ctAoGoi.setChiPhi(0);
+        ctAoGoi.setChiPhiPhatSinh(ShareHelper.toMoney(txtCPPSAoGhe.getText()));
+        ctAoGoi.setGhiChu(txtGCAoGhe.getText());
+
+        ctTham.setMaHD(maHD);
+        ctTham.setMaDV(maDV);
+        ctTham.setMaCSVC(((CoSoVatChat) cbbTham.getSelectedItem()).getMaCSVC());
+        ctTham.setChiPhi(0);
+        ctTham.setChiPhiPhatSinh(ShareHelper.toMoney(txtCPPSTham.getText()));
+        ctTham.setGhiChu(txtGCTham.getText());
+
+        ctHoaTT.setMaHD(maHD);
+        ctHoaTT.setMaDV(maDV);
+        ctHoaTT.setMaCSVC(((CoSoVatChat) cbbHoaTT.getSelectedItem()).getMaCSVC());
+        ctHoaTT.setChiPhi(ShareHelper.toMoney(txtCPHoaTT.getText()));
+        ctHoaTT.setChiPhiPhatSinh(ShareHelper.toMoney(txtCPPSHoaTT.getText()));
+        ctHoaTT.setGhiChu(txtGCHoaTT.getText());
+
+        list.add(ctAoGoi);
+        list.add(ctTham);
+        list.add(ctHoaTT);
+
+        return list;
+
+    }
+
+    public boolean insertHopDongDichVu() {
+        HopDongDichVu hddv = new HopDongDichVu();
+        hddv.setMaHD(maHD);
+        hddv.setMaDV(maDV);
+        if (cbbGoiDV.getSelectedIndex() != -1) {
+            hddv.setMaGoi(((GoiDichVu) cbbGoiDV.getSelectedItem()).getMaGoi());
+        }
+        hddv.setChiPhi(ShareHelper.toMoney(txtChiPhi.getText()));
+        hddv.setGhiChu(taGhiChu.getText());
+        return chiTietDVDAO.insertDichVu(hddv);
 
     }
 
     public void updateHopDongDichVu() {
+        HopDongDichVu hddv = new HopDongDichVu();
+        hddv.setMaHD(maHD);
+        hddv.setMaDV(maDV);
+        if (cbbGoiDV.getSelectedIndex() != -1) {
+            hddv.setMaGoi(((GoiDichVu) cbbGoiDV.getSelectedItem()).getMaGoi());
+        }
+        hddv.setChiPhi(ShareHelper.toMoney(txtChiPhi.getText()));
+        hddv.setGhiChu(taGhiChu.getText());
 
+        chiTietDVDAO.updateDichVu(hddv);
     }
 
     public void insertChiTietDichVu() {
+        List<ChiTietDichVu> list = getChiTietDichVu();
+        try {
+            for (ChiTietDichVu dv : list) {
+                chiTietDVDAO.insertChiTietDichVy(dv);
+            }
 
+        } catch (Exception e) {
+            DialogHelper.alertError(this, "Lưu không thành công");
+        }
     }
 
     public void updateChiTietDichVu() {
-
+        chiTietDVDAO.deleteAllChiTietDichVu(maHD, maDV);
+        insertChiTietDichVu();
     }
-    
+
     // các hàm lấy dữ liệu từ cơ sở dữ liệu
-    public void loadGoiDichVu(){
+    public void loadGoiDichVu() {
         listGoiDichVu = new GoiDichVuDAO().selectGoiDichVu(maDV);
         DefaultComboBoxModel cbbModel = (DefaultComboBoxModel) cbbGoiDV.getModel();
         cbbModel.removeAllElements();
-        for (GoiDichVu s : listGoiDichVu ){
+        for (GoiDichVu s : listGoiDichVu) {
             cbbModel.addElement(s);
         }
     }
-    
-    public void loadCoSoVatChat(){
+
+    public void loadCoSoVatChat() {
         listAoGhe = csvcDAO.selectByMaDMC(VatTrangTri.AOGHE);
         listHoa = csvcDAO.selectByMaDMC(VatTrangTri.HOACHUDAO);
         listTraiBan = csvcDAO.selectByMaDMC(VatTrangTri.TRAIBAN);
-        
-         DefaultComboBoxModel cbbAoGheModel = (DefaultComboBoxModel) cbbAoGhe.getModel();
-         cbbAoGheModel.removeAllElements();
-         
-         for (CoSoVatChat csvc : listAoGhe){
-             cbbAoGheModel.addElement(csvc);
-         }
-         
-        DefaultComboBoxModel cbbThamTraiModel = (DefaultComboBoxModel) cbbTham.getModel();
-        cbbAoGheModel.removeAllElements();
-         
-         for (CoSoVatChat csvc : listTraiBan){
-            cbbThamTraiModel.addElement(csvc);
-         }
-         
-        DefaultComboBoxModel cbbHoaModel = (DefaultComboBoxModel) cbbAoGhe.getModel();
-        cbbAoGheModel.removeAllElements();
-         
-         for (CoSoVatChat csvc : listHoa){
-            cbbHoaModel.addElement(csvc);
-         }
-        
-    }
-    
-    
-    // các hàm xử lý form
-    public void tinhTien(){
-        long tongCPPS = Integer.parseInt(txtCPPSAoGhe.getText()) + Integer.parseInt(txtCPPSHoaTT.getText()) + Integer.parseInt(txtCPPSTham.getText()) ;
-        long chiPhi = Integer.parseInt(txtCPAoGhe.getText()) + Integer.parseInt(txtCPHoaTT.getText()) + Integer.parseInt(txtCPTham.getText()) ;
-        txtTongCPPS.setText(tongCPPS + "");
-        txtChiPhi.setText(chiPhi + "");
-    }
-    
-    public void fillForm(){
-            ChiTietDichVu ctAoGhe = chiTietDVDAO.selectChiTietDichVuCustom(maHD, maDV, VatTrangTri.AOGHE);
-            ChiTietDichVu ctTraiBan = chiTietDVDAO.selectChiTietDichVuCustom(maHD, maDV, VatTrangTri.TRAIBAN);
-            ChiTietDichVu ctHoaChuDao = chiTietDVDAO.selectChiTietDichVuCustom(maHD, maDV, VatTrangTri.HOACHUDAO);
 
-            for (CoSoVatChat csvc : listAoGhe) {
-                if (csvc.getMaCSVC().equals(ctAoGhe.getMaCSVC())) {
-                    cbbAoGhe.setSelectedItem(csvc);
-                }
-            }
-            
-            for (CoSoVatChat csvc : listTraiBan) {
-                if (csvc.getMaCSVC().equals(ctTraiBan.getMaCSVC())) {
-                    cbbTham.setSelectedItem(csvc);
-                }
-            }
-            
-            for (CoSoVatChat csvc : listHoa) {
-                if (csvc.getMaCSVC().equals(ctHoaChuDao.getMaCSVC())) {
-                    cbbHoaTT.setSelectedItem(csvc);
-                }
-            }
-            
-            txtCPAoGhe.setText(ctAoGhe.getChiPhi() + "");
-            txtCPTham.setText(ctTraiBan.getChiPhi() + "");
-            txtCPHoaTT.setText(ctHoaChuDao.getChiPhi() + "");
-         
-            
-            txtCPPSAoGhe.setText(ctAoGhe.getChiPhiPhatSinh()+ "");
-            txtCPPSTham.setText(ctTraiBan.getChiPhiPhatSinh() + "");
-            txtCPPSHoaTT.setText(ctHoaChuDao.getChiPhiPhatSinh() + "");
-            
-            
-            txtGCAoGhe.setText(ctAoGhe.getGhiChu()+ "");
-            txtGCTham.setText(ctTraiBan.getGhiChu() + "");
-            txtGCHoaTT.setText(ctHoaChuDao.getGhiChu() + "");
-            
-            txtTongCPPS.setText(ttBanTiec.getChiPhiPhatSinh() + "");
-            txtChiPhi.setText(ttBanTiec.getChiPhi() + "");
-            txtTongChiPhi.setText(ttBanTiec.getChiPhiPhatSinh() + ttBanTiec.getChiPhi() + "");
-          
-            
+        DefaultComboBoxModel cbbAoGheModel = (DefaultComboBoxModel) cbbAoGhe.getModel();
+        cbbAoGheModel.removeAllElements();
+
+        for (CoSoVatChat csvc : listAoGhe) {
+            cbbAoGheModel.addElement(csvc);
+        }
+
+        DefaultComboBoxModel cbbThamTraiModel = (DefaultComboBoxModel) cbbTham.getModel();
+        cbbThamTraiModel.removeAllElements();
+
+        for (CoSoVatChat csvc : listTraiBan) {
+            cbbThamTraiModel.addElement(csvc);
+        }
+
+        DefaultComboBoxModel cbbHoaModel = (DefaultComboBoxModel) cbbHoaTT.getModel();
+        cbbHoaModel.removeAllElements();
+
+        for (CoSoVatChat csvc : listHoa) {
+            cbbHoaModel.addElement(csvc);
+        }
+
     }
-    
-    
+
+    // các hàm xử lý form
+    public boolean tinhTien() {
+        try {
+            long tongCPPS = ShareHelper.toMoney(txtCPPSAoGhe.getText()) + ShareHelper.toMoney(txtCPPSHoaTT.getText()) + ShareHelper.toMoney(txtCPPSTham.getText());
+            long chiPhi = ShareHelper.toMoney(txtCPAoGhe.getText()) + ShareHelper.toMoney(txtCPHoaTT.getText()) + ShareHelper.toMoney(txtCPTham.getText());
+
+            txtTongCPPS.setText(ShareHelper.toMoney(tongCPPS));
+            txtChiPhi.setText(ShareHelper.toMoney(chiPhi));
+            txtTongChiPhi.setText(ShareHelper.toMoney(tongCPPS + chiPhi));
+
+        } catch (Exception e) {
+            DialogHelper.alertError(this, "Vui lòng nhập đúng định dạng số");
+            return false;
+        }
+        return true;
+
+    }
+
+    public void fillChiTietDichVu(ChiTietDichVu ct, List<CoSoVatChat> list,
+            Combobox cbb, JTextField txtChiPhi, JTextField txtPhatSinh, JTextField txtGhiChu, int soLuongBan, int heSoNhan, boolean isCustom) {
+
+        for (CoSoVatChat csvc : list) {
+            if (csvc.getMaCSVC().equals(ct.getMaCSVC())) {
+                cbb.setSelectedItem(csvc);
+                cbb.setToolTipText(ShareHelper.toMoney(csvc.getGiaThue()));
+            }
+        }
+
+        txtPhatSinh.setText(ShareHelper.toMoney(ct.getChiPhiPhatSinh()));
+        if (isCustom) {
+            txtChiPhi.setText(ShareHelper.toMoney(ct.getChiPhi()));
+            txtChiPhi.setToolTipText(ShareHelper.toMoney(ct.getChiPhi()));
+        } else {
+            txtChiPhi.setText(ShareHelper.toMoney(ct.getChiPhi() * soLuongBan * heSoNhan));
+            txtChiPhi.setToolTipText(ShareHelper.toMoney(ct.getChiPhi()) + " x " + soLuongBan + " bàn");
+        }
+        txtGhiChu.setText(ct.getGhiChu());
+
+    }
+
+    public void fillChiTietGoiDichVu(ChiTietDichVu ct, List<CoSoVatChat> list,
+            Combobox cbb, JTextField txtChiPhi, JTextField txtGhiChu, int soLuongBan, int heSoNhan, boolean isCustom) {
+
+        for (CoSoVatChat csvc : list) {
+            if (csvc.getMaCSVC().equals(ct.getMaCSVC())) {
+                cbb.setSelectedItem(csvc);
+                cbb.setToolTipText(ShareHelper.toMoney(csvc.getGiaThue()));
+            }
+        }
+        if (isCustom) {
+            txtChiPhi.setText(ShareHelper.toMoney(ct.getChiPhi()));
+            txtChiPhi.setToolTipText(ShareHelper.toMoney(ct.getChiPhi()));
+        } else {
+            txtChiPhi.setText(ShareHelper.toMoney(ct.getChiPhi() * soLuongBan * heSoNhan));
+            txtChiPhi.setToolTipText(ShareHelper.toMoney(ct.getChiPhi()) + " x " + soLuongBan + " bàn");
+        }
+        txtGhiChu.setText(ct.getGhiChu());
+
+    }
+
+    public void changeCombbox(Combobox cbb, List<CoSoVatChat> list, JTextField txtChiPhi, JTextField txtPhatSinh, JTextField txtGhiChu, int soLuongBan, int heSoNhan, boolean isCustom) {
+        if (isLoad && cbb.getSelectedIndex() != -1) {
+            long giaThue = list.get(cbb.getSelectedIndex()).getGiaThue();
+
+            cbb.setToolTipText(ShareHelper.toMoney(giaThue));
+            if (isCustom) {
+                txtChiPhi.setText("0");
+                txtChiPhi.setToolTipText(ShareHelper.toMoney(giaThue));
+            } else {
+                txtChiPhi.setText(ShareHelper.toMoney(giaThue * soLuongBan * heSoNhan));
+                txtChiPhi.setToolTipText(giaThue + " x " + soLuongBan + " bàn");
+            }
+//            txtGhiChu.setText("");
+//            txtPhatSinh.setText("0");
+            tinhTien();
+        }
+    }
+
+    public void fillForm() {
+        ChiTietDichVu ctAoGhe = chiTietDVDAO.selectChiTietDichVuNoCustom(maHD, maDV, VatTrangTri.AOGHE);
+        ChiTietDichVu ctTraiBan = chiTietDVDAO.selectChiTietDichVuNoCustom(maHD, maDV, VatTrangTri.TRAIBAN);
+        ChiTietDichVu ctHoaChuDao = chiTietDVDAO.selectChiTietDichVuCustom(maHD, maDV, VatTrangTri.HOACHUDAO);
+
+        if (ctAoGhe != null) {
+
+            fillChiTietDichVu(ctAoGhe, listAoGhe, cbbAoGhe, txtCPAoGhe, txtCPPSAoGhe, txtGCAoGhe, soLuongBan, 10, false);
+        }
+
+        if (ctTraiBan != null) {
+
+            fillChiTietDichVu(ctTraiBan, listTraiBan, cbbTham, txtCPTham, txtCPPSTham, txtGCTham, soLuongBan, 1, false);
+        }
+
+        if (ctHoaChuDao != null) {
+
+            fillChiTietDichVu(ctHoaChuDao, listHoa, cbbHoaTT, txtCPHoaTT, txtCPPSHoaTT, txtGCHoaTT, soLuongBan, 1, true);
+        }
+
+        txtTongCPPS.setText(ShareHelper.toMoney(ttBanTiec.getChiPhiPhatSinh()));
+        txtChiPhi.setText(ShareHelper.toMoney(ttBanTiec.getChiPhi()));
+        txtTongChiPhi.setText(ShareHelper.toMoney(ttBanTiec.getChiPhiPhatSinh() + ttBanTiec.getChiPhi()));
+        taGhiChu.setText(ttBanTiec.getGhiChu());
+
+    }
+
+    public void fillFormByGoiDichVu(GoiDichVu goi) {
+
+        ChiTietDichVu ctAoGhe = goiDichVuDAO.selectChiTietGoiDichVuNoCustom(goi.getMaGoi(), VatTrangTri.AOGHE);
+        ChiTietDichVu ctTraiBan = goiDichVuDAO.selectChiTietGoiDichVuNoCustom(goi.getMaGoi(), VatTrangTri.TRAIBAN);
+        ChiTietDichVu ctHoaChuDao = goiDichVuDAO.selectChiTietGoiDichVuCustom(goi.getMaGoi(), VatTrangTri.HOACHUDAO);
+
+        if (ctAoGhe != null) {
+
+            fillChiTietGoiDichVu(ctAoGhe, listAoGhe, cbbAoGhe, txtCPAoGhe, txtGCAoGhe, soLuongBan, 10, false);
+        }
+
+        if (ctTraiBan != null) {
+
+            fillChiTietGoiDichVu(ctTraiBan, listTraiBan, cbbTham, txtCPTham, txtGCTham, soLuongBan, 1, false);
+        }
+
+        if (ctHoaChuDao != null) {
+
+            fillChiTietGoiDichVu(ctHoaChuDao, listHoa, cbbHoaTT, txtCPHoaTT, txtGCHoaTT, soLuongBan, 1, true);
+        }
+
+    }
+
     public void isView(boolean isCreate) {
         for (Component cp : pnlTTBanTiec.getComponents()) {
             if (cp instanceof JTextField) {
@@ -209,7 +364,37 @@ public class TrangTriBanTiec extends javax.swing.JDialog {
         btnSave.setVisible(isCreate);
         btnReset.setVisible(isCreate);
         btnEdit.setVisible(isCreate);
-        taGhiChu.setEnabled(false);
+        taGhiChu.setEnabled(isCreate);
+    }
+
+    public void isTuyChinhGoiDichVu(boolean is) {
+        cbbAoGhe.setEnabled(is);
+        cbbHoaTT.setEnabled(is);
+        cbbTham.setEnabled(is);
+    }
+
+    public boolean checkValid(JTextField txt) {
+        if (txt.getText().equals("")) {
+            txt.setText("0");
+        } else if (ShareHelper.toMoney(txt.getText()) < 1000 && !txt.getText().equals("0")) {
+            DialogHelper.alertError(this, "Chi phí thấp nhất là 1.000 VNĐ");
+            return false;
+        }
+
+        tinhTien();
+        return true;
+    }
+
+    class CheckNumber extends KeyAdapter {
+
+        public void keyTyped(java.awt.event.KeyEvent evt) {
+            char testChar = evt.getKeyChar();
+            if (!((Character.isDigit(testChar)))) {
+                if (testChar != '.') {
+                    evt.consume();
+                }
+            }
+        }
     }
 
     /**
@@ -256,6 +441,7 @@ public class TrangTriBanTiec extends javax.swing.JDialog {
         txtCPTham = new javax.swing.JTextField();
         txtCPAoGhe = new javax.swing.JTextField();
         txtCPHoaTT = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -273,6 +459,11 @@ public class TrangTriBanTiec extends javax.swing.JDialog {
         cbbGoiDV.setToolTipText("");
         cbbGoiDV.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         cbbGoiDV.setLabeText("");
+        cbbGoiDV.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cbbGoiDVItemStateChanged(evt);
+            }
+        });
         cbbGoiDV.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cbbGoiDVActionPerformed(evt);
@@ -295,7 +486,7 @@ public class TrangTriBanTiec extends javax.swing.JDialog {
                 btnEditActionPerformed(evt);
             }
         });
-        pnlTTBanTiec.add(btnEdit, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 100, -1, 30));
+        pnlTTBanTiec.add(btnEdit, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 90, -1, 30));
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel5.setText("Trang trí bàn tiệc");
@@ -399,35 +590,53 @@ public class TrangTriBanTiec extends javax.swing.JDialog {
         pnlTTBanTiec.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(1210, 160, -1, -1));
 
         txtCPPSTham.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
-        txtCPPSTham.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtCPPSThamActionPerformed(evt);
+        txtCPPSTham.setText("0");
+        txtCPPSTham.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtCPPSThamFocusLost(evt);
             }
         });
         txtCPPSTham.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                txtCPPSThamKeyReleased(evt);
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtCPPSThamKeyTyped(evt);
             }
         });
         pnlTTBanTiec.add(txtCPPSTham, new org.netbeans.lib.awtextra.AbsoluteConstraints(1210, 220, 210, 35));
 
         txtCPPSAoGhe.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        txtCPPSAoGhe.setText("0");
+        txtCPPSAoGhe.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtCPPSAoGheFocusLost(evt);
+            }
+        });
+        txtCPPSAoGhe.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtCPPSAoGheActionPerformed(evt);
+            }
+        });
         txtCPPSAoGhe.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                txtCPPSAoGheKeyReleased(evt);
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtCPPSAoGheKeyTyped(evt);
             }
         });
         pnlTTBanTiec.add(txtCPPSAoGhe, new org.netbeans.lib.awtextra.AbsoluteConstraints(1210, 280, 210, 35));
 
         txtCPPSHoaTT.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        txtCPPSHoaTT.setText("0");
+        txtCPPSHoaTT.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtCPPSHoaTTFocusLost(evt);
+            }
+        });
         txtCPPSHoaTT.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtCPPSHoaTTActionPerformed(evt);
             }
         });
         txtCPPSHoaTT.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                txtCPPSHoaTTKeyReleased(evt);
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtCPPSHoaTTKeyTyped(evt);
             }
         });
         pnlTTBanTiec.add(txtCPPSHoaTT, new org.netbeans.lib.awtextra.AbsoluteConstraints(1210, 350, 210, 35));
@@ -510,6 +719,8 @@ public class TrangTriBanTiec extends javax.swing.JDialog {
 
         txtCPTham.setEditable(false);
         txtCPTham.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        txtCPTham.setText("0");
+        txtCPTham.setToolTipText("");
         txtCPTham.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtCPThamActionPerformed(evt);
@@ -519,15 +730,40 @@ public class TrangTriBanTiec extends javax.swing.JDialog {
 
         txtCPAoGhe.setEditable(false);
         txtCPAoGhe.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        txtCPAoGhe.setText("0");
+        txtCPAoGhe.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtCPAoGheActionPerformed(evt);
+            }
+        });
         pnlTTBanTiec.add(txtCPAoGhe, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 280, 210, 35));
 
         txtCPHoaTT.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        txtCPHoaTT.setText("0");
+        txtCPHoaTT.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtCPHoaTTFocusLost(evt);
+            }
+        });
         txtCPHoaTT.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtCPHoaTTActionPerformed(evt);
             }
         });
+        txtCPHoaTT.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtCPHoaTTKeyTyped(evt);
+            }
+        });
         pnlTTBanTiec.add(txtCPHoaTT, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 350, 210, 35));
+
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/happywedding/assets/eye.png"))); // NOI18N
+        jLabel1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel1MouseClicked(evt);
+            }
+        });
+        pnlTTBanTiec.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 40, 40, 30));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -549,22 +785,20 @@ public class TrangTriBanTiec extends javax.swing.JDialog {
     }//GEN-LAST:event_cbbGoiDVActionPerformed
 
     private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
-       
+        isTuyChinhGoiDichVu(true);
+        cbbGoiDV.setSelectedIndex(-1);
     }//GEN-LAST:event_btnEditActionPerformed
 
     private void cbbAoGheActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbbAoGheActionPerformed
-//          txtCPPSAoGhe.setText(listAoGhe.get(cbbAoGhe.getSelectedIndex()).getGiaThue() * soLuongBan * 10  + "");
-//        tinhTien();
+
     }//GEN-LAST:event_cbbAoGheActionPerformed
 
     private void cbbHoaTTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbbHoaTTActionPerformed
-        txtCPHoaTT.setText("0");
-        tinhTien();
+
     }//GEN-LAST:event_cbbHoaTTActionPerformed
 
     private void cbbThamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbbThamActionPerformed
-        txtCPTham.setText(listTraiBan.get(cbbTham.getSelectedIndex()).getGiaThue() * soLuongBan  + "");
-        tinhTien();
+
     }//GEN-LAST:event_cbbThamActionPerformed
 
     private void txtGCThamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtGCThamActionPerformed
@@ -579,14 +813,6 @@ public class TrangTriBanTiec extends javax.swing.JDialog {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtChiPhiActionPerformed
 
-    private void txtCPPSThamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCPPSThamActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtCPPSThamActionPerformed
-
-    private void txtCPPSHoaTTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCPPSHoaTTActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtCPPSHoaTTActionPerformed
-
     private void txtTongCPPSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTongCPPSActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtTongCPPSActionPerformed
@@ -596,21 +822,60 @@ public class TrangTriBanTiec extends javax.swing.JDialog {
     }//GEN-LAST:event_txtTongChiPhiActionPerformed
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
-//        if (!chiTietDVDAO.checkHopDongDichVu("HD003", "TTSANKHAU")) {
-//            System.out.println("INSERT");
-//            insertHopDongDichVu();
-//            insertChiTietDichVu();
-//        } else {
-//            System.out.println("UPDATE");
-//            updateHopDongDichVu();
-//            updateChiTietDichVu();
-//        }
-        //  AppStatus.lapHopDong.reloadHopDong();
+
+        if (cbbAoGhe.getSelectedIndex() == -1 || cbbHoaTT.getSelectedIndex() == -1 || cbbTham.getSelectedIndex() == -1) {
+            DialogHelper.alertError(this, "Vui lòng chọn đầy đủ thông tin");
+            return;
+        }
+
+        if (!checkValid(txtCPPSTham) || !checkValid(txtCPPSHoaTT) || !checkValid(txtCPPSHoaTT) || !checkValid(txtCPHoaTT)) {
+            return;
+        }
+
+        if (txtCPHoaTT.getText().equals("0")) {
+            boolean rs = DialogHelper.confirm(this, "Bạn chưa xác định giá trị của hoa trang trí. Tiếp tục lưu");
+            if (!rs) {
+                return;
+            }
+        }
+
+        if (!chiTietDVDAO.checkHopDongDichVu(maHD, maDV)) {
+
+            if (insertHopDongDichVu()) {
+                insertChiTietDichVu();
+            } else {
+                DialogHelper.alertError(this, "Lưu không thành công");
+            }
+
+        } else {
+
+            updateHopDongDichVu();
+            updateChiTietDichVu();
+        }
+        AppStatus.lapHopDong.reloadHopDong();
         this.dispose();
     }//GEN-LAST:event_btnSaveActionPerformed
 
     private void btnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetActionPerformed
-        // TODO add your handling code here:
+        cbbAoGhe.setSelectedIndex(-1);
+        cbbHoaTT.setSelectedIndex(-1);
+        cbbTham.setSelectedIndex(-1);
+        cbbGoiDV.setSelectedIndex(-1);
+
+        txtCPAoGhe.setText("0");
+        txtCPHoaTT.setText("0");
+        txtCPTham.setText("0");
+
+        txtCPPSAoGhe.setText("0");
+        txtCPPSHoaTT.setText("0");
+        txtCPPSTham.setText("0");
+
+        txtGCAoGhe.setText("");
+        txtGCHoaTT.setText("");
+        txtGCTham.setText("");
+
+        tinhTien();
+
     }//GEN-LAST:event_btnResetActionPerformed
 
     private void txtCPThamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCPThamActionPerformed
@@ -622,29 +887,78 @@ public class TrangTriBanTiec extends javax.swing.JDialog {
     }//GEN-LAST:event_txtCPHoaTTActionPerformed
 
     private void cbbThamItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbbThamItemStateChanged
-    
-       
+
+        changeCombbox(cbbTham, listTraiBan, txtCPTham, txtCPPSTham, txtGCTham, soLuongBan, 1, false);
+
     }//GEN-LAST:event_cbbThamItemStateChanged
 
     private void cbbAoGheItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbbAoGheItemStateChanged
-        
+
+        changeCombbox(cbbAoGhe, listAoGhe, txtCPAoGhe, txtCPPSAoGhe, txtGCAoGhe, soLuongBan, 10, false);
     }//GEN-LAST:event_cbbAoGheItemStateChanged
 
     private void cbbHoaTTItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbbHoaTTItemStateChanged
-      
+
+        changeCombbox(cbbHoaTT, listHoa, txtCPHoaTT, txtCPPSHoaTT, txtGCHoaTT, soLuongBan, 1, true);
     }//GEN-LAST:event_cbbHoaTTItemStateChanged
 
-    private void txtCPPSThamKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCPPSThamKeyReleased
-       tinhTien();
-    }//GEN-LAST:event_txtCPPSThamKeyReleased
+    private void txtCPPSThamFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtCPPSThamFocusLost
+        checkValid(txtCPPSTham);
 
-    private void txtCPPSAoGheKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCPPSAoGheKeyReleased
-        tinhTien();
-    }//GEN-LAST:event_txtCPPSAoGheKeyReleased
+    }//GEN-LAST:event_txtCPPSThamFocusLost
 
-    private void txtCPPSHoaTTKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCPPSHoaTTKeyReleased
-        tinhTien();
-    }//GEN-LAST:event_txtCPPSHoaTTKeyReleased
+    private void txtCPPSAoGheFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtCPPSAoGheFocusLost
+
+        checkValid(txtCPPSAoGhe);
+    }//GEN-LAST:event_txtCPPSAoGheFocusLost
+
+    private void txtCPPSHoaTTFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtCPPSHoaTTFocusLost
+        checkValid(txtCPPSHoaTT);
+
+    }//GEN-LAST:event_txtCPPSHoaTTFocusLost
+
+    private void txtCPHoaTTFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtCPHoaTTFocusLost
+        checkValid(txtCPHoaTT);
+    }//GEN-LAST:event_txtCPHoaTTFocusLost
+
+    private void cbbGoiDVItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbbGoiDVItemStateChanged
+        if (cbbGoiDV.getSelectedIndex() != -1) {
+            fillFormByGoiDichVu((GoiDichVu) cbbGoiDV.getSelectedItem());
+            isTuyChinhGoiDichVu(false);
+        }
+    }//GEN-LAST:event_cbbGoiDVItemStateChanged
+
+    private void txtCPPSAoGheActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCPPSAoGheActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtCPPSAoGheActionPerformed
+
+    private void txtCPPSHoaTTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCPPSHoaTTActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtCPPSHoaTTActionPerformed
+
+    private void txtCPAoGheActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCPAoGheActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtCPAoGheActionPerformed
+
+    private void txtCPPSThamKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCPPSThamKeyTyped
+          txtCPPSTham.addKeyListener(new CheckNumber());
+    }//GEN-LAST:event_txtCPPSThamKeyTyped
+
+    private void txtCPPSAoGheKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCPPSAoGheKeyTyped
+        txtCPPSAoGhe.addKeyListener(new CheckNumber());
+    }//GEN-LAST:event_txtCPPSAoGheKeyTyped
+
+    private void txtCPPSHoaTTKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCPPSHoaTTKeyTyped
+         txtCPPSHoaTT.addKeyListener(new CheckNumber());
+    }//GEN-LAST:event_txtCPPSHoaTTKeyTyped
+
+    private void txtCPHoaTTKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCPHoaTTKeyTyped
+         txtCPHoaTT.addKeyListener(new CheckNumber());
+    }//GEN-LAST:event_txtCPHoaTTKeyTyped
+
+    private void jLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jLabel1MouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -655,6 +969,7 @@ public class TrangTriBanTiec extends javax.swing.JDialog {
     private com.ui.swing.Combobox cbbGoiDV;
     private com.ui.swing.Combobox cbbHoaTT;
     private com.ui.swing.Combobox cbbTham;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
