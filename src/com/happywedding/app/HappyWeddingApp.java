@@ -375,6 +375,7 @@ public class HappyWeddingApp extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
+                
                 new HappyWeddingApp().setVisible(true);
             }
         });
