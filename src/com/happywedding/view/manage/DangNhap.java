@@ -21,6 +21,8 @@ public class DangNhap extends javax.swing.JDialog {
         initComponents();
         txtTenDangNhap.setBorder(BorderFactory.createCompoundBorder(txtTenDangNhap.getBorder(), BorderFactory.createEmptyBorder(0, 5, 0, 0)));
         txtMatKhau.setBorder(BorderFactory.createCompoundBorder(txtMatKhau.getBorder(), BorderFactory.createEmptyBorder(0, 5, 0, 0)));
+       
+        lblHidePassword.setVisible(false);
     }
 
     /**
@@ -32,6 +34,9 @@ public class DangNhap extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        lblShowPassword = new javax.swing.JLabel();
+        lblHidePassword = new javax.swing.JLabel();
+        txtMatKhau = new javax.swing.JPasswordField();
         pictureBox2 = new com.ui.swing.PictureBox();
         pictureBox1 = new com.ui.swing.PictureBox();
         btnQuenMatKhau = new com.ui.swing.component.Tab();
@@ -39,7 +44,6 @@ public class DangNhap extends javax.swing.JDialog {
         btnDangNhap = new com.ui.swing.component.Tab();
         jLabel6 = new javax.swing.JLabel();
         txtTenDangNhap = new javax.swing.JTextField();
-        txtMatKhau = new javax.swing.JPasswordField();
         lblMatKhau = new javax.swing.JLabel();
         lblTenDangNhap = new javax.swing.JLabel();
         lblMauNen = new javax.swing.JLabel();
@@ -48,11 +52,32 @@ public class DangNhap extends javax.swing.JDialog {
         setTitle("Đăng nhập");
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
+        lblShowPassword.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/happywedding/assets/ShowPassword.png"))); // NOI18N
+        lblShowPassword.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblShowPasswordMouseClicked(evt);
+            }
+        });
+        getContentPane().add(lblShowPassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 410, 50, 50));
+
+        lblHidePassword.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/happywedding/assets/HidePassword.png"))); // NOI18N
+        lblHidePassword.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblHidePasswordMouseClicked(evt);
+            }
+        });
+        getContentPane().add(lblHidePassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 410, 50, 50));
+
+        txtMatKhau.setBackground(new java.awt.Color(255, 247, 244));
+        txtMatKhau.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        txtMatKhau.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(0, 0, 0)));
+        getContentPane().add(txtMatKhau, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 420, 400, 50));
+
         pictureBox2.setImage(new javax.swing.ImageIcon(getClass().getResource("/com/happywedding/assets/dangNhap.png"))); // NOI18N
         getContentPane().add(pictureBox2, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 20, 430, 140));
 
         pictureBox1.setImage(new javax.swing.ImageIcon(getClass().getResource("/com/happywedding/assets/HappyWedding.png"))); // NOI18N
-        getContentPane().add(pictureBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 120, 640, 410));
+        getContentPane().add(pictureBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 100, 640, 410));
 
         btnQuenMatKhau.setEndColor("#FFB9B9");
         btnQuenMatKhau.setStartColor("#E9D5CA");
@@ -115,11 +140,6 @@ public class DangNhap extends javax.swing.JDialog {
         txtTenDangNhap.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(0, 0, 0)));
         getContentPane().add(txtTenDangNhap, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 260, 400, 50));
 
-        txtMatKhau.setBackground(new java.awt.Color(255, 247, 244));
-        txtMatKhau.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        txtMatKhau.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(0, 0, 0)));
-        getContentPane().add(txtMatKhau, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 420, 400, 50));
-
         lblMatKhau.setFont(new java.awt.Font("Times New Roman", 0, 24)); // NOI18N
         lblMatKhau.setText("Mật khẩu");
         getContentPane().add(lblMatKhau, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 370, -1, -1));
@@ -144,6 +164,29 @@ public class DangNhap extends javax.swing.JDialog {
     private void btnDangNhapMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnDangNhapMouseClicked
         login();
     }//GEN-LAST:event_btnDangNhapMouseClicked
+
+    public void showPassword(boolean a){
+        
+        if(a){
+            txtMatKhau.setEchoChar((char)0);
+        }else{
+            txtMatKhau.setEchoChar('*');
+        }
+        
+        
+        lblShowPassword.setVisible(!a);
+        lblHidePassword.setVisible(a);
+        
+    }
+    
+    private void lblShowPasswordMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblShowPasswordMouseClicked
+        showPassword(true);
+        
+    }//GEN-LAST:event_lblShowPasswordMouseClicked
+    
+    private void lblHidePasswordMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblHidePasswordMouseClicked
+        showPassword(false);
+    }//GEN-LAST:event_lblHidePasswordMouseClicked
     
     
     public void login(){
@@ -200,8 +243,10 @@ public class DangNhap extends javax.swing.JDialog {
     private com.ui.swing.component.Tab btnQuenMatKhau;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel lblHidePassword;
     private javax.swing.JLabel lblMatKhau;
     private javax.swing.JLabel lblMauNen;
+    private javax.swing.JLabel lblShowPassword;
     private javax.swing.JLabel lblTenDangNhap;
     private com.ui.swing.PictureBox pictureBox1;
     private com.ui.swing.PictureBox pictureBox2;
