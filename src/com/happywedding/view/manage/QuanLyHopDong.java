@@ -4,7 +4,9 @@
  * and open the template in the editor.
  */
 package com.happywedding.view.manage;
+
 import com.happywedding.dao.HopDongDAO;
+import com.happywedding.dao.SanhDAO;
 import com.happywedding.helper.AppStatus;
 import com.happywedding.helper.DateHelper;
 import com.happywedding.helper.DialogHelper;
@@ -14,7 +16,9 @@ import com.ui.swing.Table;
 import com.ui.swing.datechooser.DateChooser;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -22,17 +26,17 @@ import javax.swing.table.DefaultTableModel;
  * @author ADMIN
  */
 public class QuanLyHopDong extends javax.swing.JPanel {
-    
-    private DefaultTableModel tblModel ;
+
+    private DefaultTableModel tblModel;
     private int currentIndex = 0;
     private DateChooser dtChooser1 = new DateChooser();
     private DateChooser dtChooser2 = new DateChooser();
-    
+
     private List<Sanh> listSanh = new ArrayList<>();
     private List<HopDong> listHopDong = new ArrayList<>();
-    private HopDongDAO dao = new HopDongDAO();
-   
-    
+    private HopDongDAO hopDongDAO = new HopDongDAO();
+    private SanhDAO sanhDAO = new SanhDAO();
+
     /**
      * Creates new form QuanLyHopDong
      */
@@ -40,57 +44,57 @@ public class QuanLyHopDong extends javax.swing.JPanel {
         initComponents();
         init();
     }
-    
-    public void init(){
+
+    public void init() {
         tblHopDong.fixTable(jScrollPane2);
         tblModel = (DefaultTableModel) tblHopDong.getModel();
         tblHopDong.setAutoscrolls(true);
         dtChooser1.setTextRefernce(txtNgayToChuc);
-       
-       
-        Sanh s = new Sanh();
-        s.setMaSanh("SANH01");
-        s.setTenSanh("Sảnh 01");
-        s.setMaPL("DONGIAN");
-        s.setTenPL("Đơn Giản");
-        s.setSucChua(100);
-        s.setGiaThueSanh(5000000);
-        s.setGiaBan(300000);
+
+//        Sanh s = new Sanh();
+//        s.setMaSanh("SANH01");
+//        s.setTenSanh("Sảnh 01");
+//        s.setMaPL("DONGIAN");
+//        s.setTenPL("Đơn Giản");
+//        s.setSucChua(100);
+//        s.setGiaThueSanh(5000000);
+//        s.setGiaBan(300000);
+//
+//        Sanh s2 = new Sanh();
+//        s2.setMaSanh("SANH02");
+//        s2.setTenSanh("Sảnh 02");
+//        s2.setMaPL("TRUNGBINH");
+//        s2.setTenPL("Trung Bình");
+//        s2.setSucChua(150);
+//        s2.setGiaThueSanh(7000000);
+//        s2.setGiaBan(435000);
+//
+//        Sanh s3 = new Sanh();
+//        s3.setMaSanh("SANH03");
+//        s3.setTenSanh("Sảnh 03");
+//        s3.setMaPL("CAOCAP");
+//        s3.setTenPL("Cao cấp");
+//        s3.setSucChua(200);
+//        s3.setGiaThueSanh(18000000);
+//        s3.setGiaBan(840000);
+//
+//        listSanh.add(s);
+//        listSanh.add(s2);
+//        listSanh.add(s3);
+        loadSanh();
         
-         Sanh s2 = new Sanh();
-         s2.setMaSanh("SANH02");
-        s2.setTenSanh("Sảnh 02");
-        s2.setMaPL("TRUNGBINH");
-        s2.setTenPL("Trung Bình");
-        s2.setSucChua(150);
-        s2.setGiaThueSanh(7000000);
-        s2.setGiaBan(435000);
-        
-         Sanh s3 = new Sanh();
-        s3.setMaSanh("SANH03");
-        s3.setTenSanh("Sảnh 03");
-        s3.setMaPL("CAOCAP");
-        s3.setTenPL("Cao cấp");
-        s3.setSucChua(200);
-        s3.setGiaThueSanh(18000000);
-        s3.setGiaBan(840000);
-        
-        listSanh.add(s);
-        listSanh.add(s2);
-        listSanh.add(s3);
-        
-        
+
         txtNgayToChuc.setText("");
-        listHopDong = dao.select();
-        fillToTable(listHopDong);
+        listHopDong = hopDongDAO.select();
         
-     
+        
+        fillToTable(listHopDong);
+
     }
-    
-    public void fillToTable(List<HopDong> listHopDong){
-          tblModel.setRowCount(0);
+
+    public void fillToTable(List<HopDong> listHopDong) {
+        tblModel.setRowCount(0);
         try {
-          
 
             for (HopDong hd : listHopDong) {
                 Object[] row = {
@@ -98,7 +102,7 @@ public class QuanLyHopDong extends javax.swing.JPanel {
                     hd.getTenNguoiLap(),
                     hd.getSoLuongBan(),
                     hd.getSanh(),
-                    DateHelper.toString(hd.getNgayDuyet(), "dd/MM/yyyy"),
+                    DateHelper.toString(hd.getNgayLap(), "dd/MM/yyyy"),
                     hd.getTenKhachHang(),
                     DateHelper.toString(hd.getNgayToChuc(), "dd/MM/yyyy"),
                     hd.getThoiGianBatDau().substring(0, 5),
@@ -111,17 +115,22 @@ public class QuanLyHopDong extends javax.swing.JPanel {
             DialogHelper.alertError(this, "Lỗi truy vấn dữ liệu!");
         }
     }
-    
-    public void load(){
-        System.out.println("ldsfadddfS");
+
+    public void loadSanh() {
+        listSanh = sanhDAO.select();
+        DefaultComboBoxModel cbbModel = (DefaultComboBoxModel) cbbSanh.getModel();
+        cbbModel.removeAllElements();
+        for (Sanh ss : listSanh) {
+            cbbModel.addElement(ss);
+        }
+        cbbSanh.setSelectedIndex(-1);
     }
-    
-    
-    
+
     public void showCalendar1() {
         dtChooser1.showPopup();
     }
-     public void showCalendar2() {
+
+    public void showCalendar2() {
         dtChooser2.showPopup();
     }
 
@@ -152,9 +161,7 @@ public class QuanLyHopDong extends javax.swing.JPanel {
         btnChiTiet = new com.ui.swing.HoverButton();
         btnLapHopDong = new com.ui.swing.HoverButton();
         jLabel4 = new javax.swing.JLabel();
-        rdBtnDaThucHien = new javax.swing.JRadioButton();
-        rdBtnDangCho = new javax.swing.JRadioButton();
-        rdBtnChoKyKet = new javax.swing.JRadioButton();
+        cbbTrangThai = new com.ui.swing.Combobox();
 
         setPreferredSize(new java.awt.Dimension(1620, 990));
 
@@ -223,7 +230,7 @@ public class QuanLyHopDong extends javax.swing.JPanel {
 
             },
             new String [] {
-                "MaHD", "Người lập", "Số bàn", "Sảnh", "Ngày lập ", "Khách hàng", "Ngày tổ chức", "Bắt đầu ", "Kết thúc", "Trạng thái"
+                "MaHD", "Người lập", "Số bàn", "Sảnh", "Ngày lập ", "Khách hàng", "Ngày tổ chức", "Giờ bắt đầu ", "Giờ kết thúc", "Trạng thái"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -275,7 +282,7 @@ public class QuanLyHopDong extends javax.swing.JPanel {
                 cbbSanhActionPerformed(evt);
             }
         });
-        pnlQuanLyHopDong.add(cbbSanh, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 20, 270, 54));
+        pnlQuanLyHopDong.add(cbbSanh, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 20, 140, 54));
 
         cbbSortBy.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Họ và Tên" }));
         cbbSortBy.setSelectedIndex(-1);
@@ -318,42 +325,17 @@ public class QuanLyHopDong extends javax.swing.JPanel {
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 1, 15)); // NOI18N
         jLabel4.setText("Trạng thái");
-        pnlQuanLyHopDong.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(910, 900, -1, -1));
+        pnlQuanLyHopDong.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 40, -1, 30));
 
-        btnGrpStatus.add(rdBtnDaThucHien);
-        rdBtnDaThucHien.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
-        rdBtnDaThucHien.setText("Đã thực hiện");
-        rdBtnDaThucHien.setContentAreaFilled(false);
-        rdBtnDaThucHien.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        rdBtnDaThucHien.addActionListener(new java.awt.event.ActionListener() {
+        cbbTrangThai.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tất cả", "Đang chờ duyệt", "Đang chờ ký kết", "Đang chờ thực hiện", "Đã hủy" }));
+        cbbTrangThai.setToolTipText("");
+        cbbTrangThai.setLabeText("");
+        cbbTrangThai.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rdBtnDaThucHienActionPerformed(evt);
+                cbbTrangThaiActionPerformed(evt);
             }
         });
-        pnlQuanLyHopDong.add(rdBtnDaThucHien, new org.netbeans.lib.awtextra.AbsoluteConstraints(1330, 900, -1, -1));
-
-        btnGrpStatus.add(rdBtnDangCho);
-        rdBtnDangCho.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
-        rdBtnDangCho.setSelected(true);
-        rdBtnDangCho.setText("Đang chờ duyệt");
-        rdBtnDangCho.setContentAreaFilled(false);
-        rdBtnDangCho.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rdBtnDangChoActionPerformed(evt);
-            }
-        });
-        pnlQuanLyHopDong.add(rdBtnDangCho, new org.netbeans.lib.awtextra.AbsoluteConstraints(1030, 900, -1, -1));
-
-        btnGrpStatus.add(rdBtnChoKyKet);
-        rdBtnChoKyKet.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
-        rdBtnChoKyKet.setText("Chờ ký kết");
-        rdBtnChoKyKet.setContentAreaFilled(false);
-        rdBtnChoKyKet.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rdBtnChoKyKetActionPerformed(evt);
-            }
-        });
-        pnlQuanLyHopDong.add(rdBtnChoKyKet, new org.netbeans.lib.awtextra.AbsoluteConstraints(1200, 900, -1, -1));
+        pnlQuanLyHopDong.add(cbbTrangThai, new org.netbeans.lib.awtextra.AbsoluteConstraints(800, 20, 140, 50));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -363,7 +345,7 @@ public class QuanLyHopDong extends javax.swing.JPanel {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(pnlQuanLyHopDong, javax.swing.GroupLayout.DEFAULT_SIZE, 950, Short.MAX_VALUE)
+            .addComponent(pnlQuanLyHopDong, javax.swing.GroupLayout.DEFAULT_SIZE, 990, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -372,11 +354,11 @@ public class QuanLyHopDong extends javax.swing.JPanel {
     }//GEN-LAST:event_txtSearchActionPerformed
 
     private void txtSearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchKeyReleased
-      
+
     }//GEN-LAST:event_txtSearchKeyReleased
 
     private void lblSearchMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblSearchMouseClicked
-       
+
     }//GEN-LAST:event_lblSearchMouseClicked
 
     private void lblSortMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblSortMouseClicked
@@ -396,37 +378,54 @@ public class QuanLyHopDong extends javax.swing.JPanel {
     }//GEN-LAST:event_cbbSanhActionPerformed
 
     private void btnLapHopDongActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLapHopDongActionPerformed
-        AppStatus.mainApp.showForm(new LapHopDong(true,""));
+        String maHD = "";
+        String thuTu = "";
+        String today = DateHelper.toString(DateHelper.now(), "dd/MM/yyyy");
+        List<String> list = new ArrayList<>();
+        for (HopDong hd : listHopDong) {
+            if (today.equals(DateHelper.toString(hd.getNgayLap(), "dd/MM/yyyy"))) {
+                list.add(hd.getMaHD());
+            }
+        }
+
+        if (!list.isEmpty()) {
+            List<Integer> listThuTu = new ArrayList<>();
+
+            for (String ma : list) {
+                int tt = Integer.parseInt(ma.substring(10));
+                listThuTu.add(tt);
+            }
+            Collections.sort(listThuTu);
+            thuTu = String.format("%03d", listThuTu.get(listThuTu.size() - 1) + 1);;
+        } else {
+            thuTu = "001";
+        }
+
+        String[] partDate = today.split("/");
+
+        maHD = "HD" + partDate[2] + partDate[1] + partDate[0] + thuTu;
+        
+
+        
+         AppStatus.mainApp.showForm(new LapHopDong(true,maHD));
     }//GEN-LAST:event_btnLapHopDongActionPerformed
 
     private void txtNgayToChucActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNgayToChucActionPerformed
         showCalendar1();
-        
+
     }//GEN-LAST:event_txtNgayToChucActionPerformed
 
     private void btnChiTietActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChiTietActionPerformed
-       currentIndex = tblHopDong.getSelectedRow();
-         if (currentIndex >= 0){
-                   String maHD = (String) tblHopDong.getValueAt(this.currentIndex, 0);
-                   LapHopDong lapHopDong = new LapHopDong(false, maHD);
-                   AppStatus.mainApp.showForm(lapHopDong);
-            
-         }else{
-             DialogHelper.alertError(this, "Vui lòng chọn hợp đồng");
-         }
+        currentIndex = tblHopDong.getSelectedRow();
+        if (currentIndex >= 0) {
+            String maHD = (String) tblHopDong.getValueAt(this.currentIndex, 0);
+            LapHopDong lapHopDong = new LapHopDong(false, maHD);
+            AppStatus.mainApp.showForm(lapHopDong);
+
+        } else {
+            DialogHelper.alertError(this, "Vui lòng chọn hợp đồng");
+        }
     }//GEN-LAST:event_btnChiTietActionPerformed
-
-    private void rdBtnDangChoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdBtnDangChoActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_rdBtnDangChoActionPerformed
-
-    private void rdBtnChoKyKetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdBtnChoKyKetActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_rdBtnChoKyKetActionPerformed
-
-    private void rdBtnDaThucHienActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdBtnDaThucHienActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_rdBtnDaThucHienActionPerformed
 
     private void cbbSortItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbbSortItemStateChanged
         // TODO add your handling code here:
@@ -437,15 +436,19 @@ public class QuanLyHopDong extends javax.swing.JPanel {
     }//GEN-LAST:event_txtNgayToChucMouseClicked
 
     private void tblHopDongMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblHopDongMouseClicked
-         currentIndex = tblHopDong.rowAtPoint(evt.getPoint());
-         if (currentIndex > 0){
-               if (evt.getClickCount() == 2) {
-                   String maHD = (String) tblHopDong.getValueAt(this.currentIndex, 0);
-                   LapHopDong lapHopDong = new LapHopDong(false, maHD);
-                   AppStatus.mainApp.showForm(lapHopDong);
+        currentIndex = tblHopDong.rowAtPoint(evt.getPoint());
+        if (currentIndex > 0) {
+            if (evt.getClickCount() == 2) {
+                String maHD = (String) tblHopDong.getValueAt(this.currentIndex, 0);
+                LapHopDong lapHopDong = new LapHopDong(false, maHD);
+                AppStatus.mainApp.showForm(lapHopDong);
             }
-         }
+        }
     }//GEN-LAST:event_tblHopDongMouseClicked
+
+    private void cbbTrangThaiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbbTrangThaiActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbbTrangThaiActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -455,6 +458,7 @@ public class QuanLyHopDong extends javax.swing.JPanel {
     private com.ui.swing.Combobox cbbSanh;
     private com.ui.swing.Combobox cbbSort;
     private com.ui.swing.Combobox cbbSortBy;
+    private com.ui.swing.Combobox cbbTrangThai;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -464,9 +468,6 @@ public class QuanLyHopDong extends javax.swing.JPanel {
     private javax.swing.JLabel lblSort;
     private javax.swing.JLabel lblSort1;
     private javax.swing.JPanel pnlQuanLyHopDong;
-    private javax.swing.JRadioButton rdBtnChoKyKet;
-    private javax.swing.JRadioButton rdBtnDaThucHien;
-    private javax.swing.JRadioButton rdBtnDangCho;
     private com.ui.swing.Table tblHopDong;
     private javax.swing.JTextField txtNgayToChuc;
     private javax.swing.JTextField txtSearch;

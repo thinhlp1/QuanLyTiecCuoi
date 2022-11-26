@@ -7,6 +7,7 @@ package com.happywedding.helper;
 
 import com.happywedding.app.HappyWeddingApp;
 import com.happywedding.model.CoSoVatChat;
+import com.happywedding.model.NhanVien;
 import com.happywedding.model.PhanLoaiMonAn;
 import com.happywedding.model.PhanLoaiSanh;
 import com.happywedding.model.PhongBan;
@@ -27,9 +28,9 @@ public class AppStatus {
 //    /**
 //     * Đối tượng này chứa thông tin người sử dụng sau khi đăng nhập
 //     */
-    public static Object USER = null;
+    public static NhanVien USER = null;
     public static int STATUS = 0;
-    public static String ROLE = "ADMIN" ;
+    public static String ROLE = "QLCC" ;
 
    
     public static HappyWeddingApp mainApp = null;
@@ -40,7 +41,7 @@ public class AppStatus {
     //1 is loading
     public static void loadApp(){
       
-//        STATUS = 1;
+        STATUS = 1;
     }
 
     public static void logoff() {

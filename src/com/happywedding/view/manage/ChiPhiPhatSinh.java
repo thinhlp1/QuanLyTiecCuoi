@@ -5,19 +5,37 @@
  */
 package com.happywedding.view.manage;
 
+import java.awt.event.KeyAdapter;
+
 /**
  *
  * @author ADMIN
  */
 public class ChiPhiPhatSinh extends javax.swing.JFrame {
-    
-     private String maHD;
+
+    private String maHD;
+
     /**
      * Creates new form ChiPhiPhatSinh
      */
     public ChiPhiPhatSinh(String maHD) {
-          this.maHD = maHD;
+        this.maHD = maHD;
         initComponents();
+    }
+
+    class CheckNumber extends KeyAdapter {
+
+        public void keyTyped(java.awt.event.KeyEvent evt) {
+            char testChar = evt.getKeyChar();
+            if (!((Character.isDigit(testChar)))) {
+                if (testChar == '\n') {
+                    lblMaNH24.requestFocus();
+                }
+                if (testChar != '.') {
+                    evt.consume();
+                }
+            }
+        }
     }
 
     /**
@@ -53,8 +71,12 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
         lblMaNH31 = new javax.swing.JLabel();
         txtCPPSThamTraiBan12 = new javax.swing.JTextField();
         txtCPPSThamTraiBan13 = new javax.swing.JTextField();
-        btnXacNhan = new com.ui.swing.HoverButton();
-        btnBoQua = new com.ui.swing.HoverButton();
+        btnXuatHoaDon = new com.ui.swing.HoverButton();
+        lblMaNH24 = new javax.swing.JLabel();
+        txtChiPhi = new javax.swing.JTextField();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tblThucDon = new com.ui.swing.Table(new CheckNumber());
+        jLabel9 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -66,8 +88,8 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
         jPanel1.add(lblMaNH25, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 80, 100, 30));
 
         jLabel7.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        jLabel7.setText("Chi phí phát sinh");
-        jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 40, -1, -1));
+        jLabel7.setText("Chi phí nước uống");
+        jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 450, 180, -1));
 
         txtCPPSThamTraiBan.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         txtCPPSThamTraiBan.addActionListener(new java.awt.event.ActionListener() {
@@ -209,51 +231,86 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
         });
         jPanel1.add(txtCPPSThamTraiBan13, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 380, 360, 35));
 
-        btnXacNhan.setBackground(new java.awt.Color(24, 153, 29));
-        btnXacNhan.setForeground(new java.awt.Color(255, 255, 255));
-        btnXacNhan.setText("Xác nhận");
-        btnXacNhan.setBorderColor(new java.awt.Color(24, 153, 29));
-        btnXacNhan.setColor(new java.awt.Color(24, 153, 29));
-        btnXacNhan.setColorClick(new java.awt.Color(0, 204, 0));
-        btnXacNhan.setColorOver(new java.awt.Color(0, 204, 0));
-        btnXacNhan.setFocusPainted(false);
-        btnXacNhan.setLabelColor(java.awt.Color.white);
-        btnXacNhan.setLableColorClick(java.awt.Color.white);
-        btnXacNhan.setRadius(15);
-        btnXacNhan.addActionListener(new java.awt.event.ActionListener() {
+        btnXuatHoaDon.setBackground(new java.awt.Color(24, 153, 29));
+        btnXuatHoaDon.setForeground(new java.awt.Color(255, 255, 255));
+        btnXuatHoaDon.setText("Xuất hóa đơn");
+        btnXuatHoaDon.setBorderColor(new java.awt.Color(24, 153, 29));
+        btnXuatHoaDon.setColor(new java.awt.Color(24, 153, 29));
+        btnXuatHoaDon.setColorClick(new java.awt.Color(0, 204, 0));
+        btnXuatHoaDon.setColorOver(new java.awt.Color(0, 204, 0));
+        btnXuatHoaDon.setFocusPainted(false);
+        btnXuatHoaDon.setLabelColor(java.awt.Color.white);
+        btnXuatHoaDon.setLableColorClick(java.awt.Color.white);
+        btnXuatHoaDon.setRadius(15);
+        btnXuatHoaDon.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnXacNhanActionPerformed(evt);
+                btnXuatHoaDonActionPerformed(evt);
             }
         });
-        jPanel1.add(btnXacNhan, new org.netbeans.lib.awtextra.AbsoluteConstraints(660, 460, -1, 30));
+        jPanel1.add(btnXuatHoaDon, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 700, -1, 30));
 
-        btnBoQua.setBackground(new java.awt.Color(24, 37, 153));
-        btnBoQua.setForeground(new java.awt.Color(255, 255, 255));
-        btnBoQua.setText("Bỏ qua");
-        btnBoQua.setBorderColor(new java.awt.Color(24, 37, 153));
-        btnBoQua.setColor(new java.awt.Color(24, 37, 153));
-        btnBoQua.setColorClick(new java.awt.Color(51, 51, 255));
-        btnBoQua.setColorOver(new java.awt.Color(51, 51, 255));
-        btnBoQua.setFocusPainted(false);
-        btnBoQua.setLabelColor(java.awt.Color.white);
-        btnBoQua.setLableColorClick(java.awt.Color.white);
-        btnBoQua.setRadius(15);
-        btnBoQua.addActionListener(new java.awt.event.ActionListener() {
+        lblMaNH24.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        lblMaNH24.setText("Tổng chi phí");
+        jPanel1.add(lblMaNH24, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 700, 160, 30));
+
+        txtChiPhi.setEditable(false);
+        txtChiPhi.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        txtChiPhi.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnBoQuaActionPerformed(evt);
+                txtChiPhiActionPerformed(evt);
             }
         });
-        jPanel1.add(btnBoQua, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 460, -1, 30));
+        jPanel1.add(txtChiPhi, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 700, 270, 35));
+
+        tblThucDon.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null}
+            },
+            new String [] {
+                "Tên món", "Giá", "Số lượng"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, true
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tblThucDon.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        tblThucDon.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tblThucDonFocusLost(evt);
+            }
+        });
+        tblThucDon.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblThucDonMouseClicked(evt);
+            }
+        });
+        tblThucDon.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                tblThucDonKeyTyped(evt);
+            }
+        });
+        jScrollPane2.setViewportView(tblThucDon);
+
+        jPanel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 490, 840, 160));
+
+        jLabel9.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel9.setText("Chi phí phát sinh");
+        jPanel1.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 40, -1, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 891, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 916, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 546, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 826, Short.MAX_VALUE)
         );
 
         pack();
@@ -316,21 +373,61 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtCPPSThamTraiBan13ActionPerformed
 
-    private void btnXacNhanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXacNhanActionPerformed
+    private void btnXuatHoaDonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXuatHoaDonActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnXacNhanActionPerformed
+    }//GEN-LAST:event_btnXuatHoaDonActionPerformed
 
-    private void btnBoQuaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBoQuaActionPerformed
+    private void txtChiPhiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtChiPhiActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnBoQuaActionPerformed
+    }//GEN-LAST:event_txtChiPhiActionPerformed
+
+    private void tblThucDonFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tblThucDonFocusLost
+
+        //      tblThucDon.getCellEditor().stopCellEditing();
+    }//GEN-LAST:event_tblThucDonFocusLost
+
+    private void tblThucDonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblThucDonMouseClicked
+//        int index = tblThucDon.getSelectedRow();
+//        if (index >= 0) {
+//            if (evt.getClickCount() >= 2) {
+//
+//                ChiTietDatMon ct = listChiTietDatMon.get(index);
+//                for (MonAn m : listMonAnBk) {
+//                    if (ct.getMaMA().equals(m.getMaMA())) {
+//                        listChiTietDatMon.remove(ct);
+//
+//                        break;
+//                    }
+//                }
+//
+//                fillTableThucDon(listChiTietDatMon);
+//                filtedMonAn();
+//
+//                tinhTien();
+//            } else if (SwingUtilities.isRightMouseButton(evt)) {
+//                boolean rs = DialogHelper.confirm(this, "Chuyển qua bàn phụ");
+//                if (rs) {
+//                    listMonAnBanPhu.add(listChiTietDatMon.get(tblThucDon.getSelectedRow()));
+//                    autoSetSoLuong();
+//                    tinhTien();
+//                }
+//            }
+//        }
+    }//GEN-LAST:event_tblThucDonMouseClicked
+
+    private void tblThucDonKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tblThucDonKeyTyped
+
+    }//GEN-LAST:event_tblThucDonKeyTyped
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private com.ui.swing.HoverButton btnBoQua;
-    private com.ui.swing.HoverButton btnXacNhan;
+    private com.ui.swing.HoverButton btnXuatHoaDon;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JLabel lblMaNH24;
     private javax.swing.JLabel lblMaNH25;
     private javax.swing.JLabel lblMaNH26;
     private javax.swing.JLabel lblMaNH27;
@@ -338,6 +435,7 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
     private javax.swing.JLabel lblMaNH29;
     private javax.swing.JLabel lblMaNH30;
     private javax.swing.JLabel lblMaNH31;
+    private com.ui.swing.Table tblThucDon;
     private javax.swing.JTextField txtCPPSThamTraiBan;
     private javax.swing.JTextField txtCPPSThamTraiBan1;
     private javax.swing.JTextField txtCPPSThamTraiBan10;
@@ -352,5 +450,6 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
     private javax.swing.JTextField txtCPPSThamTraiBan7;
     private javax.swing.JTextField txtCPPSThamTraiBan8;
     private javax.swing.JTextField txtCPPSThamTraiBan9;
+    private javax.swing.JTextField txtChiPhi;
     // End of variables declaration//GEN-END:variables
 }

@@ -13,7 +13,9 @@ public class ChiTietDatMon {
     private String maHD;
     private String maMA;
     private String tenMA;
+    private String maTD;
     private long gia;
+    private int soLuong;
     private long chiPhiPhatSinh;
     private int thuTu;
     private String ghiChu;
@@ -29,6 +31,22 @@ public class ChiTietDatMon {
     }
 
     public ChiTietDatMon() {
+    }
+
+    public int getSoLuong() {
+        return soLuong;
+    }
+
+    public void setSoLuong(int soLuong) {
+        this.soLuong = soLuong;
+    }
+
+    public String getMaTD() {
+        return maTD;
+    }
+
+    public void setMaTD(String maTD) {
+        this.maTD = maTD;
     }
     
     

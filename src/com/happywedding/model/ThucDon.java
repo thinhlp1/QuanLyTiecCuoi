@@ -4,18 +4,22 @@ public class ThucDon {
 
     private String maTD;
     private String tenTD;
-    private long gia;
     private String ghiChu;
 
-    public ThucDon(String maTD, String tenTD, long gia, String ghiChu) {
+    public ThucDon(String maTD, String tenTD, String ghiChu) {
         this.maTD = maTD;
         this.tenTD = tenTD;
-        this.gia = gia;
+
         this.ghiChu = ghiChu;
     }
 
     public ThucDon() {
-   
+
+    }
+
+    @Override
+    public String toString() {
+        return tenTD;
     }
 
     public String getMaTD() {
@@ -32,14 +36,6 @@ public class ThucDon {
 
     public void setTenTD(String tenTD) {
         this.tenTD = tenTD;
-    }
-
-    public long getGia() {
-        return gia;
-    }
-
-    public void setGia(long gia) {
-        this.gia = gia;
     }
 
     public String getGhiChu() {

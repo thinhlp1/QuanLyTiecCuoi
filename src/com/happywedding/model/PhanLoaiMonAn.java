@@ -13,6 +13,12 @@ public class PhanLoaiMonAn {
 
     public PhanLoaiMonAn() {
     }
+
+    @Override
+    public String toString() {
+        return tenPL;
+    }
+    
     
     
 

@@ -16,21 +16,20 @@ import java.util.List;
  *
  * @author ADMIN
  */
-public class ThucDonDAO extends AbstractDAO<ThucDon>{
-    private final String INSERT_THUCDON = "INSERT INTO ThucDon (MaTD, TenTD, Gia, GhiChu) VALUES (?, ?, ?, ?)";
+public class ThucDonDAO extends AbstractDAO<ThucDon> {
 
-    private final String UPDATE_THUCDON = "UPDATE ThucDon SET MaTD=?, TenTD=?, Gia=?, GhiChu=? WHERE\n"
+    private final String INSERT_THUCDON = "INSERT INTO ThucDon (MaTD, TenTD, GhiChu) VALUES (?, ?, ?, ?)";
+
+    private final String UPDATE_THUCDON = "UPDATE ThucDon SET MaTD=?, TenTD=?, GhiChu=? WHERE\n"
             + "MaTD=?";
     private final String DELELTE_THUCDON = "DELETE FROM ThucDon WHERE MaTD=?";
-    private final String SELECT_ALL = "SELECT * FROM ThucDon";
-    private final String SELECT_BY_ID = "SELECT * FROM ThucDon WHERE MaTD=?";
-   
+    private final String SELECT_ALL = "SELECT * FROM ThucDon ";
+    private final String SELECT_BY_ID = "SELECT * FROM ThucDon WHERE MaTD=? ";
 
     public boolean insert(ThucDon thucDon) {
         int rs = JDBCHelper.executeUpdate(INSERT_THUCDON,
                 thucDon.getMaTD(),
                 thucDon.getTenTD(),
-                thucDon.getGia(),
                 thucDon.getGhiChu()
         );
         return rs > 0;
@@ -40,7 +39,6 @@ public class ThucDonDAO extends AbstractDAO<ThucDon>{
         int rs = JDBCHelper.executeUpdate(UPDATE_THUCDON,
                 thucDon.getMaTD(),
                 thucDon.getTenTD(),
-                thucDon.getGia(),
                 thucDon.getGhiChu()
         );
         return rs > 0;
@@ -80,15 +78,13 @@ public class ThucDonDAO extends AbstractDAO<ThucDon>{
         return list;
     }
 
-    
     // sửa lại
     private ThucDon readFromResultSet(ResultSet rs) throws SQLException {
-        
+
         ThucDon thucDon = new ThucDon();
 
         thucDon.setMaTD(rs.getString("MaTD"));
         thucDon.setTenTD(rs.getString("TenTD"));
-        thucDon.setGia(rs.getLong("Gia"));
         thucDon.setGhiChu(rs.getString("GhiChu"));
 
         return thucDon;

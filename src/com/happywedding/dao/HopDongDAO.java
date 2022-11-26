@@ -76,6 +76,10 @@ public class HopDongDAO extends AbstractDAO<HopDong> {
     public void danhDauXoa(String maHD, String MaTT) {
         int rs = JDBCHelper.executeUpdate(UPDATE_TRANGTHAI, MaTT);
     }
+    
+    public void updateTrangThai(String maHD, String MaTT) {
+        int rs = JDBCHelper.executeUpdate(UPDATE_TRANGTHAI, MaTT);
+    }
 
     // trả về chi phí và chi phí phát sinh trong toàn bộ hợp đồng
     public List<Long> tinhToan(String maHD) {

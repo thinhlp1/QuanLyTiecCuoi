@@ -12,8 +12,13 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.text.NumberFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Currency;
+import java.util.Date;
 import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 
 public class ShareHelper {
@@ -71,13 +76,29 @@ public class ShareHelper {
         }
         if (money.charAt(0) == '.') {
             money = money.replaceFirst(".", "");
-    }
-       
+        }
+
         return money;
     }
-    
-    public static long toMoney(String moneyy){
-        return Integer.parseInt(moneyy.replaceAll("\\.", ""));
+
+    public static long toMoney(String moneyy) {
+        return Long.parseLong(moneyy.replaceAll("\\.", ""));
+    }
+
+    public static String to24Hour(String time) {
+        SimpleDateFormat displayFormat = new SimpleDateFormat("HH:mm");
+        SimpleDateFormat parseFormat = new SimpleDateFormat("hh:mm a");
+        Date date;
+        try {
+            date = parseFormat.parse(time);
+            
+            System.out.println(displayFormat.format(date));
+            return displayFormat.format(date);
+        } catch (ParseException ex) {
+            Logger.getLogger(ShareHelper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return time;
+        
     }
 
 }
