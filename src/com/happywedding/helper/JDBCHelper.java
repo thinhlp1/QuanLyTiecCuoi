@@ -24,6 +24,7 @@ public class JDBCHelper {
     static {
         try {
             Class.forName(driver);
+            System.out.println("Kết nối thành công");
         } catch (ClassNotFoundException ex) {
             throw new RuntimeException(ex);
         }

@@ -16,10 +16,14 @@ public class QuanLyKho extends javax.swing.JPanel {
      */
     public QuanLyKho() {
         initComponents();
+      
+    }
+        
+    public void init(){
         tblCoSoVatChat.fixTable(jScrollPane1);
         tblCoSoVatChat.setAutoscrolls(true);
     }
-
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -64,6 +68,8 @@ public class QuanLyKho extends javax.swing.JPanel {
         cbbSapXepDanhMuc = new com.ui.swing.Combobox();
         cbbDanhMuc = new com.ui.swing.Combobox();
         lblHinhAnh = new javax.swing.JLabel();
+        jLabel32 = new javax.swing.JLabel();
+        txtSoLuong1 = new javax.swing.JTextField();
 
         pnlEmplpyeeManager.setBackground(new java.awt.Color(255, 255, 255));
         pnlEmplpyeeManager.setMinimumSize(new java.awt.Dimension(1600, 838));
@@ -86,7 +92,7 @@ public class QuanLyKho extends javax.swing.JPanel {
 
         jLabel27.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
         jLabel27.setText("Mã cơ sở vật chất");
-        pnlEmplpyeeManager.add(jLabel27, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 470, 130, -1));
+        pnlEmplpyeeManager.add(jLabel27, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 450, 130, -1));
 
         txtMaCoSoVatChat.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
         txtMaCoSoVatChat.addActionListener(new java.awt.event.ActionListener() {
@@ -94,18 +100,18 @@ public class QuanLyKho extends javax.swing.JPanel {
                 txtMaCoSoVatChatActionPerformed(evt);
             }
         });
-        pnlEmplpyeeManager.add(txtMaCoSoVatChat, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 500, 340, 35));
+        pnlEmplpyeeManager.add(txtMaCoSoVatChat, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 480, 340, 35));
 
         jLabel28.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
         jLabel28.setText("Tên cơ sở vật chất");
-        pnlEmplpyeeManager.add(jLabel28, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 550, 130, -1));
+        pnlEmplpyeeManager.add(jLabel28, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 530, 130, -1));
 
         txtTenCoSoVatChat.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
-        pnlEmplpyeeManager.add(txtTenCoSoVatChat, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 580, 340, 35));
+        pnlEmplpyeeManager.add(txtTenCoSoVatChat, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 560, 340, 35));
 
         jLabel30.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
         jLabel30.setText("Số lượng");
-        pnlEmplpyeeManager.add(jLabel30, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 630, 130, -1));
+        pnlEmplpyeeManager.add(jLabel30, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 610, 130, -1));
 
         txtSoLuong.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
         txtSoLuong.addActionListener(new java.awt.event.ActionListener() {
@@ -113,11 +119,11 @@ public class QuanLyKho extends javax.swing.JPanel {
                 txtSoLuongActionPerformed(evt);
             }
         });
-        pnlEmplpyeeManager.add(txtSoLuong, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 660, 340, 35));
+        pnlEmplpyeeManager.add(txtSoLuong, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 640, 340, 35));
 
         jLabel29.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
         jLabel29.setText("Ghi chú");
-        pnlEmplpyeeManager.add(jLabel29, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 710, 60, -1));
+        pnlEmplpyeeManager.add(jLabel29, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 750, 60, -1));
 
         cbbDanhMucCon.setLabeText("");
         cbbDanhMucCon.addActionListener(new java.awt.event.ActionListener() {
@@ -125,7 +131,7 @@ public class QuanLyKho extends javax.swing.JPanel {
                 cbbDanhMucConActionPerformed(evt);
             }
         });
-        pnlEmplpyeeManager.add(cbbDanhMucCon, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 420, 340, -1));
+        pnlEmplpyeeManager.add(cbbDanhMucCon, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 410, 340, 35));
 
         jLabel31.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
         jLabel31.setText("Danh mục con");
@@ -213,11 +219,11 @@ public class QuanLyKho extends javax.swing.JPanel {
 
             },
             new String [] {
-                "Mã cơ sở vật chất", "Tên cơ sở vật chất", "Số lượng", "Ghi chú"
+                "Mã cơ sở vật chất", "Tên cơ sở vật chất", "Số lượng", "Giá thuê", "Ghi chú"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false
+                false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -287,7 +293,7 @@ public class QuanLyKho extends javax.swing.JPanel {
         txtGhiChu.setRows(5);
         jScrollPane2.setViewportView(txtGhiChu);
 
-        pnlEmplpyeeManager.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 740, 340, 70));
+        pnlEmplpyeeManager.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 780, 340, 70));
 
         cbbSapXepDanhMuc.setLabeText("Danh mục");
         cbbSapXepDanhMuc.addActionListener(new java.awt.event.ActionListener() {
@@ -316,6 +322,18 @@ public class QuanLyKho extends javax.swing.JPanel {
             }
         });
         pnlEmplpyeeManager.add(lblHinhAnh, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 90, 180, 190));
+
+        jLabel32.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
+        jLabel32.setText("Giá thuê");
+        pnlEmplpyeeManager.add(jLabel32, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 680, 130, -1));
+
+        txtSoLuong1.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
+        txtSoLuong1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtSoLuong1ActionPerformed(evt);
+            }
+        });
+        pnlEmplpyeeManager.add(txtSoLuong1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 710, 340, 35));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -399,6 +417,10 @@ public class QuanLyKho extends javax.swing.JPanel {
 
     }//GEN-LAST:event_lblHinhAnhMouseClicked
 
+    private void txtSoLuong1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSoLuong1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtSoLuong1ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.ui.swing.InkwellButton btnFirst;
@@ -424,6 +446,7 @@ public class QuanLyKho extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel30;
     private javax.swing.JLabel jLabel31;
+    private javax.swing.JLabel jLabel32;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
@@ -434,6 +457,7 @@ public class QuanLyKho extends javax.swing.JPanel {
     private javax.swing.JTextArea txtGhiChu;
     private javax.swing.JPasswordField txtMaCoSoVatChat;
     private javax.swing.JTextField txtSoLuong;
+    private javax.swing.JTextField txtSoLuong1;
     private javax.swing.JPasswordField txtTenCoSoVatChat;
     private javax.swing.JTextField txtTimKiem;
     // End of variables declaration//GEN-END:variables

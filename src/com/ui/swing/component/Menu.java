@@ -24,10 +24,10 @@ public class Menu extends javax.swing.JPanel {
     }
     
        static class Role{
-        static int QUANLY = 0;
-        static int TIEPTAN = 1;
-        static int KHO = 2;
-        static int ADMIN = 3;
+        static String QUANLY = "QLCC";
+        static String TIEPTAN = "TIEPTAN";
+        static String QLKHO = "QLKHO";
+        static String ADMIN = "ADMIN";
     }
 
     public Menu() {
@@ -40,27 +40,27 @@ public class Menu extends javax.swing.JPanel {
 
     private void init() {
         
-       int role = AppStatus.ROLE;
-       if (role == Role.QUANLY){
+       String role = AppStatus.ROLE;
+       if (role.equals(Role.QUANLY)){
        
         listMenu1.addItem(new Model_Menu("/com/happywedding/assets/hopdong.png", "Quản lý hợp đồng", Model_Menu.MenuType.MENU));
         listMenu1.addItem(new Model_Menu("/com/happywedding/assets/hoadon.png", "Quản lý hóa đơn", Model_Menu.MenuType.MENU));
         listMenu1.addItem(new Model_Menu("/com/happywedding/assets/employee.png", "Quản lý nhân viên", Model_Menu.MenuType.MENU));
         listMenu1.addItem(new Model_Menu("/com/happywedding/assets/kho.png", "Quản lý kho", Model_Menu.MenuType.MENU));
-        listMenu1.addItem(new Model_Menu("/com/happywedding/assets/combo.png", "Quản lý gói dịch vụ", Model_Menu.MenuType.MENU));
+        listMenu1.addItem(new Model_Menu("/com/happywedding/assets/sanh.png", "Quản lý sảnh", Model_Menu.MenuType.MENU));
         listMenu1.addItem(new Model_Menu("/com/happywedding/assets/chart.png", "Thống kê", Model_Menu.MenuType.MENU));
         listMenu1.addItem(new Model_Menu("", "", Model_Menu.MenuType.EMPTY));
      
       
        }
-       else if (role == Role.TIEPTAN){
+       else if (role.equals(Role.TIEPTAN)){
      
         listMenu1.addItem(new Model_Menu("/com/happywedding/assets/hopdong.png", "Quản lý hợp đồng", Model_Menu.MenuType.MENU));
          listMenu1.addItem(new Model_Menu("/com/happywedding/assets/hoadon.png", "Quản lý hóa đơn", Model_Menu.MenuType.MENU));
         listMenu1.addItem(new Model_Menu("", "", Model_Menu.MenuType.EMPTY));
        
        
-       }else if (role == Role.KHO){
+       }else if (role.equals(Role.QLKHO)){
         
         listMenu1.addItem(new Model_Menu("/com/happywedding/assets/kho.png", "Quản lý kho", Model_Menu.MenuType.MENU));
 
@@ -68,22 +68,23 @@ public class Menu extends javax.swing.JPanel {
        
 
         
-       }else if (role == Role.ADMIN){
+       }else if (role.equals(Role.ADMIN)){
         
         listMenu1.addItem(new Model_Menu("/com/happywedding/assets/account.png", "Quản lý tài khoản", Model_Menu.MenuType.MENU));
-
+        listMenu1.addItem(new Model_Menu("/com/happywedding/assets/sanh.png", "Quản lý sảnh", Model_Menu.MenuType.MENU));
         listMenu1.addItem(new Model_Menu("", "", Model_Menu.MenuType.EMPTY));
-         listMenu1.addItem(new Model_Menu("/com/happywedding/assets/Exit.png", "Thoát", Model_Menu.MenuType.MENU));
-         return;
+        listMenu1.addItem(new Model_Menu("/com/happywedding/assets/Exit.png", "Thoát", Model_Menu.MenuType.MENU));
+        listMenu1.addItem(new Model_Menu("", "", Model_Menu.MenuType.EMPTY));
+        return;
        
        }
-        listMenu1.addItem(new Model_Menu("/com/happywedding/assets/info.png", "Giới thiệu", Model_Menu.MenuType.MENU));
-        listMenu1.addItem(new Model_Menu("/com/happywedding/assets/guide.png", "Hướng dẫn", Model_Menu.MenuType.MENU));
-        listMenu1.addItem(new Model_Menu("", "", Model_Menu.MenuType.EMPTY));
+       listMenu1.addItem(new Model_Menu("/com/happywedding/assets/info.png", "Giới thiệu", Model_Menu.MenuType.MENU));
+       listMenu1.addItem(new Model_Menu("/com/happywedding/assets/guide.png", "Hướng dẫn", Model_Menu.MenuType.MENU));
+       listMenu1.addItem(new Model_Menu("", "", Model_Menu.MenuType.EMPTY));
        listMenu1.addItem(new Model_Menu("/com/happywedding/assets/change.png", "Đổi mật khẩu", Model_Menu.MenuType.MENU));
        listMenu1.addItem(new Model_Menu("/com/happywedding/assets/logout.png", "Đăng xuất", Model_Menu.MenuType.MENU));
        listMenu1.addItem(new Model_Menu("/com/happywedding/assets/Exit.png", "Thoát", Model_Menu.MenuType.MENU));
-       listMenu1.addItem(new Model_Menu("", "", Model_Menu.MenuType.EMPTY));
+     
        
     }
 

@@ -87,28 +87,6 @@
             </Constraint>
           </Constraints>
         </Component>
-        <Component class="com.ui.swing.InkwellButton" name="btnDanhDauXoa">
-          <Properties>
-            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="18" green="18" red="99" type="rgb"/>
-            </Property>
-            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="ff" green="ff" red="ff" type="rgb"/>
-            </Property>
-            <Property name="text" type="java.lang.String" value="&#x110;&#xe1;nh d&#x1ea5;u x&#xf3;a"/>
-            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Tahoma" size="14" style="0"/>
-            </Property>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnDanhDauXoaActionPerformed"/>
-          </Events>
-          <Constraints>
-            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-              <AbsoluteConstraints x="140" y="900" width="120" height="-1"/>
-            </Constraint>
-          </Constraints>
-        </Component>
         <Container class="javax.swing.JScrollPane" name="jScrollPane1">
           <AuxValues>
             <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
@@ -121,22 +99,18 @@
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
           <SubComponents>
-            <Component class="com.ui.swing.Table" name="tblHopDong">
+            <Component class="com.ui.swing.Table" name="tblHoaDon">
               <Properties>
                 <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                  <Table columnCount="12" rowCount="0">
+                  <Table columnCount="8" rowCount="0">
                     <Column editable="false" title="M&#xe3; h&#x1ee3;p &#x111;&#x1ed3;ng" type="java.lang.Object"/>
+                    <Column editable="false" title="M&#xe3; h&#xf3;a &#x111;&#x1a1;n" type="java.lang.Object"/>
                     <Column editable="false" title="Ng&#xe0;y l&#x1ead;p" type="java.lang.Object"/>
                     <Column editable="false" title="Ng&#x1b0;&#x1edd;i l&#x1ead;p" type="java.lang.Object"/>
-                    <Column editable="false" title="Trang tr&#xed; c&#x1ed5;ng" type="java.lang.Object"/>
-                    <Column editable="false" title="Trang tr&#xed; b&#xe0;n" type="java.lang.Object"/>
-                    <Column editable="false" title="Trang tr&#xed; s&#xe2;n kh&#x1ea5;u" type="java.lang.Object"/>
-                    <Column editable="false" title="&#x110;i k&#xe8;m" type="java.lang.Object"/>
-                    <Column editable="false" title="Ngh&#x1ec7; thu&#x1ead;t" type="java.lang.Object"/>
-                    <Column editable="false" title="Th&#x1ef1;c &#x111;&#x1a1;n" type="java.lang.Object"/>
                     <Column editable="false" title="Ti&#x1ec1;n c&#x1ecd;c" type="java.lang.Object"/>
                     <Column editable="false" title="Ph&#xe1;t sinh " type="java.lang.Object"/>
                     <Column editable="false" title="T&#x1ed5;ng ti&#x1ec1;n" type="java.lang.Object"/>
+                    <Column editable="false" title="Tr&#x1ea1;ng th&#xe1;i" type="java.lang.Object"/>
                   </Table>
                 </Property>
                 <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">

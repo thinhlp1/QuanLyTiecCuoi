@@ -11,6 +11,11 @@ public class VaiTroTaiKhoan {
         this.tenVT = tenVT;
     }
 
+    public VaiTroTaiKhoan() {
+    }
+    
+    
+
     public String getMaVT() {
         return maVT;
     }

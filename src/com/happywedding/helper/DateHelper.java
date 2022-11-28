@@ -13,6 +13,7 @@ import java.util.Date;
 public class DateHelper {
 
     static final SimpleDateFormat DATE_FORMATER = new SimpleDateFormat("MM/dd/yyyy");
+    static final SimpleDateFormat TIME_FORMATER = new SimpleDateFormat("hh:MM");
 
     /**
      * Chuyển đổi String sang Date
@@ -35,6 +36,8 @@ public class DateHelper {
             throw new RuntimeException(ex);
         }
     }
+    
+  
 
     /**
      * Chuyển đổi từ Date sang String

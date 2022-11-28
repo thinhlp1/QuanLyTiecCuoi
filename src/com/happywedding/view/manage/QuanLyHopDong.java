@@ -4,10 +4,17 @@
  * and open the template in the editor.
  */
 package com.happywedding.view.manage;
+import com.happywedding.dao.HopDongDAO;
 import com.happywedding.helper.AppStatus;
+import com.happywedding.helper.DateHelper;
+import com.happywedding.helper.DialogHelper;
+import com.happywedding.model.HopDong;
+import com.happywedding.model.Sanh;
 import com.ui.swing.Table;
 import com.ui.swing.datechooser.DateChooser;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -21,6 +28,11 @@ public class QuanLyHopDong extends javax.swing.JPanel {
     private DateChooser dtChooser1 = new DateChooser();
     private DateChooser dtChooser2 = new DateChooser();
     
+    private List<Sanh> listSanh = new ArrayList<>();
+    private List<HopDong> listHopDong = new ArrayList<>();
+    private HopDongDAO dao = new HopDongDAO();
+   
+    
     /**
      * Creates new form QuanLyHopDong
      */
@@ -33,15 +45,71 @@ public class QuanLyHopDong extends javax.swing.JPanel {
         tblHopDong.fixTable(jScrollPane2);
         tblModel = (DefaultTableModel) tblHopDong.getModel();
         tblHopDong.setAutoscrolls(true);
-        dtChooser1.setTextRefernce(txtNgayBatDau);
-        dtChooser2.setTextRefernce(txtNgayKetThuc);
+        dtChooser1.setTextRefernce(txtNgayToChuc);
+       
+       
+        Sanh s = new Sanh();
+        s.setMaSanh("SANH01");
+        s.setTenSanh("Sảnh 01");
+        s.setMaPL("DONGIAN");
+        s.setTenPL("Đơn Giản");
+        s.setSucChua(100);
+        s.setGiaThueSanh(5000000);
+        s.setGiaBan(300000);
         
-        txtNgayBatDau.setText("");
-        txtNgayKetThuc.setText("");
+         Sanh s2 = new Sanh();
+         s2.setMaSanh("SANH02");
+        s2.setTenSanh("Sảnh 02");
+        s2.setMaPL("TRUNGBINH");
+        s2.setTenPL("Trung Bình");
+        s2.setSucChua(150);
+        s2.setGiaThueSanh(7000000);
+        s2.setGiaBan(435000);
+        
+         Sanh s3 = new Sanh();
+        s3.setMaSanh("SANH03");
+        s3.setTenSanh("Sảnh 03");
+        s3.setMaPL("CAOCAP");
+        s3.setTenPL("Cao cấp");
+        s3.setSucChua(200);
+        s3.setGiaThueSanh(18000000);
+        s3.setGiaBan(840000);
+        
+        listSanh.add(s);
+        listSanh.add(s2);
+        listSanh.add(s3);
+        
+        
+        txtNgayToChuc.setText("");
+        listHopDong = dao.select();
+        fillToTable(listHopDong);
+        
+     
     }
     
-    public void fillToTable(){
-        
+    public void fillToTable(List<HopDong> listHopDong){
+          tblModel.setRowCount(0);
+        try {
+          
+
+            for (HopDong hd : listHopDong) {
+                Object[] row = {
+                    hd.getMaHD(),
+                    hd.getTenNguoiLap(),
+                    hd.getSoLuongBan(),
+                    hd.getSanh(),
+                    DateHelper.toString(hd.getNgayDuyet(), "dd/MM/yyyy"),
+                    hd.getTenKhachHang(),
+                    DateHelper.toString(hd.getNgayToChuc(), "dd/MM/yyyy"),
+                    hd.getThoiGianBatDau().substring(0, 5),
+                    hd.getThoiGianKetThuc().substring(0, 5),
+                    hd.getTenTrangThai()
+                };
+                tblModel.addRow(row);
+            }
+        } catch (Exception e) {
+            DialogHelper.alertError(this, "Lỗi truy vấn dữ liệu!");
+        }
     }
     
     public void load(){
@@ -78,8 +146,7 @@ public class QuanLyHopDong extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        txtNgayKetThuc = new javax.swing.JTextField();
-        txtNgayBatDau = new javax.swing.JTextField();
+        txtNgayToChuc = new javax.swing.JTextField();
         cbbSanh = new com.ui.swing.Combobox();
         cbbSortBy = new com.ui.swing.Combobox();
         btnChiTiet = new com.ui.swing.HoverButton();
@@ -87,7 +154,7 @@ public class QuanLyHopDong extends javax.swing.JPanel {
         jLabel4 = new javax.swing.JLabel();
         rdBtnDaThucHien = new javax.swing.JRadioButton();
         rdBtnDangCho = new javax.swing.JRadioButton();
-        rdBtnDangThucHien = new javax.swing.JRadioButton();
+        rdBtnChoKyKet = new javax.swing.JRadioButton();
 
         setPreferredSize(new java.awt.Dimension(1620, 990));
 
@@ -167,9 +234,15 @@ public class QuanLyHopDong extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
+        tblHopDong.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        tblHopDong.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblHopDongMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(tblHopDong);
 
-        pnlQuanLyHopDong.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 170, 1590, 730));
+        pnlQuanLyHopDong.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 170, 1590, 710));
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/happywedding/assets/filt.png"))); // NOI18N
         pnlQuanLyHopDong.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 40, -1, -1));
@@ -182,21 +255,18 @@ public class QuanLyHopDong extends javax.swing.JPanel {
         jLabel3.setText("Ngày tổ chức");
         pnlQuanLyHopDong.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 40, -1, 20));
 
-        txtNgayKetThuc.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
-        txtNgayKetThuc.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtNgayKetThucActionPerformed(evt);
+        txtNgayToChuc.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        txtNgayToChuc.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                txtNgayToChucMouseClicked(evt);
             }
         });
-        pnlQuanLyHopDong.add(txtNgayKetThuc, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 40, 200, 35));
-
-        txtNgayBatDau.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
-        txtNgayBatDau.addActionListener(new java.awt.event.ActionListener() {
+        txtNgayToChuc.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtNgayBatDauActionPerformed(evt);
+                txtNgayToChucActionPerformed(evt);
             }
         });
-        pnlQuanLyHopDong.add(txtNgayBatDau, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 40, 200, 35));
+        pnlQuanLyHopDong.add(txtNgayToChuc, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 40, 200, 35));
 
         cbbSanh.setToolTipText("");
         cbbSanh.setLabeText("Sảnh");
@@ -205,7 +275,7 @@ public class QuanLyHopDong extends javax.swing.JPanel {
                 cbbSanhActionPerformed(evt);
             }
         });
-        pnlQuanLyHopDong.add(cbbSanh, new org.netbeans.lib.awtextra.AbsoluteConstraints(1090, 10, 270, 54));
+        pnlQuanLyHopDong.add(cbbSanh, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 20, 270, 54));
 
         cbbSortBy.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Họ và Tên" }));
         cbbSortBy.setSelectedIndex(-1);
@@ -227,7 +297,7 @@ public class QuanLyHopDong extends javax.swing.JPanel {
                 btnChiTietActionPerformed(evt);
             }
         });
-        pnlQuanLyHopDong.add(btnChiTiet, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 920, 80, 30));
+        pnlQuanLyHopDong.add(btnChiTiet, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 890, 80, 30));
 
         btnLapHopDong.setBackground(new java.awt.Color(77, 76, 125));
         btnLapHopDong.setForeground(new java.awt.Color(255, 255, 255));
@@ -244,11 +314,11 @@ public class QuanLyHopDong extends javax.swing.JPanel {
                 btnLapHopDongActionPerformed(evt);
             }
         });
-        pnlQuanLyHopDong.add(btnLapHopDong, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 920, 110, 30));
+        pnlQuanLyHopDong.add(btnLapHopDong, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 890, 110, 30));
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 1, 15)); // NOI18N
         jLabel4.setText("Trạng thái");
-        pnlQuanLyHopDong.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(900, 930, -1, -1));
+        pnlQuanLyHopDong.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(910, 900, -1, -1));
 
         btnGrpStatus.add(rdBtnDaThucHien);
         rdBtnDaThucHien.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
@@ -260,7 +330,7 @@ public class QuanLyHopDong extends javax.swing.JPanel {
                 rdBtnDaThucHienActionPerformed(evt);
             }
         });
-        pnlQuanLyHopDong.add(rdBtnDaThucHien, new org.netbeans.lib.awtextra.AbsoluteConstraints(1320, 930, -1, -1));
+        pnlQuanLyHopDong.add(rdBtnDaThucHien, new org.netbeans.lib.awtextra.AbsoluteConstraints(1330, 900, -1, -1));
 
         btnGrpStatus.add(rdBtnDangCho);
         rdBtnDangCho.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
@@ -272,18 +342,18 @@ public class QuanLyHopDong extends javax.swing.JPanel {
                 rdBtnDangChoActionPerformed(evt);
             }
         });
-        pnlQuanLyHopDong.add(rdBtnDangCho, new org.netbeans.lib.awtextra.AbsoluteConstraints(1020, 930, -1, -1));
+        pnlQuanLyHopDong.add(rdBtnDangCho, new org.netbeans.lib.awtextra.AbsoluteConstraints(1030, 900, -1, -1));
 
-        btnGrpStatus.add(rdBtnDangThucHien);
-        rdBtnDangThucHien.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
-        rdBtnDangThucHien.setText("Đang thực hiện ");
-        rdBtnDangThucHien.setContentAreaFilled(false);
-        rdBtnDangThucHien.addActionListener(new java.awt.event.ActionListener() {
+        btnGrpStatus.add(rdBtnChoKyKet);
+        rdBtnChoKyKet.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        rdBtnChoKyKet.setText("Chờ ký kết");
+        rdBtnChoKyKet.setContentAreaFilled(false);
+        rdBtnChoKyKet.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rdBtnDangThucHienActionPerformed(evt);
+                rdBtnChoKyKetActionPerformed(evt);
             }
         });
-        pnlQuanLyHopDong.add(rdBtnDangThucHien, new org.netbeans.lib.awtextra.AbsoluteConstraints(1170, 930, -1, -1));
+        pnlQuanLyHopDong.add(rdBtnChoKyKet, new org.netbeans.lib.awtextra.AbsoluteConstraints(1200, 900, -1, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -293,7 +363,7 @@ public class QuanLyHopDong extends javax.swing.JPanel {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(pnlQuanLyHopDong, javax.swing.GroupLayout.PREFERRED_SIZE, 950, Short.MAX_VALUE)
+            .addComponent(pnlQuanLyHopDong, javax.swing.GroupLayout.DEFAULT_SIZE, 950, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -326,29 +396,33 @@ public class QuanLyHopDong extends javax.swing.JPanel {
     }//GEN-LAST:event_cbbSanhActionPerformed
 
     private void btnLapHopDongActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLapHopDongActionPerformed
-        AppStatus.mainApp.showForm(new LapHopDong(true));
+        AppStatus.mainApp.showForm(new LapHopDong(true,""));
     }//GEN-LAST:event_btnLapHopDongActionPerformed
 
-    private void txtNgayBatDauActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNgayBatDauActionPerformed
+    private void txtNgayToChucActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNgayToChucActionPerformed
         showCalendar1();
         
-    }//GEN-LAST:event_txtNgayBatDauActionPerformed
-
-    private void txtNgayKetThucActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNgayKetThucActionPerformed
-        showCalendar2();
-    }//GEN-LAST:event_txtNgayKetThucActionPerformed
+    }//GEN-LAST:event_txtNgayToChucActionPerformed
 
     private void btnChiTietActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChiTietActionPerformed
-        // TODO add your handling code here:
+       currentIndex = tblHopDong.getSelectedRow();
+         if (currentIndex >= 0){
+                   String maHD = (String) tblHopDong.getValueAt(this.currentIndex, 0);
+                   LapHopDong lapHopDong = new LapHopDong(false, maHD);
+                   AppStatus.mainApp.showForm(lapHopDong);
+            
+         }else{
+             DialogHelper.alertError(this, "Vui lòng chọn hợp đồng");
+         }
     }//GEN-LAST:event_btnChiTietActionPerformed
 
     private void rdBtnDangChoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdBtnDangChoActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_rdBtnDangChoActionPerformed
 
-    private void rdBtnDangThucHienActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdBtnDangThucHienActionPerformed
+    private void rdBtnChoKyKetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdBtnChoKyKetActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_rdBtnDangThucHienActionPerformed
+    }//GEN-LAST:event_rdBtnChoKyKetActionPerformed
 
     private void rdBtnDaThucHienActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdBtnDaThucHienActionPerformed
         // TODO add your handling code here:
@@ -357,6 +431,21 @@ public class QuanLyHopDong extends javax.swing.JPanel {
     private void cbbSortItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbbSortItemStateChanged
         // TODO add your handling code here:
     }//GEN-LAST:event_cbbSortItemStateChanged
+
+    private void txtNgayToChucMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtNgayToChucMouseClicked
+        showCalendar1();
+    }//GEN-LAST:event_txtNgayToChucMouseClicked
+
+    private void tblHopDongMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblHopDongMouseClicked
+         currentIndex = tblHopDong.rowAtPoint(evt.getPoint());
+         if (currentIndex > 0){
+               if (evt.getClickCount() == 2) {
+                   String maHD = (String) tblHopDong.getValueAt(this.currentIndex, 0);
+                   LapHopDong lapHopDong = new LapHopDong(false, maHD);
+                   AppStatus.mainApp.showForm(lapHopDong);
+            }
+         }
+    }//GEN-LAST:event_tblHopDongMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -375,12 +464,11 @@ public class QuanLyHopDong extends javax.swing.JPanel {
     private javax.swing.JLabel lblSort;
     private javax.swing.JLabel lblSort1;
     private javax.swing.JPanel pnlQuanLyHopDong;
+    private javax.swing.JRadioButton rdBtnChoKyKet;
     private javax.swing.JRadioButton rdBtnDaThucHien;
     private javax.swing.JRadioButton rdBtnDangCho;
-    private javax.swing.JRadioButton rdBtnDangThucHien;
     private com.ui.swing.Table tblHopDong;
-    private javax.swing.JTextField txtNgayBatDau;
-    private javax.swing.JTextField txtNgayKetThuc;
+    private javax.swing.JTextField txtNgayToChuc;
     private javax.swing.JTextField txtSearch;
     // End of variables declaration//GEN-END:variables
 }

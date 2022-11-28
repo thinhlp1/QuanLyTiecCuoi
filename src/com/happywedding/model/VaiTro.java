@@ -12,6 +12,11 @@ public class VaiTro {
         this.tenVT = tenVT;
     }
 
+    public VaiTro() {
+    }
+    
+    
+
     public String getMaVT() {
         return maVT;
     }

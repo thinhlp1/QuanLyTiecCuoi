@@ -5,20 +5,40 @@
  */
 package com.happywedding.view.manage;
 
+import com.ui.swing.Combobox;
+import java.awt.Component;
 import javax.swing.JFrame;
+import javax.swing.JTextField;
 
 /**
  *
  * @author ADMIN
  */
 public class PhanCong extends javax.swing.JDialog {
-
+     private String maHD;
+     private boolean isCreate;
     /**
      * Creates new form PhanCong
      */
-    public PhanCong(java.awt.Frame parent, boolean modal) {
+    public PhanCong(java.awt.Frame parent, boolean modal, String maHD) {
         super(parent, modal);
+         this.isCreate = modal;
         initComponents();
+        init();
+    }
+
+    public void init() {
+        isView(isCreate);
+    }
+
+    public void isView(boolean isCreate) {
+       txtMaNV.setEnabled(isCreate);
+       txtBatDau.setEditable(isCreate);
+       txtNgayPhanCong.setEditable(isCreate);
+       txtKetThuc.setEditable(isCreate);
+       btnThem.setVisible(isCreate);
+       btnSua.setVisible(isCreate);
+       btnXoa.setVisible(isCreate);
     }
 
     /**
@@ -45,13 +65,11 @@ public class PhanCong extends javax.swing.JDialog {
         txtBatDau = new javax.swing.JTextField();
         jLabel23 = new javax.swing.JLabel();
         txtKetThuc = new javax.swing.JTextField();
-        jLabel14 = new javax.swing.JLabel();
-        cbbXe = new com.ui.swing.Combobox();
-        btnSua = new com.ui.swing.InkwellButton();
+        btnThem = new com.ui.swing.InkwellButton();
         btnXoa = new com.ui.swing.InkwellButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         tblNhanVien = new com.ui.swing.Table();
-        btnSua1 = new com.ui.swing.InkwellButton();
+        btnSua = new com.ui.swing.InkwellButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -132,18 +150,11 @@ public class PhanCong extends javax.swing.JDialog {
         txtKetThuc.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
         pnlUpdate3.add(txtKetThuc, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 430, 160, 35));
 
-        jLabel14.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
-        jLabel14.setText("Xe");
-        pnlUpdate3.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 490, -1, -1));
-
-        cbbXe.setLabeText("");
-        pnlUpdate3.add(cbbXe, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 520, 340, -1));
-
-        btnSua.setBackground(new java.awt.Color(0, 153, 0));
-        btnSua.setForeground(new java.awt.Color(255, 255, 255));
-        btnSua.setText("Thêm");
-        btnSua.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        pnlUpdate3.add(btnSua, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 620, 80, -1));
+        btnThem.setBackground(new java.awt.Color(0, 153, 0));
+        btnThem.setForeground(new java.awt.Color(255, 255, 255));
+        btnThem.setText("Thêm");
+        btnThem.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        pnlUpdate3.add(btnThem, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 620, 80, -1));
 
         btnXoa.setBackground(new java.awt.Color(153, 24, 24));
         btnXoa.setForeground(new java.awt.Color(255, 255, 255));
@@ -156,18 +167,18 @@ public class PhanCong extends javax.swing.JDialog {
 
             },
             new String [] {
-                "Mã nhân viên", "Họ tên nhân viên", "Vai trò", "Ngày phân công", "Bắt đầu", "Kết thúc", "Xe"
+                "Mã nhân viên", "Họ tên nhân viên", "Vai trò", "Ngày phân công", "Bắt đầu", "Kết thúc"
             }
         ));
         jScrollPane2.setViewportView(tblNhanVien);
 
-        pnlUpdate3.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 110, 1200, 660));
+        pnlUpdate3.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 110, 1180, 660));
 
-        btnSua1.setBackground(new java.awt.Color(0, 153, 0));
-        btnSua1.setForeground(new java.awt.Color(255, 255, 255));
-        btnSua1.setText("Sửa");
-        btnSua1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        pnlUpdate3.add(btnSua1, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 620, 80, -1));
+        btnSua.setBackground(new java.awt.Color(0, 153, 0));
+        btnSua.setForeground(new java.awt.Color(255, 255, 255));
+        btnSua.setText("Sửa");
+        btnSua.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        pnlUpdate3.add(btnSua, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 620, 80, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -200,54 +211,12 @@ public class PhanCong extends javax.swing.JDialog {
       new ChonNhanVien(new JFrame(), true).setVisible(true);
     }//GEN-LAST:event_txtMaNVMouseClicked
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(PhanCong.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(PhanCong.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(PhanCong.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(PhanCong.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
 
-        /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                PhanCong dialog = new PhanCong(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.ui.swing.InkwellButton btnSua;
-    private com.ui.swing.InkwellButton btnSua1;
+    private com.ui.swing.InkwellButton btnThem;
     private com.ui.swing.InkwellButton btnXoa;
-    private com.ui.swing.Combobox cbbXe;
-    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;

@@ -6,6 +6,8 @@ package com.happywedding.view.manage;
 import java.awt.Color;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
+import com.happywedding.dao.TaiKhoanDAO;
+import com.happywedding.model.TaiKhoan;
 
 /**
  *
@@ -187,6 +189,14 @@ public class DangNhap extends javax.swing.JDialog {
     private void lblHidePasswordMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblHidePasswordMouseClicked
         showPassword(false);
     }//GEN-LAST:event_lblHidePasswordMouseClicked
+    
+    public boolean hasUser(String username){
+        
+        TaiKhoanDAO taiKhoanDAO = new TaiKhoanDAO();
+        TaiKhoan soTaiKhoan = taiKhoanDAO.findByUserName(username);
+        
+        return true;
+    }
     
     
     public void login(){

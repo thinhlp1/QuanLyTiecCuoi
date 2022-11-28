@@ -12,16 +12,23 @@ import java.util.Date;
  * @author ADMIN
  */
 public class ChiTietPhanCong {
-  private String maNV;
-  private String tenNV;
-  private String maVT;
-  private Date ngayPhanCong;
-  private String thoiGianBatDau;
-  private String thoiGianKetThuc;
-  private String maXe;
-  private String tenXe;
 
-    public ChiTietPhanCong(String maNV, String tenNV, String maVT, Date ngayPhanCong, String thoiGianBatDau, String thoiGianKetThuc, String maXe, String tenXe) {
+
+    private int maPC;
+    private String maNV;
+    private String tenNV;
+    private String maVT;
+    private Date ngayPhanCong;
+    private String thoiGianBatDau;
+    private String thoiGianKetThuc;
+    private String maXe;
+    private String tenXe;
+
+    public ChiTietPhanCong() {
+    }
+
+    public ChiTietPhanCong(int maPC, String maNV, String tenNV, String maVT, Date ngayPhanCong, String thoiGianBatDau, String thoiGianKetThuc, String maXe, String tenXe) {
+        this.maPC = maPC;
         this.maNV = maNV;
         this.tenNV = tenNV;
         this.maVT = maVT;
@@ -32,8 +39,14 @@ public class ChiTietPhanCong {
         this.tenXe = tenXe;
     }
 
-  
-  
+    public int getMaPC() {
+        return maPC;
+    }
+
+    public void setMaPC(int maPC) {
+        this.maPC = maPC;
+    }
+
     public String getMaNV() {
         return maNV;
     }
@@ -97,6 +110,6 @@ public class ChiTietPhanCong {
     public void setTenXe(String tenXe) {
         this.tenXe = tenXe;
     }
-  
-  
+
+    
 }

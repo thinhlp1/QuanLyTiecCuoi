@@ -14,6 +14,11 @@ public class DanhMucCon {
         this.tenDM = tenDM;
     }
 
+    public DanhMucCon() {
+    }
+    
+    
+
     public String getMaDMC() {
         return maDMC;
     }

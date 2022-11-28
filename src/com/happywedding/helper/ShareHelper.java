@@ -5,13 +5,15 @@
  */
 package com.happywedding.helper;
 
-
 import java.awt.Image;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.text.NumberFormat;
+import java.util.Currency;
+import java.util.Locale;
 import javax.swing.ImageIcon;
 
 public class ShareHelper {
@@ -23,7 +25,7 @@ public class ShareHelper {
 
     static {
         // Tải biểu tượng ứng dụng
-        String file = "/com/edusys/assets/fpt.png";
+        String file = "/com/happywedding/assets/logoWedding.png";
         APP_ICON = new ImageIcon(ShareHelper.class.getResource(file)).getImage();
     }
 
@@ -41,7 +43,7 @@ public class ShareHelper {
             Files.copy(source, destination, StandardCopyOption.REPLACE_EXISTING);
             return true;
         } catch (Exception ex) {
-            
+
             return false;
         }
     }
@@ -57,6 +59,25 @@ public class ShareHelper {
         return new ImageIcon(path.getAbsolutePath());
     }
 
-   
+    public static String toMoney(long moneyy) {
+        String money = moneyy + "";
+        int x = 0; // cứ 3 số đơn vị sẽ là một dấu chấm
+        for (int i = money.length() - 1; i >= 0; i--) {
+            x++;
+            if (x == 3) {
+                money = money.substring(0, i) + '.' + money.substring(i, money.length());
+                x = 0;
+            }
+        }
+        if (money.charAt(0) == '.') {
+            money = money.replaceFirst(".", "");
+    }
+       
+        return money;
+    }
+    
+    public static long toMoney(String moneyy){
+        return Integer.parseInt(moneyy.replaceAll("\\.", ""));
+    }
 
 }

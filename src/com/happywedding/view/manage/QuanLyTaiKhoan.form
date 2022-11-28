@@ -213,7 +213,6 @@
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                   <StringArray count="0"/>
                 </Property>
-                <Property name="selectedIndex" type="int" value="-1"/>
                 <Property name="labeText" type="java.lang.String" value=""/>
               </Properties>
               <Events>
@@ -454,7 +453,7 @@
               </AuxValues>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-                  <AbsoluteConstraints x="420" y="100" width="1250" height="900"/>
+                  <AbsoluteConstraints x="420" y="100" width="1250" height="820"/>
                 </Constraint>
               </Constraints>
 

@@ -20,6 +20,14 @@ public class GoiDichVu {
         this.hinhAnh = hinhAnh;
     }
 
+    public GoiDichVu() {
+    }
+
+    @Override
+    public String toString() {
+       return tenGoi;
+    }
+
     
     
     public String getTenDV() {

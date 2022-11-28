@@ -6,19 +6,42 @@
 package com.happywedding.view.manage;
 
 import com.happywedding.helper.AppStatus;
+import com.ui.swing.Combobox;
+import java.awt.Component;
+import javax.swing.JTextField;
 
 /**
  *
  * @author ADMIN
  */
 public class DatMon extends javax.swing.JDialog {
-
+     private String maHD;
+     private boolean isCreate;
     /**
      * Creates new form DatMon
      */
-    public DatMon(java.awt.Frame parent, boolean modal) {
+    public DatMon(java.awt.Frame parent, boolean modal, String maHD) {
         super(parent, modal);
+        this.maHD = maHD;
+         this.isCreate = modal;
         initComponents();
+        init();
+    }
+
+    public void init() {
+        isView(isCreate);
+    }
+
+    public void isView(boolean isCreate) {
+       
+        btnSave.setVisible(isCreate);
+        btnReset.setVisible(isCreate);
+        cbbThucDon.setEnabled(isCreate);
+        cbbLoaiMon.setEnabled(isCreate);
+        taGhiChu.setEnabled(isCreate);
+        txtSearch.setEditable(isCreate);
+        tblMonAn.setEnabled(isCreate);
+        tblThucDon.setEnabled(isCreate);
     }
 
     /**
@@ -62,14 +85,14 @@ public class DatMon extends javax.swing.JDialog {
 
         tblThucDon.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-
+                {null, null, null, null, null}
             },
             new String [] {
-                "STT", "Tên món", "Giá", "Ghi chú"
+                "STT", "Tên món", "Giá", "Ghi chú", "Phát sinh"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, true
+                false, false, false, true, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -118,6 +141,7 @@ public class DatMon extends javax.swing.JDialog {
         jLabel9.setText("Tổng chi phát phát sinh");
         jPanel1.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 690, -1, -1));
 
+        txtTongCPPS.setEditable(false);
         txtTongCPPS.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         jPanel1.add(txtTongCPPS, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 730, 300, 35));
 
@@ -125,6 +149,7 @@ public class DatMon extends javax.swing.JDialog {
         jLabel4.setText("Tổng chi phí phải trả");
         jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(900, 690, -1, -1));
 
+        txtTongChiPhi.setEditable(false);
         txtTongChiPhi.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         jPanel1.add(txtTongChiPhi, new org.netbeans.lib.awtextra.AbsoluteConstraints(900, 730, 280, 35));
 
@@ -139,6 +164,11 @@ public class DatMon extends javax.swing.JDialog {
         btnSave.setLabelColor(java.awt.Color.white);
         btnSave.setLableColorClick(java.awt.Color.white);
         btnSave.setRadius(15);
+        btnSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSaveActionPerformed(evt);
+            }
+        });
         jPanel1.add(btnSave, new org.netbeans.lib.awtextra.AbsoluteConstraints(950, 800, -1, 30));
 
         btnReset.setBackground(new java.awt.Color(24, 37, 153));
@@ -251,47 +281,11 @@ public class DatMon extends javax.swing.JDialog {
 
     }//GEN-LAST:event_txtSearchKeyReleased
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(DatMon.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(DatMon.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(DatMon.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(DatMon.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+        AppStatus.lapHopDong.reloadHopDong();
+    }//GEN-LAST:event_btnSaveActionPerformed
 
-        /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                DatMon dialog = new DatMon(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
-    }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.ui.swing.InkwellButton btnBack;

@@ -31,7 +31,11 @@ public class Sanh {
     public Sanh() {
         
     }
-
+    
+    @Override
+    public String toString(){
+        return tenSanh;
+    }
     
     
     public String getMaSanh() {

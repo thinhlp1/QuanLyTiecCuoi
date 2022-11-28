@@ -5,18 +5,38 @@
  */
 package com.happywedding.view.manage;
 
+import com.happywedding.helper.AppStatus;
+
 /**
  *
  * @author ADMIN
  */
 public class DichVuDiKem extends javax.swing.JDialog {
-
+     private String maHD;
+     private boolean isCreate;
     /**
      * Creates new form DichVuDiKem
-     */
-    public DichVuDiKem(java.awt.Frame parent, boolean modal) {
+     */ 
+    public DichVuDiKem(java.awt.Frame parent, boolean modal, String maHD) {
         super(parent, modal);
+          this.maHD = maHD;
+        this.isCreate = modal;
         initComponents();
+        init();
+    }
+
+    public void init() {
+        isView(isCreate);
+    }
+
+    public void isView(boolean isCreate) {
+       
+        btnSave.setVisible(isCreate);
+        btnReset.setVisible(isCreate);  
+        taGhiChu.setEnabled(isCreate);
+        txtSearch.setEditable(isCreate);
+        tblDichVu.setEnabled(isCreate);
+        tbDichVuDiKem.setEnabled(isCreate);
     }
 
     /**
@@ -45,7 +65,7 @@ public class DichVuDiKem extends javax.swing.JDialog {
         lblSearch = new javax.swing.JLabel();
         txtSearch = new javax.swing.JTextField();
         jScrollPane3 = new javax.swing.JScrollPane();
-        listDichVu = new javax.swing.JList<>();
+        tbDichVuDiKem = new com.ui.swing.Table();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -54,14 +74,14 @@ public class DichVuDiKem extends javax.swing.JDialog {
 
         tblDichVu.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-
+                {null, null, null, null}
             },
             new String [] {
-                "Dịch vụ", "Ghi chú", "Chi phí"
+                "Dịch vụ", "Chi phí", "Ghi chú", "Chi phí phát sinh"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false
+                false, false, true, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -74,7 +94,7 @@ public class DichVuDiKem extends javax.swing.JDialog {
 
         btnBack.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/happywedding/assets/back.png"))); // NOI18N
         btnBack.setFocusPainted(false);
-        jPanel1.add(btnBack, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 340, -1, -1));
+        jPanel1.add(btnBack, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 340, -1, -1));
 
         lblMaNH8.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         lblMaNH8.setText("Ghi chú");
@@ -111,6 +131,11 @@ public class DichVuDiKem extends javax.swing.JDialog {
         btnSave.setLabelColor(java.awt.Color.white);
         btnSave.setLableColorClick(java.awt.Color.white);
         btnSave.setRadius(15);
+        btnSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSaveActionPerformed(evt);
+            }
+        });
         jPanel1.add(btnSave, new org.netbeans.lib.awtextra.AbsoluteConstraints(950, 800, -1, 30));
 
         btnReset.setBackground(new java.awt.Color(24, 37, 153));
@@ -155,15 +180,25 @@ public class DichVuDiKem extends javax.swing.JDialog {
         });
         jPanel1.add(txtSearch, new org.netbeans.lib.awtextra.AbsoluteConstraints(890, 70, 280, 35));
 
-        listDichVu.setFixedCellHeight(30);
-        listDichVu.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                listDichVuMouseClicked(evt);
+        tbDichVuDiKem.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null}
+            },
+            new String [] {
+                "Dịch vụ", "Chi phí"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
             }
         });
-        jScrollPane3.setViewportView(listDichVu);
+        jScrollPane3.setViewportView(tbDichVuDiKem);
 
-        jPanel1.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 120, 310, 540));
+        jPanel1.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(870, 130, 310, 520));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -201,52 +236,11 @@ public class DichVuDiKem extends javax.swing.JDialog {
 
     }//GEN-LAST:event_txtSearchKeyReleased
 
-    private void listDichVuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listDichVuMouseClicked
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+         AppStatus.lapHopDong.reloadHopDong();
+    }//GEN-LAST:event_btnSaveActionPerformed
 
-      
-    }//GEN-LAST:event_listDichVuMouseClicked
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(DichVuDiKem.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(DichVuDiKem.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(DichVuDiKem.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(DichVuDiKem.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                DichVuDiKem dialog = new DichVuDiKem(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.ui.swing.InkwellButton btnBack;
@@ -261,8 +255,8 @@ public class DichVuDiKem extends javax.swing.JDialog {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JLabel lblMaNH8;
     private javax.swing.JLabel lblSearch;
-    private javax.swing.JList<Object> listDichVu;
     private javax.swing.JTextArea taGhiChu;
+    private com.ui.swing.Table tbDichVuDiKem;
     private com.ui.swing.Table tblDichVu;
     private javax.swing.JTextField txtSearch;
     private javax.swing.JTextField txtTongCPPS;

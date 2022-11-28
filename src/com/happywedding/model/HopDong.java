@@ -1,28 +1,33 @@
-
 package com.happywedding.model;
 
 import java.util.Date;
 
-
 public class HopDong {
+
     private String maHD;
     private String maNL;
+    private String tenNguoiLap;
+    private String tenNguoiDuyet;
     private Date ngayLap;
     private Date ngayDuyet;
     private String maND;
     private String sanh;
     private long soLuongBan;
     private int maKH;
+    private String tenKhachHang;
+    private String sdtKhachHang;
+    private String tenTrangThai;
     private Date ngayToChuc;
     private String thoiGianBatDau;
     private String thoiGianKetThuc;
     private String TrangThai;
     private long Thue;
     private long TienCoc;
+    private long chiPhi;
     private long ChiPhiPhatSinh;
     private long TongTien;
 
-    public HopDong(String maHD, String maNL, Date ngayLap, Date ngayDuyet, String maND, String sanh, long soLuongBan, int maKH, Date ngayToChuc, String thoiGianBatDau, String thoiGianKetThuc, String TrangThai, long Thue, long TienCoc, long ChiPhiPhatSinh, long TongTien) {
+    public HopDong(String maHD, String maNL, Date ngayLap, Date ngayDuyet, String maND, String sanh, long soLuongBan, int maKH, Date ngayToChuc, String thoiGianBatDau, String thoiGianKetThuc, String TrangThai, long Thue, long TienCoc, long chiPhi, long ChiPhiPhatSinh, long TongTien) {
         this.maHD = maHD;
         this.maNL = maNL;
         this.ngayLap = ngayLap;
@@ -37,8 +42,63 @@ public class HopDong {
         this.TrangThai = TrangThai;
         this.Thue = Thue;
         this.TienCoc = TienCoc;
+        this.chiPhi = chiPhi;
         this.ChiPhiPhatSinh = ChiPhiPhatSinh;
         this.TongTien = TongTien;
+    }
+
+    public String getTenNguoiLap() {
+        return tenNguoiLap;
+    }
+
+    public void setTenNguoiLap(String tenNguoiLap) {
+        this.tenNguoiLap = tenNguoiLap;
+    }
+
+    public String getTenNguoiDuyet() {
+        return tenNguoiDuyet;
+    }
+
+    public void setTenNguoiDuyet(String tenNguoiDuyet) {
+        this.tenNguoiDuyet = tenNguoiDuyet;
+    }
+
+    public String getTenKhachHang() {
+        return tenKhachHang;
+    }
+
+    public void setTenKhachHang(String tenKhachHang) {
+        this.tenKhachHang = tenKhachHang;
+    }
+
+    public String getSdtKhachHang() {
+        return sdtKhachHang;
+    }
+
+    public void setSdtKhachHang(String sdtKhachHang) {
+        this.sdtKhachHang = sdtKhachHang;
+    }
+
+    public String getTenTrangThai() {
+        return tenTrangThai;
+    }
+
+    public void setTenTrangThai(String tenTrangThai) {
+        this.tenTrangThai = tenTrangThai;
+    }
+
+    
+    
+    public long getChiPhi() {
+        return chiPhi;
+    }
+
+    public void setChiPhi(long chiPhi) {
+        this.chiPhi = chiPhi;
+    }
+
+    public HopDong() {
+
     }
 
     public String getMaHD() {
@@ -118,7 +178,7 @@ public class HopDong {
     }
 
     public void setThoiGianBatDau(String thoiGianBatDau) {
-        this.thoiGianBatDau = thoiGianBatDau;
+this.thoiGianBatDau = thoiGianBatDau;
     }
 
     public String getThoiGianKetThuc() {
@@ -169,5 +229,4 @@ public class HopDong {
         this.TongTien = TongTien;
     }
 
-    
 }
