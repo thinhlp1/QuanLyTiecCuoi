@@ -11,21 +11,31 @@ import com.happywedding.dao.SanhDAO;
 import com.happywedding.dao.TrangThaiHopDongDAO;
 import com.happywedding.helper.AppStatus;
 import com.happywedding.helper.DateHelper;
+import com.happywedding.helper.EnglishNumberToWords;
+import com.happywedding.helper.JDBCHelper;
 import com.happywedding.helper.ShareHelper;
 import com.happywedding.model.HopDong;
 import com.happywedding.model.KhachHang;
 import com.happywedding.model.Sanh;
 import com.happywedding.model.TrangThaiHopDong;
 import com.ui.swing.datechooser.DateChooser;
+import com.ui.swing.timepicker.EventTimePicker;
 import java.awt.Frame;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFrame;
 
@@ -43,6 +53,7 @@ public class LapHopDong extends javax.swing.JPanel {
 
     static class StatusHopDong {
 
+        static String DANGLAP = "DANGLAP";
         static String CHODUYET = "CHODUYET";
         static String CHOKYKET = "CHOKYKET";
         static String THUCHIEN = "THUCHIEN";
@@ -60,35 +71,37 @@ public class LapHopDong extends javax.swing.JPanel {
     private Calendar calendar = Calendar.getInstance();
     private DateChooser dateChooser = new DateChooser();
 
-    private String statusHopDong = StatusHopDong.CHODUYET;
-    private boolean isCreate;
-    private boolean isEdit;
+    private String statusHopDong = StatusHopDong.DANGLAP;
+    private boolean isCreate; // đang được tạo hay không
+    private boolean isEdit; // có được chỉnh sữa hay
 
-    private boolean checkIsDichVu = false;
+    private List<Boolean> checkedDichVu = new ArrayList<Boolean>(Collections.nCopies(6, false));
 
     private List<Sanh> listSanh = new ArrayList<>();
 
     /**
      * Creates new form LapHopDong
+     *
+     * @param isCreate là trạng thái đang tạo hợp đồng hay đang xem lại hợp đồng
+     * @param maHD
      */
     public LapHopDong(boolean isCreate, String maHD) {
         initComponents();
         this.isCreate = isCreate;
         this.maHD = maHD;
-          
-        loadSanh();
+
         init();
+
         phanQuyen();
         if (isCreate) {
             isEdit();
-            txtMaHD.setEditable(true);
+            txtMaHD.setText(this.maHD);
         }
         AppStatus.lapHopDong = this;
-        dateChooser.setTextRefernce(txtNgayToChuc);
 
-       
-      
-
+//          txtBatDau.setText("");
+//        txtKetThuc.setText("");
+//        
     }
 
     public LapHopDong(String MaHD) {
@@ -97,8 +110,41 @@ public class LapHopDong extends javax.swing.JPanel {
     }
 
     public void init() {
+
+        // khởi tạo ngày và giờ
+        timePickerBatDau.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                txtBatDau.setText(ShareHelper.to24Hour(timePickerBatDau.getSelectedTime()));
+//                String myDayTime = txtNgayToChuc.getText() +" " + ShareHelper.to24Hour(timePickerBatDau.getSelectedTime() )+ ":00" ; 
+//                //System.out.println(txtNgayToChuc.getText() +" " + ShareHelper.to24Hour(timePickerBatDau.getSelectedTime()) );
+//                SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+//                try {
+//                    Date datetime = format.parse(myDayTime);
+//                    //System.out.println(datetime);
+//                    JDBCHelper.executeUpdate("INSERT  Test (NgayGioBatDau) VALUES ( ? )", datetime);
+//                    
+//                } catch (ParseException ex) {
+//                    Logger.getLogger(LapHopDong.class.getName()).log(Level.SEVERE, null, ex);
+//                }
+            }
+
+        });
+        timePickerKetThuc.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                txtKetThuc.setText(ShareHelper.to24Hour(timePickerKetThuc.getSelectedTime()));
+            }
+
+        });
+        dateChooser.setTextRefernce(txtNgayToChuc);
+
+        //load các dữ liệu cần thiết
+        loadSanh();
+
+        // để xét xem nên ẩn cái nào , hiện cái nào
         if (isCreate == true) {
-            txtMaHD.setEditable(true);
+
             txtNgayToChuc.setText("");
             initCreate();
         } else {
@@ -109,7 +155,8 @@ public class LapHopDong extends javax.swing.JPanel {
     }
 
     public void initCreate() {
-        statusHopDong = StatusHopDong.XOA;
+
+        //  statusHopDong = StatusHopDong.XOA;
         disableFeature();
 
     }
@@ -121,7 +168,7 @@ public class LapHopDong extends javax.swing.JPanel {
         statusHopDong = hopDong.getTrangThai();
         btnSaveInfo.setVisible(false);
         fillFormHopDong(khachHang, hopDong);
-        
+
     }
 
     public void loadCbbTrangThai(List<TrangThaiHopDong> list) {
@@ -162,6 +209,12 @@ public class LapHopDong extends javax.swing.JPanel {
         }
     }
 
+    /**
+     * khi làm thay đổi trạng thái hợp đồng chỉ cần gọi hàm này
+     *
+     * @param trangThai là mã trạng thái của hơp đồng hiện tại, sẽ đc chuyển đến
+     * trạng thái kế tiếp
+     */
     public void updateTrangThaiHopDong(String trangThai) {
 
         if (trangThai.equals(StatusHopDong.CHODUYET)) {
@@ -181,7 +234,7 @@ public class LapHopDong extends javax.swing.JPanel {
     // các hàm lấy thông tin từ database
 
     /*
-    Lấy thông tin khách hàng
+    Lấy thông tin khách hàng 
      */
     public KhachHang getKhachHang(String maKH) {
 
@@ -199,41 +252,11 @@ public class LapHopDong extends javax.swing.JPanel {
     Lấy danh sách các sảnh chưa đặt trong ngày tổ chức
      */
     public void loadSanh() {
-         Sanh s = new Sanh();
-        s.setMaSanh("SANH01");
-        s.setTenSanh("Sảnh 01");
-        s.setMaPL("DONGIAN");
-        s.setTenPL("Đơn Giản");
-        s.setSucChua(100);
-        s.setGiaThueSanh(5000000);
-        s.setGiaBan(300000);
 
-        Sanh s2 = new Sanh();
-        s2.setMaSanh("SANH02");
-        s2.setTenSanh("Sảnh 02");
-        s2.setMaPL("TRUNGBINH");
-        s2.setTenPL("Trung Bình");
-        s2.setSucChua(150);
-        s2.setGiaThueSanh(7000000);
-        s2.setGiaBan(435000);
-
-        Sanh s3 = new Sanh();
-        s3.setMaSanh("SANH03");
-        s3.setTenSanh("Sảnh 03");
-        s3.setMaPL("CAOCAP");
-        s3.setTenPL("Cao cấp");
-        s3.setSucChua(200);
-        s3.setGiaThueSanh(18000000);
-        s3.setGiaBan(840000);
-
-        listSanh.add(s);
-        listSanh.add(s2);
-        listSanh.add(s3);
-        
-        //listSanh = sanhDAO.selectSanhConTrong();
+        listSanh = sanhDAO.select();
         DefaultComboBoxModel cbbModel = (DefaultComboBoxModel) cbbSanh.getModel();
         cbbModel.removeAllElements();
-        for (Sanh ss : listSanh ){
+        for (Sanh ss : listSanh) {
             cbbModel.addElement(ss);
         }
         cbbSanh.setSelectedIndex(-1);
@@ -245,18 +268,55 @@ public class LapHopDong extends javax.swing.JPanel {
     Khi dịch vụ đc cập nhật thì thông tin chi phí trên form LapHopDong cũng phải reload
      */
     public void reloadHopDong() {
-        System.out.println("reload");
+        //  System.out.println("reload");
         hopDong = hopDongDAO.findById(maHD);
 
         List<Long> chiPhi = hopDongDAO.tinhToan(maHD);
-        txtChiPhi.setText(ShareHelper.toMoney(chiPhi.get(0)) );
-        txtChiPhiPhatSinh.setText(ShareHelper.toMoney(chiPhi.get(1)) );
-        long tongTien = (long) ((chiPhi.get(0) + chiPhi.get(1)) + ((chiPhi.get(0) + chiPhi.get(1)) * ((Integer.parseInt(txtThue.getText())) / 100.0)));
+        txtChiPhi.setText(ShareHelper.toMoney(chiPhi.get(0)));
+        txtChiPhiPhatSinh.setText(ShareHelper.toMoney(chiPhi.get(1)));
+        long tt = ((chiPhi.get(0) + chiPhi.get(1)));
+        long tienThue = (long)  (((chiPhi.get(0) + chiPhi.get(1))) * ((Integer.parseInt(txtThue.getText())) / 100.0));
+        long tongTien = tt + tienThue;
         long tienCoc = (long) (tongTien * 0.5);
         txtTongTien.setText(ShareHelper.toMoney(tongTien));
         txtTienCoc.setText(ShareHelper.toMoney(tienCoc));
+          lblThanhChu.setText("( " + EnglishNumberToWords.convert(tongTien) + " )");
+        
 
         hopDongDAO.updateChiPhi(tienCoc, tongTien, maHD);
+    }
+
+    public void checkedDichVu(String maDV, boolean isSave) {
+        int thuTuDichVu;
+        switch (maDV) {
+            case "TTBANTIEC":
+                thuTuDichVu = 0;
+                break;
+            case "TTSANKHAU":
+                thuTuDichVu = 1;
+                break;
+            case "TTCONG":
+                thuTuDichVu = 2;
+                break;
+            case "DATMON":
+                thuTuDichVu = 3;
+                break;
+            case "NGHETHUAT":
+                thuTuDichVu = 4;
+                break;
+            case "DICHVUDIKEM":
+                thuTuDichVu = 5;
+                break;
+            default:
+                thuTuDichVu = 0;
+
+        }
+
+        checkedDichVu.remove(thuTuDichVu);
+        checkedDichVu.add(thuTuDichVu, isSave);
+
+        System.out.println(thuTuDichVu + " - " + isSave);
+        System.out.println(checkedDichVu.toString());
     }
 
     // các hàm lấy dữ liệu từ form
@@ -315,15 +375,16 @@ public class LapHopDong extends javax.swing.JPanel {
         txtThue.setText(hopDong.getThue() + "");
         txtTienCoc.setText(ShareHelper.toMoney(hopDong.getTienCoc()));
         List<Long> chiPhi = hopDongDAO.tinhToan(maHD);
-        txtChiPhi.setText(ShareHelper.toMoney(chiPhi.get(0)) );
+        txtChiPhi.setText(ShareHelper.toMoney(chiPhi.get(0)));
         txtChiPhiPhatSinh.setText(ShareHelper.toMoney(chiPhi.get(1)));
 
-        txtTongTien.setText(ShareHelper.toMoney(hopDong.getTongTien()) );
+        txtTongTien.setText(ShareHelper.toMoney(hopDong.getTongTien()));
+        lblThanhChu.setText("( " + EnglishNumberToWords.convert(hopDong.getTongTien()) + " )");
 
-        if (hopDong.getNgayDuyet() != null){
+        if (hopDong.getNgayDuyet() != null) {
             txtNgayDuyet.setText(DateHelper.toString(hopDong.getNgayDuyet(), "dd/MM/yyyy"));
-        }else{
-              txtNgayDuyet.setText("");
+        } else {
+            txtNgayDuyet.setText("");
         }
         txtNguoiDuyet.setText(hopDong.getTenNguoiDuyet());
     }
@@ -341,11 +402,11 @@ public class LapHopDong extends javax.swing.JPanel {
     /*
     * lấy thông tin trên hợp đồng lưu trước lần 1 và cho chọn dịch vụ
      */
-    public void saveInfo() {
+    public void showFeature() {
         pnlDichVu.setVisible(true);
         lbldv.setVisible(true);
         pnlBtn.setVisible(true);
-        txtMaHD.setEditable(false);
+
     }
 
     public void saveHopDong() {
@@ -378,7 +439,7 @@ public class LapHopDong extends javax.swing.JPanel {
 
     public void isEdit() {
         isEdit = true;
-        System.out.println(isEdit);
+        // System.out.println(isEdit);
         txtHoTenKhachHang.setEditable(true);
         txtHoTenChuRe.setEditable(true);
         txtHoTenCoDau.setEditable(true);
@@ -387,9 +448,9 @@ public class LapHopDong extends javax.swing.JPanel {
         taDiaChi.setEditable(true);
         txtMaHD.setEditable(false);
 
-        txtNgayToChuc.setEditable(true);
-        txtBatDau.setEditable(true);
-        txtKetThuc.setEditable(true);
+        txtNgayToChuc.setEditable(false);
+        txtBatDau.setEditable(false);
+        txtKetThuc.setEditable(false);
         txtSLBan.setEditable(true);
         cbbSanh.setEditable(true);
 
@@ -411,14 +472,28 @@ public class LapHopDong extends javax.swing.JPanel {
      */
     public void phanQuyen() {
         if (AppStatus.ROLE.equals(Role.QUANLY)) {
-            if (statusHopDong.equals(StatusHopDong.CHODUYET)) {
+            if (statusHopDong.equals(StatusHopDong.DANGLAP)) {
+                isEdit();
+                btnSave.setVisible(true);
+                btnDuyet.setVisible(false);
+                btnKyKet.setVisible(false);
+                btnInHopDong.setVisible(false);
+                btnDanhDauXoa.setVisible(true);
+                btnPhanCong.setVisible(false);
+                btnChiPhiPhatSinh.setVisible(false);
+                btnXuatHoaDonTam.setVisible(false);
+                btnComfimHoanThanh.setVisible(false);
+                btnHuyHopDong.setVisible(false);
+                btnHuyDuyet.setVisible(false);
+            } else if (statusHopDong.equals(StatusHopDong.CHODUYET)) {
                 isEdit();
                 btnSave.setVisible(true);
                 btnDuyet.setVisible(true);
                 btnKyKet.setVisible(false);
+                btnInHopDong.setVisible(false);
                 btnDanhDauXoa.setVisible(true);
                 btnPhanCong.setVisible(false);
-                btnXuatHoaDon.setVisible(false);
+                btnChiPhiPhatSinh.setVisible(false);
                 btnXuatHoaDonTam.setVisible(false);
                 btnComfimHoanThanh.setVisible(false);
                 btnHuyHopDong.setVisible(false);
@@ -427,10 +502,11 @@ public class LapHopDong extends javax.swing.JPanel {
                 isView();
                 btnSave.setVisible(false);
                 btnKyKet.setVisible(true);
+                btnInHopDong.setVisible(true);
                 btnDuyet.setVisible(false);
                 btnDanhDauXoa.setVisible(false);
                 btnPhanCong.setVisible(false);
-                btnXuatHoaDon.setVisible(false);
+                btnChiPhiPhatSinh.setVisible(false);
                 btnXuatHoaDonTam.setVisible(false);
                 btnComfimHoanThanh.setVisible(false);
                 btnHuyHopDong.setVisible(false);
@@ -439,10 +515,11 @@ public class LapHopDong extends javax.swing.JPanel {
                 isView();
                 btnSave.setVisible(false);
                 btnKyKet.setVisible(false);
+                btnInHopDong.setVisible(false);
                 btnDuyet.setVisible(false);
                 btnDanhDauXoa.setVisible(false);
                 btnPhanCong.setVisible(true);
-                btnXuatHoaDon.setVisible(false);
+                btnChiPhiPhatSinh.setVisible(false);
                 btnXuatHoaDonTam.setVisible(true);
 
                 try {
@@ -473,11 +550,12 @@ public class LapHopDong extends javax.swing.JPanel {
                 btnDuyet.setVisible(false);
                 btnDanhDauXoa.setVisible(false);
                 btnPhanCong.setVisible(true);
-                btnXuatHoaDon.setVisible(true);
+                btnChiPhiPhatSinh.setVisible(true);
                 btnXuatHoaDonTam.setVisible(false);
                 btnComfimHoanThanh.setVisible(false);
                 btnHuyHopDong.setVisible(false);
                 btnHuyDuyet.setVisible(false);
+                btnInHopDong.setVisible(false);
 
             } else if (statusHopDong.equals(StatusHopDong.XOA)) {
                 isView();
@@ -486,26 +564,42 @@ public class LapHopDong extends javax.swing.JPanel {
                 btnDuyet.setVisible(false);
                 btnDanhDauXoa.setVisible(false);
                 btnPhanCong.setVisible(true);
-                btnXuatHoaDon.setVisible(false);
+                btnChiPhiPhatSinh.setVisible(false);
                 btnXuatHoaDonTam.setVisible(false);
                 btnComfimHoanThanh.setVisible(false);
                 btnHuyHopDong.setVisible(false);
                 btnHuyDuyet.setVisible(false);
+                btnInHopDong.setVisible(false);
             }
 
         } else if (AppStatus.ROLE.equals(Role.TIEPTAN)) {
-            if (statusHopDong.equals(StatusHopDong.CHODUYET)) {
+
+            if (statusHopDong.equals(StatusHopDong.DANGLAP)) {
+                isEdit();
+                btnSave.setVisible(true);
+                btnDuyet.setVisible(false);
+                btnKyKet.setVisible(false);
+                btnInHopDong.setVisible(false);
+                btnDanhDauXoa.setVisible(true);
+                btnPhanCong.setVisible(false);
+                btnChiPhiPhatSinh.setVisible(false);
+                btnXuatHoaDonTam.setVisible(false);
+                btnComfimHoanThanh.setVisible(false);
+                btnHuyHopDong.setVisible(false);
+                btnHuyDuyet.setVisible(false);
+            } else if (statusHopDong.equals(StatusHopDong.CHODUYET)) {
                 isView();
                 btnSave.setVisible(false);
                 btnDuyet.setVisible(false);
                 btnKyKet.setVisible(false);
                 btnDanhDauXoa.setVisible(false);
                 btnPhanCong.setVisible(false);
-                btnXuatHoaDon.setVisible(false);
+                btnChiPhiPhatSinh.setVisible(false);
                 btnXuatHoaDonTam.setVisible(false);
                 btnComfimHoanThanh.setVisible(false);
                 btnHuyHopDong.setVisible(false);
                 btnHuyDuyet.setVisible(false);
+                btnInHopDong.setVisible(false);
 
             } else if (statusHopDong.equals(StatusHopDong.CHOKYKET)) {
                 isView();
@@ -514,11 +608,12 @@ public class LapHopDong extends javax.swing.JPanel {
                 btnDuyet.setVisible(false);
                 btnDanhDauXoa.setVisible(false);
                 btnPhanCong.setVisible(false);
-                btnXuatHoaDon.setVisible(false);
+                btnChiPhiPhatSinh.setVisible(false);
                 btnXuatHoaDonTam.setVisible(false);
                 btnComfimHoanThanh.setVisible(false);
                 btnHuyHopDong.setVisible(false);
                 btnHuyDuyet.setVisible(false);
+                btnInHopDong.setVisible(true);
             } else if (statusHopDong.equals(StatusHopDong.THUCHIEN)) {
                 isView();
                 btnSave.setVisible(false);
@@ -526,12 +621,13 @@ public class LapHopDong extends javax.swing.JPanel {
                 btnDuyet.setVisible(false);
                 btnDanhDauXoa.setVisible(false);
                 btnPhanCong.setVisible(false);
-                btnXuatHoaDon.setVisible(false);
+                btnChiPhiPhatSinh.setVisible(false);
                 btnXuatHoaDonTam.setVisible(true);
-                btnXuatHoaDon.setVisible(true);
+                btnChiPhiPhatSinh.setVisible(true);
                 btnComfimHoanThanh.setVisible(false);
                 btnHuyHopDong.setVisible(false);
                 btnHuyDuyet.setVisible(false);
+                btnInHopDong.setVisible(false);
 
             } else if (statusHopDong.equals(StatusHopDong.DATHUCHIEN)) {
                 isView();
@@ -540,11 +636,12 @@ public class LapHopDong extends javax.swing.JPanel {
                 btnDuyet.setVisible(false);
                 btnDanhDauXoa.setVisible(false);
                 btnPhanCong.setVisible(false);
-                btnXuatHoaDon.setVisible(true);
+                btnChiPhiPhatSinh.setVisible(true);
                 btnXuatHoaDonTam.setVisible(false);
                 btnComfimHoanThanh.setVisible(false);
                 btnHuyHopDong.setVisible(false);
                 btnHuyDuyet.setVisible(false);
+                btnInHopDong.setVisible(false);
             } else if (statusHopDong.equals(StatusHopDong.XOA)) {
                 isView();
                 btnSave.setVisible(false);
@@ -552,11 +649,12 @@ public class LapHopDong extends javax.swing.JPanel {
                 btnDuyet.setVisible(false);
                 btnDanhDauXoa.setVisible(false);
                 btnPhanCong.setVisible(false);
-                btnXuatHoaDon.setVisible(false);
+                btnChiPhiPhatSinh.setVisible(false);
                 btnXuatHoaDonTam.setVisible(false);
                 btnComfimHoanThanh.setVisible(false);
                 btnHuyHopDong.setVisible(false);
                 btnHuyDuyet.setVisible(false);
+                btnInHopDong.setVisible(false);
             }
         }
 
@@ -571,6 +669,8 @@ public class LapHopDong extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        timePickerBatDau = new com.ui.swing.timepicker.TimePicker();
+        timePickerKetThuc = new com.ui.swing.timepicker.TimePicker();
         jPanel1 = new javax.swing.JPanel();
         btnBack = new com.ui.swing.InkwellButton();
         jPanel2 = new javax.swing.JPanel();
@@ -623,6 +723,8 @@ public class LapHopDong extends javax.swing.JPanel {
         txtChiPhiPhatSinh = new javax.swing.JTextField();
         lblMaNH23 = new javax.swing.JLabel();
         txtTongTien = new javax.swing.JTextField();
+        lblThanhChu = new javax.swing.JLabel();
+        lblMaNH24 = new javax.swing.JLabel();
         lbldv = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -637,15 +739,20 @@ public class LapHopDong extends javax.swing.JPanel {
         btnSaveInfo = new com.ui.swing.HoverButton();
         pnlBtn = new javax.swing.JPanel();
         btnSave = new com.ui.swing.HoverButton();
-        btnPhanCong = new com.ui.swing.HoverButton();
         btnXuatHoaDonTam = new com.ui.swing.HoverButton();
-        btnXuatHoaDon = new com.ui.swing.HoverButton();
+        btnPhanCong = new com.ui.swing.HoverButton();
         btnKyKet = new com.ui.swing.HoverButton();
         btnDuyet = new com.ui.swing.HoverButton();
-        btnComfimHoanThanh = new com.ui.swing.HoverButton();
         btnDanhDauXoa = new com.ui.swing.HoverButton();
+        btnComfimHoanThanh = new com.ui.swing.HoverButton();
         btnHuyHopDong = new com.ui.swing.HoverButton();
         btnHuyDuyet = new com.ui.swing.HoverButton();
+        btnChiPhiPhatSinh = new com.ui.swing.HoverButton();
+        btnInHopDong = new com.ui.swing.HoverButton();
+
+        timePickerBatDau.setForeground(new java.awt.Color(255, 102, 102));
+
+        timePickerKetThuc.setForeground(new java.awt.Color(255, 102, 102));
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setPreferredSize(new java.awt.Dimension(1650, 980));
@@ -715,7 +822,7 @@ public class LapHopDong extends javax.swing.JPanel {
 
         lblMaNH8.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         lblMaNH8.setText("Địa chỉ");
-        jPanel2.add(lblMaNH8, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 190, 100, -1));
+        jPanel2.add(lblMaNH8, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 140, 100, -1));
 
         lblMaNH9.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         lblMaNH9.setText("Họ tên chú rể");
@@ -727,12 +834,12 @@ public class LapHopDong extends javax.swing.JPanel {
 
         taDiaChi.setColumns(20);
         taDiaChi.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
-        taDiaChi.setRows(5);
+        taDiaChi.setRows(3);
         jScrollPane1.setViewportView(taDiaChi);
 
-        jPanel2.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 180, 360, 80));
+        jPanel2.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 130, 360, 80));
 
-        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 120, 1010, 280));
+        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 120, 1010, 240));
 
         jPanel3.setBackground(new java.awt.Color(248, 248, 248));
         jPanel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
@@ -774,7 +881,7 @@ public class LapHopDong extends javax.swing.JPanel {
         lblMaNH1.setText("Ngày duyệt");
         jPanel3.add(lblMaNH1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 80, 100, 30));
 
-        jPanel1.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 120, 550, 280));
+        jPanel1.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 120, 550, 240));
 
         jPanel4.setBackground(new java.awt.Color(248, 248, 248));
         jPanel4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
@@ -832,7 +939,13 @@ public class LapHopDong extends javax.swing.JPanel {
         lblMaNH14.setText("Ngày tổ chức");
         jPanel4.add(lblMaNH14, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 20, 100, 30));
 
+        txtNgayToChuc.setEditable(false);
         txtNgayToChuc.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        txtNgayToChuc.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                txtNgayToChucMouseClicked(evt);
+            }
+        });
         txtNgayToChuc.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtNgayToChucActionPerformed(evt);
@@ -842,9 +955,15 @@ public class LapHopDong extends javax.swing.JPanel {
 
         lblMaNH3.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         lblMaNH3.setText("Kết thúc");
-        jPanel4.add(lblMaNH3, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 70, 100, 30));
+        jPanel4.add(lblMaNH3, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 70, 70, 30));
 
+        txtBatDau.setEditable(false);
         txtBatDau.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        txtBatDau.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                txtBatDauMouseClicked(evt);
+            }
+        });
         jPanel4.add(txtBatDau, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 70, 120, 35));
 
         lblMaNH17.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
@@ -857,17 +976,28 @@ public class LapHopDong extends javax.swing.JPanel {
                 txtSLBanActionPerformed(evt);
             }
         });
+        txtSLBan.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtSLBanKeyTyped(evt);
+            }
+        });
         jPanel4.add(txtSLBan, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 120, 360, 35));
 
         lblMaNH18.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         lblMaNH18.setText("Sảnh");
-        jPanel4.add(lblMaNH18, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 180, 90, 30));
+        jPanel4.add(lblMaNH18, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 190, 90, 30));
 
         lblMaNH4.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         lblMaNH4.setText("Bắt đầu");
-        jPanel4.add(lblMaNH4, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 70, 60, 30));
+        jPanel4.add(lblMaNH4, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 70, 60, 30));
 
+        txtKetThuc.setEditable(false);
         txtKetThuc.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        txtKetThuc.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                txtKetThucMouseClicked(evt);
+            }
+        });
         jPanel4.add(txtKetThuc, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 70, 140, 35));
 
         cbbSanh.setToolTipText("");
@@ -878,7 +1008,7 @@ public class LapHopDong extends javax.swing.JPanel {
                 cbbSanhActionPerformed(evt);
             }
         });
-        jPanel4.add(cbbSanh, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 180, 360, 35));
+        jPanel4.add(cbbSanh, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 180, 360, 45));
 
         lblMaNH19.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         lblMaNH19.setText("Thuế");
@@ -886,7 +1016,7 @@ public class LapHopDong extends javax.swing.JPanel {
 
         txtThue.setEditable(false);
         txtThue.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
-        txtThue.setText("10");
+        txtThue.setText("10%");
         txtThue.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtThueActionPerformed(evt);
@@ -923,8 +1053,8 @@ public class LapHopDong extends javax.swing.JPanel {
         jPanel4.add(txtChiPhi, new org.netbeans.lib.awtextra.AbsoluteConstraints(1190, 120, 360, 35));
 
         lblMaNH22.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
-        lblMaNH22.setText("Chi phí phát sinh");
-        jPanel4.add(lblMaNH22, new org.netbeans.lib.awtextra.AbsoluteConstraints(1060, 180, 110, 30));
+        lblMaNH22.setText("Thành chữ");
+        jPanel4.add(lblMaNH22, new org.netbeans.lib.awtextra.AbsoluteConstraints(1060, 290, 110, 30));
 
         txtChiPhiPhatSinh.setEditable(false);
         txtChiPhiPhatSinh.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
@@ -948,7 +1078,15 @@ public class LapHopDong extends javax.swing.JPanel {
         });
         jPanel4.add(txtTongTien, new org.netbeans.lib.awtextra.AbsoluteConstraints(1190, 240, 360, 35));
 
-        jPanel1.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 440, 1590, 300));
+        lblThanhChu.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        lblThanhChu.setText("()");
+        jPanel4.add(lblThanhChu, new org.netbeans.lib.awtextra.AbsoluteConstraints(1190, 289, 360, 30));
+
+        lblMaNH24.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        lblMaNH24.setText("Chi phí phát sinh");
+        jPanel4.add(lblMaNH24, new org.netbeans.lib.awtextra.AbsoluteConstraints(1060, 180, 110, 30));
+
+        jPanel1.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 400, 1590, 340));
 
         lbldv.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         lbldv.setText("Dịch vụ");
@@ -965,6 +1103,7 @@ public class LapHopDong extends javax.swing.JPanel {
         pnlDichVu.setBackground(new java.awt.Color(248, 248, 248));
         pnlDichVu.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(241, 238, 238)));
         pnlDichVu.setForeground(new java.awt.Color(241, 238, 238));
+        pnlDichVu.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         pnlDichVu.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         btnDVDK.setBackground(new java.awt.Color(251, 157, 144));
@@ -975,6 +1114,7 @@ public class LapHopDong extends javax.swing.JPanel {
         btnDVDK.setColorClick(new java.awt.Color(251, 157, 144));
         btnDVDK.setColorOver(new java.awt.Color(251, 157, 144));
         btnDVDK.setFocusPainted(false);
+        btnDVDK.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         btnDVDK.setRadius(15);
         btnDVDK.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -991,6 +1131,7 @@ public class LapHopDong extends javax.swing.JPanel {
         btnTTBan.setColorClick(new java.awt.Color(251, 157, 144));
         btnTTBan.setColorOver(new java.awt.Color(251, 157, 144));
         btnTTBan.setFocusPainted(false);
+        btnTTBan.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         btnTTBan.setRadius(15);
         btnTTBan.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1007,6 +1148,7 @@ public class LapHopDong extends javax.swing.JPanel {
         btnTrangTriCong.setColorClick(new java.awt.Color(251, 157, 144));
         btnTrangTriCong.setColorOver(new java.awt.Color(251, 157, 144));
         btnTrangTriCong.setFocusPainted(false);
+        btnTrangTriCong.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         btnTrangTriCong.setRadius(15);
         btnTrangTriCong.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1023,13 +1165,14 @@ public class LapHopDong extends javax.swing.JPanel {
         btnTTSanKhau.setColorClick(new java.awt.Color(251, 157, 144));
         btnTTSanKhau.setColorOver(new java.awt.Color(251, 157, 144));
         btnTTSanKhau.setFocusPainted(false);
+        btnTTSanKhau.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         btnTTSanKhau.setRadius(15);
         btnTTSanKhau.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnTTSanKhauActionPerformed(evt);
             }
         });
-        pnlDichVu.add(btnTTSanKhau, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 10, 140, 40));
+        pnlDichVu.add(btnTTSanKhau, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 10, -1, 40));
 
         btnDatMon.setBackground(new java.awt.Color(251, 157, 144));
         btnDatMon.setForeground(new java.awt.Color(255, 255, 255));
@@ -1039,6 +1182,7 @@ public class LapHopDong extends javax.swing.JPanel {
         btnDatMon.setColorClick(new java.awt.Color(251, 157, 144));
         btnDatMon.setColorOver(new java.awt.Color(251, 157, 144));
         btnDatMon.setFocusPainted(false);
+        btnDatMon.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         btnDatMon.setRadius(15);
         btnDatMon.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1055,19 +1199,20 @@ public class LapHopDong extends javax.swing.JPanel {
         btnNgheThuat.setColorClick(new java.awt.Color(251, 157, 144));
         btnNgheThuat.setColorOver(new java.awt.Color(251, 157, 144));
         btnNgheThuat.setFocusPainted(false);
+        btnNgheThuat.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         btnNgheThuat.setRadius(15);
         btnNgheThuat.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnNgheThuatActionPerformed(evt);
             }
         });
-        pnlDichVu.add(btnNgheThuat, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 10, 100, 40));
+        pnlDichVu.add(btnNgheThuat, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 10, 110, 40));
 
         jPanel1.add(pnlDichVu, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 790, 1590, 60));
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel4.setText("Thông tin hợp đồng");
-        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 410, -1, -1));
+        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 370, -1, -1));
 
         btnSaveInfo.setBackground(new java.awt.Color(24, 153, 29));
         btnSaveInfo.setForeground(new java.awt.Color(255, 255, 255));
@@ -1088,7 +1233,8 @@ public class LapHopDong extends javax.swing.JPanel {
         jPanel1.add(btnSaveInfo, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 750, -1, 30));
 
         pnlBtn.setBackground(new java.awt.Color(255, 255, 255));
-        pnlBtn.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        pnlBtn.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        pnlBtn.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 15, 5));
 
         btnSave.setBackground(new java.awt.Color(24, 153, 29));
         btnSave.setForeground(new java.awt.Color(255, 255, 255));
@@ -1098,6 +1244,7 @@ public class LapHopDong extends javax.swing.JPanel {
         btnSave.setColorClick(new java.awt.Color(0, 204, 0));
         btnSave.setColorOver(new java.awt.Color(0, 204, 0));
         btnSave.setFocusPainted(false);
+        btnSave.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         btnSave.setLabelColor(java.awt.Color.white);
         btnSave.setLableColorClick(java.awt.Color.white);
         btnSave.setRadius(15);
@@ -1106,25 +1253,7 @@ public class LapHopDong extends javax.swing.JPanel {
                 btnSaveActionPerformed(evt);
             }
         });
-        pnlBtn.add(btnSave, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 10, -1, 30));
-
-        btnPhanCong.setBackground(new java.awt.Color(77, 76, 125));
-        btnPhanCong.setForeground(new java.awt.Color(255, 255, 255));
-        btnPhanCong.setText("Phân công");
-        btnPhanCong.setBorderColor(new java.awt.Color(77, 76, 125));
-        btnPhanCong.setColor(new java.awt.Color(77, 76, 125));
-        btnPhanCong.setColorClick(new java.awt.Color(77, 0, 196));
-        btnPhanCong.setColorOver(new java.awt.Color(77, 0, 196));
-        btnPhanCong.setFocusPainted(false);
-        btnPhanCong.setLabelColor(java.awt.Color.white);
-        btnPhanCong.setLableColorClick(java.awt.Color.white);
-        btnPhanCong.setRadius(15);
-        btnPhanCong.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnPhanCongActionPerformed(evt);
-            }
-        });
-        pnlBtn.add(btnPhanCong, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 10, -1, 30));
+        pnlBtn.add(btnSave);
 
         btnXuatHoaDonTam.setBackground(new java.awt.Color(77, 76, 125));
         btnXuatHoaDonTam.setForeground(new java.awt.Color(255, 255, 255));
@@ -1134,6 +1263,7 @@ public class LapHopDong extends javax.swing.JPanel {
         btnXuatHoaDonTam.setColorClick(new java.awt.Color(77, 0, 196));
         btnXuatHoaDonTam.setColorOver(new java.awt.Color(77, 0, 196));
         btnXuatHoaDonTam.setFocusPainted(false);
+        btnXuatHoaDonTam.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         btnXuatHoaDonTam.setLabelColor(java.awt.Color.white);
         btnXuatHoaDonTam.setLableColorClick(java.awt.Color.white);
         btnXuatHoaDonTam.setRadius(15);
@@ -1142,25 +1272,26 @@ public class LapHopDong extends javax.swing.JPanel {
                 btnXuatHoaDonTamActionPerformed(evt);
             }
         });
-        pnlBtn.add(btnXuatHoaDonTam, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 10, -1, 30));
+        pnlBtn.add(btnXuatHoaDonTam);
 
-        btnXuatHoaDon.setBackground(new java.awt.Color(77, 76, 125));
-        btnXuatHoaDon.setForeground(new java.awt.Color(255, 255, 255));
-        btnXuatHoaDon.setText("Xuất hóa đơn");
-        btnXuatHoaDon.setBorderColor(new java.awt.Color(77, 76, 125));
-        btnXuatHoaDon.setColor(new java.awt.Color(77, 76, 125));
-        btnXuatHoaDon.setColorClick(new java.awt.Color(77, 0, 196));
-        btnXuatHoaDon.setColorOver(new java.awt.Color(77, 0, 196));
-        btnXuatHoaDon.setFocusPainted(false);
-        btnXuatHoaDon.setLabelColor(java.awt.Color.white);
-        btnXuatHoaDon.setLableColorClick(java.awt.Color.white);
-        btnXuatHoaDon.setRadius(15);
-        btnXuatHoaDon.addActionListener(new java.awt.event.ActionListener() {
+        btnPhanCong.setBackground(new java.awt.Color(77, 76, 125));
+        btnPhanCong.setForeground(new java.awt.Color(255, 255, 255));
+        btnPhanCong.setText("Phân công");
+        btnPhanCong.setBorderColor(new java.awt.Color(77, 76, 125));
+        btnPhanCong.setColor(new java.awt.Color(77, 76, 125));
+        btnPhanCong.setColorClick(new java.awt.Color(77, 0, 196));
+        btnPhanCong.setColorOver(new java.awt.Color(77, 0, 196));
+        btnPhanCong.setFocusPainted(false);
+        btnPhanCong.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        btnPhanCong.setLabelColor(java.awt.Color.white);
+        btnPhanCong.setLableColorClick(java.awt.Color.white);
+        btnPhanCong.setRadius(15);
+        btnPhanCong.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnXuatHoaDonActionPerformed(evt);
+                btnPhanCongActionPerformed(evt);
             }
         });
-        pnlBtn.add(btnXuatHoaDon, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 10, -1, 30));
+        pnlBtn.add(btnPhanCong);
 
         btnKyKet.setBackground(new java.awt.Color(24, 37, 153));
         btnKyKet.setForeground(new java.awt.Color(255, 255, 255));
@@ -1170,6 +1301,7 @@ public class LapHopDong extends javax.swing.JPanel {
         btnKyKet.setColorClick(new java.awt.Color(51, 51, 255));
         btnKyKet.setColorOver(new java.awt.Color(51, 51, 255));
         btnKyKet.setFocusPainted(false);
+        btnKyKet.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         btnKyKet.setLabelColor(java.awt.Color.white);
         btnKyKet.setLableColorClick(java.awt.Color.white);
         btnKyKet.setRadius(15);
@@ -1178,7 +1310,7 @@ public class LapHopDong extends javax.swing.JPanel {
                 btnKyKetActionPerformed(evt);
             }
         });
-        pnlBtn.add(btnKyKet, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 10, -1, 30));
+        pnlBtn.add(btnKyKet);
 
         btnDuyet.setBackground(new java.awt.Color(24, 37, 153));
         btnDuyet.setForeground(new java.awt.Color(255, 255, 255));
@@ -1188,6 +1320,7 @@ public class LapHopDong extends javax.swing.JPanel {
         btnDuyet.setColorClick(new java.awt.Color(51, 51, 255));
         btnDuyet.setColorOver(new java.awt.Color(51, 51, 255));
         btnDuyet.setFocusPainted(false);
+        btnDuyet.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         btnDuyet.setLabelColor(java.awt.Color.white);
         btnDuyet.setLableColorClick(java.awt.Color.white);
         btnDuyet.setRadius(15);
@@ -1196,7 +1329,25 @@ public class LapHopDong extends javax.swing.JPanel {
                 btnDuyetActionPerformed(evt);
             }
         });
-        pnlBtn.add(btnDuyet, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 10, -1, 30));
+        pnlBtn.add(btnDuyet);
+
+        btnDanhDauXoa.setForeground(new java.awt.Color(255, 255, 255));
+        btnDanhDauXoa.setText("Xóa");
+        btnDanhDauXoa.setBorderColor(new java.awt.Color(153, 24, 24));
+        btnDanhDauXoa.setColor(new java.awt.Color(153, 24, 24));
+        btnDanhDauXoa.setColorClick(new java.awt.Color(255, 51, 51));
+        btnDanhDauXoa.setColorOver(new java.awt.Color(255, 51, 51));
+        btnDanhDauXoa.setFocusPainted(false);
+        btnDanhDauXoa.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        btnDanhDauXoa.setLabelColor(java.awt.Color.white);
+        btnDanhDauXoa.setLableColorClick(java.awt.Color.white);
+        btnDanhDauXoa.setRadius(15);
+        btnDanhDauXoa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDanhDauXoaActionPerformed(evt);
+            }
+        });
+        pnlBtn.add(btnDanhDauXoa);
 
         btnComfimHoanThanh.setBackground(new java.awt.Color(24, 37, 153));
         btnComfimHoanThanh.setForeground(new java.awt.Color(255, 255, 255));
@@ -1206,6 +1357,7 @@ public class LapHopDong extends javax.swing.JPanel {
         btnComfimHoanThanh.setColorClick(new java.awt.Color(51, 51, 255));
         btnComfimHoanThanh.setColorOver(new java.awt.Color(51, 51, 255));
         btnComfimHoanThanh.setFocusPainted(false);
+        btnComfimHoanThanh.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         btnComfimHoanThanh.setLabelColor(java.awt.Color.white);
         btnComfimHoanThanh.setLableColorClick(java.awt.Color.white);
         btnComfimHoanThanh.setRadius(15);
@@ -1214,24 +1366,7 @@ public class LapHopDong extends javax.swing.JPanel {
                 btnComfimHoanThanhActionPerformed(evt);
             }
         });
-        pnlBtn.add(btnComfimHoanThanh, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 10, -1, 30));
-
-        btnDanhDauXoa.setForeground(new java.awt.Color(255, 255, 255));
-        btnDanhDauXoa.setText("Xóa");
-        btnDanhDauXoa.setBorderColor(new java.awt.Color(153, 24, 24));
-        btnDanhDauXoa.setColor(new java.awt.Color(153, 24, 24));
-        btnDanhDauXoa.setColorClick(new java.awt.Color(255, 51, 51));
-        btnDanhDauXoa.setColorOver(new java.awt.Color(255, 51, 51));
-        btnDanhDauXoa.setFocusPainted(false);
-        btnDanhDauXoa.setLabelColor(java.awt.Color.white);
-        btnDanhDauXoa.setLableColorClick(java.awt.Color.white);
-        btnDanhDauXoa.setRadius(15);
-        btnDanhDauXoa.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnDanhDauXoaActionPerformed(evt);
-            }
-        });
-        pnlBtn.add(btnDanhDauXoa, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 10, -1, 30));
+        pnlBtn.add(btnComfimHoanThanh);
 
         btnHuyHopDong.setForeground(new java.awt.Color(255, 255, 255));
         btnHuyHopDong.setText("Hủy");
@@ -1240,6 +1375,7 @@ public class LapHopDong extends javax.swing.JPanel {
         btnHuyHopDong.setColorClick(new java.awt.Color(255, 51, 51));
         btnHuyHopDong.setColorOver(new java.awt.Color(255, 51, 51));
         btnHuyHopDong.setFocusPainted(false);
+        btnHuyHopDong.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         btnHuyHopDong.setLabelColor(java.awt.Color.white);
         btnHuyHopDong.setLableColorClick(java.awt.Color.white);
         btnHuyHopDong.setRadius(15);
@@ -1248,7 +1384,7 @@ public class LapHopDong extends javax.swing.JPanel {
                 btnHuyHopDongActionPerformed(evt);
             }
         });
-        pnlBtn.add(btnHuyHopDong, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 10, -1, 30));
+        pnlBtn.add(btnHuyHopDong);
 
         btnHuyDuyet.setBackground(new java.awt.Color(24, 37, 153));
         btnHuyDuyet.setForeground(new java.awt.Color(255, 255, 255));
@@ -1258,6 +1394,7 @@ public class LapHopDong extends javax.swing.JPanel {
         btnHuyDuyet.setColorClick(new java.awt.Color(51, 51, 255));
         btnHuyDuyet.setColorOver(new java.awt.Color(51, 51, 255));
         btnHuyDuyet.setFocusPainted(false);
+        btnHuyDuyet.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         btnHuyDuyet.setLabelColor(java.awt.Color.white);
         btnHuyDuyet.setLableColorClick(java.awt.Color.white);
         btnHuyDuyet.setRadius(15);
@@ -1266,19 +1403,57 @@ public class LapHopDong extends javax.swing.JPanel {
                 btnHuyDuyetActionPerformed(evt);
             }
         });
-        pnlBtn.add(btnHuyDuyet, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 10, -1, 30));
+        pnlBtn.add(btnHuyDuyet);
 
-        jPanel1.add(pnlBtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 870, 1010, 50));
+        btnChiPhiPhatSinh.setBackground(new java.awt.Color(77, 76, 125));
+        btnChiPhiPhatSinh.setForeground(new java.awt.Color(255, 255, 255));
+        btnChiPhiPhatSinh.setText("Chi phí phát sinh");
+        btnChiPhiPhatSinh.setBorderColor(new java.awt.Color(77, 76, 125));
+        btnChiPhiPhatSinh.setColor(new java.awt.Color(77, 76, 125));
+        btnChiPhiPhatSinh.setColorClick(new java.awt.Color(77, 0, 196));
+        btnChiPhiPhatSinh.setColorOver(new java.awt.Color(77, 0, 196));
+        btnChiPhiPhatSinh.setFocusPainted(false);
+        btnChiPhiPhatSinh.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        btnChiPhiPhatSinh.setLabelColor(java.awt.Color.white);
+        btnChiPhiPhatSinh.setLableColorClick(java.awt.Color.white);
+        btnChiPhiPhatSinh.setRadius(15);
+        btnChiPhiPhatSinh.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnChiPhiPhatSinhActionPerformed(evt);
+            }
+        });
+        pnlBtn.add(btnChiPhiPhatSinh);
+
+        btnInHopDong.setBackground(new java.awt.Color(77, 76, 125));
+        btnInHopDong.setForeground(new java.awt.Color(255, 255, 255));
+        btnInHopDong.setText("In hợp đồng");
+        btnInHopDong.setBorderColor(new java.awt.Color(77, 76, 125));
+        btnInHopDong.setColor(new java.awt.Color(77, 76, 125));
+        btnInHopDong.setColorClick(new java.awt.Color(77, 0, 196));
+        btnInHopDong.setColorOver(new java.awt.Color(77, 0, 196));
+        btnInHopDong.setFocusPainted(false);
+        btnInHopDong.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        btnInHopDong.setLabelColor(java.awt.Color.white);
+        btnInHopDong.setLableColorClick(java.awt.Color.white);
+        btnInHopDong.setRadius(15);
+        btnInHopDong.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnInHopDongActionPerformed(evt);
+            }
+        });
+        pnlBtn.add(btnInHopDong);
+
+        jPanel1.add(pnlBtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 870, 1240, 50));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 1650, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 1650, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 980, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 980, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -1352,7 +1527,7 @@ public class LapHopDong extends javax.swing.JPanel {
     }//GEN-LAST:event_btnTTSanKhauActionPerformed
 
     private void btnDatMonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDatMonActionPerformed
-        new DatMon(new JFrame(), isEdit, maHD).setVisible(true);
+        new DatMon(new JFrame(), isEdit, maHD,(int) hopDong.getSoLuongBan()).setVisible(true);
     }//GEN-LAST:event_btnDatMonActionPerformed
 
     private void btnNgheThuatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNgheThuatActionPerformed
@@ -1370,7 +1545,7 @@ public class LapHopDong extends javax.swing.JPanel {
     }//GEN-LAST:event_btnPhanCongActionPerformed
 
     private void txtNgayToChucActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNgayToChucActionPerformed
-        // TODO add your handling code here:
+
     }//GEN-LAST:event_txtNgayToChucActionPerformed
 
     private void txtSLBanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSLBanActionPerformed
@@ -1378,7 +1553,7 @@ public class LapHopDong extends javax.swing.JPanel {
     }//GEN-LAST:event_txtSLBanActionPerformed
 
     private void cbbSanhActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbbSanhActionPerformed
-        // TODO add your handling code here:
+        //  if ( ( (Sanh) cbbSanh.getSelectedItem() ).getSucChua()  )
     }//GEN-LAST:event_cbbSanhActionPerformed
 
     private void txtThueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtThueActionPerformed
@@ -1402,22 +1577,20 @@ public class LapHopDong extends javax.swing.JPanel {
     }//GEN-LAST:event_lblMaNH20AncestorMoved
 
     private void btnSaveInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveInfoActionPerformed
-        saveInfo();
+        showFeature();
         btnSaveInfo.setVisible(false);
-
-        statusHopDong = StatusHopDong.XOA;
+        //statusHopDong = StatusHopDong.XOA;
         // thêm khách hàng và hợp đồng vào csdl với trạng thái là dã xóa
         //insertHopDong()
 
-        this.maHD = txtMaHD.getText();
-        hopDong = hopDongDAO.findById(maHD);
+        // hopDong = hopDongDAO.findById(maHD);
         ;
 
         phanQuyen();
         isEdit();
-        btnSave.setVisible(true);
-        btnDanhDauXoa.setVisible(true);
-        btnPhanCong.setVisible(false);
+//        btnSave.setVisible(true);
+//        btnDanhDauXoa.setVisible(true);
+//        btnPhanCong.setVisible(false);
 
     }//GEN-LAST:event_btnSaveInfoActionPerformed
 
@@ -1429,10 +1602,10 @@ public class LapHopDong extends javax.swing.JPanel {
         // updateHopDong();
     }//GEN-LAST:event_btnSaveActionPerformed
 
-    private void btnXuatHoaDonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXuatHoaDonActionPerformed
+    private void btnChiPhiPhatSinhActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChiPhiPhatSinhActionPerformed
 
         new ChiPhiPhatSinh(maHD).setVisible(true);
-    }//GEN-LAST:event_btnXuatHoaDonActionPerformed
+    }//GEN-LAST:event_btnChiPhiPhatSinhActionPerformed
 
     private void btnDuyetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDuyetActionPerformed
         updateTrangThaiHopDong(StatusHopDong.CHODUYET);
@@ -1465,9 +1638,33 @@ public class LapHopDong extends javax.swing.JPanel {
         phanQuyen();
     }//GEN-LAST:event_btnHuyDuyetActionPerformed
 
+    private void btnInHopDongActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInHopDongActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnInHopDongActionPerformed
+
+    private void txtSLBanKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSLBanKeyTyped
+        char testChar = evt.getKeyChar();
+        if (!((Character.isDigit(testChar)))) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtSLBanKeyTyped
+
+    private void txtBatDauMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtBatDauMouseClicked
+        timePickerBatDau.showPopup(this, (getWidth() - timePickerBatDau.getPreferredSize().width) / 2, (getHeight() - timePickerBatDau.getPreferredSize().height) / 2);
+    }//GEN-LAST:event_txtBatDauMouseClicked
+
+    private void txtNgayToChucMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtNgayToChucMouseClicked
+        dateChooser.showPopup();
+    }//GEN-LAST:event_txtNgayToChucMouseClicked
+
+    private void txtKetThucMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtKetThucMouseClicked
+        timePickerKetThuc.showPopup(this, (getWidth() - timePickerBatDau.getPreferredSize().width) / 2, (getHeight() - timePickerBatDau.getPreferredSize().height) / 2);
+    }//GEN-LAST:event_txtKetThucMouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.ui.swing.InkwellButton btnBack;
+    private com.ui.swing.HoverButton btnChiPhiPhatSinh;
     private com.ui.swing.HoverButton btnComfimHoanThanh;
     private com.ui.swing.HoverButton btnDVDK;
     private com.ui.swing.HoverButton btnDanhDauXoa;
@@ -1475,6 +1672,7 @@ public class LapHopDong extends javax.swing.JPanel {
     private com.ui.swing.HoverButton btnDuyet;
     private com.ui.swing.HoverButton btnHuyDuyet;
     private com.ui.swing.HoverButton btnHuyHopDong;
+    private com.ui.swing.HoverButton btnInHopDong;
     private com.ui.swing.HoverButton btnKyKet;
     private com.ui.swing.HoverButton btnNgheThuat;
     private com.ui.swing.HoverButton btnPhanCong;
@@ -1483,7 +1681,6 @@ public class LapHopDong extends javax.swing.JPanel {
     private com.ui.swing.HoverButton btnTTBan;
     private com.ui.swing.HoverButton btnTTSanKhau;
     private com.ui.swing.HoverButton btnTrangTriCong;
-    private com.ui.swing.HoverButton btnXuatHoaDon;
     private com.ui.swing.HoverButton btnXuatHoaDonTam;
     private com.ui.swing.Combobox cbbSanh;
     private javax.swing.JLabel jLabel2;
@@ -1510,6 +1707,7 @@ public class LapHopDong extends javax.swing.JPanel {
     private javax.swing.JLabel lblMaNH20;
     private javax.swing.JLabel lblMaNH22;
     private javax.swing.JLabel lblMaNH23;
+    private javax.swing.JLabel lblMaNH24;
     private javax.swing.JLabel lblMaNH3;
     private javax.swing.JLabel lblMaNH4;
     private javax.swing.JLabel lblMaNH5;
@@ -1517,10 +1715,13 @@ public class LapHopDong extends javax.swing.JPanel {
     private javax.swing.JLabel lblMaNH7;
     private javax.swing.JLabel lblMaNH8;
     private javax.swing.JLabel lblMaNH9;
+    private javax.swing.JLabel lblThanhChu;
     private javax.swing.JLabel lbldv;
     private javax.swing.JPanel pnlBtn;
     private javax.swing.JPanel pnlDichVu;
     private javax.swing.JTextArea taDiaChi;
+    private com.ui.swing.timepicker.TimePicker timePickerBatDau;
+    private com.ui.swing.timepicker.TimePicker timePickerKetThuc;
     private javax.swing.JTextField txtBatDau;
     private javax.swing.JTextField txtCMND;
     private javax.swing.JTextField txtChiPhi;
