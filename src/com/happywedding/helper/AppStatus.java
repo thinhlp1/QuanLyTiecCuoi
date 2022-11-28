@@ -29,7 +29,7 @@ public class AppStatus {
 //     */
     public static Object USER = null;
     public static int STATUS = 0;
-    public static String ROLE = "ADMIN" ;
+    public static String ROLE = "QLCC" ;
 
    
     public static HappyWeddingApp mainApp = null;

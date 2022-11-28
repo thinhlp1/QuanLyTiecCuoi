@@ -53,10 +53,10 @@ public class ChiTietDatMonDAO {
         return list.size() > 0 ? list.get(0) : null;
     }
 
-    public List<ChiTietDatMon> selectDichVuDatMon() {
-        List<DichVuDatMon> list = selectDichVuDatMon(, args);
-        return null;
-    }
+//    public List<ChiTietDatMon> selectDichVuDatMon() {
+//        List<DichVuDatMon> list = selectDichVuDatMon(, args);
+//        return null;
+//    }
 
     public boolean insertChiTietDatMon(String maHD, String maMA, String thuTu, String ghiChu) {
         throw new UnsupportedOperationException("Not supported yet.");
