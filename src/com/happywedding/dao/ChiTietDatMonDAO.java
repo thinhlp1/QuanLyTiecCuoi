@@ -26,16 +26,16 @@ public class ChiTietDatMonDAO {
             + "SET MaTD = ?, ChiPhi = ?, GhiChu = ?\n"
             + "WHERE MaHD = ? AND MaTD = ?";
     private final String SELECT_DICHVUDATMON = "SELECT MaHD,MaTD,ChiPhi, \n"
-            + "( SELECT SUM(ChiPhiPhatSinh)  FROM ChiTietDatMon WHERE MaHD = ?) AS ChiPhiPhatSinh,\n"
+            + "( SELECT SUM(ChiPhiPhatSinh * SoLuong)  FROM ChiTietDatMon WHERE MaHD = ? AND  MaTD = ? ) AS ChiPhiPhatSinh,\n"
             + "GhiChu FROM DichVuDatMon WHERE MaHD = ? AND MaTD = ?";
-    
-    private final String SELECT_THUCDONCHINH = "SELECT Top 1 MaHD,MaTD,ct.MaMA,TenMA,MaPL, ma.GiaTien AS ChiPhi,ct.ChiPhiPhatSinh,ThuTu,ct.SoLuong,GhiChu,HinhAnh FROM ChiTietDatMon ct\n" +
-"		INNER JOIN MonAn ma ON ct.MaMA = ma.MaMA \n" +
-"		WHERE MaHD = ? ORDER BY SoLuong DESC ";
-    
-    private final String SELECT_THUCDONPHU = "SELECT Top 1 MaHD,MaTD,ct.MaMA,TenMA,MaPL, ma.GiaTien AS ChiPhi,ct.ChiPhiPhatSinh,ThuTu,ct.SoLuong,GhiChu,HinhAnh FROM ChiTietDatMon ct\n" +
-"		INNER JOIN MonAn ma ON ct.MaMA = ma.MaMA \n" +
-"		WHERE MaHD = ? AND SoLuong != -1 ORDER BY SoLuong ASC ";
+
+    private final String SELECT_THUCDONCHINH = "SELECT Top 1 MaHD,MaTD,ct.MaMA,TenMA,MaPL, ma.GiaTien AS ChiPhi,ct.ChiPhiPhatSinh,ThuTu,ct.SoLuong,GhiChu,HinhAnh FROM ChiTietDatMon ct\n"
+            + "		INNER JOIN MonAn ma ON ct.MaMA = ma.MaMA \n"
+            + "		WHERE MaHD = ? ORDER BY SoLuong DESC ";
+
+    private final String SELECT_THUCDONPHU = "SELECT Top 1 MaHD,MaTD,ct.MaMA,TenMA,MaPL, ma.GiaTien AS ChiPhi,ct.ChiPhiPhatSinh,ThuTu,ct.SoLuong,GhiChu,HinhAnh FROM ChiTietDatMon ct\n"
+            + "		INNER JOIN MonAn ma ON ct.MaMA = ma.MaMA \n"
+            + "		WHERE MaHD = ? AND SoLuong != -1 ORDER BY SoLuong ASC ";
 
     private final String INSERT_CHITIETDATMON = "INSERT ChiTietDatMon (MaHD, MaMA,MaTD,ChiPhiPhatSinh ,ThuTu,SoLuong, GhiChu) VALUES (?, ?,?,?, ?,?, ?)";
     private final String SELECT_CHITIETDATMON = "SELECT MaHD,MaTD,ct.MaMA,TenMA,MaPL,ma.GiaTien AS ChiPhi,ct.ChiPhiPhatSinh,ThuTu,SoLuong,GhiChu,HinhAnh FROM ChiTietDatMon ct\n"
@@ -61,22 +61,22 @@ public class ChiTietDatMonDAO {
     }
 
     public boolean updateDichVuDatMon(DichVuDatMon dvdm, String maTD) {
-        int rs = JDBCHelper.executeUpdate(UPDATE_DICHVUDATMON, dvdm.getMaTD(), dvdm.getChiPhi(), dvdm.getGhiChu(), dvdm.getMaHD(),dvdm.getMaTD());
+        int rs = JDBCHelper.executeUpdate(UPDATE_DICHVUDATMON, dvdm.getMaTD(), dvdm.getChiPhi(), dvdm.getGhiChu(), dvdm.getMaHD(), dvdm.getMaTD());
         return rs > 0;
     }
 
-    public DichVuDatMon selectDichVuDatMon(String maHD,String maTD) {
-        List<DichVuDatMon> list = selectDichVuDatMon(SELECT_DICHVUDATMON, maHD, maHD,maTD);
+    public DichVuDatMon selectDichVuDatMon(String maHD, String maTD) {
+        List<DichVuDatMon> list = selectDichVuDatMon(SELECT_DICHVUDATMON, maHD,maTD, maHD, maTD);
         return list.size() > 0 ? list.get(0) : null;
     }
-    
+
     public String selectThucDonChinh(String maHD) {
         List<String> list2 = new ArrayList<>();
         list2.add(maHD);
         List<DichVuDatMon> list = selectDichVuDatMon(SELECT_THUCDONCHINH, list2.toArray(new String[0]));
         return list.size() > 0 ? list.get(0).getMaTD() : null;
     }
-    
+
     public String selectThucDonPhu(String maHD) {
         List<String> list2 = new ArrayList<>();
         list2.add(maHD);
@@ -84,14 +84,13 @@ public class ChiTietDatMonDAO {
         return list.size() > 0 ? list.get(0).getMaTD() : null;
     }
 
-
-    public List<ChiTietDatMon> selectChiTietDatMon(String maHD,String maTD) {
-        return selectChiTietDatMon(SELECT_CHITIETDATMON, maHD,maTD);
+    public List<ChiTietDatMon> selectChiTietDatMon(String maHD, String maTD) {
+        return selectChiTietDatMon(SELECT_CHITIETDATMON, maHD, maTD);
 
     }
 
     public boolean insertChiTietDatMon(ChiTietDatMon ctdm) {
-        int rs = JDBCHelper.executeUpdate(INSERT_CHITIETDATMON, ctdm.getMaHD(), ctdm.getMaMA(),ctdm.getMaTD() ,ctdm.getChiPhiPhatSinh(), ctdm.getThuTu(),ctdm.getSoLuong() ,ctdm.getGhiChu());
+        int rs = JDBCHelper.executeUpdate(INSERT_CHITIETDATMON, ctdm.getMaHD(), ctdm.getMaMA(), ctdm.getMaTD(), ctdm.getChiPhiPhatSinh(), ctdm.getThuTu(), ctdm.getSoLuong(), ctdm.getGhiChu());
         return rs > 0;
     }
 
@@ -99,12 +98,12 @@ public class ChiTietDatMonDAO {
     reset lại các món ăn trong ChiTietDatMon
      */
     public boolean removeAllChiTietDatMon(String maHD, String maTD) {
-        int rs = JDBCHelper.executeUpdate(DELETE_ALL_CHITIETDATMON, maHD,maTD);
+        int rs = JDBCHelper.executeUpdate(DELETE_ALL_CHITIETDATMON, maHD, maTD);
         return rs > 0;
     }
-    
+
     public boolean deleteDichVuDatMon(String maHD, String maTD) {
-        int rs = JDBCHelper.executeUpdate(DELETE_DICHVUDATMON, maHD,maTD);
+        int rs = JDBCHelper.executeUpdate(DELETE_DICHVUDATMON, maHD, maTD);
         return rs > 0;
     }
 
@@ -166,8 +165,8 @@ public class ChiTietDatMonDAO {
         }
         return list;
     }
-    
-      private List selectChiTietThucDon(String sql, Object... args) {
+
+    private List selectChiTietThucDon(String sql, Object... args) {
         List<ChiTietDatMon> list = new ArrayList<>();
         try {
             ResultSet rs = null;
@@ -216,7 +215,7 @@ public class ChiTietDatMonDAO {
         ctdm.setChiPhiPhatSinh(rs.getLong("ChiPhiPhatSinh"));
         ctdm.setThuTu(rs.getInt("ThuTu"));
         ctdm.setSoLuong(rs.getInt("SoLuong"));
-       
+
         ctdm.setGhiChu(rs.getString("GhiChu"));
         return ctdm;
     }

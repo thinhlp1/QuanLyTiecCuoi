@@ -460,7 +460,7 @@ public class DatMon extends javax.swing.JDialog {
         if (dichVuDatMon != null) {
             taGhiChu.setText(dichVuDatMon.getGhiChu());
             txtChiPhi.setText(ShareHelper.toMoney(dichVuDatMon.getChiPhi()));
-            txtTongCPPS.setText(ShareHelper.toMoney(dichVuDatMon.getChiPhiPhatSinh() * soLuongBan));
+            txtTongCPPS.setText(ShareHelper.toMoney(dichVuDatMon.getChiPhiPhatSinh()));
             txtTongChiPhi.setText(ShareHelper.toMoney(dichVuDatMon.getChiPhi() + dichVuDatMon.getChiPhiPhatSinh()));
         }
 

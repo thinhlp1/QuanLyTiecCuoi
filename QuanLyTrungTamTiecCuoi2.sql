@@ -1079,14 +1079,21 @@ CREATE PROCEDURE tinhTien( @MaHD varchar(50) )
 AS
 BEGIN
 	DECLARE @ChiPhi bigint,@ChiPhiPhatSinh bigint;
+	--DECLARE @MaHD VARCHAR(50) = 'HD20220101001';
 	SELECT @ChiPhi = ( SELECT  SUM( distinct hddv.ChiPhi) AS ChiPhi  FROM HopDongDichVu hddv WHERE hddv.MaHD = @MaHD ) 
-	+ (SELECT ChiPhi FROM DichVuDatMon WHERE MaHD = @MaHD  )
+	+ (SELECT SUM(ChiPhi) FROM DichVuDatMon WHERE MaHD = @MaHD  )
 	+ ( SELECT ChiPhi FROM HopDongDichVuDiKem WHERE MaHD = @MaHD )
 
 
-	SELECT @ChiPhiPhatSinh = ( SELECT SUM (ChiPhiPhatSinh) FROM HopDongDichVu hddv INNER JOIN ChiTietDichVu ct ON hddv.MaHD = ct.MaHD WHERE hddv.MaHD = @MaHD )
-	+ ( SELECT SUM(ct.ChiPhiPhatSinh) FROM DichVuDatMon dv INNER JOIN ChiTietDatMon ct ON dv.MaHD = ct.MaHD WHERE dv.MaHD = @MaHD )
+	PRINT @ChiPhi
+
+	SELECT @ChiPhiPhatSinh = ( SELECT SUM ( a.ChiPhiPhatSinh )
+							FROM ( SELECT SUM ( distinct ChiPhiPhatSinh)  AS ChiPhiPhatSinh FROM HopDongDichVu hddv INNER JOIN ChiTietDichVu ct ON hddv.MaHD = ct.MaHD
+							WHERE hddv.MaHD = @MaHD GROUP BY ct.MaCSVC ) a )
+	+ ( SELECT SUM( ChiPhiPhatSinh * SoLuong )  FROM ChiTietDatMon WHERE MaHD = @MaHD )
 	+ ( SELECT SUM(ct.ChiPhiPhatSinh) FROM HopDongDichVuDiKem dv INNER JOIN ChiTietDichVuDiKem ct ON dv.MaHD = ct.MaHD WHERE dv.MaHD = @MaHD )
 	
+	PRINT @ChiPhiPhatSinh
+
 	SELECT @ChiPhi AS ChiPhi,@ChiPhiPhatSinh AS ChiPhiPhatSinh
 END
