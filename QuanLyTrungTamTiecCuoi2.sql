@@ -1083,6 +1083,7 @@ BEGIN
 	SELECT @ChiPhi = ( SELECT  SUM( distinct hddv.ChiPhi) AS ChiPhi  FROM HopDongDichVu hddv WHERE hddv.MaHD = @MaHD ) 
 	+ (SELECT SUM(ChiPhi) FROM DichVuDatMon WHERE MaHD = @MaHD  )
 	+ ( SELECT ChiPhi FROM HopDongDichVuDiKem WHERE MaHD = @MaHD )
+	+ (SELECT (GiaThueSanh + ( GiaBan * hd.SoLuongBan )) AS ChiPhi FROM Sanh s INNER JOIN HopDong hd ON s.MaSanh = hd.Sanh WHERE MaHD = @MaHD)
 
 
 	PRINT @ChiPhi
