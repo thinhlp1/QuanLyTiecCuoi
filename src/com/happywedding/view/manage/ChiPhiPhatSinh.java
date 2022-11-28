@@ -77,6 +77,9 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         tblThucDon = new com.ui.swing.Table(new CheckNumber());
         jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        tblThucDon1 = new com.ui.swing.Table(new CheckNumber());
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -88,8 +91,8 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
         jPanel1.add(lblMaNH25, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 80, 100, 30));
 
         jLabel7.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        jLabel7.setText("Chi phí nước uống");
-        jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 450, 180, -1));
+        jLabel7.setText("Số lượng nước uống");
+        jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 450, 240, -1));
 
         txtCPPSThamTraiBan.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         txtCPPSThamTraiBan.addActionListener(new java.awt.event.ActionListener() {
@@ -247,11 +250,11 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
                 btnXuatHoaDonActionPerformed(evt);
             }
         });
-        jPanel1.add(btnXuatHoaDon, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 700, -1, 30));
+        jPanel1.add(btnXuatHoaDon, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 890, -1, 30));
 
         lblMaNH24.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         lblMaNH24.setText("Tổng chi phí");
-        jPanel1.add(lblMaNH24, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 700, 160, 30));
+        jPanel1.add(lblMaNH24, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 890, 160, 30));
 
         txtChiPhi.setEditable(false);
         txtChiPhi.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
@@ -260,7 +263,7 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
                 txtChiPhiActionPerformed(evt);
             }
         });
-        jPanel1.add(txtChiPhi, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 700, 270, 35));
+        jPanel1.add(txtChiPhi, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 890, 270, 35));
 
         tblThucDon.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -302,6 +305,46 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
         jLabel9.setText("Chi phí phát sinh");
         jPanel1.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 40, -1, -1));
 
+        jLabel10.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel10.setText("Dịch vụ sử dụng");
+        jPanel1.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 660, 180, -1));
+
+        tblThucDon1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null}
+            },
+            new String [] {
+                "Dịch vụ", "Giá", "Số lượng"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, true
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tblThucDon1.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        tblThucDon1.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tblThucDon1FocusLost(evt);
+            }
+        });
+        tblThucDon1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblThucDon1MouseClicked(evt);
+            }
+        });
+        tblThucDon1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                tblThucDon1KeyTyped(evt);
+            }
+        });
+        jScrollPane3.setViewportView(tblThucDon1);
+
+        jPanel1.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 700, 840, 160));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -310,7 +353,7 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 826, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 949, Short.MAX_VALUE)
         );
 
         pack();
@@ -419,14 +462,28 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
 
     }//GEN-LAST:event_tblThucDonKeyTyped
 
+    private void tblThucDon1FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tblThucDon1FocusLost
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tblThucDon1FocusLost
+
+    private void tblThucDon1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblThucDon1MouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tblThucDon1MouseClicked
+
+    private void tblThucDon1KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tblThucDon1KeyTyped
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tblThucDon1KeyTyped
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.ui.swing.HoverButton btnXuatHoaDon;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JLabel lblMaNH24;
     private javax.swing.JLabel lblMaNH25;
     private javax.swing.JLabel lblMaNH26;
@@ -436,6 +493,7 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
     private javax.swing.JLabel lblMaNH30;
     private javax.swing.JLabel lblMaNH31;
     private com.ui.swing.Table tblThucDon;
+    private com.ui.swing.Table tblThucDon1;
     private javax.swing.JTextField txtCPPSThamTraiBan;
     private javax.swing.JTextField txtCPPSThamTraiBan1;
     private javax.swing.JTextField txtCPPSThamTraiBan10;

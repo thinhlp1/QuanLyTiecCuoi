@@ -1,6 +1,6 @@
 ﻿--Tạo CSDL
---CREATE DATABASE QuanLyTrungTamTiecCuoi
---DROP DATABASE QuanLyTrungTamTiecCuoi
+CREATE DATABASE QuanLyTrungTamTiecCuoi
+--DROP DATABASE QuanLyTrungTamTiecCuoi  SELECT * FROM ChiTietDatMon
 GO
 --Gọi CSDL
 USE QuanLyTrungTamTiecCuoi
@@ -8,10 +8,10 @@ GO
 --Tạo bảng "ChiTietDichVu"
 --DROP TABLE ChiTietDichVu
 CREATE TABLE ChiTietDichVu(
-	MaHD varchar(5) NOT NULL,
+	MaHD varchar(50) NOT NULL,
 	MaCSVC varchar(25) NOT NULL,
 	MaDV varchar(25) NOT NULL,
-	ChiPhi bigint NOT NULL,
+	ChiPhi bigint NULL,
 	ChiPhiPhatSinh bigint NULL,
 	GhiChu nvarchar(255) NULL,
  CONSTRAINT PK_ChiTietDichVu PRIMARY KEY 
@@ -24,20 +24,24 @@ CREATE TABLE ChiTietDichVu(
 GO
 --Tạo bảng "ChiTietDatMon"
 CREATE TABLE ChiTietDatMon(
-	MaHD varchar(5) NOT NULL,
+	MaHD varchar(50) NOT NULL,
 	MaMA varchar(25) NOT NULL,
 	ThuTu int NOT NULL,
+	MaTD varchar(25) NOT NULL,
+	SoLuong int NOT NULL DEFAULT 0,
+	ChiPhiPhatSinh bigint null,
 	GhiChu nvarchar(255) NULL,
  CONSTRAINT PK_ChiTietDatMon PRIMARY KEY 
 (
 	MaHD ASC,
-	MaMA ASC
+	MaMA ASC,
+	MaTD
 )
 ) 
 GO
 --Tạo bảng "HopDongDichVu"
 CREATE TABLE HopDongDichVu(
-	MaHD varchar(5) NOT NULL,
+	MaHD varchar(50) NOT NULL,
 	MaDV varchar(25) NOT NULL,
 	MaGoi varchar(25) NULL,
 	ChiPhi bigint NOT NULL,
@@ -49,15 +53,26 @@ CREATE TABLE HopDongDichVu(
 )
 )
 GO
+--Tạo bảng HopDongDichVuDiKem
+CREATE TABLE HopDongDichVuDiKem(
+	MaHD varchar(50) NOT NULL,
+	GhiChu nvarchar(255) NULL,
+	ChiPhi BIGINT NULL,
+	ChiPhiPhatSinh bigint NULL,
+
+ CONSTRAINT PK_HopDongDichVuDiKem PRIMARY KEY CLUSTERED 
+(
+	MaHD ASC
+))
+
 --Tạo bảng "ChiTietDichVuDiKem
---DROP TABLE ChiTietDichVuDiKem
 CREATE TABLE ChiTietDichVuDiKem(
-	MaHD varchar(5) NOT NULL,
+	MaHD varchar(50) NOT NULL,
 	MaDV varchar(25) NOT NULL,
 	GhiChu nvarchar(255) NULL,
 	ChiPhi BIGINT NULL,
 	ChiPhiPhatSinh bigint NULL,
-	
+	SoLuong int NOT NULL,
  CONSTRAINT PK_ChiTietDichVuDiKem PRIMARY KEY CLUSTERED 
 (
 	MaHD ASC,
@@ -67,7 +82,7 @@ CREATE TABLE ChiTietDichVuDiKem(
 GO
 --Tạo bảng "ChiTietDVDuaDon"
 CREATE TABLE ChiTietDVDuaDon(
-	MaHD varchar(5) NOT NULL,
+	MaHD varchar(50) NOT NULL,
 	MaNV varchar(5) NOT NULL,	
 	LoaiXe varchar(25) NOT NULL,
  CONSTRAINT PK_ChiTietDVDuaDon PRIMARY KEY CLUSTERED 
@@ -81,7 +96,7 @@ GO
 CREATE TABLE ChiTietGoiDichVu(
 	MaGoi varchar(25) NOT NULL,
 	MaCSVC varchar(25) NOT NULL,
-	
+	ChiPhi bigint NULL, 	
 	GhiChu nvarchar(255) NULL,
  CONSTRAINT PK_ChiTietGoiDichVu PRIMARY KEY CLUSTERED 
 (
@@ -164,13 +179,15 @@ CREATE TABLE DichVu(
 GO
 --Tạo bảng "DichVuDatMon"
 CREATE TABLE DichVuDatMon(
-	MaHD varchar(5) NOT NULL,
-	MaTD varchar(25) NULL,
+	MaHD varchar(50) NOT NULL,
+	MaTD varchar(25) NOT NULL,
 	ChiPhi bigint NOT NULL,
+	ChiPhiPhatSinh bigint NULL,
 	GhiChu nvarchar(255) NULL,
  CONSTRAINT PK_DichVuDatMon1 PRIMARY KEY CLUSTERED 
 (
-	MaHD ASC
+	MaHD ASC,
+	MaTD
 )
 )
 GO
@@ -187,7 +204,7 @@ CREATE TABLE DichVuDiKem(
 GO
 --Tạo bảng DichVuDuaDon
 CREATE TABLE DichVuDuaDon(
-	MaHD varchar(5) NOT NULL,
+	MaHD varchar(50) NOT NULL,
 	NgayKhoiHanh date NOT NULL,
 	GioKhoiHanh time(7) NOT NULL,
 	DiaDiem nvarchar(255) NOT NULL,
@@ -217,18 +234,9 @@ CREATE TABLE GoiDichVu(
 --Tạo bảng "HoaDon"
 CREATE TABLE HoaDon(
 	MaHoaDon int IDENTITY(1,1) NOT NULL,
-	MaHD varchar(5) NOT NULL,
+	MaHD varchar(50) NOT NULL,
 	NgayLap date NOT NULL,
 	MaNV varchar(5) NOT NULL,
-	TrangTriCong bigint NULL,   
-	TrangTriBan bigint NULL,
-	TrangTriSanKhau bigint NULL,
-	DiKem bigint NULL,
-	NgheThuat bigint NULL,
-	ThucDon bigint NULL,
-	TienCoc bigint NULL,
-	PhatSinh bigint NULL,
-	TongTien bigint NOT NULL,
 	TrangThai int NOT NULL,
 
  CONSTRAINT PK_HoaDon PRIMARY KEY CLUSTERED 
@@ -239,7 +247,7 @@ CREATE TABLE HoaDon(
 GO
 --Tạo bảng "HopDong"
 CREATE TABLE HopDong(
-	MaHD varchar(5) NOT NULL,
+	MaHD varchar(50) NOT NULL,
 	MaNL varchar(5) NOT NULL,
 	SoLuongBan bigint NOT NULL,
 	Sanh varchar(25) NOT NULL,
@@ -310,7 +318,7 @@ GO
 --Tạo bảng PhanCong
 CREATE TABLE PhanCong(
 	MaPC int IDENTITY(1,1) NOT NULL,
-	MaHD varchar(5) NOT NULL,
+	MaHD varchar(50) NOT NULL,
 	MaNguoiPC varchar(5) NOT NULL,
  CONSTRAINT PK_PhanCong PRIMARY KEY CLUSTERED 
 (
@@ -436,7 +444,7 @@ CREATE TABLE VaiTroTaiKhoan(
 
 --Tạo bảng ChiPhiPhatSinh
 CREATE TABLE ChiPhiPhatSinh (
-	MaHD varchar(5) NOT NULL ,
+	MaHD varchar(50) NOT NULL ,
 	MaPLDV varchar(25) NOT NULL,
 	ChiPhi bigint NOT NULL,
 	LyDo nvarchar(255) NULL,
@@ -449,91 +457,104 @@ CREATE TABLE ChiPhiPhatSinh (
 
 GO
 --Thêm dữ liệu 
-INSERT ChiTietDichVu (MaHD, MaCSVC, MaDV,ChiPhi ,ChiPhiPhatSinh, GhiChu) VALUES (N'HD001', N'AOGHEDO', N'TTBANTIEC',0 ,10000, NULL)
-INSERT ChiTietDichVu (MaHD, MaCSVC, MaDV,ChiPhi ,ChiPhiPhatSinh, GhiChu) VALUES (N'HD001', N'BANGTEN1', N'TTSANKHAU',0, NULL, NULL)
-INSERT ChiTietDichVu (MaHD, MaCSVC, MaDV,ChiPhi ,ChiPhiPhatSinh, GhiChu) VALUES (N'HD001', N'CONGTRON', N'TTCONG', 0, 10000, NULL)
-INSERT ChiTietDichVu (MaHD, MaCSVC, MaDV,ChiPhi ,ChiPhiPhatSinh, GhiChu) VALUES (N'HD001', N'GIAGO', N'TTCONG',0, NULL, NULL)
-INSERT ChiTietDichVu (MaHD, MaCSVC, MaDV,ChiPhi ,ChiPhiPhatSinh, GhiChu) VALUES (N'HD001', N'HOACUCDO', N'TTCONG', 0, NULL, NULL)
-INSERT ChiTietDichVu (MaHD, MaCSVC, MaDV,ChiPhi ,ChiPhiPhatSinh, GhiChu) VALUES (N'HD001', N'HOACUCDO', N'TTSANKHAU',0, NULL, NULL)
-INSERT ChiTietDichVu (MaHD, MaCSVC, MaDV,ChiPhi ,ChiPhiPhatSinh, GhiChu) VALUES (N'HD001', N'HOAHONGDO', N'TTBANTIEC',0, NULL, NULL)
-INSERT ChiTietDichVu (MaHD, MaCSVC, MaDV,ChiPhi ,ChiPhiPhatSinh, GhiChu) VALUES (N'HD001', N'HOAHONGDO', N'TTCONG',0, NULL, NULL)
-INSERT ChiTietDichVu (MaHD, MaCSVC, MaDV,ChiPhi ,ChiPhiPhatSinh, GhiChu) VALUES (N'HD001', N'HOAHONGDO', N'TTSANKHAU',0, NULL, NULL)
-INSERT ChiTietDichVu (MaHD, MaCSVC, MaDV,ChiPhi ,ChiPhiPhatSinh, GhiChu) VALUES (N'HD001', N'LIENKHUC1', N'NGHETHUAT', 0,NULL, NULL)
-INSERT ChiTietDichVu (MaHD, MaCSVC, MaDV,ChiPhi ,ChiPhiPhatSinh, GhiChu) VALUES (N'HD001', N'THAMDO', N'TTSANKHAU',0, NULL, NULL)
-INSERT ChiTietDichVu (MaHD, MaCSVC, MaDV,ChiPhi ,ChiPhiPhatSinh, GhiChu) VALUES (N'HD001', N'TRAIBANTRANG', N'TTBANTIEC',0, NULL, NULL)
-INSERT ChiTietDichVu (MaHD, MaCSVC, MaDV,ChiPhi ,ChiPhiPhatSinh, GhiChu) VALUES (N'HD002', N'AOGHEDO', N'TTBANTIEC',0, NULL, NULL)
-INSERT ChiTietDichVu (MaHD, MaCSVC, MaDV,ChiPhi ,ChiPhiPhatSinh, GhiChu) VALUES (N'HD002', N'BANGTEN1', N'TTSANKHAU',0, NULL, NULL)
-INSERT ChiTietDichVu (MaHD, MaCSVC, MaDV,ChiPhi ,ChiPhiPhatSinh, GhiChu) VALUES (N'HD002', N'CONGVUONG', N'TTCONG', 0,NULL, NULL)
-INSERT ChiTietDichVu (MaHD, MaCSVC, MaDV,ChiPhi ,ChiPhiPhatSinh, GhiChu) VALUES (N'HD002', N'GIASAT', N'TTCONG',0, NULL, NULL)
-INSERT ChiTietDichVu (MaHD, MaCSVC, MaDV,ChiPhi ,ChiPhiPhatSinh, GhiChu) VALUES (N'HD002', N'HOAHONGXANH', N'TTBANTIEC',0, NULL, NULL)
-INSERT ChiTietDichVu (MaHD, MaCSVC, MaDV,ChiPhi ,ChiPhiPhatSinh, GhiChu) VALUES (N'HD002', N'HOAHONGXANH', N'TTCONG',0, NULL, NULL)
-INSERT ChiTietDichVu (MaHD, MaCSVC, MaDV,ChiPhi ,ChiPhiPhatSinh, GhiChu) VALUES (N'HD002', N'HOAHONGXANH', N'TTSANKHAU', 0,NULL, NULL)
-INSERT ChiTietDichVu (MaHD, MaCSVC, MaDV,ChiPhi ,ChiPhiPhatSinh, GhiChu) VALUES (N'HD002', N'HOAHUE', N'TTCONG', 0,NULL, NULL)
-INSERT ChiTietDichVu (MaHD, MaCSVC, MaDV,ChiPhi ,ChiPhiPhatSinh, GhiChu) VALUES (N'HD002', N'HOAHUE', N'TTSANKHAU',0, NULL, NULL)
-INSERT ChiTietDichVu (MaHD, MaCSVC, MaDV,ChiPhi ,ChiPhiPhatSinh, GhiChu) VALUES (N'HD002', N'LIENKHUC2', N'NGHETHUAT',0, NULL, NULL)
-INSERT ChiTietDichVu (MaHD, MaCSVC, MaDV,ChiPhi ,ChiPhiPhatSinh, GhiChu) VALUES (N'HD002', N'THAMCO', N'TTSANKHAU',0, NULL, NULL)
-INSERT ChiTietDichVu (MaHD, MaCSVC, MaDV,ChiPhi ,ChiPhiPhatSinh, GhiChu) VALUES (N'HD002', N'TRAIBANTRANG', N'TTBANTIEC',0, NULL, NULL)
+INSERT ChiTietDichVu (MaHD, MaCSVC, MaDV,ChiPhi ,ChiPhiPhatSinh, GhiChu) VALUES (N'HD20220101001', N'AOGHEDO', N'TTBANTIEC',0 ,10000, '')
+INSERT ChiTietDichVu (MaHD, MaCSVC, MaDV,ChiPhi ,ChiPhiPhatSinh, GhiChu) VALUES (N'HD20220101001', N'BANGTEN1', N'TTSANKHAU',0, 0, '')
+INSERT ChiTietDichVu (MaHD, MaCSVC, MaDV,ChiPhi ,ChiPhiPhatSinh, GhiChu) VALUES (N'HD20220101001', N'CONGTRON', N'TTCONG', 0, 10000, '')
+INSERT ChiTietDichVu (MaHD, MaCSVC, MaDV,ChiPhi ,ChiPhiPhatSinh, GhiChu) VALUES (N'HD20220101001', N'GIAGO', N'TTCONG',0, 0, '')
+INSERT ChiTietDichVu (MaHD, MaCSVC, MaDV,ChiPhi ,ChiPhiPhatSinh, GhiChu) VALUES (N'HD20220101001', N'HOACUCDO', N'TTCONG', 0, 0, '')
+INSERT ChiTietDichVu (MaHD, MaCSVC, MaDV,ChiPhi ,ChiPhiPhatSinh, GhiChu) VALUES (N'HD20220101001', N'HOACUCDO', N'TTSANKHAU',0, 0, '')
+INSERT ChiTietDichVu (MaHD, MaCSVC, MaDV,ChiPhi ,ChiPhiPhatSinh, GhiChu) VALUES (N'HD20220101001', N'HOAHONGDO', N'TTBANTIEC',0, 0, '')
+INSERT ChiTietDichVu (MaHD, MaCSVC, MaDV,ChiPhi ,ChiPhiPhatSinh, GhiChu) VALUES (N'HD20220101001', N'HOAHONGDO', N'TTCONG',0, 0, '')
+INSERT ChiTietDichVu (MaHD, MaCSVC, MaDV,ChiPhi ,ChiPhiPhatSinh, GhiChu) VALUES (N'HD20220101001', N'HOAHONGDO', N'TTSANKHAU',0, 0, '')
+INSERT ChiTietDichVu (MaHD, MaCSVC, MaDV,ChiPhi ,ChiPhiPhatSinh, GhiChu) VALUES (N'HD20220101001', N'LIENKHUC1', N'NGHETHUAT', 0,0, '')
+INSERT ChiTietDichVu (MaHD, MaCSVC, MaDV,ChiPhi ,ChiPhiPhatSinh, GhiChu) VALUES (N'HD20220101001', N'THAMDO', N'TTSANKHAU',0, 0, '')
+INSERT ChiTietDichVu (MaHD, MaCSVC, MaDV,ChiPhi ,ChiPhiPhatSinh, GhiChu) VALUES (N'HD20220101001', N'TRAIBANTRANG', N'TTBANTIEC',0, 0, '')
+INSERT ChiTietDichVu (MaHD, MaCSVC, MaDV,ChiPhi ,ChiPhiPhatSinh, GhiChu) VALUES (N'HD20220105001', N'AOGHEDO', N'TTBANTIEC',0 ,0,'')
+INSERT ChiTietDichVu (MaHD, MaCSVC, MaDV,ChiPhi ,ChiPhiPhatSinh, GhiChu) VALUES (N'HD20220105001', N'BANGTEN1', N'TTSANKHAU',0, 0, '')
+INSERT ChiTietDichVu (MaHD, MaCSVC, MaDV,ChiPhi ,ChiPhiPhatSinh, GhiChu) VALUES (N'HD20220105001', N'CONGVUONG', N'TTCONG', 0,0,0)
+INSERT ChiTietDichVu (MaHD, MaCSVC, MaDV,ChiPhi ,ChiPhiPhatSinh, GhiChu) VALUES (N'HD20220105001', N'GIASAT', N'TTCONG',0, 0, '')
+INSERT ChiTietDichVu (MaHD, MaCSVC, MaDV,ChiPhi ,ChiPhiPhatSinh, GhiChu) VALUES (N'HD20220105001', N'HOAHONGXANH', N'TTBANTIEC',0, 0, '')
+INSERT ChiTietDichVu (MaHD, MaCSVC, MaDV,ChiPhi ,ChiPhiPhatSinh, GhiChu) VALUES (N'HD20220105001', N'HOAHONGXANH', N'TTCONG',0, 0, '')
+INSERT ChiTietDichVu (MaHD, MaCSVC, MaDV,ChiPhi ,ChiPhiPhatSinh, GhiChu) VALUES (N'HD20220105001', N'HOAHONGXANH', N'TTSANKHAU', 0,0,0)
+INSERT ChiTietDichVu (MaHD, MaCSVC, MaDV,ChiPhi ,ChiPhiPhatSinh, GhiChu) VALUES (N'HD20220105001', N'HOAHUE', N'TTCONG', 0,0,0)
+INSERT ChiTietDichVu (MaHD, MaCSVC, MaDV,ChiPhi ,ChiPhiPhatSinh, GhiChu) VALUES (N'HD20220105001', N'HOAHUE', N'TTSANKHAU',0, 0, '')
+INSERT ChiTietDichVu (MaHD, MaCSVC, MaDV,ChiPhi ,ChiPhiPhatSinh, GhiChu) VALUES (N'HD20220105001', N'LIENKHUC2', N'NGHETHUAT',0, 0, '')
+INSERT ChiTietDichVu (MaHD, MaCSVC, MaDV,ChiPhi ,ChiPhiPhatSinh, GhiChu) VALUES (N'HD20220105001', N'THAMCO', N'TTSANKHAU',0, 0, '')
+INSERT ChiTietDichVu (MaHD, MaCSVC, MaDV,ChiPhi ,ChiPhiPhatSinh, GhiChu) VALUES (N'HD20220105001', N'TRAIBANTRANG', N'TTBANTIEC',0, 0, '')
 GO
-INSERT ChiTietDatMon (MaHD, MaMA, ThuTu, GhiChu) VALUES (N'HD001', N'BANHPLAN', 1, NULL)
-INSERT ChiTietDatMon (MaHD, MaMA, ThuTu, GhiChu) VALUES (N'HD001', N'BOLAGU', 2, NULL)
-INSERT ChiTietDatMon (MaHD, MaMA, ThuTu, GhiChu) VALUES (N'HD001', N'CHAOGA', 3, NULL)
-INSERT ChiTietDatMon (MaHD, MaMA, ThuTu, GhiChu) VALUES (N'HD001', N'CHAOVIT', 4, NULL)
-INSERT ChiTietDatMon (MaHD, MaMA, ThuTu, GhiChu) VALUES (N'HD001', N'COCACOLA', 9, NULL)
-INSERT ChiTietDatMon (MaHD, MaMA, ThuTu, GhiChu) VALUES (N'HD001', N'COMCHIENHAISAN', 6, NULL)
-INSERT ChiTietDatMon (MaHD, MaMA, ThuTu, GhiChu) VALUES (N'HD001', N'HOTVITLON', 7, NULL)
-INSERT ChiTietDatMon (MaHD, MaMA, ThuTu, GhiChu) VALUES (N'HD001', N'LAUDE', 8, NULL)
-INSERT ChiTietDatMon (MaHD, MaMA, ThuTu, GhiChu) VALUES (N'HD001', N'NGHEUHAP', 5, NULL)
-INSERT ChiTietDatMon (MaHD, MaMA, ThuTu, GhiChu) VALUES (N'HD002', N'BIA333', 9, NULL)
-INSERT ChiTietDatMon (MaHD, MaMA, ThuTu, GhiChu) VALUES (N'HD002', N'CHAOVIT', 2, NULL)
-INSERT ChiTietDatMon (MaHD, MaMA, ThuTu, GhiChu) VALUES (N'HD002', N'COMCHIENHAISAN', 3, NULL)
-INSERT ChiTietDatMon (MaHD, MaMA, ThuTu, GhiChu) VALUES (N'HD002', N'GABOXOI', 4, NULL)
-INSERT ChiTietDatMon (MaHD, MaMA, ThuTu, GhiChu) VALUES (N'HD002', N'GAHAP', 5, NULL)
-INSERT ChiTietDatMon (MaHD, MaMA, ThuTu, GhiChu) VALUES (N'HD002', N'LAUCABOP', 6, NULL)
-INSERT ChiTietDatMon (MaHD, MaMA, ThuTu, GhiChu) VALUES (N'HD002', N'NGHEUHAP', 7, NULL)
-INSERT ChiTietDatMon (MaHD, MaMA, ThuTu, GhiChu) VALUES (N'HD002', N'SUACHUA', 8, NULL)
-INSERT ChiTietDatMon (MaHD, MaMA, ThuTu, GhiChu) VALUES (N'HD002', N'SUPHAISAN', 1, NULL)
+INSERT ChiTietDatMon (MaHD, MaMA, ThuTu,SoLuong, ChiPhiPhatSinh ,GhiChu,MaTD) VALUES (N'HD20220101001', N'BANHPLAN', 1,0,0,'','TD002')
+INSERT ChiTietDatMon (MaHD,  MaMA, ThuTu,SoLuong,ChiPhiPhatSinh ,GhiChu,MaTD) VALUES (N'HD20220101001', N'BOLAGU', 2,0,0,'','TD002')
+INSERT ChiTietDatMon (MaHD,  MaMA, ThuTu,SoLuong,ChiPhiPhatSinh ,GhiChu,MaTD) VALUES (N'HD20220101001', N'CHAOGA', 3,0,0,'','TD002')
+INSERT ChiTietDatMon (MaHD,  MaMA, ThuTu,SoLuong,ChiPhiPhatSinh ,GhiChu,MaTD) VALUES (N'HD20220101001', N'CHAOVIT', 4, 0,0,'','TD002')
+INSERT ChiTietDatMon (MaHD,  MaMA, ThuTu,SoLuong,ChiPhiPhatSinh ,GhiChu,MaTD) VALUES (N'HD20220101001', N'COCACOLA', 9,0,0,'','TD002')
+INSERT ChiTietDatMon (MaHD,  MaMA, ThuTu,SoLuong,ChiPhiPhatSinh ,GhiChu,MaTD) VALUES (N'HD20220101001', N'COMCHIENHAISAN', 6,0,0,'','TD002')
+INSERT ChiTietDatMon (MaHD,  MaMA, ThuTu,SoLuong,ChiPhiPhatSinh ,GhiChu,MaTD) VALUES (N'HD20220101001', N'HOTVITLON', 7, 0,0,'','TD002')
+INSERT ChiTietDatMon (MaHD,  MaMA, ThuTu,SoLuong,ChiPhiPhatSinh ,GhiChu,MaTD) VALUES (N'HD20220101001', N'LAUDE', 8,0,0,'','TD002')
+INSERT ChiTietDatMon (MaHD,  MaMA, ThuTu,SoLuong,ChiPhiPhatSinh ,GhiChu,MaTD) VALUES (N'HD20220101001', N'NGHEUHAP', 5, 0,0,'','TD002')
+INSERT ChiTietDatMon (MaHD,  MaMA, ThuTu,SoLuong,ChiPhiPhatSinh ,GhiChu,MaTD) VALUES (N'HD20220105001', N'BIA333', 9, 0,0,'','TD002')
+INSERT ChiTietDatMon (MaHD,  MaMA, ThuTu,SoLuong,ChiPhiPhatSinh ,GhiChu,MaTD) VALUES (N'HD20220105001', N'CHAOVIT', 2, 0,0,'','TD002')
+INSERT ChiTietDatMon (MaHD,  MaMA, ThuTu,SoLuong,ChiPhiPhatSinh ,GhiChu,MaTD) VALUES (N'HD20220105001', N'COMCHIENHAISAN', 3,0,0,'','TD002')
+INSERT ChiTietDatMon (MaHD,  MaMA, ThuTu,SoLuong,ChiPhiPhatSinh ,GhiChu,MaTD) VALUES (N'HD20220105001', N'GABOXOI', 4, 0,0,'','TD002')
+INSERT ChiTietDatMon (MaHD,  MaMA, ThuTu,SoLuong,ChiPhiPhatSinh ,GhiChu,MaTD) VALUES (N'HD20220105001', N'GAHAP', 5,0,0,'','TD002')
+INSERT ChiTietDatMon (MaHD,  MaMA, ThuTu,SoLuong,ChiPhiPhatSinh ,GhiChu,MaTD) VALUES (N'HD20220105001', N'LAUCABOP', 6, 0,0,'','TD002')
+INSERT ChiTietDatMon (MaHD,  MaMA, ThuTu,SoLuong,ChiPhiPhatSinh ,GhiChu,MaTD) VALUES (N'HD20220105001', N'NGHEUHAP', 7,0,0,'','TD002')
+INSERT ChiTietDatMon (MaHD,  MaMA, ThuTu,SoLuong,ChiPhiPhatSinh ,GhiChu,MaTD) VALUES (N'HD20220105001', N'SUACHUA', 8, 0,0,'','TD002')
+INSERT ChiTietDatMon (MaHD,  MaMA, ThuTu,SoLuong,ChiPhiPhatSinh ,GhiChu,MaTD) VALUES (N'HD20220105001', N'SUPHAISAN', 1,0,0,'','TD002')
 GO
-INSERT HopDongDichVu (MaHD, MaDV,MaGoi ,ChiPhi, GhiChu) VALUES (N'HD001', N'NGHETHUAT',NULL ,1200000, NULL)
-INSERT HopDongDichVu (MaHD, MaDV, MaGoi ,ChiPhi, GhiChu) VALUES (N'HD001', N'TTBANTIEC',NULL , 4000000, NULL)
-INSERT HopDongDichVu (MaHD, MaDV, MaGoi ,ChiPhi, GhiChu) VALUES (N'HD001', N'TTCONG',NULL , 1000000, NULL)
-INSERT HopDongDichVu (MaHD, MaDV, MaGoi ,ChiPhi, GhiChu) VALUES (N'HD001', N'TTSANKHAU',NULL , 3000000, NULL)
-INSERT HopDongDichVu (MaHD, MaDV, MaGoi ,ChiPhi, GhiChu) VALUES (N'HD002', N'NGHETHUAT',NULL , 1200000, NULL)
-INSERT HopDongDichVu (MaHD, MaDV, MaGoi ,ChiPhi, GhiChu) VALUES (N'HD002', N'TTBANTIEC',NULL , 4000000, NULL)
-INSERT HopDongDichVu (MaHD, MaDV, MaGoi ,ChiPhi, GhiChu) VALUES (N'HD002', N'TTCONG',NULL , 1000000, NULL)
-INSERT HopDongDichVu (MaHD, MaDV, MaGoi ,ChiPhi, GhiChu) VALUES (N'HD002', N'TTSANKHAU',NULL , 3000000, NULL)
+INSERT HopDongDichVu (MaHD, MaDV,MaGoi ,ChiPhi, GhiChu) VALUES (N'HD20220101001', N'NGHETHUAT',NULL ,1200000, '')
+INSERT HopDongDichVu (MaHD, MaDV, MaGoi ,ChiPhi, GhiChu) VALUES (N'HD20220101001', N'TTBANTIEC',NULL , 4000000, '')
+INSERT HopDongDichVu (MaHD, MaDV, MaGoi ,ChiPhi, GhiChu) VALUES (N'HD20220101001', N'TTCONG',NULL , 1000000, '')
+INSERT HopDongDichVu (MaHD, MaDV, MaGoi ,ChiPhi, GhiChu) VALUES (N'HD20220101001', N'TTSANKHAU',NULL , 3000000, '')
+INSERT HopDongDichVu (MaHD, MaDV, MaGoi ,ChiPhi, GhiChu) VALUES (N'HD20220105001', N'NGHETHUAT',NULL , 1200000, '')
+INSERT HopDongDichVu (MaHD, MaDV, MaGoi ,ChiPhi, GhiChu) VALUES (N'HD20220105001', N'TTBANTIEC',NULL , 4000000, '')
+INSERT HopDongDichVu (MaHD, MaDV, MaGoi ,ChiPhi, GhiChu) VALUES (N'HD20220105001', N'TTCONG',NULL , 1000000, '')
+INSERT HopDongDichVu (MaHD, MaDV, MaGoi ,ChiPhi, GhiChu) VALUES (N'HD20220105001', N'TTSANKHAU',NULL , 3000000, '')
+
+
+INSERT HopDongDichVuDiKem( MaHD,ChiPhi,ChiPhiPhatSinh,GhiChu ) VALUES( 'HD20220101001',1000000,0,'' )
+INSERT HopDongDichVuDiKem( MaHD,ChiPhi,ChiPhiPhatSinh,GhiChu ) VALUES( 'HD20220105001',1000000,0,'' )
+
+
 GO
-INSERT ChiTietDichVuDiKem (MaHD, MaDV, GhiChu, ChiPhiPhatSinh, ChiPhi) VALUES (N'HD001', N'BANHKEM', N'3 tầng', 120000, 0)
-INSERT ChiTietDichVuDiKem (MaHD, MaDV, GhiChu, ChiPhiPhatSinh, ChiPhi) VALUES (N'HD001', N'MAYTAOKHOI', NULL, NULL, 0)
-INSERT ChiTietDichVuDiKem (MaHD, MaDV, GhiChu, ChiPhiPhatSinh, ChiPhi) VALUES (N'HD001', N'PHAOKIMTUYEN', N'100 cái', 1000000, 0)
-INSERT ChiTietDichVuDiKem (MaHD, MaDV, GhiChu, ChiPhiPhatSinh, ChiPhi) VALUES (N'HD002', N'BANHKEM', N'4 tầng', 1000000, 0)
-INSERT ChiTietDichVuDiKem (MaHD, MaDV, GhiChu, ChiPhiPhatSinh, ChiPhi) VALUES (N'HD002', N'PHAOKIMTUYEN', N'54 cái', 479999, 0)
-INSERT ChiTietDichVuDiKem (MaHD, MaDV, GhiChu, ChiPhiPhatSinh, ChiPhi) VALUES (N'HD002', N'THIENNGABANG', N'2 con màu xanh', 400000, 0)
+INSERT ChiTietDichVuDiKem (MaHD, MaDV, GhiChu, ChiPhiPhatSinh, ChiPhi, SoLuong) VALUES (N'HD20220101001', N'BANHKEM', N'3 tầng', 120000, 0,1)
+INSERT ChiTietDichVuDiKem (MaHD, MaDV, GhiChu, ChiPhiPhatSinh, ChiPhi, SoLuong) VALUES (N'HD20220101001', N'MAYTAOKHOI', 0, '', 0,1)
+INSERT ChiTietDichVuDiKem (MaHD, MaDV, GhiChu, ChiPhiPhatSinh, ChiPhi, SoLuong) VALUES (N'HD20220101001', N'PHAOKIMTUYEN', N'100 cái', 1000000, 0,1)
+INSERT ChiTietDichVuDiKem (MaHD, MaDV, GhiChu, ChiPhiPhatSinh, ChiPhi, SoLuong) VALUES (N'HD20220105001', N'BANHKEM', N'4 tầng', 1000000, 0,1)
+INSERT ChiTietDichVuDiKem (MaHD, MaDV, GhiChu, ChiPhiPhatSinh, ChiPhi, SoLuong) VALUES (N'HD20220105001', N'PHAOKIMTUYEN', N'54 cái', 479999, 0,1)
+INSERT ChiTietDichVuDiKem (MaHD, MaDV, GhiChu, ChiPhiPhatSinh, ChiPhi, SoLuong) VALUES (N'HD20220105001', N'THIENNGABANG', N'2 con màu xanh', 400000, 0,1)
 GO
-INSERT ChiTietDVDuaDon (MaHD, MaNV, LoaiXe) VALUES (N'HD001', N'NV002', N'XE17CHO')
-INSERT ChiTietDVDuaDon (MaHD, MaNV, LoaiXe) VALUES (N'HD001', N'NV006', N'XE17CHO')
-INSERT ChiTietDVDuaDon (MaHD, MaNV, LoaiXe) VALUES (N'HD002', N'NV002', N'XE17CHO')
-INSERT ChiTietDVDuaDon (MaHD, MaNV, LoaiXe) VALUES (N'HD002', N'NV006', N'XE17CHO')
+INSERT ChiTietDVDuaDon (MaHD, MaNV, LoaiXe) VALUES (N'HD20220101001', N'NV002', N'XE17CHO')
+INSERT ChiTietDVDuaDon (MaHD, MaNV, LoaiXe) VALUES (N'HD20220101001', N'NV006', N'XE17CHO')
+INSERT ChiTietDVDuaDon (MaHD, MaNV, LoaiXe) VALUES (N'HD20220105001', N'NV002', N'XE17CHO')
+INSERT ChiTietDVDuaDon (MaHD, MaNV, LoaiXe) VALUES (N'HD20220105001', N'NV006', N'XE17CHO')
 GO
-INSERT ChiTietGoiDichVu (MaGoi, MaCSVC, GhiChu) VALUES (N'NGHETHUAT1', N'LIENKHUC1', NULL)
-INSERT ChiTietGoiDichVu (MaGoi, MaCSVC, GhiChu) VALUES (N'NGHETHUAT1', N'VUDAO1', NULL)
-INSERT ChiTietGoiDichVu (MaGoi, MaCSVC, GhiChu) VALUES (N'TTBANGHE1', N'AOGHEDO', NULL)
-INSERT ChiTietGoiDichVu (MaGoi, MaCSVC, GhiChu) VALUES (N'TTBANGHE1', N'HOAHONGDO', NULL)
-INSERT ChiTietGoiDichVu (MaGoi, MaCSVC, GhiChu) VALUES (N'TTBANGHE1', N'TRAIBANTRANG', NULL)
-INSERT ChiTietGoiDichVu (MaGoi, MaCSVC, GhiChu) VALUES (N'TTBANGHE3', N'AOGHEXANH', NULL)
-INSERT ChiTietGoiDichVu (MaGoi, MaCSVC, GhiChu) VALUES (N'TTBANGHE3', N'HOAHONGXANH', NULL)
-INSERT ChiTietGoiDichVu (MaGoi, MaCSVC, GhiChu) VALUES (N'TTBANGHE3', N'HOAHUE', NULL)
-INSERT ChiTietGoiDichVu (MaGoi, MaCSVC, GhiChu) VALUES (N'TTCONG1', N'CONGTRON', N'màu xanh')
-INSERT ChiTietGoiDichVu (MaGoi, MaCSVC, GhiChu) VALUES (N'TTCONG1', N'GIASAT', NULL)
-INSERT ChiTietGoiDichVu (MaGoi, MaCSVC, GhiChu) VALUES (N'TTCONG1', N'HOACUCDO', NULL)
-INSERT ChiTietGoiDichVu (MaGoi, MaCSVC, GhiChu) VALUES (N'TTCONG1', N'HOAHONGDO', NULL)
-INSERT ChiTietGoiDichVu (MaGoi, MaCSVC, GhiChu) VALUES (N'TTCONG2', N'GIAGO', NULL)
-INSERT ChiTietGoiDichVu (MaGoi, MaCSVC, GhiChu) VALUES (N'TTCONG2', N'HOAHONGXANH', NULL)
-INSERT ChiTietGoiDichVu (MaGoi, MaCSVC, GhiChu) VALUES (N'TTCONG2', N'HOAHUE', NULL)
-INSERT ChiTietGoiDichVu (MaGoi, MaCSVC, GhiChu) VALUES (N'TTCONG2', N'THAMDO', NULL)
-INSERT ChiTietGoiDichVu (MaGoi, MaCSVC, GhiChu) VALUES (N'TTSANKHAU1', N'BANGTEN1', NULL)
-INSERT ChiTietGoiDichVu (MaGoi, MaCSVC, GhiChu) VALUES (N'TTSANKHAU1', N'HOACUCDO', NULL)
-INSERT ChiTietGoiDichVu (MaGoi, MaCSVC, GhiChu) VALUES (N'TTSANKHAU1', N'HOAHONGDO', NULL)
-INSERT ChiTietGoiDichVu (MaGoi, MaCSVC, GhiChu) VALUES (N'TTSANKHAU2', N'BANGTEN1', NULL)
+INSERT ChiTietGoiDichVu (MaGoi, MaCSVC,ChiPhi, GhiChu) VALUES (N'NGHETHUAT1', N'LIENKHUC1',10000, '')
+INSERT ChiTietGoiDichVu (MaGoi, MaCSVC,ChiPhi, GhiChu) VALUES (N'NGHETHUAT1', N'VUDAO1',10000, '')
+
+INSERT ChiTietGoiDichVu (MaGoi, MaCSVC,ChiPhi, GhiChu) VALUES (N'TTBANGHE1', N'AOGHEDO', 10000,'')
+INSERT ChiTietGoiDichVu (MaGoi, MaCSVC,ChiPhi, GhiChu) VALUES (N'TTBANGHE1', N'HOAHONGDO',10000, '')
+INSERT ChiTietGoiDichVu (MaGoi, MaCSVC,ChiPhi, GhiChu) VALUES (N'TTBANGHE1', N'TRAIBANTRANG',10000, '')
+
+INSERT ChiTietGoiDichVu (MaGoi, MaCSVC,ChiPhi, GhiChu) VALUES (N'TTBANGHE3', N'AOGHEXANH',10000, '')
+INSERT ChiTietGoiDichVu (MaGoi, MaCSVC,ChiPhi, GhiChu) VALUES (N'TTBANGHE3', N'HOAHONGXANH', 10000,'')
+INSERT ChiTietGoiDichVu (MaGoi, MaCSVC,ChiPhi, GhiChu) VALUES (N'TTBANGHE3', N'HOAHUE',10000, '')
+
+INSERT ChiTietGoiDichVu (MaGoi, MaCSVC,ChiPhi, GhiChu) VALUES (N'TTCONG1', N'CONGTRON',10000, N'màu xanh')
+INSERT ChiTietGoiDichVu (MaGoi, MaCSVC,ChiPhi, GhiChu) VALUES (N'TTCONG1', N'BANGTEN1',10000, '')
+INSERT ChiTietGoiDichVu (MaGoi, MaCSVC,ChiPhi, GhiChu) VALUES (N'TTCONG1', N'HOACUCDO',10000, '')
+INSERT ChiTietGoiDichVu (MaGoi, MaCSVC,ChiPhi, GhiChu) VALUES (N'TTCONG1', N'HOAHONGDO',10000, '')
+INSERT ChiTietGoiDichVu (MaGoi, MaCSVC,ChiPhi, GhiChu) VALUES (N'TTCONG1', N'THAMDO',10000, '')
+
+INSERT ChiTietGoiDichVu (MaGoi, MaCSVC,ChiPhi, GhiChu) VALUES (N'TTCONG2', N'GIAGO',10000, '')
+INSERT ChiTietGoiDichVu (MaGoi, MaCSVC,ChiPhi, GhiChu) VALUES (N'TTCONG2', N'HOAHONGXANH',10000, '')
+INSERT ChiTietGoiDichVu (MaGoi, MaCSVC,ChiPhi, GhiChu) VALUES (N'TTCONG2', N'HOAHUE', 10000,'')
+INSERT ChiTietGoiDichVu (MaGoi, MaCSVC,ChiPhi, GhiChu) VALUES (N'TTCONG2', N'THAMDO',10000, '')
+INSERT ChiTietGoiDichVu (MaGoi, MaCSVC,ChiPhi, GhiChu) VALUES (N'TTCONG2', N'BANGTEN1',10000, '')
+
+INSERT ChiTietGoiDichVu (MaGoi, MaCSVC,ChiPhi, GhiChu) VALUES (N'TTSANKHAU1', N'BANGTEN1',10000, '')
+INSERT ChiTietGoiDichVu (MaGoi, MaCSVC,ChiPhi, GhiChu) VALUES (N'TTSANKHAU1', N'HOACUCDO',10000, '')
+INSERT ChiTietGoiDichVu (MaGoi, MaCSVC,ChiPhi, GhiChu) VALUES (N'TTSANKHAU1', N'HOAHONGDO',10000, '')
+INSERT ChiTietGoiDichVu (MaGoi, MaCSVC,ChiPhi, GhiChu) VALUES (N'TTSANKHAU2', N'BANGTEN1',10000, '')
 GO
 INSERT ChiTietPhanCong (MaPC, MaNV, NgayPC, GioBatDau, GioKetThuc) VALUES (1, N'NV001', CAST(N'2022-01-01' AS Date), CAST(N'05:00:00' AS Time), CAST(N'07:00:00' AS Time))
 INSERT ChiTietPhanCong (MaPC, MaNV, NgayPC, GioBatDau, GioKetThuc) VALUES (1, N'NV002', CAST(N'2022-01-01' AS Date), CAST(N'05:00:00' AS Time), CAST(N'07:00:00' AS Time))
@@ -553,56 +574,56 @@ INSERT ChiTietPhanCong (MaPC, MaNV, NgayPC, GioBatDau, GioKetThuc) VALUES (5, N'
 INSERT ChiTietPhanCong (MaPC, MaNV, NgayPC, GioBatDau, GioKetThuc) VALUES (5, N'NV004', CAST(N'2021-08-02' AS Date), CAST(N'05:00:00' AS Time), CAST(N'17:00:00' AS Time))
 INSERT ChiTietPhanCong (MaPC, MaNV, NgayPC, GioBatDau, GioKetThuc) VALUES (5, N'NV005', CAST(N'2021-08-02' AS Date), CAST(N'05:00:00' AS Time), CAST(N'17:00:00' AS Time))
 GO
-INSERT ChiTietThucDon (MaTD, MaMA, ThuTu, GhiChu) VALUES (N'TD001', N'BANHPLAN', 1, NULL)
-INSERT ChiTietThucDon (MaTD, MaMA, ThuTu, GhiChu) VALUES (N'TD001', N'BOLAGU', 2, NULL)
-INSERT ChiTietThucDon (MaTD, MaMA, ThuTu, GhiChu) VALUES (N'TD001', N'CHAOGA', 3, NULL)
-INSERT ChiTietThucDon (MaTD, MaMA, ThuTu, GhiChu) VALUES (N'TD001', N'CHAOVIT', 4, NULL)
-INSERT ChiTietThucDon (MaTD, MaMA, ThuTu, GhiChu) VALUES (N'TD001', N'COCACOLA', 9, NULL)
-INSERT ChiTietThucDon (MaTD, MaMA, ThuTu, GhiChu) VALUES (N'TD001', N'COMCHIENHAISAN', 6, NULL)
-INSERT ChiTietThucDon (MaTD, MaMA, ThuTu, GhiChu) VALUES (N'TD001', N'HOTVITLON', 7, NULL)
-INSERT ChiTietThucDon (MaTD, MaMA, ThuTu, GhiChu) VALUES (N'TD001', N'LAUDE', 8, NULL)
-INSERT ChiTietThucDon (MaTD, MaMA, ThuTu, GhiChu) VALUES (N'TD001', N'NGHEUHAP', 5, NULL)
-INSERT ChiTietThucDon (MaTD, MaMA, ThuTu, GhiChu) VALUES (N'TD002', N'BIA333', 9, NULL)
-INSERT ChiTietThucDon (MaTD, MaMA, ThuTu, GhiChu) VALUES (N'TD002', N'CHAOVIT', 2, NULL)
-INSERT ChiTietThucDon (MaTD, MaMA, ThuTu, GhiChu) VALUES (N'TD002', N'COMCHIENHAISAN', 3, NULL)
-INSERT ChiTietThucDon (MaTD, MaMA, ThuTu, GhiChu) VALUES (N'TD002', N'GABOXOI', 4, NULL)
-INSERT ChiTietThucDon (MaTD, MaMA, ThuTu, GhiChu) VALUES (N'TD002', N'GAHAP', 5, NULL)
-INSERT ChiTietThucDon (MaTD, MaMA, ThuTu, GhiChu) VALUES (N'TD002', N'LAUCABOP', 6, NULL)
-INSERT ChiTietThucDon (MaTD, MaMA, ThuTu, GhiChu) VALUES (N'TD002', N'NGHEUHAP', 7, NULL)
-INSERT ChiTietThucDon (MaTD, MaMA, ThuTu, GhiChu) VALUES (N'TD002', N'SUACHUA', 8, NULL)
-INSERT ChiTietThucDon (MaTD, MaMA, ThuTu, GhiChu) VALUES (N'TD002', N'SUPHAISAN', 1, NULL)
-INSERT ChiTietThucDon (MaTD, MaMA, ThuTu, GhiChu) VALUES (N'TD003', N'BOCUBE', 1, NULL)
-INSERT ChiTietThucDon (MaTD, MaMA, ThuTu, GhiChu) VALUES (N'TD003', N'BOLUCLAC', 2, NULL)
-INSERT ChiTietThucDon (MaTD, MaMA, ThuTu, GhiChu) VALUES (N'TD003', N'CANGCUABACHHOA', 3, NULL)
-INSERT ChiTietThucDon (MaTD, MaMA, ThuTu, GhiChu) VALUES (N'TD003', N'CARIGA', 4, NULL)
-INSERT ChiTietThucDon (MaTD, MaMA, ThuTu, GhiChu) VALUES (N'TD003', N'CUAHOANGDE', 5, NULL)
-INSERT ChiTietThucDon (MaTD, MaMA, ThuTu, GhiChu) VALUES (N'TD003', N'GAQUAYNGUVI', 6, NULL)
-INSERT ChiTietThucDon (MaTD, MaMA, ThuTu, GhiChu) VALUES (N'TD003', N'LAUCABOP', 7, NULL)
-INSERT ChiTietThucDon (MaTD, MaMA, ThuTu, GhiChu) VALUES (N'TD003', N'RUOUVANG', 8, NULL)
-INSERT ChiTietThucDon (MaTD, MaMA, ThuTu, GhiChu) VALUES (N'TD003', N'TOYEN', 9, NULL)
+INSERT ChiTietThucDon (MaTD, MaMA, ThuTu, GhiChu) VALUES (N'TD001', N'BANHPLAN', 1, '')
+INSERT ChiTietThucDon (MaTD, MaMA, ThuTu, GhiChu) VALUES (N'TD001', N'BOLAGU', 2, '')
+INSERT ChiTietThucDon (MaTD, MaMA, ThuTu, GhiChu) VALUES (N'TD001', N'CHAOGA', 3, '')
+INSERT ChiTietThucDon (MaTD, MaMA, ThuTu, GhiChu) VALUES (N'TD001', N'CHAOVIT', 4, '')
+INSERT ChiTietThucDon (MaTD, MaMA, ThuTu, GhiChu) VALUES (N'TD001', N'COCACOLA', 9, '')
+INSERT ChiTietThucDon (MaTD, MaMA, ThuTu, GhiChu) VALUES (N'TD001', N'COMCHIENHAISAN', 6, '')
+INSERT ChiTietThucDon (MaTD, MaMA, ThuTu, GhiChu) VALUES (N'TD001', N'HOTVITLON', 7, '')
+INSERT ChiTietThucDon (MaTD, MaMA, ThuTu, GhiChu) VALUES (N'TD001', N'LAUDE', 8, '')
+INSERT ChiTietThucDon (MaTD, MaMA, ThuTu, GhiChu) VALUES (N'TD001', N'NGHEUHAP', 5, '')
+INSERT ChiTietThucDon (MaTD, MaMA, ThuTu, GhiChu) VALUES (N'TD002', N'BIA333', 9, '')
+INSERT ChiTietThucDon (MaTD, MaMA, ThuTu, GhiChu) VALUES (N'TD002', N'CHAOVIT', 2, '')
+INSERT ChiTietThucDon (MaTD, MaMA, ThuTu, GhiChu) VALUES (N'TD002', N'COMCHIENHAISAN', 3, '')
+INSERT ChiTietThucDon (MaTD, MaMA, ThuTu, GhiChu) VALUES (N'TD002', N'GABOXOI', 4, '')
+INSERT ChiTietThucDon (MaTD, MaMA, ThuTu, GhiChu) VALUES (N'TD002', N'GAHAP', 5, '')
+INSERT ChiTietThucDon (MaTD, MaMA, ThuTu, GhiChu) VALUES (N'TD002', N'LAUCABOP', 6, '')
+INSERT ChiTietThucDon (MaTD, MaMA, ThuTu, GhiChu) VALUES (N'TD002', N'NGHEUHAP', 7, '')
+INSERT ChiTietThucDon (MaTD, MaMA, ThuTu, GhiChu) VALUES (N'TD002', N'SUACHUA', 8, '')
+INSERT ChiTietThucDon (MaTD, MaMA, ThuTu, GhiChu) VALUES (N'TD002', N'SUPHAISAN', 1, '')
+INSERT ChiTietThucDon (MaTD, MaMA, ThuTu, GhiChu) VALUES (N'TD003', N'BOCUBE', 1, '')
+INSERT ChiTietThucDon (MaTD, MaMA, ThuTu, GhiChu) VALUES (N'TD003', N'BOLUCLAC', 2, '')
+INSERT ChiTietThucDon (MaTD, MaMA, ThuTu, GhiChu) VALUES (N'TD003', N'CANGCUABACHHOA', 3, '')
+INSERT ChiTietThucDon (MaTD, MaMA, ThuTu, GhiChu) VALUES (N'TD003', N'CARIGA', 4, '')
+INSERT ChiTietThucDon (MaTD, MaMA, ThuTu, GhiChu) VALUES (N'TD003', N'CUAHOANGDE', 5, '')
+INSERT ChiTietThucDon (MaTD, MaMA, ThuTu, GhiChu) VALUES (N'TD003', N'GAQUAYNGUVI', 6, '')
+INSERT ChiTietThucDon (MaTD, MaMA, ThuTu, GhiChu) VALUES (N'TD003', N'LAUCABOP', 7, '')
+INSERT ChiTietThucDon (MaTD, MaMA, ThuTu, GhiChu) VALUES (N'TD003', N'RUOUVANG', 8, '')
+INSERT ChiTietThucDon (MaTD, MaMA, ThuTu, GhiChu) VALUES (N'TD003', N'TOYEN', 9, '')
 GO
-INSERT CoSoVatChat (MaCSVC, TenCSVC, MaDMC, SoLuong, GiaThue,GhiChu) VALUES (N'AOGHEDO', N'Áo ghế đỏ', N'AOGHE', 1000,30000 ,NULL)
-INSERT CoSoVatChat (MaCSVC, TenCSVC, MaDMC, SoLuong, GiaThue,GhiChu) VALUES (N'AOGHEXANH', N'Áo ghế xanh', N'AOGHE', 1000, 40000, NULL)
-INSERT CoSoVatChat (MaCSVC, TenCSVC, MaDMC, SoLuong, GiaThue,GhiChu) VALUES (N'BANGTEN1', N'Bảng tên tròn', N'BANGTEN', 0,500000 ,NULL)
-INSERT CoSoVatChat (MaCSVC, TenCSVC, MaDMC, SoLuong, GiaThue,GhiChu) VALUES (N'CONGDEN', N'Cổng đen', N'CONG', 1,1000000 ,NULL)
-INSERT CoSoVatChat (MaCSVC, TenCSVC, MaDMC, SoLuong, GiaThue,GhiChu) VALUES (N'CONGOVAN', N'Cổng Ovan', N'CONG', 20,1200000, NULL)
+INSERT CoSoVatChat (MaCSVC, TenCSVC, MaDMC, SoLuong, GiaThue,GhiChu) VALUES (N'AOGHEDO', N'Áo ghế đỏ', N'AOGHE', 1000,30000 ,'')
+INSERT CoSoVatChat (MaCSVC, TenCSVC, MaDMC, SoLuong, GiaThue,GhiChu) VALUES (N'AOGHEXANH', N'Áo ghế xanh', N'AOGHE', 1000, 40000, '')
+INSERT CoSoVatChat (MaCSVC, TenCSVC, MaDMC, SoLuong, GiaThue,GhiChu) VALUES (N'BANGTEN1', N'Bảng tên tròn', N'BANGTEN', 0,500000 ,'')
+INSERT CoSoVatChat (MaCSVC, TenCSVC, MaDMC, SoLuong, GiaThue,GhiChu) VALUES (N'CONGDEN', N'Cổng đen', N'CONG', 1,1000000 ,'')
+INSERT CoSoVatChat (MaCSVC, TenCSVC, MaDMC, SoLuong, GiaThue,GhiChu) VALUES (N'CONGOVAN', N'Cổng Ovan', N'CONG', 20,1200000, '')
 INSERT CoSoVatChat (MaCSVC, TenCSVC, MaDMC, SoLuong, GiaThue,GhiChu) VALUES (N'CONGTRON', N'Cổng tròn xanh', N'CONG', 3,1300000, N'không có')
-INSERT CoSoVatChat (MaCSVC, TenCSVC, MaDMC, SoLuong, GiaThue,GhiChu) VALUES (N'CONGVUONG', N'Cổng vuông', N'CONG', 10,1000000, NULL)
-INSERT CoSoVatChat (MaCSVC, TenCSVC, MaDMC, SoLuong, GiaThue,GhiChu) VALUES (N'GIAGO', N'Giá gỗ', N'GIA', 10,500000, NULL)
-INSERT CoSoVatChat (MaCSVC, TenCSVC, MaDMC, SoLuong, GiaThue,GhiChu) VALUES (N'GIASAT', N'Giá sắt', N'GIA', 10,600000, NULL)
-INSERT CoSoVatChat (MaCSVC, TenCSVC, MaDMC, SoLuong, GiaThue,GhiChu) VALUES (N'HOACUCDO', N'Hoa cúc', N'HOAPHUDAO', 100,100000, NULL)
-INSERT CoSoVatChat (MaCSVC, TenCSVC, MaDMC, SoLuong, GiaThue,GhiChu) VALUES (N'HOAHONGDO', N'Hoa hồng', N'HOACHUDAO', 10,200000, NULL)
-INSERT CoSoVatChat (MaCSVC, TenCSVC, MaDMC, SoLuong, GiaThue,GhiChu) VALUES (N'HOAHONGXANH', N'Hoa hồng xanh', N'HOACHUDAO', 30,300000, NULL)
-INSERT CoSoVatChat (MaCSVC, TenCSVC, MaDMC, SoLuong, GiaThue,GhiChu) VALUES (N'HOAHUE', N'Hoa huệ', N'HOAPHUDAO', 10,100000 ,NULL)
-INSERT CoSoVatChat (MaCSVC, TenCSVC, MaDMC, SoLuong, GiaThue,GhiChu) VALUES (N'LIENKHUC1', N'Liên khúc nhạc nhẹ', N'LIENKHUC', 0,1000000 ,NULL)
-INSERT CoSoVatChat (MaCSVC, TenCSVC, MaDMC, SoLuong, GiaThue,GhiChu) VALUES (N'LIENKHUC2', N'Liên khúc nhạc soi động', N'LIENKHUC', 0,1000000, NULL)
+INSERT CoSoVatChat (MaCSVC, TenCSVC, MaDMC, SoLuong, GiaThue,GhiChu) VALUES (N'CONGVUONG', N'Cổng vuông', N'CONG', 10,1000000, '')
+INSERT CoSoVatChat (MaCSVC, TenCSVC, MaDMC, SoLuong, GiaThue,GhiChu) VALUES (N'GIAGO', N'Giá gỗ', N'GIA', 10,500000, '')
+INSERT CoSoVatChat (MaCSVC, TenCSVC, MaDMC, SoLuong, GiaThue,GhiChu) VALUES (N'GIASAT', N'Giá sắt', N'GIA', 10,600000, '')
+INSERT CoSoVatChat (MaCSVC, TenCSVC, MaDMC, SoLuong, GiaThue,GhiChu) VALUES (N'HOACUCDO', N'Hoa cúc', N'HOAPHUDAO', 100,100000, '')
+INSERT CoSoVatChat (MaCSVC, TenCSVC, MaDMC, SoLuong, GiaThue,GhiChu) VALUES (N'HOAHONGDO', N'Hoa hồng', N'HOACHUDAO', 10,200000, '')
+INSERT CoSoVatChat (MaCSVC, TenCSVC, MaDMC, SoLuong, GiaThue,GhiChu) VALUES (N'HOAHONGXANH', N'Hoa hồng xanh', N'HOACHUDAO', 30,300000, '')
+INSERT CoSoVatChat (MaCSVC, TenCSVC, MaDMC, SoLuong, GiaThue,GhiChu) VALUES (N'HOAHUE', N'Hoa huệ', N'HOAPHUDAO', 10,100000 ,'')
+INSERT CoSoVatChat (MaCSVC, TenCSVC, MaDMC, SoLuong, GiaThue,GhiChu) VALUES (N'LIENKHUC1', N'Liên khúc nhạc nhẹ', N'LIENKHUC', 0,1000000 ,'')
+INSERT CoSoVatChat (MaCSVC, TenCSVC, MaDMC, SoLuong, GiaThue,GhiChu) VALUES (N'LIENKHUC2', N'Liên khúc nhạc soi động', N'LIENKHUC', 0,1000000, '')
 INSERT CoSoVatChat (MaCSVC, TenCSVC, MaDMC, SoLuong, GiaThue,GhiChu) VALUES (N'PHAOHOANHO', N'Pháo hoa nhỏ', N'PHAOHOA', 300,100000 ,N'pháo hoa màu đỏ')
-INSERT CoSoVatChat (MaCSVC, TenCSVC, MaDMC, SoLuong, GiaThue,GhiChu) VALUES (N'THAMCO', N'Thảm cỏ', N'THAM', 5,500000 ,NULL)
-INSERT CoSoVatChat (MaCSVC, TenCSVC, MaDMC, SoLuong, GiaThue,GhiChu) VALUES (N'THAMDO', N'Thảm đỏ', N'THAM', 5,500000, NULL)
-INSERT CoSoVatChat (MaCSVC, TenCSVC, MaDMC, SoLuong, GiaThue,GhiChu) VALUES (N'TRAIBANTRANG', N'Trãi bàn trắng', N'TRAIBAN', 300,50000, NULL)
-INSERT CoSoVatChat (MaCSVC, TenCSVC, MaDMC, SoLuong, GiaThue,GhiChu) VALUES (N'TRAIBANVANG', N'Trãi bàn vàng', N'TRAIBAN', 200,60000, NULL)
-INSERT CoSoVatChat (MaCSVC, TenCSVC, MaDMC, SoLuong, GiaThue,GhiChu) VALUES (N'VUDAO1', N'Vũ đạo nhẹ nhàng', N'VUDAO', 0, 1000000,NULL)
-INSERT CoSoVatChat (MaCSVC, TenCSVC, MaDMC, SoLuong, GiaThue,GhiChu) VALUES (N'VUDAO2', N'Vũ đạo sôi động ', N'VUDAO', 0, 1000000,NULL)
+INSERT CoSoVatChat (MaCSVC, TenCSVC, MaDMC, SoLuong, GiaThue,GhiChu) VALUES (N'THAMCO', N'Thảm cỏ', N'THAM', 5,500000 ,'')
+INSERT CoSoVatChat (MaCSVC, TenCSVC, MaDMC, SoLuong, GiaThue,GhiChu) VALUES (N'THAMDO', N'Thảm đỏ', N'THAM', 5,500000, '')
+INSERT CoSoVatChat (MaCSVC, TenCSVC, MaDMC, SoLuong, GiaThue,GhiChu) VALUES (N'TRAIBANTRANG', N'Trãi bàn trắng', N'TRAIBAN', 300,50000, '')
+INSERT CoSoVatChat (MaCSVC, TenCSVC, MaDMC, SoLuong, GiaThue,GhiChu) VALUES (N'TRAIBANVANG', N'Trãi bàn vàng', N'TRAIBAN', 200,60000, '')
+INSERT CoSoVatChat (MaCSVC, TenCSVC, MaDMC, SoLuong, GiaThue,GhiChu) VALUES (N'VUDAO1', N'Vũ đạo nhẹ nhàng', N'VUDAO', 0, 1000000,'')
+INSERT CoSoVatChat (MaCSVC, TenCSVC, MaDMC, SoLuong, GiaThue,GhiChu) VALUES (N'VUDAO2', N'Vũ đạo sôi động ', N'VUDAO', 0, 1000000,'')
 INSERT CoSoVatChat (MaCSVC, TenCSVC, MaDMC, SoLuong, GiaThue,GhiChu) VALUES (N'XE17CHO', N'Xe 17 chỗ', N'XEKHACH', 3, 0,N'Xe honda')
 INSERT CoSoVatChat (MaCSVC, TenCSVC, MaDMC, SoLuong, GiaThue,GhiChu) VALUES (N'XE5CHO', N'Xe 5 chỗ', N'XEKHACH', 2, 0,N'xe luxury porcheso')
 GO
@@ -641,35 +662,35 @@ INSERT DichVu (MaDV, MaPLDV, TenDV) VALUES (N'TTBANTIEC', N'TRANGTRI', N'Trang t
 INSERT DichVu (MaDV, MaPLDV, TenDV) VALUES (N'TTCONG', N'TRANGTRI', N'Trang trí cổng')
 INSERT DichVu (MaDV, MaPLDV, TenDV) VALUES (N'TTSANKHAU', N'TRANGTRI', N'Trang trí sân khấu')
 GO
-INSERT DichVuDatMon (MaHD,MaTD, ChiPhi, GhiChu) VALUES (N'HD001',NULL, 20000000, NULL)
-INSERT DichVuDatMon (MaHD,MaTD, ChiPhi, GhiChu) VALUES (N'HD002',NULL, 32000000, NULL)
+INSERT DichVuDatMon (MaHD,MaTD, ChiPhi, GhiChu) VALUES (N'HD20220101001','TD002', 20000000, '')
+INSERT DichVuDatMon (MaHD,MaTD, ChiPhi, GhiChu) VALUES (N'HD20220105001','TD002', 32000000, '')
 GO
 INSERT DichVuDiKem (MaDV, TenDV, Gia) VALUES (N'BANHKEM', N'Bánh kem ', 600000000)
 INSERT DichVuDiKem (MaDV, TenDV, Gia) VALUES (N'MAYTAOKHOI', N'Máy tạo khói', 2000000)
 INSERT DichVuDiKem (MaDV, TenDV, Gia) VALUES (N'PHAOKIMTUYEN', N'Pháo kim tuyến', 1000000)
 INSERT DichVuDiKem (MaDV, TenDV, Gia) VALUES (N'THIENNGABANG', N'Thiên nga băng', 900000000)
 GO
-INSERT DichVuDuaDon (MaHD, NgayKhoiHanh, GioKhoiHanh, DiaDiem, GioVe, SoLuongKhach, GhiChu) VALUES (N'HD001', CAST(N'2022-01-10' AS Date), CAST(N'05:00:00' AS Time), N'Cần Thơ', CAST(N'15:00:00' AS Time), 20, N'có thể tăng')
-INSERT DichVuDuaDon (MaHD, NgayKhoiHanh, GioKhoiHanh, DiaDiem, GioVe, SoLuongKhach, GhiChu) VALUES (N'HD002', CAST(N'2022-01-12' AS Date), CAST(N'05:00:00' AS Time), N'Cần Thơ', CAST(N'13:00:00' AS Time), 23, N'có thể tăng')
+INSERT DichVuDuaDon (MaHD, NgayKhoiHanh, GioKhoiHanh, DiaDiem, GioVe, SoLuongKhach, GhiChu) VALUES (N'HD20220101001', CAST(N'2022-01-10' AS Date), CAST(N'05:00:00' AS Time), N'Cần Thơ', CAST(N'15:00:00' AS Time), 20, N'có thể tăng')
+INSERT DichVuDuaDon (MaHD, NgayKhoiHanh, GioKhoiHanh, DiaDiem, GioVe, SoLuongKhach, GhiChu) VALUES (N'HD20220105001', CAST(N'2022-01-12' AS Date), CAST(N'05:00:00' AS Time), N'Cần Thơ', CAST(N'13:00:00' AS Time), 23, N'có thể tăng')
 GO
-INSERT GoiDichVu (MaGoi, MaDV, TenGoi, ChiPhi, GhiChu, HinhAnh) VALUES (N'NGHETHUAT1', N'NGHETHUAT', N'Nghệ thuật soi động', N'12000000  ', NULL, NULL)
-INSERT GoiDichVu (MaGoi, MaDV, TenGoi, ChiPhi, GhiChu, HinhAnh) VALUES (N'TTBANGHE1', N'TTBANTIEC', N'Bàn xanh ghế trắng', N'300000    ', NULL, NULL)
-INSERT GoiDichVu (MaGoi, MaDV, TenGoi, ChiPhi, GhiChu, HinhAnh) VALUES (N'TTBANGHE3', N'TTBANTIEC', N'Bàn trắng ghế đỏ', N'300000    ', NULL, NULL)
-INSERT GoiDichVu (MaGoi, MaDV, TenGoi, ChiPhi, GhiChu, HinhAnh) VALUES (N'TTCONG1', N'TTCONG', N'Cổng hoa hồng đỏ', N'10000000  ', N'hoa thật', NULL)
-INSERT GoiDichVu (MaGoi, MaDV, TenGoi, ChiPhi, GhiChu, HinhAnh) VALUES (N'TTCONG2', N'TTCONG', N'Cổng hoa hồng đỏ', N'3000000   ', N'hoa fa ke', NULL)
-INSERT GoiDichVu (MaGoi, MaDV, TenGoi, ChiPhi, GhiChu, HinhAnh) VALUES (N'TTSANKHAU1', N'TTSANKHAU', N'Sân khấu nhiều hoa', N'3000000   ', N'gì đó', NULL)
-INSERT GoiDichVu (MaGoi, MaDV, TenGoi, ChiPhi, GhiChu, HinhAnh) VALUES (N'TTSANKHAU2', N'TTSANKHAU', N'Sân khấu bự', N'5000000   ', N'có kim tuyến....', NULL)
+INSERT GoiDichVu (MaGoi, MaDV, TenGoi, ChiPhi, GhiChu, HinhAnh) VALUES (N'NGHETHUAT1', N'NGHETHUAT', N'Nghệ thuật soi động', N'12000000  ', '', '')
+INSERT GoiDichVu (MaGoi, MaDV, TenGoi, ChiPhi, GhiChu, HinhAnh) VALUES (N'TTBANGHE1', N'TTBANTIEC', N'Bàn xanh ghế trắng', N'300000    ', '', '')
+INSERT GoiDichVu (MaGoi, MaDV, TenGoi, ChiPhi, GhiChu, HinhAnh) VALUES (N'TTBANGHE3', N'TTBANTIEC', N'Bàn trắng ghế đỏ', N'300000    ', '', '')
+INSERT GoiDichVu (MaGoi, MaDV, TenGoi, ChiPhi, GhiChu, HinhAnh) VALUES (N'TTCONG1', N'TTCONG', N'Cổng hoa hồng đỏ', N'10000000  ', N'hoa thật', '')
+INSERT GoiDichVu (MaGoi, MaDV, TenGoi, ChiPhi, GhiChu, HinhAnh) VALUES (N'TTCONG2', N'TTCONG', N'Cổng hoa hồng đỏ', N'3000000   ', N'hoa fa ke', '')
+INSERT GoiDichVu (MaGoi, MaDV, TenGoi, ChiPhi, GhiChu, HinhAnh) VALUES (N'TTSANKHAU1', N'TTSANKHAU', N'Sân khấu nhiều hoa', N'3000000   ', N'gì đó', '')
+INSERT GoiDichVu (MaGoi, MaDV, TenGoi, ChiPhi, GhiChu, HinhAnh) VALUES (N'TTSANKHAU2', N'TTSANKHAU', N'Sân khấu bự', N'5000000   ', N'có kim tuyến....', '')
 GO
 --SET IDENTITY_INSERT HoaDon ON 
 
-INSERT HoaDon ( MaHD, NgayLap, MaNV,TrangTriCong, TrangTriBan, TrangTriSanKhau, DiKem,NgheThuat,ThucDon,TienCoc,PhatSinh,  TongTien,TrangThai) VALUES ( N'HD001', CAST(N'2022-01-01' AS Date), N'NV001',1000000, 4000000 ,3000000,1000000,1200000,100000,55000000,0, 110000000,0)
+INSERT HoaDon ( MaHD, NgayLap, MaNV,TrangThai) VALUES ( N'HD20220101001', CAST(N'2022-01-01' AS Date), N'NV001',0)
 --SET IDENTITY_INSERT HoaDon OFF
 GO
-INSERT HopDong (MaHD, MaNL, SoLuongBan, Sanh, NgayLap, NgayDuyet, MaND, MaKH, NgayToChuc, ThoiGianBatDau, ThoiGianKetThuc, TrangThai, The, TienCoc, ChiPhiPhatSinh, TongTien) VALUES (N'HD001', N'NV001', 10, N'SANH01', CAST(N'2022-01-01' AS Date), CAST(N'2022-01-01' AS Date), N'NV001', 1, CAST(N'2022-01-10' AS Date), CAST(N'05:00:00' AS Time), CAST(N'07:00:00' AS Time), N'DATHUCHIEN', 10, 10000000, 1500000, 100000000)
-INSERT HopDong (MaHD, MaNL, SoLuongBan, Sanh, NgayLap, NgayDuyet, MaND, MaKH, NgayToChuc, ThoiGianBatDau, ThoiGianKetThuc, TrangThai, The, TienCoc, ChiPhiPhatSinh, TongTien) VALUES (N'HD002', N'NV003', 10, N'SANH02', CAST(N'2022-01-05' AS Date), CAST(N'2022-01-05' AS Date), N'NV001', 1, CAST(N'2022-01-12' AS Date), CAST(N'05:00:00' AS Time), CAST(N'07:00:00' AS Time), N'THUCHIEN', 10, 15000000, 0, 150000000)
-INSERT HopDong (MaHD, MaNL, SoLuongBan, Sanh, NgayLap, NgayDuyet, MaND, MaKH, NgayToChuc, ThoiGianBatDau, ThoiGianKetThuc, TrangThai, The, TienCoc, ChiPhiPhatSinh, TongTien) VALUES (N'HD003', N'NV003', 20, N'SANH03', CAST(N'2022-05-11' AS Date), CAST(N'2022-05-11' AS Date), N'NV001', 2, CAST(N'2022-05-20' AS Date), CAST(N'06:00:00' AS Time), CAST(N'13:00:00' AS Time), N'CHODUYET', 15, 40000000, 0, 400000000)
-INSERT HopDong (MaHD, MaNL, SoLuongBan, Sanh, NgayLap, NgayDuyet, MaND, MaKH, NgayToChuc, ThoiGianBatDau, ThoiGianKetThuc, TrangThai, The, TienCoc, ChiPhiPhatSinh, TongTien) VALUES (N'HD004', N'NV003', 10, N'SANH01', CAST(N'2022-08-01' AS Date), NULL, N'', 2, CAST(N'2022-08-08' AS Date), CAST(N'07:00:00' AS Time), CAST(N'14:00:00' AS Time), N'CHODUYET', 10, 30000000, 0, 300000000)
-INSERT HopDong (MaHD, MaNL, SoLuongBan, Sanh, NgayLap, NgayDuyet, MaND, MaKH, NgayToChuc, ThoiGianBatDau, ThoiGianKetThuc, TrangThai, The, TienCoc, ChiPhiPhatSinh, TongTien) VALUES (N'HD005', N'NV003', 10, N'SANH02', CAST(N'2021-08-02' AS Date), NULL, NULL, 3, CAST(N'2021-08-10' AS Date), CAST(N'07:00:00' AS Time), CAST(N'17:00:00' AS Time), N'CHODUYET', 10, 38000000, 0, 380000000)
+INSERT HopDong (MaHD, MaNL, SoLuongBan, Sanh, NgayLap, NgayDuyet, MaND, MaKH, NgayToChuc, ThoiGianBatDau, ThoiGianKetThuc, TrangThai, The, TienCoc, ChiPhiPhatSinh, TongTien) VALUES (N'HD20220101001', N'NV001', 10, N'SANH01', CAST(N'2022-01-01' AS Date), CAST(N'2022-01-01' AS Date), N'NV001', 1, CAST(N'2022-01-10' AS Date), CAST(N'05:00:00' AS Time), CAST(N'07:00:00' AS Time), N'CHODUYET', 10, 10000000, 1500000, 100000000)
+INSERT HopDong (MaHD, MaNL, SoLuongBan, Sanh, NgayLap, NgayDuyet, MaND, MaKH, NgayToChuc, ThoiGianBatDau, ThoiGianKetThuc, TrangThai, The, TienCoc, ChiPhiPhatSinh, TongTien) VALUES (N'HD20220105001', N'NV003', 10, N'SANH02', CAST(N'2022-01-05' AS Date), CAST(N'2022-01-05' AS Date), N'NV001', 1, CAST(N'2022-01-12' AS Date), CAST(N'05:00:00' AS Time), CAST(N'07:00:00' AS Time), N'THUCHIEN', 10, 15000000, 0, 150000000)
+INSERT HopDong (MaHD, MaNL, SoLuongBan, Sanh, NgayLap, NgayDuyet, MaND, MaKH, NgayToChuc, ThoiGianBatDau, ThoiGianKetThuc, TrangThai, The, TienCoc, ChiPhiPhatSinh, TongTien) VALUES (N'HD20220511001', N'NV003', 20, N'SANH03', CAST(N'2022-05-11' AS Date), CAST(N'2022-05-11' AS Date), N'NV001', 2, CAST(N'2022-05-20' AS Date), CAST(N'06:00:00' AS Time), CAST(N'13:00:00' AS Time), N'CHODUYET', 15, 40000000, 0, 400000000)
+INSERT HopDong (MaHD, MaNL, SoLuongBan, Sanh, NgayLap, NgayDuyet, MaND, MaKH, NgayToChuc, ThoiGianBatDau, ThoiGianKetThuc, TrangThai, The, TienCoc, ChiPhiPhatSinh, TongTien) VALUES (N'HD20220901001', N'NV003', 10, N'SANH01', CAST(N'2022-08-01' AS Date), NULL, N'', 2, CAST(N'2022-08-08' AS Date), CAST(N'07:00:00' AS Time), CAST(N'14:00:00' AS Time), N'CHOKYKET', 10, 30000000, 0, 300000000)
+INSERT HopDong (MaHD, MaNL, SoLuongBan, Sanh, NgayLap, NgayDuyet, MaND, MaKH, NgayToChuc, ThoiGianBatDau, ThoiGianKetThuc, TrangThai, The, TienCoc, ChiPhiPhatSinh, TongTien) VALUES (N'HD20220802001', N'NV003', 10, N'SANH02', CAST(N'2021-08-02' AS Date), NULL, NULL, 3, CAST(N'2021-08-10' AS Date), CAST(N'07:00:00' AS Time), CAST(N'17:00:00' AS Time), N'CHODUYET', 10, 38000000, 0, 380000000)
 GO
 --SET IDENTITY_INSERT KhachHang ON 
 
@@ -715,7 +736,7 @@ INSERT MonAn (MaMA, TenMA, HinhAnh, GiaTien, MaPL) VALUES (N'SUPHAISAN', N'súp 
 INSERT MonAn (MaMA, TenMA, HinhAnh, GiaTien, MaPL) VALUES (N'TOYEN', N'tổ yến', N'acc.png', N'550000', N'TRANGMIENG')
 GO
 INSERT NhanVien (MaNV, HoTen, NgaySinh, GioiTinh, SoDienThoai,Email, CCCD_CMND, HinhAnh, MaPB, MaVT, TrangThai) VALUES (N'NV001', N'Lê Phước Thịnh', CAST(N'2003-12-08' AS Date), 1, N'0334831013','thinhlpc0231@gmail.com', N'5223252452452', N'noimg', N'QUANLY', N'QLCC', 1)
-INSERT NhanVien (MaNV, HoTen, NgaySinh, GioiTinh, SoDienThoai,Email, CCCD_CMND, HinhAnh, MaPB, MaVT, TrangThai) VALUES (N'NV002', N'Tô Văn Tấn', CAST(N'2003-01-01' AS Date), 1, N'0734238290', 'tovantan@gmail.com',N'5223252452452', N'noimag', N'VANCHUYEN', N'TAIXE', 1)
+INSERT NhanVien (MaNV, HoTen, NgaySinh, GioiTinh, SoDienThoai,Email, CCCD_CMND, HinhAnh, MaPB, MaVT, TrangThai) VALUES (N'NV002', N'Tô Văn Tấn', CAST(N'2003-01-01' AS Date), 1, N'0734238290', 'tovantan@gmail.com',N'5223345452452', N'noimag', N'VANCHUYEN', N'TAIXE', 1)
 INSERT NhanVien (MaNV, HoTen, NgaySinh, GioiTinh, SoDienThoai,Email, CCCD_CMND, HinhAnh, MaPB, MaVT, TrangThai) VALUES (N'NV003', N'Phạm Xuân Vinh', CAST(N'2003-01-01' AS Date), 1, N'0907778028','phamxuanvinh@gmail.com', N'9283735736412', N'noimg', N'TIEPTAN', N'TIEPTAN', 1)
 INSERT NhanVien (MaNV, HoTen, NgaySinh, GioiTinh, SoDienThoai,Email, CCCD_CMND, HinhAnh, MaPB, MaVT, TrangThai) VALUES (N'NV004', N'Mai Quốc Bảo', CAST(N'2003-01-01' AS Date), 1, N'0984722028', 'maiquocbao@gmail.com',N'47285192831952', N'noumg', N'KETOAN', N'TINHHOADON', 1)
 INSERT NhanVien (MaNV, HoTen, NgaySinh, GioiTinh, SoDienThoai,Email, CCCD_CMND, HinhAnh, MaPB, MaVT, TrangThai) VALUES (N'NV005', N'Nguyễn Hồng Quang', CAST(N'2003-01-01' AS Date), 1, N'0708578029','nguyenhongquang@gmail.com', N'1679452302159', N'noimg', N'CSVC', N'KHO', 1)
@@ -723,11 +744,11 @@ INSERT NhanVien (MaNV, HoTen, NgaySinh, GioiTinh, SoDienThoai,Email, CCCD_CMND, 
 GO
 
 SET IDENTITY_INSERT PhanCong OFF 
-INSERT PhanCong (MaHD, MaNguoiPC) VALUES ( N'HD001', N'NV001')
-INSERT PhanCong ( MaHD, MaNguoiPC) VALUES ( N'HD002', N'NV002')
-INSERT PhanCong ( MaHD, MaNguoiPC) VALUES ( N'HD003', N'NV001')
-INSERT PhanCong ( MaHD, MaNguoiPC) VALUES ( N'HD004', N'NV001')
-INSERT PhanCong ( MaHD, MaNguoiPC) VALUES ( N'HD005', N'NV001')
+INSERT PhanCong (MaHD, MaNguoiPC) VALUES ( N'HD20220101001', N'NV001')
+INSERT PhanCong ( MaHD, MaNguoiPC) VALUES ( N'HD20220105001', N'NV002')
+INSERT PhanCong ( MaHD, MaNguoiPC) VALUES ( N'HD20220511001', N'NV001')
+INSERT PhanCong ( MaHD, MaNguoiPC) VALUES ( N'HD20220901001', N'NV001')
+INSERT PhanCong ( MaHD, MaNguoiPC) VALUES ( N'HD20220802001', N'NV001')
 
 GO
 INSERT PhanLoaiDichVu (MaPLDV, TenDV) VALUES (N'DATMON', N'Đặt món')
@@ -830,8 +851,8 @@ ON UPDATE CASCADE
 GO
 ALTER TABLE ChiTietDichVu CHECK CONSTRAINT FK_ChiTietDichVu_DichVu
 GO
-ALTER TABLE ChiTietDatMon  WITH CHECK ADD  CONSTRAINT FK_ChiTietDatMon_DichVuDatMon1 FOREIGN KEY(MaHD)
-REFERENCES DichVuDatMon (MaHD)
+ALTER TABLE ChiTietDatMon  WITH CHECK ADD  CONSTRAINT FK_ChiTietDatMon_DichVuDatMon1 FOREIGN KEY(MaHD,MaTD)
+REFERENCES DichVuDatMon (MaHD,MaTD)
 ON UPDATE CASCADE
 ON DELETE CASCADE 
 GO
@@ -843,6 +864,11 @@ ON UPDATE CASCADE
 GO
 ALTER TABLE ChiTietDatMon CHECK CONSTRAINT FK_ChiTietDatMon_MonAn
 GO
+
+
+
+
+
 ALTER TABLE HopDongDichVu  WITH CHECK ADD  CONSTRAINT FK_HopDongDichVu_DichVu FOREIGN KEY(MaDV)
 REFERENCES DichVu (MaDV)
 ON UPDATE CASCADE
@@ -862,13 +888,7 @@ ON UPDATE CASCADE
 ON DELETE CASCADE 
 GO
 ALTER TABLE ChiTietDichVuDiKem CHECK CONSTRAINT FK_ChiTietDichVuDiKem_DichVuDiKem
-GO
-ALTER TABLE ChiTietDichVuDiKem  WITH CHECK ADD  CONSTRAINT FK_ChiTietDichVuDiKem_HopDong FOREIGN KEY(MaHD)
-REFERENCES HopDong (MaHD)
-ON UPDATE CASCADE
-ON DELETE CASCADE 
-GO
-ALTER TABLE ChiTietDichVuDiKem CHECK CONSTRAINT FK_ChiTietDichVuDiKem_HopDong
+
 GO
 ALTER TABLE ChiTietDVDuaDon  WITH CHECK ADD  CONSTRAINT FK_ChiTietDVDuaDon_CoSoVatChat FOREIGN KEY(LoaiXe)
 REFERENCES CoSoVatChat (MaCSVC)
@@ -1040,3 +1060,33 @@ ON DELETE CASCADE
 ALTER TABLE ChiPhiPhatSinh  WITH CHECK ADD  CONSTRAINT FK_ChiPhiPhatSinh_DichVu FOREIGN KEY(MaPLDV)
 REFERENCES DichVu (MaDV)
 ON UPDATE CASCADE 
+
+ALTER TABLE HopDongDichVuDiKem WITH CHECK ADD  CONSTRAINT FK_HDDVDK_HopDong FOREIGN KEY(MaHD)
+REFERENCES HopDong (MaHD)
+ON UPDATE CASCADE 
+ON DELETE CASCADE 
+
+ALTER TABLE ChiTietDichVuDiKem  WITH CHECK ADD  CONSTRAINT FK_CTDVDK_HDDVDK FOREIGN KEY (MaHD)
+REFERENCES HopDongDichVuDiKem (MaHD)
+ON UPDATE CASCADE 
+ON DELETE CASCADE 
+
+
+
+
+GO
+CREATE PROCEDURE tinhTien( @MaHD varchar(50) )
+AS
+BEGIN
+	DECLARE @ChiPhi bigint,@ChiPhiPhatSinh bigint;
+	SELECT @ChiPhi = ( SELECT  SUM( distinct hddv.ChiPhi) AS ChiPhi  FROM HopDongDichVu hddv WHERE hddv.MaHD = @MaHD ) 
+	+ (SELECT ChiPhi FROM DichVuDatMon WHERE MaHD = @MaHD  )
+	+ ( SELECT ChiPhi FROM HopDongDichVuDiKem WHERE MaHD = @MaHD )
+
+
+	SELECT @ChiPhiPhatSinh = ( SELECT SUM (ChiPhiPhatSinh) FROM HopDongDichVu hddv INNER JOIN ChiTietDichVu ct ON hddv.MaHD = ct.MaHD WHERE hddv.MaHD = @MaHD )
+	+ ( SELECT SUM(ct.ChiPhiPhatSinh) FROM DichVuDatMon dv INNER JOIN ChiTietDatMon ct ON dv.MaHD = ct.MaHD WHERE dv.MaHD = @MaHD )
+	+ ( SELECT SUM(ct.ChiPhiPhatSinh) FROM HopDongDichVuDiKem dv INNER JOIN ChiTietDichVuDiKem ct ON dv.MaHD = ct.MaHD WHERE dv.MaHD = @MaHD )
+	
+	SELECT @ChiPhi AS ChiPhi,@ChiPhiPhatSinh AS ChiPhiPhatSinh
+END

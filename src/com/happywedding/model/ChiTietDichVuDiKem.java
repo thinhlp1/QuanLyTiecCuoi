@@ -16,6 +16,7 @@ public class ChiTietDichVuDiKem {
     private String ghiChu;
     private long chiPhi;
     private long chiPhiPhatSinh;
+    private int soLuong;
 
     public ChiTietDichVuDiKem(String maHD, String maDV, String tenDV, String ghiChu, long chiPhi, long chiPhiPhatSinh) {
         this.maHD = maHD;
@@ -29,6 +30,16 @@ public class ChiTietDichVuDiKem {
     public ChiTietDichVuDiKem() {
     }
 
+    public int getSoLuong() {
+        return soLuong;
+    }
+
+    public void setSoLuong(int soLuong) {
+        this.soLuong = soLuong;
+    }
+    
+    
+    
     public String getMaHD() {
         return maHD;
     }
