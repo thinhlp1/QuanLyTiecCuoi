@@ -3,11 +3,17 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
  */
 package com.happywedding.view.manage;
+import com.happywedding.app.HappyWeddingApp;
+import com.happywedding.dao.NhanVienDAO;
 import java.awt.Color;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import com.happywedding.dao.TaiKhoanDAO;
+import com.happywedding.helper.AppStatus;
+import com.happywedding.model.NhanVien;
 import com.happywedding.model.TaiKhoan;
+import java.util.List;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -182,8 +188,7 @@ public class DangNhap extends javax.swing.JDialog {
     }
     
     private void lblShowPasswordMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblShowPasswordMouseClicked
-        showPassword(true);
-        
+        showPassword(true);   
     }//GEN-LAST:event_lblShowPasswordMouseClicked
     
     private void lblHidePasswordMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblHidePasswordMouseClicked
@@ -193,18 +198,56 @@ public class DangNhap extends javax.swing.JDialog {
     public boolean hasUser(String username){
         
         TaiKhoanDAO taiKhoanDAO = new TaiKhoanDAO();
-        TaiKhoan soTaiKhoan = taiKhoanDAO.findByUserName(username);
+        List<TaiKhoan> soTaiKhoan = taiKhoanDAO.selectTenDangNhap(username.trim());
         
-        return true;
+        if(soTaiKhoan.size() == 0){
+            return false;
+        }else{
+            boolean matKhauDung = kiemTraMatKhau(soTaiKhoan.get(0).getMatKhau());
+            if(!matKhauDung){
+                //JOptionPane.showMessageDialog(this, "Tài khoản hoặc mật khẩu không đúng");
+                return false;
+            }else{
+                NhanVien nv = new NhanVienDAO().findById(soTaiKhoan.get(0).getMaNhanVien());
+                AppStatus.USER = nv;
+                
+                System.out.println(soTaiKhoan.get(0).getTenDangNhap());
+                System.out.println(soTaiKhoan.get(0).getMatKhau());
+                System.out.println(soTaiKhoan.get(0).getVaiTro());
+                
+                return true;
+            }
+        }
+        
+        
+ 
     }
     
+    public boolean kiemTraMatKhau(String matKhau){
+        
+        matKhau = matKhau.trim();
+        if(String.valueOf(txtMatKhau.getPassword()).equals(matKhau)){
+            return true;
+        }else{
+            return false;
+        }
+    }
     
     public void login(){
         //
+        boolean coTenDangNhap = hasUser(txtTenDangNhap.getText());
+        if(!coTenDangNhap){
+            JOptionPane.showMessageDialog(this, "Tài khoản hoặc mật khẩu không đúng");
+        }else{
+            JOptionPane.showMessageDialog(this, "Đăng nhập thành công");
+            JOptionPane.showMessageDialog(this, "Xin chào" + txtTenDangNhap.getText());
+            
+            //new HappyWeddingApp().setVisible(true);
+            this.dispose();
+        }
         
         
-        
-        this.dispose();
+        //this.dispose();
     }
     /**
      * @param args the command line arguments

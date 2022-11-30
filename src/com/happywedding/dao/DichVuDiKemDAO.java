@@ -5,39 +5,54 @@
  */
 package com.happywedding.dao;
 
+import com.happywedding.helper.JDBCHelper;
+import com.happywedding.model.ChiTietDichVuDiKem;
+import com.happywedding.model.DichVuDiKemModel;
 import com.happywedding.view.manage.DichVuDiKem;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  *
  * @author ADMIN
  */
-public class DichVuDiKemDAO extends AbstractDAO<DichVuDiKem>{
+public class DichVuDiKemDAO {
 
-    @Override
-    public boolean insert(DichVuDiKem entity) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private final String SELECT = "SELECT * FROM DichVuDiKem";
+
+    public List<DichVuDiKemModel> select() {
+        return selectDichVuDiKem(SELECT);
     }
 
-    @Override
-    public boolean update(DichVuDiKem entity) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private List selectDichVuDiKem(String sql, Object... args) {
+        List<DichVuDiKemModel> list = new ArrayList<>();
+        try {
+            ResultSet rs = null;
+            try {
+                rs = JDBCHelper.executeQuery(sql, args);
+                while (rs.next()) {
+                    DichVuDiKemModel model = readichVuDiKemFromResultSet(rs);
+                    list.add(model);
+                }
+            } finally {
+                rs.getStatement().getConnection().close();
+            }
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
+        return list;
     }
 
-    @Override
-    public void delete(String id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private DichVuDiKemModel readichVuDiKemFromResultSet(ResultSet rs) throws SQLException {
+        DichVuDiKemModel dvdk = new DichVuDiKemModel();
+
+        dvdk.setMaDV(rs.getString("MaDV"));
+        dvdk.setTenDV(rs.getString("TenDV"));
+        dvdk.setGia(rs.getLong("Gia"));
+        return dvdk;
+
     }
 
-    @Override
-    public List<DichVuDiKem> select() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public DichVuDiKem findById(String id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
-    
 }

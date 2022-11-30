@@ -31,9 +31,9 @@ public class ChiTietDichVuDiKemDAO {
     
     
 
-    private final String INSERT_CHITIETDICHVUDIKEM = "INSERT ChiTietDichVuDiKem (MaHD, MaDV, GhiChu, ChiPhiPhatSinh, ChiPhi) VALUES (?, ?, ?, ?, ?)";
+    private final String INSERT_CHITIETDICHVUDIKEM = "INSERT ChiTietDichVuDiKem (MaHD, MaDV, GhiChu, ChiPhiPhatSinh, ChiPhi,SoLuong) VALUES (?, ?, ?, ?, ?,?)";
     private final String DELETE_ALL_CHITIETDICHVUDIKEM = "DELETE ChiTietDichVuDiKem WHERE MaHD = ?";
-    private final String SELECT_CHITIETDICHVUDIKEM = "SELECT MaHD,dv.MaDV,dv.TenDV,dv.Gia AS ChiPhi,GhiChu,ChiPhiPhatSinh  FROM ChiTietDichVuDiKem ct\n"
+    private final String SELECT_CHITIETDICHVUDIKEM = "SELECT MaHD,dv.MaDV,dv.TenDV,dv.Gia AS ChiPhi,GhiChu,ChiPhiPhatSinh,SoLuong  FROM ChiTietDichVuDiKem ct\n"
             + "INNER JOIN DichVuDiKem  dv ON ct.MaDV = dv.MaDV\n"
             + "WHERE MaHD = ?";
     
@@ -57,7 +57,7 @@ public class ChiTietDichVuDiKemDAO {
     thêm vào bảng ChiTietDichVuDiKem
      */
     public boolean insertChiTietDichVuDiKem(ChiTietDichVuDiKem ct) {
-        int rs = JDBCHelper.executeUpdate(INSERT_CHITIETDICHVUDIKEM, ct.getMaHD(), ct.getMaDV(), ct.getGhiChu(), ct.getChiPhiPhatSinh(), ct.getChiPhi());
+        int rs = JDBCHelper.executeUpdate(INSERT_CHITIETDICHVUDIKEM, ct.getMaHD(), ct.getMaDV(), ct.getGhiChu(), ct.getChiPhiPhatSinh(), ct.getChiPhi(),ct.getSoLuong());
         return rs > 0;
     }
 
@@ -139,9 +139,11 @@ public class ChiTietDichVuDiKemDAO {
 
         ctdv.setMaHD(rs.getString("MaHD"));
         ctdv.setMaDV(rs.getString("MaDV"));
+        ctdv.setTenDV(rs.getString("TenDV"));
         ctdv.setChiPhi(rs.getLong("ChiPhi"));
         ctdv.setChiPhiPhatSinh(rs.getLong("ChiPhiPhatSinh"));
         ctdv.setGhiChu(rs.getString("GhiChu"));
+        ctdv.setSoLuong(rs.getInt("SoLuong"));
         return ctdv;
 
     }

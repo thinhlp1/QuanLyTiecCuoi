@@ -95,11 +95,12 @@ public class HappyWeddingApp extends javax.swing.JFrame {
 
     public HappyWeddingApp() {
 
-//        if (!AppStatus.isFirstStart()) {
-//            new DangNhap(this, true).setVisible(true);
-//            new Loading(this, true).setVisible(true);
-//            AppStatus.loadApp();
-//        }
+        if (!AppStatus.isFirstStart()) {
+            new DangNhap(this, true).setVisible(true);
+            new Loading(this, true).setVisible(true);
+            AppStatus.loadApp();
+        }
+        
         AppStatus.USER = new NhanVienDAO().findById("NV001");
         AppStatus.loadApp();
         initComponents();

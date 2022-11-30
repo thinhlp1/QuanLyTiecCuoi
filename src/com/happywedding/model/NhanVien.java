@@ -19,6 +19,7 @@ public class NhanVien {
     private int TrangThai;
 
     public NhanVien() {
+        
     }
     
     

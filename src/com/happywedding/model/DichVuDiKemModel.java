@@ -2,15 +2,22 @@
 package com.happywedding.model;
 
 
-public class DichVuDiKem {
+public class DichVuDiKemModel {
     private String maDV;
     private String tenDV;
     private long gia;
 
-    public DichVuDiKem(String maDV, String tenDV, long gia) {
+    public DichVuDiKemModel(String maDV, String tenDV, long gia) {
         this.maDV = maDV;
         this.tenDV = tenDV;
         this.gia = gia;
+    }
+
+    public DichVuDiKemModel() {
+    }
+    
+    public String getInfo(){
+        return this.maDV + " " + this.tenDV;
     }
 
     public String getMaDV() {

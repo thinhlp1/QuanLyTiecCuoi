@@ -58,9 +58,7 @@ public class DatMon extends javax.swing.JDialog {
     private List<ThucDon> listThucDon = new ArrayList<>();
     private List<MonAn> listMonAn = new ArrayList<>();
     private List<ChiTietDatMon> listChiTietDatMon = new ArrayList<>();
-    private List<ChiTietDatMon> listMonAnBanPhu = new ArrayList<>();
 
-    private List<MonAn> listMonAnBk = new ArrayList<>();
     private List<MonAn> listFilted = new ArrayList<>();
 
     private boolean isLoad = false;
@@ -72,6 +70,7 @@ public class DatMon extends javax.swing.JDialog {
     private int soLuongBan;
     private int soBanPhu;
     private String maTD;
+    private String maTDPhu;
 
     /**
      * Creates new form DatMon
@@ -168,24 +167,24 @@ public class DatMon extends javax.swing.JDialog {
         spnSoBanChinh.setModel(new SpinnerNumberModel(soLuongBan, soLuongBan - 3, soLuongBan, 1));
 
         spnSoBanChinh.setUI(new BasicSpinnerUI());
-        String maTDChinh = chiTietDatMonDAO.selectThucDonChinh(maHD);
-        this.maTD = maTDChinh;
-        
-        loadThucDon();
+
         loadPhanLoaiMonAn();
+        loadThucDon();
 
         if (isThucDonPhu) {
-            loadChiTietDatMonPhu();
+            if (!chiTietDatMonDAO.selectThucDonChinh(maHD).equals(chiTietDatMonDAO.selectThucDonPhu(maHD))) {
+                loadChiTietDatMonPhu();
+                dichVuDatMon = chiTietDatMonDAO.selectDichVuDatMon(maHD, maTD);
+
+            }
 
         } else {
             loadChiTietDatMon();
+            dichVuDatMon = chiTietDatMonDAO.selectDichVuDatMon(maHD, maTD);
         }
 
         loadMonAn();
 
-   
-
-        dichVuDatMon = chiTietDatMonDAO.selectDichVuDatMon(maHD, maTDChinh);
         if (dichVuDatMon != null) {
             if (dichVuDatMon.getMaTD() != null) {
                 for (ThucDon thucDon : listThucDon) {
@@ -196,6 +195,7 @@ public class DatMon extends javax.swing.JDialog {
             } else {
                 cbbThucDon.setSelectedItem(-1);
             }
+
         }
 
         if (isThucDonPhu) {
@@ -204,7 +204,9 @@ public class DatMon extends javax.swing.JDialog {
         }
 
         isLoad = true;
+
         fillDatMonForm();
+
         fillTableThucDon(listChiTietDatMon);
         filtedMonAn();
 
@@ -232,8 +234,42 @@ public class DatMon extends javax.swing.JDialog {
     // các hàm lấy dữ liệu
     public void loadThucDon() {
         listThucDon = thucDonDAO.select();
+
+        if (isThucDonPhu) {
+            String maTDP = chiTietDatMonDAO.selectThucDonPhu(maHD);
+            this.maTD = maTDP;
+            int size = listThucDon.size();
+            String maTDChinh = chiTietDatMonDAO.selectThucDonChinh(maHD);
+            if (!maTDChinh.equals(maTDPhu)) {
+                for (int i = 0; i < size; i++) {
+                    if (listThucDon.get(i).getMaTD().equals(maTDChinh)) {
+                        listThucDon.remove(i);
+                        break;
+                    }
+                }
+            }
+
+        } else {
+            String maTDChinh = chiTietDatMonDAO.selectThucDonChinh(maHD);
+            this.maTD = maTDChinh;
+            int size = listThucDon.size();
+            String maTDPhu = chiTietDatMonDAO.selectThucDonPhu(maHD);
+
+            if (!maTDChinh.equals(maTDPhu)) {
+                for (int i = 0; i < size; i++) {
+                    if (listThucDon.get(i).getMaTD().equals(maTDPhu)) {
+                        listThucDon.remove(i);
+                        break;
+                    }
+                }
+
+            }
+
+        }
+
         DefaultComboBoxModel cbbModel = (DefaultComboBoxModel) cbbThucDon.getModel();
         cbbModel.removeAllElements();
+        listThucDon.toArray();
         for (ThucDon td : listThucDon) {
             cbbModel.addElement(td);
         }
@@ -259,7 +295,7 @@ public class DatMon extends javax.swing.JDialog {
         int soBanChinh = soLuongBan;
 
         for (ChiTietDatMon ct : listChiTietDatMon) {
-            if (ct.getSoLuong() < soLuongBan && ct.getSoLuong() != -1 && ct.getSoLuong() > soLuongBan - 3) {
+            if (ct.getSoLuong() < soLuongBan && ct.getSoLuong() != -1 && ct.getSoLuong() >= soLuongBan - 3) {
                 soBanChinh = ct.getSoLuong();
             }
         }
@@ -270,29 +306,6 @@ public class DatMon extends javax.swing.JDialog {
             }
         }
 
-        Iterator<ChiTietDatMon> listTemp = listChiTietDatMon.iterator();
-
-        int i = 0;
-        while (listTemp.hasNext()) {
-            ChiTietDatMon ct = listTemp.next();
-            if (ct.getSoLuong() != soBanChinh && ct.getSoLuong() != -1) {
-                listTemp.remove();
-//                soBanPhu = ct.getSoLuong();
-            }
-        }
-
-        listTemp.forEachRemaining(listChiTietDatMon::add);
-
-//        int temp;
-//        temp = soBanChinh;
-//        soBanPhu = soBanChinh;
-//        soBanChinh = temp;
-//        for (ChiTietDatMon ct : listChiTietDatMon) {
-//            if (ct.getSoLuong() == soBanPhu && ct.getSoLuong() != -1) {
-//                listMonAnBanPhu.add(ct);
-////                soBanPhu = ct.getSoLuong();
-//            }
-//        }
         if (soBanPhu != soLuongBan) {
             try {
                 spnSoBanChinh.setValue(soBanChinh);
@@ -302,6 +315,11 @@ public class DatMon extends javax.swing.JDialog {
             lblBanPhu.setText(soBanPhu + "");
         } else {
             lblBanPhu.setText("0");
+        }
+
+        if (soBanChinh != soLuongBan && soBanPhu == 0) {
+            soBanPhu = soLuongBan - soBanChinh;
+            lblBanPhu.setText(soBanPhu + "");
         }
 
         autoSetSoLuong();
@@ -312,19 +330,6 @@ public class DatMon extends javax.swing.JDialog {
         int soBanPhu = this.soBanPhu;
         int soBanChinh = soLuongBan - soBanPhu;
 
-        Iterator<ChiTietDatMon> listTemp = listChiTietDatMon.iterator();
-        if (isThucDonPhu) {
-            int i = 0;
-            while (listTemp.hasNext()) {
-                ChiTietDatMon ct = listTemp.next();
-                if (ct.getSoLuong() != soBanPhu) {
-                    listTemp.remove();
-//                soBanPhu = ct.getSoLuong();
-                }
-            }
-        }
-
-        listTemp.forEachRemaining(listChiTietDatMon::add);
         if (soBanPhu != soLuongBan) {
             try {
                 spnSoBanChinh.setValue(soBanChinh);
@@ -334,6 +339,11 @@ public class DatMon extends javax.swing.JDialog {
             lblBanPhu.setText(soBanPhu + "");
         } else {
             lblBanPhu.setText("0");
+        }
+
+        if (soBanChinh != soLuongBan && soBanPhu == 0) {
+            soBanPhu = soLuongBan - soBanChinh;
+            lblBanPhu.setText(soBanPhu + "");
         }
 
         autoSetSoLuong();
@@ -374,13 +384,14 @@ public class DatMon extends javax.swing.JDialog {
     public void updateDichVuDatMon() {
         DichVuDatMon dv = getDichVuDatMon();
         try {
+
             chiTietDatMonDAO.updateDichVuDatMon(dv, maTD);
         } catch (Exception e) {
             DialogHelper.alertError(this, "Lưu không thành công");
         }
     }
 
-    public void updateChiTietDichVu() {
+    public void updateChiTietDatMon() {
         try {
             chiTietDatMonDAO.removeAllChiTietDatMon(maHD, maTD);
             insertChiTietDatMon();
@@ -389,19 +400,41 @@ public class DatMon extends javax.swing.JDialog {
         }
     }
 
+    public void updateChiTietDatMonThucDonPhu() {
+        String maTDPhu = chiTietDatMonDAO.selectThucDonPhu(maHD);
+        List<ChiTietDatMon> listChiTietDatMonTDP = chiTietDatMonDAO.selectChiTietDatMon(maHD, maTDPhu);
+
+        chiTietDatMonDAO.deleteDichVuDatMon(maHD, maTDPhu);
+        chiTietDatMonDAO.removeAllChiTietDatMon(maHD, maTDPhu);
+
+        chiTietDatMonDAO.insertDichVuDatMon(dichVuDatMon);
+        for (ChiTietDatMon ct : listChiTietDatMonTDP) {
+            try {
+                ct.setSoLuong(Integer.parseInt(lblBanPhu.getText()));
+                chiTietDatMonDAO.insertChiTietDatMon(ct);
+            } catch (Exception e) {
+                e.printStackTrace();
+
+                DialogHelper.alertError(this, "Lưu không thành công");
+                return;
+            }
+        }
+
+    }
+
     // các hàm lấy dữ liệu từ form
     public List<ChiTietDatMon> getChiTietDatMon() {
         List<ChiTietDatMon> list = new ArrayList<>();
         int size = tblThucDon.getRowCount();
         for (int i = 0; i < size; i++) {
-             String maTD = ((ThucDon) cbbThucDon.getSelectedItem()).getMaTD();
+            String maTD = ((ThucDon) cbbThucDon.getSelectedItem()).getMaTD();
             ChiTietDatMon ct = listChiTietDatMon.get(i);
             ct.setMaHD(maHD);
             ct.setGhiChu((String) tblThucDon.getValueAt(i, 3));
             ct.setChiPhiPhatSinh(ShareHelper.toMoney((String) tblThucDon.getValueAt(i, 4)));
             if (!tblThucDon.getValueAt(i, 5).toString().equals("CXD")) {
                 ct.setSoLuong(Integer.parseInt(tblThucDon.getValueAt(i, 5).toString()));
-                // System.out.println(tblThucDon.getValueAt(i, 1).toString() + " : " + tblThucDon.getValueAt(i, 5).toString());
+             
             } else {
                 ct.setSoLuong(-1);
             }
@@ -445,13 +478,15 @@ public class DatMon extends javax.swing.JDialog {
                 ShareHelper.toMoney(ct.getChiPhiPhatSinh()),
                 ct.getSoLuong()
             };
-            //System.out.println("row");
+         
             tblThucDonModel.addRow(row);
-//            if (ct.getSoLuong() == Integer.parseInt(lblBanPhu.getText())) {
-//                tblThucDon.addRowColor(tblThucDon.getRowCount() - 1);
-//            }
+
         }
         autoSetSoLuong();
+
+        if (isThucDonPhu) {
+            tinhTien();
+        }
     }
 
     public void fillTableMonAn(List<MonAn> list) {
@@ -472,16 +507,15 @@ public class DatMon extends javax.swing.JDialog {
         if (cbbLoaiMon.getSelectedIndex() != -1 && cbbLoaiMon.getSelectedIndex() != 0) {
             pl = (PhanLoaiMonAn) cbbLoaiMon.getSelectedItem();
         }
-        String txtSearch = this.txtSearch.getText();
+        String txtSearch = this.txtSearch.getText().trim();
 
-        listMonAnBk.clear();
         listFilted.clear();
         if (pl == null) {
             for (MonAn ma : listMonAn) {
                 boolean isExit = false;
                 for (ChiTietDatMon ct : listChiTietDatMon) {
                     if (ct.getMaMA().equals(ma.getMaMA())) {
-                        listMonAnBk.add(ma);
+
                         isExit = true;
                         break;
                     }
@@ -499,7 +533,7 @@ public class DatMon extends javax.swing.JDialog {
                 boolean isExit = false;
                 for (ChiTietDatMon ct : listChiTietDatMon) {
                     if (ct.getMaMA().equals(ma.getMaMA())) {
-                        listMonAnBk.add(ma);
+
                         isExit = true;
                         break;
                     }
@@ -524,6 +558,9 @@ public class DatMon extends javax.swing.JDialog {
         listChiTietDatMon = getChiTietDatMon();
 
         for (ChiTietDatMon ct : listChiTietDatMon) {
+            if (ct.getSoLuong() == -1) {
+                continue;
+            }
             chiPhi += ct.getGia() * ct.getSoLuong();
             chiPhiPhatSinh += ct.getChiPhiPhatSinh() * ct.getSoLuong();
         }
@@ -697,6 +734,11 @@ public class DatMon extends javax.swing.JDialog {
 
         btnBack.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/happywedding/assets/back.png"))); // NOI18N
         btnBack.setFocusPainted(false);
+        btnBack.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBackActionPerformed(evt);
+            }
+        });
         jPanel1.add(btnBack, new org.netbeans.lib.awtextra.AbsoluteConstraints(820, 340, 50, 50));
 
         jLabel9.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
@@ -924,28 +966,7 @@ public class DatMon extends javax.swing.JDialog {
     }//GEN-LAST:event_cbbThucDonActionPerformed
 
     private void cbbLoaiMonItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbbLoaiMonItemStateChanged
-//        if (isLoad && cbbLoaiMon.getSelectedIndex() != -1) {
-//            PhanLoaiMonAn pl = (PhanLoaiMonAn) cbbLoaiMon.getSelectedItem();
-//            List<MonAn> list = new ArrayList<>();
-//            String txtSearch = this.txtSearch.getText();
-//            for (MonAn ma : listFilted) {
-//                if (ma.getMaPL().equals(pl.getMaPL()) && ma.getSearchInfo().contains(txtSearch)) {
-//                    boolean isExit = false;
-//                    for (MonAn m : listMonAnBk) {
-//                        if (ma.getMaMA().equals(m.getMaMA())) {
-//                            isExit = true;
-//                            break;
-//                        }
-//                    }
-//                    if (!isExit) {
-//                        list.add(ma);
-//                    }
-//                }
-//            }
-//            listFilted = list;
-//            filtedMonAn();
-//            fillTableMonAn(list);
-//        }
+
         filtedMonAn();
     }//GEN-LAST:event_cbbLoaiMonItemStateChanged
 
@@ -971,11 +992,10 @@ public class DatMon extends javax.swing.JDialog {
             return;
         }
 
-        if (listMonAnBanPhu.isEmpty() && !lblBanPhu.getText().equals("0")) {
-            DialogHelper.alertError(this, "Không có bàn phụ. Hãy nâng tất cả thành bàn chính");
-            return;
-        }
-
+//        if (listMonAnBanPhu.isEmpty() && !lblBanPhu.getText().equals("0")) {
+//            DialogHelper.alertError(this, "Không có bàn phụ. Hãy nâng tất cả thành bàn chính");
+//            return;
+//        }
         if (listChiTietDatMon.size() < 6) {
             boolean rs = DialogHelper.confirm(this, "Thực đơn nên có ít nhất 6 món. Xác nhận lưu ?");
             if (!rs) {
@@ -990,12 +1010,63 @@ public class DatMon extends javax.swing.JDialog {
             }
         }
 
+        if (!isThucDonPhu) {
+
+            if ((chiTietDatMonDAO.selectChiTietDatMon(maHD, chiTietDatMonDAO.selectThucDonPhu(maHD)).get(0).getSoLuong() != Integer.parseInt(lblBanPhu.getText())
+                    && (!chiTietDatMonDAO.selectThucDonChinh(maHD).equals(chiTietDatMonDAO.selectThucDonPhu(maHD))))) {
+                boolean rs = DialogHelper.confirm(this, "Bạn vừa thay đổi số bàn. Vui lòng xác nhận lại thông tin bên bàn phụ?");
+                if (rs) {
+                    return;
+                } else {
+                    return;
+                }
+            }
+        }
+
+        if (!isThucDonPhu) {
+            if ((chiTietDatMonDAO.selectThucDonChinh(maHD).equals(chiTietDatMonDAO.selectThucDonPhu(maHD))) && (Integer.parseInt(lblBanPhu.getText()) != 0)) {
+                DialogHelper.alertError(this, "Vui lòng chọn thực đơn cho bàn phụ");
+                return;
+            }
+        }
+
+        if (isThucDonPhu) {
+            if (Integer.parseInt(lblBanPhu.getText()) == 0) {
+                boolean rs = DialogHelper.confirm(this, "Không có bàn phụ. Thực đơn này sẽ bị xóa ?");
+                if (rs) {
+                    chiTietDatMonDAO.deleteDichVuDatMon(maHD, maTD);
+                    chiTietDatMonDAO.removeAllChiTietDatMon(maHD, maTD);
+                    AppStatus.lapHopDong.reloadHopDong();
+                    this.dispose();
+                    return;
+                }
+            }
+        }
+
+        if (!isThucDonPhu) {
+            if (!maTD.equals(chiTietDatMonDAO.selectThucDonChinh(maHD))) {
+                if (!isThucDonPhu) {
+                    chiTietDatMonDAO.deleteDichVuDatMon(maHD, chiTietDatMonDAO.selectThucDonChinh(maHD));
+                } else {
+                    chiTietDatMonDAO.deleteDichVuDatMon(maHD, chiTietDatMonDAO.selectThucDonPhu(maHD));
+                }
+            }
+        } else {
+            if (!maTD.equals(chiTietDatMonDAO.selectThucDonPhu(maHD)) && !chiTietDatMonDAO.selectThucDonPhu(maHD).equals(chiTietDatMonDAO.selectThucDonChinh(maHD))) {
+                if (!isThucDonPhu) {
+                    chiTietDatMonDAO.deleteDichVuDatMon(maHD, chiTietDatMonDAO.selectThucDonChinh(maHD));
+                } else {
+                    chiTietDatMonDAO.deleteDichVuDatMon(maHD, chiTietDatMonDAO.selectThucDonPhu(maHD));
+                }
+            }
+        }
+
         if (chiTietDatMonDAO.selectDichVuDatMon(maHD, maTD) == null) {
             insertDichVuDatMon();
             insertChiTietDatMon();
         } else {
             updateDichVuDatMon();
-            updateChiTietDichVu();
+            updateChiTietDatMon();
         }
 
         AppStatus.lapHopDong.reloadHopDong();
@@ -1026,6 +1097,8 @@ public class DatMon extends javax.swing.JDialog {
     private void tblMonAnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblMonAnMouseClicked
         int index = tblMonAn.getSelectedRow();
         if (index >= 0) {
+            btnBack.setVisible(true);
+            btnNext.setVisible(false);
             if (evt.getClickCount() >= 2) {
                 MonAn ma = listFilted.get(index);
 
@@ -1042,10 +1115,9 @@ public class DatMon extends javax.swing.JDialog {
 
                 listChiTietDatMon.add(ct);
 
-                if (isThucDonPhu) {
-                    listMonAnBanPhu.add(ct);
-                }
-
+//                if (isThucDonPhu) {
+//                    listMonAnBanPhu.add(ct);
+//                }
                 autoSetSoLuong();
                 ct.getSoLuong();
 
@@ -1063,86 +1135,84 @@ public class DatMon extends javax.swing.JDialog {
     private void tblThucDonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblThucDonMouseClicked
         int index = tblThucDon.getSelectedRow();
         if (index >= 0) {
+            btnBack.setVisible(false);
+            btnNext.setVisible(true);
             if (evt.getClickCount() >= 2) {
 
-                ChiTietDatMon ct = listChiTietDatMon.get(index);
-                for (MonAn m : listMonAnBk) {
-                    if (ct.getMaMA().equals(m.getMaMA())) {
-                        listChiTietDatMon.remove(ct);
-                        break;
-                    }
-                }
+                listChiTietDatMon.remove(index);
 
                 fillTableThucDon(listChiTietDatMon);
 
                 filtedMonAn();
                 autoSetThuTu();
                 tinhTien();
-            } else if (SwingUtilities.isRightMouseButton(evt)) {
-                int soBanPhu = Integer.parseInt(lblBanPhu.getText());
-                if (soBanPhu == 0) {
-                    DialogHelper.alertError(this, "Không có bàn phụ");
-                    return;
-                }
-                ChiTietDatMon ct = listChiTietDatMon.get(tblThucDon.getSelectedRow());
-
-                if (ct.getSoLuong() == -1) {
-                    boolean isPhu = false;
-                    for (ChiTietDatMon c : listMonAnBanPhu) {
-                        if (c.getMaMA().equals(ct.getMaMA())) {
-                            isPhu = true;
-                        }
-                    }
-                    if (isPhu) {
-                        boolean rs = DialogHelper.confirm(this, "Chuyển qua bàn chính ?");
-                        if (rs) {
-                            listMonAnBanPhu.remove(ct);
-                            listChiTietDatMon.add(ct);
-                            tblThucDon.removeRowColor(tblThucDon.getSelectedRow());
-                            autoSetSoLuong();
-
-                            tinhTien();
-                        }
-                    } else {
-                        boolean rs = DialogHelper.confirm(this, "Chuyển qua bàn phụ ?");
-                        if (rs) {
-                            listMonAnBanPhu.add(ct);
-                            tblThucDon.addRowColor(tblThucDon.getSelectedRow());
-                            autoSetSoLuong();
-
-                            tinhTien();
-                        }
-                    }
-                    return;
-                }
-
-                if (ct.getSoLuong() == soBanPhu) {
-                    boolean rs = DialogHelper.confirm(this, "Chuyển qua bàn chính ?");
-                    if (rs) {
-                        listMonAnBanPhu.remove(ct);
-                        listChiTietDatMon.add(ct);
-                        tblThucDon.removeRowColor(tblThucDon.getSelectedRow());
-                        autoSetSoLuong();
-
-                        tinhTien();
-                    }
-                } else {
-                    boolean rs = DialogHelper.confirm(this, "Chuyển qua bàn phụ ?");
-                    if (rs) {
-                        listMonAnBanPhu.add(ct);
-                        tblThucDon.addRowColor(tblThucDon.getSelectedRow());
-                        autoSetSoLuong();
-
-                        tinhTien();
-                    }
-                }
-
             }
+//            else if (SwingUtilities.isRightMouseButton(evt)) {
+//                int soBanPhu = Integer.parseInt(lblBanPhu.getText());
+//                if (soBanPhu == 0) {
+//                    DialogHelper.alertError(this, "Không có bàn phụ");
+//                    return;
+//                }
+//                ChiTietDatMon ct = listChiTietDatMon.get(tblThucDon.getSelectedRow());
+//
+//                if (ct.getSoLuong() == -1) {
+//                    boolean isPhu = false;
+//                    for (ChiTietDatMon c : listMonAnBanPhu) {
+//                        if (c.getMaMA().equals(ct.getMaMA())) {
+//                            isPhu = true;
+//                        }
+//                    }
+//                    if (isPhu) {
+//                        boolean rs = DialogHelper.confirm(this, "Chuyển qua bàn chính ?");
+//                        if (rs) {
+//                            listMonAnBanPhu.remove(ct);
+//                            listChiTietDatMon.add(ct);
+//                            tblThucDon.removeRowColor(tblThucDon.getSelectedRow());
+//                            autoSetSoLuong();
+//
+//                            tinhTien();
+//                        }
+//                    } else {
+//                        boolean rs = DialogHelper.confirm(this, "Chuyển qua bàn phụ ?");
+//                        if (rs) {
+//                            listMonAnBanPhu.add(ct);
+//                            tblThucDon.addRowColor(tblThucDon.getSelectedRow());
+//                            autoSetSoLuong();
+//
+//                            tinhTien();
+//                        }
+//                    }
+//                    return;
+//                }
+//
+//                if (ct.getSoLuong() == soBanPhu) {
+//                    boolean rs = DialogHelper.confirm(this, "Chuyển qua bàn chính ?");
+//                    if (rs) {
+//                        listMonAnBanPhu.remove(ct);
+//                        listChiTietDatMon.add(ct);
+//                        tblThucDon.removeRowColor(tblThucDon.getSelectedRow());
+//                        autoSetSoLuong();
+//
+//                        tinhTien();
+//                    }
+//                } else {
+//                    boolean rs = DialogHelper.confirm(this, "Chuyển qua bàn phụ ?");
+//                    if (rs) {
+//                        listMonAnBanPhu.add(ct);
+//                        tblThucDon.addRowColor(tblThucDon.getSelectedRow());
+//                        autoSetSoLuong();
+//
+//                        tinhTien();
+//                    }
+//                }
+//
+//            }
         }
     }//GEN-LAST:event_tblThucDonMouseClicked
 
     private void spnSoBanChinhStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_spnSoBanChinhStateChanged
         if (isLoad) {
+
             int soBanChinh = Integer.parseInt(spnSoBanChinh.getValue().toString());
             int soBanPhu = soLuongBan - soBanChinh;
             if (soBanPhu != Integer.parseInt(lblBanPhu.getText())) {
@@ -1151,6 +1221,7 @@ public class DatMon extends javax.swing.JDialog {
                 tinhTien();
             } else {
                 spnSoBanChinh.setValue(soBanChinh + 1);
+
             }
         }
     }//GEN-LAST:event_spnSoBanChinhStateChanged
@@ -1161,7 +1232,7 @@ public class DatMon extends javax.swing.JDialog {
 
     private void btnThucDonPhuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThucDonPhuActionPerformed
         int soBanPhu = Integer.parseInt(lblBanPhu.getText());
-        if (soBanPhu == 0) {
+        if ((chiTietDatMonDAO.selectThucDonChinh(maHD).equals(chiTietDatMonDAO.selectThucDonPhu(maHD))) && (Integer.parseInt(lblBanPhu.getText()) == 0)) {
             DialogHelper.alertError(this, "Không có bàn phụ");
             return;
         }
@@ -1173,13 +1244,19 @@ public class DatMon extends javax.swing.JDialog {
         loadMonAn();
         filtedMonAn();
         fillTableMonAn(listMonAn);
-        spnSoBanChinh.setValue(soLuongBan);
-        lblBanPhu.setText("0");
+        if (!isThucDonPhu) {
+            spnSoBanChinh.setValue(soLuongBan);
+            lblBanPhu.setText("0");
+        }
         cbbThucDon.setSelectedIndex(-1);
         txtChiPhi.setText("");
         txtTongCPPS.setText("");
         txtTongChiPhi.setText("");
     }//GEN-LAST:event_btnResetActionPerformed
+
+    private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnBackActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

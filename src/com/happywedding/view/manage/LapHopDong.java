@@ -116,17 +116,17 @@ public class LapHopDong extends javax.swing.JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 txtBatDau.setText(ShareHelper.to24Hour(timePickerBatDau.getSelectedTime()));
-//                String myDayTime = txtNgayToChuc.getText() +" " + ShareHelper.to24Hour(timePickerBatDau.getSelectedTime() )+ ":00" ; 
-//                //System.out.println(txtNgayToChuc.getText() +" " + ShareHelper.to24Hour(timePickerBatDau.getSelectedTime()) );
-//                SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-//                try {
-//                    Date datetime = format.parse(myDayTime);
-//                    //System.out.println(datetime);
-//                    JDBCHelper.executeUpdate("INSERT  Test (NgayGioBatDau) VALUES ( ? )", datetime);
-//                    
-//                } catch (ParseException ex) {
-//                    Logger.getLogger(LapHopDong.class.getName()).log(Level.SEVERE, null, ex);
-//                }
+                String myDayTime = txtNgayToChuc.getText() +" " + ShareHelper.to24Hour(timePickerBatDau.getSelectedTime() ); 
+                //System.out.println(txtNgayToChuc.getText() +" " + ShareHelper.to24Hour(timePickerBatDau.getSelectedTime()) );
+                SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+                try {
+                    Date datetime = format.parse(myDayTime);
+                    //System.out.println(datetime);
+                    JDBCHelper.executeUpdate("INSERT  Test (ThoiGian) VALUES ( ? )", datetime);
+                    
+                } catch (ParseException ex) {
+                    Logger.getLogger(LapHopDong.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
 
         });
