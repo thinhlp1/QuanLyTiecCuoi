@@ -13,6 +13,7 @@ public class ChiTietDatMon {
     private String maHD;
     private String maMA;
     private String tenMA;
+    private String maPL;
     private String maTD;
     private long gia;
     private int soLuong;
@@ -33,6 +34,16 @@ public class ChiTietDatMon {
     public ChiTietDatMon() {
     }
 
+    public String getMaPL() {
+        return maPL;
+    }
+
+    public void setMaPL(String maPL) {
+        this.maPL = maPL;
+    }
+    
+    
+    
     public int getSoLuong() {
         return soLuong;
     }

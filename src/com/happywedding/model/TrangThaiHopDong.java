@@ -13,6 +13,11 @@ public class TrangThaiHopDong {
 
     public TrangThaiHopDong() {
     }
+
+    @Override
+    public String toString() {
+        return tenTT;
+    }
     
     
 

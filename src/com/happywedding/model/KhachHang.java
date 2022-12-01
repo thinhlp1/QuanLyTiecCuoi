@@ -4,6 +4,7 @@ package com.happywedding.model;
 
 public class KhachHang {
     
+    private String maHD;
     private int maKH;
     private String hoTen;
     private String soDienThoai;
@@ -25,6 +26,16 @@ public class KhachHang {
     public KhachHang() {
   
     }
+
+    public String getMaHD() {
+        return maHD;
+    }
+
+    public void setMaHD(String maHD) {
+        this.maHD = maHD;
+    }
+    
+    
 
     public int getMaKH() {
         return maKH;

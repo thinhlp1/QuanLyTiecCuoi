@@ -75,7 +75,7 @@ public class NgheThuat extends javax.swing.JDialog {
         ttCong = chiTietDVDAO.selectDichVu(maHD, maDV);
 
         isView(isCreate);
-
+         isLoad = true;
         if (ttCong != null) {
             if (ttCong.getMaGoi() != null) {
                 for (GoiDichVu goi : listGoiDichVu) {
@@ -96,7 +96,7 @@ public class NgheThuat extends javax.swing.JDialog {
             }
 
         }
-        isLoad = true;
+       
 
     }
 
@@ -180,6 +180,7 @@ public class NgheThuat extends javax.swing.JDialog {
         for (GoiDichVu s : listGoiDichVu) {
             cbbModel.addElement(s);
         }
+        cbbGoiDV.setSelectedIndex(-1);
     }
 
     public void loadCoSoVatChat() {
@@ -325,20 +326,23 @@ public class NgheThuat extends javax.swing.JDialog {
             if (cp instanceof JTextField) {
                 cp.setEnabled(isCreate);
             } else if (cp instanceof Combobox) {
-                cp.setEnabled(isCreate);
+                cp.setEnabled(false);
             }
 
         }
+        cbbGoiDV.setEnabled(true);
         btnSave.setVisible(isCreate);
         btnReset.setVisible(isCreate);
-        btnEdit.setVisible(isCreate);
+       // btnEdit.setVisible(isCreate);
         taGhiChu.setEnabled(isCreate);
     }
 
     public void isTuyChinhGoiDichVu(boolean is) {
+        if (isCreate) {
 
-        cbbAmNhac.setEnabled(is);
-        cbbVuDao.setEnabled(is);
+            cbbAmNhac.setEnabled(is);
+            cbbVuDao.setEnabled(is);
+        }
 
     }
 
@@ -360,7 +364,7 @@ public class NgheThuat extends javax.swing.JDialog {
         public void keyTyped(java.awt.event.KeyEvent evt) {
             char testChar = evt.getKeyChar();
             if (!((Character.isDigit(testChar)))) {
-                  if (testChar == '\n'){
+                if (testChar == '\n') {
                     lblMaNH18.requestFocus();
                 }
                 if (testChar != '.') {
@@ -805,7 +809,7 @@ public class NgheThuat extends javax.swing.JDialog {
     }//GEN-LAST:event_cbbVuDaoItemStateChanged
 
     private void cbbGoiDVItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbbGoiDVItemStateChanged
-        if (isLoad && cbbGoiDV.getSelectedIndex() != -1) {
+        if (isLoad && cbbGoiDV.getSelectedIndex() != -1 && isCreate) {
             fillFormByGoiDichVu((GoiDichVu) cbbGoiDV.getSelectedItem());
             isTuyChinhGoiDichVu(false);
             lblViewSlideShow.setVisible(true);

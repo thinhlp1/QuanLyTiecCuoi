@@ -49,6 +49,12 @@ public class ChiTietDatMonDAO {
             + "INNER JOIN MonAn ma ON ct.MaMA = ma.MaMA \n"
             + "WHERE MaTD = ?   ORDER BY ThuTu ASC ";
 
+    private final String SELECT_MONAN_BY_MAPL = "SELECT MaHD,MaTD,ct.MaMA,TenMA,MaPL, ma.GiaTien AS ChiPhi,ct.ChiPhiPhatSinh,ThuTu,ct.SoLuong,GhiChu,HinhAnh FROM ChiTietDatMon ct\n"
+            + "INNER JOIN MonAn ma ON ct.MaMA = ma.MaMA \n"
+            + "WHERE MaHD = ? AND MaPL = ?";
+    
+    private final String UPDATE_SOLUONG = "UPDATE ChiTietDatMon SET SoLuong = ? WHERE MaHD = ? AND MaMA = ?";
+    
     private final String SELECT_MONAN_NOTIN_HOPDONG = "SELECT * FROM MonAn WHERE MaMA NOT IN( SELECT MaMA FROM ChiTietDatMon WHERE MaHD = ?  ) ";
     private final String SELECT_MONAN_NOTIN_THUCDON = "SELECT * FROM MonAn WHERE MaMA NOT IN( SELECT MaMA FROM ChiTietThucDon WHERE MaTD = ?  )";
 
@@ -66,7 +72,7 @@ public class ChiTietDatMonDAO {
     }
 
     public DichVuDatMon selectDichVuDatMon(String maHD, String maTD) {
-        List<DichVuDatMon> list = selectDichVuDatMon(SELECT_DICHVUDATMON, maHD,maTD, maHD, maTD);
+        List<DichVuDatMon> list = selectDichVuDatMon(SELECT_DICHVUDATMON, maHD, maTD, maHD, maTD);
         return list.size() > 0 ? list.get(0) : null;
     }
 
@@ -113,6 +119,18 @@ public class ChiTietDatMonDAO {
     public List<ChiTietDatMon> selectByMaThucDon(String maTD) {
         return selectChiTietThucDon(SELECT_MONAN_IN_THUCDON, maTD);
     }
+    
+      /*
+    lấy các món ăn có trong thực đơn
+     */
+    public List<ChiTietDatMon> selectByMaPhanLoai(String maHD,String maPL) {
+        return selectChiTietDatMon(SELECT_MONAN_BY_MAPL, maHD,maPL);
+    }
+    
+    public boolean updateChiTietDatMon(ChiTietDatMon ct){
+        int rs = JDBCHelper.executeUpdate(UPDATE_SOLUONG,ct.getSoLuong(), ct.getMaHD(),ct.getMaMA());
+        return rs > 0;
+    }
 
     /*
     lấy các món ăn ko có trong hợp đồng
@@ -127,6 +145,8 @@ public class ChiTietDatMonDAO {
     public List<MonAn> selectNotinThucDon(String maTD) {
         return selectMonAn(SELECT_MONAN_NOTIN_THUCDON, maTD);
     }
+    
+   
 
     private List selectDichVuDatMon(String sql, Object... args) {
         List<DichVuDatMon> list = new ArrayList<>();
@@ -211,6 +231,7 @@ public class ChiTietDatMonDAO {
         ctdm.setMaTD("MaTD");
         ctdm.setMaMA(rs.getString("MaMA"));
         ctdm.setTenMA(rs.getString("TenMA"));
+        ctdm.setMaPL(rs.getString("MaPL"));
         ctdm.setGia(rs.getLong("ChiPhi"));
         ctdm.setChiPhiPhatSinh(rs.getLong("ChiPhiPhatSinh"));
         ctdm.setThuTu(rs.getInt("ThuTu"));
@@ -225,6 +246,7 @@ public class ChiTietDatMonDAO {
 
         ctdm.setMaMA(rs.getString("MaMA"));
         ctdm.setTenMA(rs.getString("TenMA"));
+        ctdm.setMaPL(rs.getString("MaPL"));
         ctdm.setGia(rs.getLong("GiaTien"));
         ctdm.setThuTu(rs.getInt("ThuTu"));
         //ctdm.setSoLuong(rs.getInt("SoLuong"));

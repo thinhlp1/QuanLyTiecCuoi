@@ -20,38 +20,39 @@ import java.util.List;
  */
 public class HopDongDAO extends AbstractDAO<HopDong> {
 
-    private final String INSERT = "INSERT INTO dbo.HopDong ( MaHD,MaNL,SoLuongBan,Sanh,NgayLap,NgayDuyet,MaND,MaKH,NgayToChuc,ThoiGianBatDau,ThoiGianKetThuc,TrangThai,The,TienCoc,ChiPhiPhatSinh,TongTien) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+    private final String INSERT = "INSERT INTO dbo.HopDong ( MaHD,MaNL,SoLuongBan,Sanh,NgayLap,NgayDuyet,MaND,NgayToChuc,ThoiGianBatDau,ThoiGianKetThuc,TrangThai,The,TienCoc,TongTien) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
     private final String DELETE = "DELETE dbo.HopDong WHERE MaHD = ?";
-    private final String UPDATE = "UPDATE dbo.HopDong SET MaNL = ?,SoLuongBan = ?,Sanh = ?, NgayLap = ?, NgayDuyet = ?, MaND = ?, MaKH = ?, NgayToChuc = ?,ThoiGianBatDau = ?, ThoiGianKetThuc = ?, TrangThai = ?, The = ?, TienCoc = ?,ChiPhiPhatSinh = ?, TongTien = ? where MaHD = ? ";
+    private final String UPDATE = "UPDATE dbo.HopDong SET MaNL = ?,SoLuongBan = ?,Sanh = ?, NgayLap = ?, NgayDuyet = ?, MaND = ?, NgayToChuc = ?,ThoiGianBatDau = ?, ThoiGianKetThuc = ?, TrangThai = ?, The = ?, TienCoc = ?, TongTien = ? where MaHD = ? ";
     private final String SECLECT_ALL = "SELECT hd.MaHD,hd.MaNL,hd.MaND,nv.HoTen AS NguoiLap,SoLuongBan,s.TenSanh,hd.NgayLap,hd.NgayDuyet,kh.MaKH,kh.HoTen,kh.SoDienThoai,hd.NgayToChuc,hd.ThoiGianBatDau,hd.ThoiGianKetThuc,tt.MaTT,tt.TenTT \n"
             + ",hd.The,hd.TienCoc,hd.TongTien,\n"
             + "( SELECT HoTen FROM NhanVien WHERE MaNV = hd.MaND ) AS NguoiDuyet\n"
-            + "FROM HopDong hd INNER JOIN KhachHang kh ON hd.MaKH = kh.MaKH\n"
+            + "FROM HopDong hd INNER JOIN KhachHang kh ON hd.MaHD = kh.MaHD\n"
             + "INNER JOIN TrangThaiHopDong tt ON hd.TrangThai = tt.MaTT\n"
             + "INNER JOIN NhanVien nv ON nv.MaNV = hd.MaNL\n"
             + "INNER JOIN Sanh s ON s.MaSanh = hd.Sanh";
     private final String SECLECT_BY_ID = "SELECT hd.MaHD,hd.MaNL,hd.MaND,nv.HoTen AS NguoiLap,SoLuongBan,s.TenSanh,hd.NgayLap,hd.NgayDuyet,kh.MaKH,kh.HoTen,kh.SoDienThoai,hd.NgayToChuc,hd.ThoiGianBatDau,hd.ThoiGianKetThuc,tt.MaTT,tt.TenTT \n"
             + ",hd.The,hd.TienCoc,hd.TongTien,\n"
             + "( SELECT HoTen FROM NhanVien WHERE MaNV = hd.MaND ) AS NguoiDuyet\n"
-            + "FROM HopDong hd INNER JOIN KhachHang kh ON hd.MaKH = kh.MaKH\n"
+            + "FROM HopDong hd INNER JOIN KhachHang kh ON hd.MaHD = kh.MaHD\n"
             + "INNER JOIN TrangThaiHopDong tt ON hd.TrangThai = tt.MaTT\n"
             + "INNER JOIN NhanVien nv ON nv.MaNV = hd.MaNL\n"
             + "INNER JOIN Sanh s ON s.MaSanh = hd.Sanh\n"
-            + "WHERE MaHD = ?";
+            + "WHERE hd.MaHD = ?";
     private final String UPDATE_TRANGTHAI = "UPDATE dbo.HopDong SET TrangThai = ? WHERE MaHD = ?";
     private final String UPDATE_CHIPHI = "UPDATE HopDong SET TongTien = ? , TienCoc = ? WHERE MaHD = ?";
-
+    private final String UPDATE_SANH = "UPDATE HopDong SET Sanh = ? WHERE MaHD = ?";
     private final String TINH_TIEN = "EXEC tinhTien @MaHD = ?";
+    private final String TINH_TIEN_VOI_SANH = "EXEC tinhTienVoiSanh @MaHD = ? , @MaSanh = ?,@SoLuongBan = ?";
 
     @Override
     public boolean insert(HopDong entity) {
-        int rs = JDBCHelper.executeUpdate(INSERT, entity.getMaHD(), entity.getMaNL(), entity.getSoLuongBan(), entity.getSanh(), entity.getNgayLap(), entity.getNgayDuyet(), entity.getMaND(), entity.getMaKH(), entity.getNgayToChuc(), entity.getThoiGianBatDau(), entity.getThoiGianKetThuc(), entity.getTrangThai(), entity.getThue(), entity.getTienCoc(), entity.getChiPhiPhatSinh(), entity.getTongTien());
+        int rs = JDBCHelper.executeUpdate(INSERT, entity.getMaHD(), entity.getMaNL(), entity.getSoLuongBan(), entity.getSanh(), entity.getNgayLap(), entity.getNgayDuyet(), entity.getMaND(), entity.getNgayToChuc(), entity.getThoiGianBatDau(), entity.getThoiGianKetThuc(), entity.getTrangThai(), entity.getThue(), entity.getTienCoc(), entity.getTongTien());
         return rs > 0;
     }
 
     @Override
     public boolean update(HopDong entity) {
-        int rs = JDBCHelper.executeUpdate(UPDATE, entity.getMaHD(), entity.getMaNL(), entity.getSoLuongBan(), entity.getSanh(), entity.getNgayLap(), entity.getNgayDuyet(), entity.getMaND(), entity.getMaKH(), entity.getNgayToChuc(), entity.getThoiGianBatDau(), entity.getThoiGianKetThuc(), entity.getTrangThai(), entity.getThue(), entity.getTienCoc(), entity.getChiPhiPhatSinh(), entity.getTongTien());
+        int rs = JDBCHelper.executeUpdate(UPDATE, entity.getMaNL(), entity.getSoLuongBan(), entity.getSanh(), entity.getNgayLap(), entity.getNgayDuyet(), entity.getMaND(), entity.getNgayToChuc(), entity.getThoiGianBatDau(), entity.getThoiGianKetThuc(), entity.getTrangThai(), entity.getThue(), entity.getTienCoc(), entity.getTongTien(), entity.getMaHD());
         return rs > 0;
     }
 
@@ -76,9 +77,15 @@ public class HopDongDAO extends AbstractDAO<HopDong> {
     public void danhDauXoa(String maHD, String MaTT) {
         int rs = JDBCHelper.executeUpdate(UPDATE_TRANGTHAI, MaTT);
     }
-    
-    public void updateTrangThai(String maHD, String MaTT) {
-        int rs = JDBCHelper.executeUpdate(UPDATE_TRANGTHAI, MaTT);
+
+    public boolean updateTrangThai(String maHD, String MaTT) {
+        int rs = JDBCHelper.executeUpdate(UPDATE_TRANGTHAI, MaTT, maHD);
+        return rs > 0;
+    }
+
+    public boolean updateSanh(String maSanh, String maHD) {
+        int rs = JDBCHelper.executeUpdate(UPDATE_SANH, maSanh, maHD);
+        return rs > 0;
     }
 
     // trả về chi phí và chi phí phát sinh trong toàn bộ hợp đồng
@@ -103,9 +110,32 @@ public class HopDongDAO extends AbstractDAO<HopDong> {
         }
         return list;
     }
-    
-    public void updateChiPhi(long tienCoc,long tongTien,String maHD){
-        JDBCHelper.executeUpdate(UPDATE_CHIPHI, tienCoc,tongTien,maHD);
+
+    // trả về chi phí và chi phí phát sinh trong toàn bộ hợp đồng
+    public List<Long> tinhToan(String maHD, String maSanh, int soLuongBan) {
+        List<Long> list = new ArrayList<>();
+        try {
+            ResultSet rs = null;
+            try {
+                rs = JDBCHelper.executeQuery(TINH_TIEN_VOI_SANH, maHD, maSanh, soLuongBan);
+                while (rs.next()) {
+                    long chiPhi = rs.getLong("ChiPhi");
+                    long chiPhiPhatSinh = rs.getLong("ChiPhiPhatSinh");
+                    list.add(chiPhi);
+                    list.add(chiPhiPhatSinh);
+                    return list;
+                }
+            } finally {
+                rs.getStatement().getConnection().close();
+            }
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
+        return list;
+    }
+
+    public void updateChiPhi(long tienCoc, long tongTien, String maHD) {
+        JDBCHelper.executeUpdate(UPDATE_CHIPHI, tienCoc, tongTien, maHD);
     }
 
     private List select(String sql, Object... args) {

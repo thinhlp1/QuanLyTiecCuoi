@@ -137,7 +137,7 @@ public class HappyWeddingApp extends javax.swing.JFrame {
         showForm(new AboutForm());
 
         AppStatus.mainApp = this;
-        AppStatus.menu = menu;
+        AppStatus.MENU = menu;
 
         // menu.initMoving(this);
     }
@@ -281,6 +281,17 @@ public class HappyWeddingApp extends javax.swing.JFrame {
         mainPane.add(form, "w 100%, h 100%");
         repaint();
         revalidate();
+    }
+    
+    public void showQuanLyHopDong(){
+        quanlyHopDong.reload();
+        showForm(quanlyHopDong);
+        
+    }
+    
+    
+     public void showQuanLyHoaDon(){
+        showForm(quanLyHoaDon);
     }
 
     public void logoff() {

@@ -13,6 +13,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import javax.swing.JFrame;
 import com.ui.swing.component.ListMenu;
+import java.util.List;
 
 public class Menu extends javax.swing.JPanel {
 
@@ -37,7 +38,15 @@ public class Menu extends javax.swing.JPanel {
         init();
         
     }
-
+    
+    public List<MenuItem> getListMenu(){
+        return listMenu1.getListMenuItem();
+    }
+    
+    public void setSelected(int index){
+        listMenu1.setSelected(index);
+    }
+    
     private void init() {
         
        String role = AppStatus.ROLE;

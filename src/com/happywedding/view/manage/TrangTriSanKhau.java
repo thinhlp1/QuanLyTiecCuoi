@@ -79,7 +79,7 @@ public class TrangTriSanKhau extends javax.swing.JDialog {
         ttCong = chiTietDVDAO.selectDichVu(maHD, maDV);
 
         isView(isCreate);
-
+        isLoad = true;
         if (ttCong != null) {
             if (ttCong.getMaGoi() != null) {
                 for (GoiDichVu goi : listGoiDichVu) {
@@ -100,8 +100,8 @@ public class TrangTriSanKhau extends javax.swing.JDialog {
             }
 
         }
-        isLoad = true;
 
+        // isTuyChinhGoiDichVu(false);
     }
 
     // các hàm lấy dữ liệu từ form 
@@ -202,6 +202,7 @@ public class TrangTriSanKhau extends javax.swing.JDialog {
         for (GoiDichVu s : listGoiDichVu) {
             cbbModel.addElement(s);
         }
+        cbbGoiDV.setSelectedIndex(-1);
     }
 
     public void loadCoSoVatChat() {
@@ -366,45 +367,49 @@ public class TrangTriSanKhau extends javax.swing.JDialog {
 
         if (ctTham != null) {
 
-            fillChiTietDichVu(ctTham, listTham, cbbTham, txtCPTham, txtCPPSTham, txtGCTham, 1, 1, false);
+            fillChiTietGoiDichVu(ctTham, listTham, cbbTham, txtCPTham, txtGCTham, 1, 1, false);
         }
 
         if (ctHoaChuDao != null) {
 
-            fillChiTietDichVu(ctHoaChuDao, listHoaChuDao, cbbHoaChuDao, txtCPHoaChuDao, txtCPPSHoaChuDao, txtGCHoaChuDao, 1, 1, true);
+            fillChiTietGoiDichVu(ctHoaChuDao, listHoaChuDao, cbbHoaChuDao, txtCPHoaChuDao, txtGCHoaChuDao, 1, 1, true);
         }
         if (ctHoaPhu != null) {
 
-            fillChiTietDichVu(ctHoaChuDao, listHoaPhu, cbbHoaPhu, txtCPHoaPhu, txtCPPSHoaPhu, txtGCHoaPhu, 1, 1, true);
+            fillChiTietGoiDichVu(ctHoaPhu, listHoaPhu, cbbHoaPhu, txtCPHoaPhu, txtGCHoaPhu, 1, 1, true);
         }
         if (ctBangTen != null) {
 
-            fillChiTietDichVu(ctBangTen, listBangTen, cbbBangTen, txtCPBangTen, txtCPPSBangTen, txtGCBangTen, 1, 1, false);
+            fillChiTietGoiDichVu(ctBangTen, listBangTen, cbbBangTen, txtCPBangTen, txtGCBangTen, 1, 1, false);
         }
 
     }
 
     public void isView(boolean isCreate) {
         for (Component cp : pnlTTSanKhau.getComponents()) {
-            if (cp instanceof JTextField) {
+              if (cp instanceof JTextField) {
                 cp.setEnabled(isCreate);
             } else if (cp instanceof Combobox) {
-                cp.setEnabled(isCreate);
+                cp.setEnabled(false);
             }
 
         }
+        cbbGoiDV.setEnabled(true);
         btnSave.setVisible(isCreate);
         btnReset.setVisible(isCreate);
-        btnEdit.setVisible(isCreate);
+        //btnEdit.setVisible(isCreate);
         taGhiChu.setEnabled(isCreate);
+
     }
 
     public void isTuyChinhGoiDichVu(boolean is) {
+        if (isCreate) {
 
-        cbbHoaChuDao.setEnabled(is);
-        cbbHoaPhu.setEnabled(is);
-        cbbTham.setEnabled(is);
-        cbbBangTen.setEnabled(is);
+            cbbHoaChuDao.setEnabled(is);
+            cbbHoaPhu.setEnabled(is);
+            cbbTham.setEnabled(is);
+            cbbBangTen.setEnabled(is);
+        }
     }
 
     public boolean checkValid(JTextField txt) {
@@ -868,12 +873,14 @@ public class TrangTriSanKhau extends javax.swing.JDialog {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(pnlTTSanKhau, javax.swing.GroupLayout.PREFERRED_SIZE, 1441, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addComponent(pnlTTSanKhau, javax.swing.GroupLayout.DEFAULT_SIZE, 1433, Short.MAX_VALUE)
+                .addGap(0, 0, 0))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(pnlTTSanKhau, javax.swing.GroupLayout.PREFERRED_SIZE, 727, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(pnlTTSanKhau, javax.swing.GroupLayout.PREFERRED_SIZE, 675, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 2, Short.MAX_VALUE))
         );
 
         setSize(new java.awt.Dimension(1451, 724));
@@ -1067,7 +1074,7 @@ public class TrangTriSanKhau extends javax.swing.JDialog {
     }//GEN-LAST:event_btnResetActionPerformed
 
     private void cbbGoiDVItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbbGoiDVItemStateChanged
-        if (isLoad && cbbGoiDV.getSelectedIndex() != -1) {
+        if (isLoad && cbbGoiDV.getSelectedIndex() != -1 && isCreate) {
             fillFormByGoiDichVu((GoiDichVu) cbbGoiDV.getSelectedItem());
             isTuyChinhGoiDichVu(false);
             lblViewSlideShow.setVisible(true);

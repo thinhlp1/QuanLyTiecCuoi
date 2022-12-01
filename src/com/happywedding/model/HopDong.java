@@ -46,6 +46,10 @@ public class HopDong {
         this.ChiPhiPhatSinh = ChiPhiPhatSinh;
         this.TongTien = TongTien;
     }
+    
+    public String getInfoSearch(){
+        return this.maHD + this.tenKhachHang + this.sdtKhachHang + this.maNL;
+    }
 
     public String getTenNguoiLap() {
         return tenNguoiLap;
