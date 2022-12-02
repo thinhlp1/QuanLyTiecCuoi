@@ -33,6 +33,7 @@ public class QuenMatKhau extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jButton1 = new javax.swing.JButton();
         pictureBox2 = new com.ui.swing.PictureBox();
         pictureBox1 = new com.ui.swing.PictureBox();
         txtMatKhauMoi = new javax.swing.JPasswordField();
@@ -50,6 +51,9 @@ public class QuenMatKhau extends javax.swing.JDialog {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Quên mật khẩu");
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jButton1.setText("Gửi mã xác nhận");
+        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(443, 180, 120, 30));
 
         pictureBox2.setImage(new javax.swing.ImageIcon(getClass().getResource("/com/happywedding/assets/QuenMatKhau.png"))); // NOI18N
         getContentPane().add(pictureBox2, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, -20, 420, 160));
@@ -193,6 +197,7 @@ public class QuenMatKhau extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.ui.swing.component.Tab btnTroVeDangNhap;
     private com.ui.swing.component.Tab btnXacNhan;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
