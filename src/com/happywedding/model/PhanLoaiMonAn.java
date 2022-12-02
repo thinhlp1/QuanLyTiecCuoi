@@ -11,6 +11,17 @@ public class PhanLoaiMonAn {
         this.tenPL = tenPL;
     }
 
+    public PhanLoaiMonAn() {
+    }
+
+    @Override
+    public String toString() {
+        return tenPL;
+    }
+    
+    
+    
+
     public String getMaPL() {
         return maPL;
     }

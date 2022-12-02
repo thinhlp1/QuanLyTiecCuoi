@@ -39,7 +39,12 @@ public class HoaDon { // hoa don
         this.trangTha = trangTha;
         this.tongTien = tongTien;
     }
+
+    public HoaDon() {
+    }
     
+     
+     
     public long getTienCoc() {
         return tienCoc;
     }

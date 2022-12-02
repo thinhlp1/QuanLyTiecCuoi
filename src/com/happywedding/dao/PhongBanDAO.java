@@ -8,6 +8,7 @@ package com.happywedding.dao;
 import com.happywedding.helper.JDBCHelper;
 import com.happywedding.model.PhongBan;
 import com.happywedding.model.TaiKhoan;
+import com.happywedding.model.VaiTroTaiKhoan;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -26,7 +27,6 @@ public class PhongBanDAO {
 //    public PhongBan findById(String id) {
 //
 //    }
-
     private List select(String sql, Object... args) {
         List<PhongBan> list = new ArrayList<>();
         try {
@@ -50,4 +50,10 @@ public class PhongBanDAO {
         PhongBan PhongBan = new PhongBan();
         return PhongBan;
     }
+    private final String SELECT_VaiTroTaiKhoan = "SELECT * FROM PhongBan";
+
+    public List<PhongBan> select() {
+        return select(SELECT_VaiTroTaiKhoan);
+    }
+
 }

@@ -3,6 +3,7 @@ package com.happywedding.model;
 
 
 public class KhachHang {
+    
     private int maKH;
     private String hoTen;
     private String soDienThoai;
@@ -81,5 +82,4 @@ public class KhachHang {
         this.hoTenChuRe = hoTenChuRe;
     }
 
-   
 }

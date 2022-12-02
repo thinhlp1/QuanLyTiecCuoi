@@ -23,6 +23,10 @@ public class MonAn {
      
     }
     
+    public String getSearchInfo(){
+        return this.maPL + this.tenMA ;
+    }
+    
     public String getTenPL() {
         return tenPL;
     }

@@ -18,6 +18,11 @@ public class NhanVien {
 
     private int TrangThai;
 
+    public NhanVien() {
+    }
+    
+    
+    
     public String getEmail() {
         return email;
     }

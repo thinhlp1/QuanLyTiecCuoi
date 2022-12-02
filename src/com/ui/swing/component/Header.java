@@ -13,8 +13,8 @@ public class Header extends javax.swing.JPanel {
 
     public Header() {
         initComponents();
-//        lbRole.setText(AppStatus.USER.isLore() ? "Quản lý" : "Nhân viên");
-//        lbUserName.setText(AppStatus.USER.getName());
+        lbRole.setText(AppStatus.ROLE);
+        lbUserName.setText(AppStatus.USER.getHoTen());
         startTime();
 
     }
@@ -65,9 +65,8 @@ public class Header extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lbRole)
                     .addComponent(lbUserName))
-                .addGap(1181, 1181, 1181)
-                .addComponent(lblTime, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(119, 119, 119))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 1300, Short.MAX_VALUE)
+                .addComponent(lblTime, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

@@ -35,7 +35,6 @@ public class QuanLyHoaDon extends javax.swing.JPanel {
         pnlEmplpyeeManager = new javax.swing.JPanel();
         lblSearch = new javax.swing.JLabel();
         btnChiTiet = new com.ui.swing.InkwellButton();
-        btnDanhDauXoa = new com.ui.swing.InkwellButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblHoaDon = new com.ui.swing.Table();
         jLabel1 = new javax.swing.JLabel();
@@ -71,27 +70,16 @@ public class QuanLyHoaDon extends javax.swing.JPanel {
         });
         pnlEmplpyeeManager.add(btnChiTiet, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 900, 80, -1));
 
-        btnDanhDauXoa.setBackground(new java.awt.Color(153, 24, 24));
-        btnDanhDauXoa.setForeground(new java.awt.Color(255, 255, 255));
-        btnDanhDauXoa.setText("Đánh dấu xóa");
-        btnDanhDauXoa.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        btnDanhDauXoa.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnDanhDauXoaActionPerformed(evt);
-            }
-        });
-        pnlEmplpyeeManager.add(btnDanhDauXoa, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 900, 120, -1));
-
         tblHoaDon.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Mã hợp đồng", "Ngày lập", "Người lập", "Trang trí cổng", "Trang trí bàn", "Trang trí sân khấu", "Đi kèm", "Nghệ thuật", "Thực đơn", "Tiền cọc", "Phát sinh ", "Tổng tiền", "Trạng thái"
+                "Mã hợp đồng", "Mã hóa đơn", "Ngày lập", "Người lập", "Tiền cọc", "Phát sinh ", "Tổng tiền", "Trạng thái"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -165,10 +153,6 @@ public class QuanLyHoaDon extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_btnChiTietActionPerformed
 
-    private void btnDanhDauXoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDanhDauXoaActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnDanhDauXoaActionPerformed
-
     private void txtTimKiemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTimKiemActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtTimKiemActionPerformed
@@ -188,7 +172,6 @@ public class QuanLyHoaDon extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.ui.swing.InkwellButton btnChiTiet;
-    private com.ui.swing.InkwellButton btnDanhDauXoa;
     private com.ui.swing.Combobox cbbSapXepTheo;
     private com.ui.swing.Combobox cbbTangDanGiamDan;
     private javax.swing.JLabel jLabel1;

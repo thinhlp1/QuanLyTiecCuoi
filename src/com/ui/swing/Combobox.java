@@ -32,6 +32,7 @@ import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.TimingTarget;
 import org.jdesktop.animation.timing.TimingTargetAdapter;
 
+
 public class Combobox<E> extends JComboBox<E> {
 
     public String getLabeText() {

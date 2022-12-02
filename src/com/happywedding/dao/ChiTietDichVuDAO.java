@@ -32,10 +32,9 @@ public class ChiTietDichVuDAO {
             + "GhiChu FROM HopDongDichVu hddv  \n"
             + "WHERE hddv.MaHD = ? AND hddv.MaDV = ?";
     
+   
+
     private final String CHECK_HOPDONGDICHVU = "SELECT * FROM HopDongDichVu WHERE MaHD = ? AND MaDV = ?";
-    
-    
-    
 
     private final String INSERT_CHITIETDICHVU = "INSERT ChiTietDichVu (MaHD,MaDV, MaCSVC,ChiPhi ,ChiPhiPhatSinh, GhiChu) VALUES (?, ?, ?, ? ,?, ?)";
     private final String UPDATE_CHITIETDICHVU = "UPDATE ctdv SET MaCSVC = ?, ChiPhi = ?, ChiPhiPhatSinh = ?, GhiChu = ?\n"
@@ -46,12 +45,31 @@ public class ChiTietDichVuDAO {
             + "INNER JOIN ChiTietDichVu ct ON hddv.MaHD = ct.MaHD\n"
             + "INNER JOIN CoSoVatChat csvc ON csvc.MaCSVC = ct.MaCSVC \n"
             + "WHERE ct.MaHD = ? AND  hddv.MaDV = ? AND ct.MaDV = ? ";
-    
-    private final String SELECT_CHITIETDIVU = "SELECT hddv.MaHD,csvc.MaCSVC,csvc.TenCSVC, hddv.MaDV,ct.ChiPhi,ct.ChiPhiPhatSinh,ct.GhiChu FROM HopDongDichVu hddv \n"
+
+    private final String SELECT_CHITIETDIVU_CUSTOM = "SELECT hddv.MaHD,csvc.MaCSVC,csvc.TenCSVC, hddv.MaDV,ct.ChiPhi,ct.ChiPhiPhatSinh,ct.GhiChu FROM HopDongDichVu hddv \n"
             + "INNER JOIN ChiTietDichVu ct ON hddv.MaHD = ct.MaHD\n"
             + "INNER JOIN CoSoVatChat csvc ON csvc.MaCSVC = ct.MaCSVC \n"
-            + "WHERE ct.MaHD = ? AND  hddv.MaDV = ? AND ct.MaDV = ? AND ct.MaDMC = ?";
+            + "INNER JOIN DanhMucCon dmc ON dmc.MaDMC = csvc.MaDMC \n"
+            + "WHERE ct.MaHD = ? AND  hddv.MaDV = ? AND ct.MaDV = ? AND csvc.MaDMC = ? ";
+
+    private final String SELECT_CHITIEDICHVU_NOCUSTOM = "SELECT hddv.MaHD,csvc.MaCSVC,csvc.TenCSVC, hddv.MaDV,csvc.GiaThue AS ChiPhi,ct.ChiPhiPhatSinh,ct.GhiChu FROM HopDongDichVu hddv \n"
+            + "INNER JOIN ChiTietDichVu ct ON hddv.MaHD = ct.MaHD\n"
+            + "INNER JOIN CoSoVatChat csvc ON csvc.MaCSVC = ct.MaCSVC \n"
+            + "INNER JOIN DanhMucCon dmc ON dmc.MaDMC = csvc.MaDMC \n"
+            + "WHERE ct.MaHD = ? AND  hddv.MaDV = ? AND ct.MaDV = ? AND csvc.MaDMC = ? ";
+
+    private final String SELECT_SOLUONGBAN = "SELECT distinct  SUM(SoLuongBan) AS SoLuongBan FROM  CoSoVatChat csvc LEFT JOIN ChiTietDichVu ctdv ON csvc.MaCSVC = ctdv.MaCSVC\n"
+            + "INNER JOIN HopDong hd ON hd.MaHD = ctdv.MaHD\n"
+            + "WHERE csvc.MaCSVC = ? AND NgayToChuc = ?\n"
+            + "GROUP BY csvc.MaCSVC";
+
+    private final String SELECT_SOLUONGSUDUNG = "SELECT COUNT(*) AS SoLuongSuDung  FROM  CoSoVatChat csvc LEFT JOIN ChiTietDichVu ctdv ON csvc.MaCSVC = ctdv.MaCSVC\n"
+            + "INNER JOIN HopDong hd ON hd.MaHD = ctdv.MaHD\n"
+            + "WHERE csvc.MaCSVC = ? AND NgayToChuc = ?\n"
+            + "GROUP BY csvc.MaCSVC";
     
+     public final String DELETE_ALL_CHITIETDICHVU = "DELETE ChiTietDichVu WHERE MaHD = ? AND MaDV = ?";
+
     /*
     thêm vào HopDongDichVu
      */
@@ -65,16 +83,14 @@ public class ChiTietDichVuDAO {
         int rs = JDBCHelper.executeUpdate(UPDATE_HOPDONGDICHVU, ctdv.getMaGoi(), ctdv.getChiPhi(), ctdv.getGhiChu(), ctdv.getMaHD(), ctdv.getMaDV());
         return rs > 0;
     }
-    
-    
 
     public HopDongDichVu selectDichVu(String maHD, String maDV) {
         List<HopDongDichVu> list = selectDichVu(SELECT_DICHVU, maHD, maDV, maDV, maHD, maDV);
         return list.size() > 0 ? list.get(0) : null;
     }
-    
-    public boolean checkHopDongDichVu(String maHD,String maDV){ 
-        List<HopDongDichVu> list = selectDichVu(CHECK_HOPDONGDICHVU, maHD, maDV);
+
+    public boolean checkHopDongDichVu(String maHD, String maDV) {
+        List<HopDongDichVu> list = selectDichVu(SELECT_DICHVU, maHD, maDV, maDV, maHD, maDV);
         return list.size() > 0;
     }
 
@@ -91,17 +107,62 @@ public class ChiTietDichVuDAO {
         return rs > 0;
 
     }
+    
+    
+    public void deleteAllChiTietDichVu(String maHD,String maDV){
+        JDBCHelper.executeUpdate(DELETE_ALL_CHITIETDICHVU, maHD,maDV);
+    }
 
     public List<ChiTietDichVu> selectAllChiTietDichVu(String maHD, String maDV) {
-        return selectChiTietDichVu(SELECT_ALL_CHITIETDICHVU,maHD,maDV,maDV);
+        return selectChiTietDichVu(SELECT_ALL_CHITIETDICHVU, maHD, maDV, maDV);
+    }
+
+    public ChiTietDichVu selectChiTietDichVuCustom(String maHD, String maDV, String maDMC) {
+        List<ChiTietDichVu> list = selectChiTietDichVu(SELECT_CHITIETDIVU_CUSTOM, maHD, maDV, maDV, maDMC);
+        return list.size() > 0 ? list.get(0) : null;
+
+    }
+
+    public ChiTietDichVu selectChiTietDichVuNoCustom(String maHD, String maDV, String maDMC) {
+        List<ChiTietDichVu> list = selectChiTietDichVu(SELECT_CHITIEDICHVU_NOCUSTOM, maHD, maDV, maDV, maDMC);
+        return list.size() > 0 ? list.get(0) : null;
+
     }
     
-    
-    public ChiTietDichVu selectChiTietDichVu(String maHD, String maDV, String maDMC){
-       List<ChiTietDichVu> list = selectChiTietDichVu(SELECT_ALL_CHITIETDICHVU,maHD,maDV,maDV,maDMC);
-       return list.size() > 0 ? list.get(0) : null; 
-         
+    public int getSoLuongBan(String maCSVC,String ngayTc){
+         try {
+            ResultSet rs = null;
+            try {
+                rs = JDBCHelper.executeQuery(SELECT_SOLUONGBAN, maCSVC,ngayTc);
+                while (rs.next()) {
+                  return rs.getInt("SoLuongBan");
+                }
+            } finally {
+                rs.getStatement().getConnection().close();
+            }
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
+         return -1;
     }
+    
+    public int getSoLuongSuDung(String maCSVC,String ngayTc){
+         try {
+            ResultSet rs = null;
+            try {
+                rs = JDBCHelper.executeQuery(SELECT_SOLUONGSUDUNG, maCSVC,ngayTc);
+                while (rs.next()) {
+                  return rs.getInt("SoLuongSuDung");
+                }
+            } finally {
+                rs.getStatement().getConnection().close();
+            }
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
+         return -1;
+    }
+
 
     private List selectDichVu(String sql, Object... args) {
         List<HopDongDichVu> list = new ArrayList<>();

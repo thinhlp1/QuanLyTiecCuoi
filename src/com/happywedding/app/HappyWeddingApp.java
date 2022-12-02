@@ -1,5 +1,6 @@
 package com.happywedding.app;
 
+import com.happywedding.dao.NhanVienDAO;
 import com.happywedding.helper.AppStatus;
 
 import com.happywedding.view.manage.*;
@@ -94,12 +95,12 @@ public class HappyWeddingApp extends javax.swing.JFrame {
 
     public HappyWeddingApp() {
 
-        if (!AppStatus.isFirstStart()) {
-            new DangNhap(this, true).setVisible(true);
-            new Loading(this, true).setVisible(true);
-            AppStatus.loadApp();
-        }
-//       AppStatus.USER = new EmployeeDAO().findById("PheoNC");
+//        if (!AppStatus.isFirstStart()) {
+//            new DangNhap(this, true).setVisible(true);
+//            new Loading(this, true).setVisible(true);
+//            AppStatus.loadApp();
+//        }
+        AppStatus.USER = new NhanVienDAO().findById("NV001");
         AppStatus.loadApp();
         initComponents();
         init();
@@ -275,7 +276,7 @@ public class HappyWeddingApp extends javax.swing.JFrame {
     }
 
     public void showForm(Component form) {
-        System.out.println("AA");
+
         mainPane.remove(mainPane.getComponentCount() - 1);
         mainPane.add(form, "w 100%, h 100%");
         repaint();
@@ -375,6 +376,7 @@ public class HappyWeddingApp extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
+
                 new HappyWeddingApp().setVisible(true);
             }
         });

@@ -5,20 +5,61 @@
  */
 package com.happywedding.dao;
 
+import com.happywedding.helper.JDBCHelper;
 import com.happywedding.model.DanhMuc;
+import com.happywedding.model.PhongBan;
 import com.happywedding.model.VaiTro;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  *
  * @author ADMIN
  */
+
+
 public class VaiTroDAO {
-       public List<VaiTro> select() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    
+    private final String SELECT_VAITRO = "SELECT MaVT,TenVT,pb.MaPB FROM VaiTro vt INNER JOIN PhongBan pb ON vt.MaPB = pb.MaPB";
+    private final String SELECT_BY_ID = "SELECT * FROM VaiTro vt INNER JOIN PhongBan pb ON vt.MaPB = pb.MaPB";
+    
+    public List<VaiTro> select() {
+        return select(SELECT_VAITRO);
     }
 
     public VaiTro findById(String id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<VaiTro> list = select(SELECT_BY_ID, id);
+        return list.size() > 0 ? list.get(0) : null;
+    }
+
+    private List select(String sql, Object... args) {
+        List<VaiTro> list = new ArrayList<>();
+        try {
+            ResultSet rs = null;
+            try {
+                rs = JDBCHelper.executeQuery(sql, args);
+                while (rs.next()) {
+                    VaiTro course = readFromResultSet(rs);
+                    list.add(course);
+                }
+            } finally {
+                rs.getStatement().getConnection().close();
+            }
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
+        return list;
+    }
+
+    private VaiTro readFromResultSet(ResultSet rs) throws SQLException {
+        VaiTro pls = new VaiTro();
+
+        pls.setMaVT(rs.getString("MaVT"));
+        pls.setMaPB(rs.getString("MaPB"));
+        pls.setTenVT(rs.getString("TenVT"));
+        return pls;
+
     }
 }

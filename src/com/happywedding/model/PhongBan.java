@@ -1,9 +1,9 @@
-
 package com.happywedding.model;
 
 public class PhongBan {
-     private String maPB;
-     private String tenPB;
+
+    private String maPB;
+    private String tenPB;
 
     public PhongBan() {
     }
@@ -29,5 +29,4 @@ public class PhongBan {
         this.tenPB = tenPB;
     }
 
-    
 }

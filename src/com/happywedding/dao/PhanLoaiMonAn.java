@@ -1,22 +1,50 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.happywedding.dao;
 
+import com.happywedding.helper.JDBCHelper;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
-/**
- *
- * @author ADMIN
- */
 public class PhanLoaiMonAn {
-       public List<PhanLoaiMonAn> select() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
+    private final String SELECT_PhanLoaiMonAn = "SELECT MaPL, TenPL FROM dbo.PhanLoaiMonAn";
+    private final String SELECT_BY_ID = "SELECT * FROM PhanLoaiMonAn WHERE MaPL=?";
+
+    public List<com.happywedding.model.PhanLoaiMonAn> select() {
+           return select(SELECT_PhanLoaiMonAn);
+       }
+
+    public com.happywedding.model.PhanLoaiMonAn findById(String id) {
+     List<com.happywedding.model.PhanLoaiMonAn> list = select(SELECT_BY_ID, id);
+        return list.size() > 0 ? list.get(0) : null;  
+    }
+    
+     private List select(String sql, Object... args) {
+        List<com.happywedding.model.PhanLoaiMonAn> list = new ArrayList<>();
+        try {
+            ResultSet rs = null;
+            try {
+                rs = JDBCHelper.executeQuery(sql, args);
+                while (rs.next()) {
+                    com.happywedding.model.PhanLoaiMonAn course = readFromResultSet(rs);
+                    list.add(course);
+                }
+            } finally {
+                rs.getStatement().getConnection().close();
+            }
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
+        return list;
     }
 
-    public PhanLoaiMonAn findById(String id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private com.happywedding.model.PhanLoaiMonAn readFromResultSet(ResultSet rs) throws SQLException {
+       com.happywedding.model.PhanLoaiMonAn pls = new com.happywedding.model.PhanLoaiMonAn();
+
+        pls.setMaPL(rs.getString("MaPL"));
+        pls.setTenPL(rs.getString("TenPL"));
+        return pls;
+
     }
 }

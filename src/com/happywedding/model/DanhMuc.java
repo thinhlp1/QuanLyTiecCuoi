@@ -11,6 +11,11 @@ public class DanhMuc {
         this.tenDM = tenDM;
     }
 
+    public DanhMuc() {
+    }
+    
+    
+
     public String getMaDM() {
         return maDM;
     }

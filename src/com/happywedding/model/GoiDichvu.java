@@ -1,7 +1,7 @@
-
 package com.happywedding.model;
 
 public class GoiDichVu {
+
     private String maGoi;
     private String maDV;
     private String tenDV;
@@ -20,8 +20,14 @@ public class GoiDichVu {
         this.hinhAnh = hinhAnh;
     }
 
-    
-    
+    public GoiDichVu() {
+    }
+
+    @Override
+    public String toString() {
+        return tenGoi;
+    }
+
     public String getTenDV() {
         return tenDV;
     }
@@ -29,9 +35,6 @@ public class GoiDichVu {
     public void setTenDV(String tenDV) {
         this.tenDV = tenDV;
     }
-    
-
-
 
     public String getMaGoi() {
         return maGoi;
