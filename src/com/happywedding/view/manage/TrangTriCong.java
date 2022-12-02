@@ -81,7 +81,7 @@ public class TrangTriCong extends javax.swing.JDialog {
         ttCong = chiTietDVDAO.selectDichVu(maHD, maDV);
 
         isView(isCreate);
-
+        isLoad = true;
         if (ttCong != null) {
             if (ttCong.getMaGoi() != null) {
                 for (GoiDichVu goi : listGoiDichVu) {
@@ -102,7 +102,6 @@ public class TrangTriCong extends javax.swing.JDialog {
             }
 
         }
-        isLoad = true;
 
     }
 
@@ -213,6 +212,7 @@ public class TrangTriCong extends javax.swing.JDialog {
         for (GoiDichVu s : listGoiDichVu) {
             cbbModel.addElement(s);
         }
+        cbbGoiDV.setSelectedIndex(-1);
     }
 
     public void loadCoSoVatChat() {
@@ -286,7 +286,7 @@ public class TrangTriCong extends javax.swing.JDialog {
 
     public void fillChiTietDichVu(ChiTietDichVu ct, List<CoSoVatChat> list,
             Combobox cbb, JTextField txtChiPhi, JTextField txtPhatSinh, JTextField txtGhiChu, int soLuongBan, int heSoNhan, boolean isCustom) {
-        
+
         for (CoSoVatChat csvc : list) {
             if (csvc.getMaCSVC().equals(ct.getMaCSVC())) {
                 cbb.setSelectedItem(csvc);
@@ -311,6 +311,7 @@ public class TrangTriCong extends javax.swing.JDialog {
 
         for (CoSoVatChat csvc : list) {
             if (csvc.getMaCSVC().equals(ct.getMaCSVC())) {
+                System.out.println(csvc.getMaCSVC());
                 cbb.setSelectedItem(csvc);
                 cbb.setToolTipText(ShareHelper.toMoney(csvc.getGiaThue()));
             }
@@ -392,25 +393,25 @@ public class TrangTriCong extends javax.swing.JDialog {
 
         if (ctCong != null) {
 
-            fillChiTietDichVu(ctCong, listCong, cbbCong, txtCPCong, txtCPPSCong, txtGCCong, 1, 1, false);
+            fillChiTietGoiDichVu(ctCong, listCong, cbbCong, txtCPCong, txtGCCong, 1, 1, false);
         }
 
         if (ctTham != null) {
 
-            fillChiTietDichVu(ctTham, listTham, cbbTham, txtCPTham, txtCPPSTham, txtGCTham, 1, 1, false);
+            fillChiTietGoiDichVu(ctTham, listTham, cbbTham, txtCPTham, txtGCTham, 1, 1, false);
         }
 
         if (ctHoaChuDao != null) {
 
-            fillChiTietDichVu(ctHoaChuDao, listHoaChuDao, cbbHoaChuDao, txtCPHoaChuDao, txtCPPSHoaChuDao, txtGCHoaChuDao, 1, 1, true);
+            fillChiTietGoiDichVu(ctHoaChuDao, listHoaChuDao, cbbHoaChuDao, txtCPHoaChuDao, txtGCHoaChuDao, 1, 1, true);
         }
         if (ctHoaPhu != null) {
 
-            fillChiTietDichVu(ctHoaChuDao, listHoaPhu, cbbHoaPhu, txtCPHoaPhu, txtCPPSHoaPhu, txtGCHoaPhu, 1, 1, true);
+            fillChiTietGoiDichVu(ctHoaPhu, listHoaPhu, cbbHoaPhu, txtCPHoaPhu, txtGCHoaPhu, 1, 1, true);
         }
         if (ctBangTen != null) {
 
-            fillChiTietDichVu(ctBangTen, listBangTen, cbbBangTen, txtCPBangTen, txtCPPSBangTen, txtGCBangTen, 1, 1, false);
+            fillChiTietGoiDichVu(ctBangTen, listBangTen, cbbBangTen, txtCPBangTen, txtGCBangTen, 1, 1, false);
         }
 
     }
@@ -420,22 +421,25 @@ public class TrangTriCong extends javax.swing.JDialog {
             if (cp instanceof JTextField) {
                 cp.setEnabled(isCreate);
             } else if (cp instanceof Combobox) {
-                cp.setEnabled(isCreate);
+                cp.setEnabled(false);
             }
 
         }
+        cbbGoiDV.setEnabled(true);
         btnSave.setVisible(isCreate);
         btnReset.setVisible(isCreate);
-        btnEdit.setVisible(isCreate);
+        //btnEdit.setVisible(isCreate);
         taGhiChu.setEnabled(isCreate);
     }
 
     public void isTuyChinhGoiDichVu(boolean is) {
-        cbbCong.setEnabled(is);
-        cbbHoaChuDao.setEnabled(is);
-        cbbHoaPhu.setEnabled(is);
-        cbbTham.setEnabled(is);
-        cbbBangTen.setEnabled(is);
+        if (isCreate) {
+            cbbCong.setEnabled(is);
+            cbbHoaChuDao.setEnabled(is);
+            cbbHoaPhu.setEnabled(is);
+            cbbTham.setEnabled(is);
+            cbbBangTen.setEnabled(is);
+        }
     }
 
     public boolean checkValid(JTextField txt) {
@@ -456,10 +460,10 @@ public class TrangTriCong extends javax.swing.JDialog {
         public void keyTyped(java.awt.event.KeyEvent evt) {
             char testChar = evt.getKeyChar();
             if (!((Character.isDigit(testChar)))) {
-                if (testChar == '\n'){
+                if (testChar == '\n') {
                     lblMaNH18.requestFocus();
                 }
-                
+
                 if (testChar != '.') {
                     evt.consume();
                 }
@@ -980,7 +984,7 @@ public class TrangTriCong extends javax.swing.JDialog {
 
     private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
         isTuyChinhGoiDichVu(true);
-        
+
     }//GEN-LAST:event_btnEditActionPerformed
 
     private void cbbHoaChuDaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbbHoaChuDaoActionPerformed
@@ -1036,14 +1040,14 @@ public class TrangTriCong extends javax.swing.JDialog {
     }//GEN-LAST:event_txtGCBangTenActionPerformed
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
-        
-        if (cbbGoiDV.getSelectedIndex() == -1){
-              DialogHelper.alertError(this, "Vui lòng chọn gói");
-              return;
+
+        if (cbbGoiDV.getSelectedIndex() == -1) {
+            DialogHelper.alertError(this, "Vui lòng chọn gói");
+            return;
         }
-        
+
         if (cbbCong.getSelectedIndex() == -1 || cbbHoaChuDao.getSelectedIndex() == -1 || cbbHoaPhu.getSelectedIndex() == -1
-                || cbbTham.getSelectedIndex() == -1 || cbbBangTen.getSelectedIndex() == -1 ) {
+                || cbbTham.getSelectedIndex() == -1 || cbbBangTen.getSelectedIndex() == -1) {
             DialogHelper.alertError(this, "Vui lòng chọn đầy đủ thông tin");
             return;
         }
@@ -1098,13 +1102,11 @@ public class TrangTriCong extends javax.swing.JDialog {
         txtCPPSBangTen.setText("0");
         txtCPPSTham.setText("0");
 
-         txtGCCong.setText("");
+        txtGCCong.setText("");
         txtGCHoaChuDao.setText("");
         txtGCHoaPhu.setText("");
         txtGCBangTen.setText("");
         txtGCTham.setText("");
-        
-      
 
         tinhTien();
     }//GEN-LAST:event_btnResetActionPerformed
@@ -1194,7 +1196,7 @@ public class TrangTriCong extends javax.swing.JDialog {
     }//GEN-LAST:event_txtCPPSBangTenFocusLost
 
     private void cbbGoiDVItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbbGoiDVItemStateChanged
-         if (isLoad && cbbGoiDV.getSelectedIndex() != -1) {
+        if (isLoad && cbbGoiDV.getSelectedIndex() != -1 && isCreate) {
             fillFormByGoiDichVu((GoiDichVu) cbbGoiDV.getSelectedItem());
             isTuyChinhGoiDichVu(false);
             lblViewSlideShow.setVisible(true);

@@ -21,17 +21,19 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
+import javax.swing.ListSelectionModel;
+import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
+import javax.swing.plaf.basic.BasicComboBoxRenderer;
 import javax.swing.plaf.basic.BasicComboBoxUI;
 import javax.swing.plaf.basic.BasicComboPopup;
 import javax.swing.plaf.basic.ComboPopup;
 import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.TimingTarget;
 import org.jdesktop.animation.timing.TimingTargetAdapter;
-
 
 public class Combobox<E> extends JComboBox<E> {
 
@@ -274,5 +276,87 @@ public class Combobox<E> extends JComboBox<E> {
                 g2.dispose();
             }
         }
+    }
+
+    public static class EnabledJComboBoxRenderer extends BasicComboBoxRenderer {
+
+        static final long serialVersionUID = -984932432414L;
+
+        private final ListSelectionModel enabledItems;
+
+        private Color disabledColor = Color.lightGray;
+
+        /**
+         *
+         * Constructs a new renderer for a JComboBox which enables/disables
+         * items
+         *
+         * based upon the parameter model.
+         *
+         * @param enabled
+         *
+         */
+        public EnabledJComboBoxRenderer(ListSelectionModel enabled) {
+
+            super();
+
+            this.enabledItems = enabled;
+
+        }
+
+        /**
+         *
+         * Sets the color to render disabled items.
+         *
+         *
+         * @param disabledColor
+         *
+         */
+         public void setDisabledColor(Color disabledColor) {
+
+            this.disabledColor = disabledColor;
+
+        }
+
+        /**
+         *
+         * Custom implementation to color items as enabled or disabled. *
+         */
+        @Override
+
+        public Component getListCellRendererComponent(JList list,
+                Object value,
+                int index,
+                boolean isSelected,
+                boolean cellHasFocus) {
+
+            Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+
+            if (!enabledItems.isSelectedIndex(index)) {//not enabled
+
+                if (isSelected) {
+
+                    c.setBackground(UIManager.getColor("ComboBox.background"));
+
+                } else {
+
+                    c.setBackground(super.getBackground());
+
+                }
+
+                c.setForeground(disabledColor);
+
+            } else {
+
+                c.setBackground(super.getBackground());
+
+                c.setForeground(super.getForeground());
+
+            }
+
+            return c;
+
+        }
+
     }
 }

@@ -12,6 +12,7 @@ import com.happywedding.helper.AppStatus;
 import com.happywedding.helper.DialogHelper;
 import com.happywedding.helper.ShareHelper;
 import com.happywedding.model.ChiTietDatMon;
+import com.happywedding.model.ChiTietDichVuDiKem;
 import com.happywedding.model.CoSoVatChat;
 import com.happywedding.model.DichVuDatMon;
 import com.happywedding.model.GoiDichVu;
@@ -71,6 +72,7 @@ public class DatMon extends javax.swing.JDialog {
     private int soBanPhu;
     private String maTD;
     private String maTDPhu;
+    private boolean isDispose = true;
 
     /**
      * Creates new form DatMon
@@ -172,10 +174,12 @@ public class DatMon extends javax.swing.JDialog {
         loadThucDon();
 
         if (isThucDonPhu) {
-            if (!chiTietDatMonDAO.selectThucDonChinh(maHD).equals(chiTietDatMonDAO.selectThucDonPhu(maHD))) {
-                loadChiTietDatMonPhu();
-                dichVuDatMon = chiTietDatMonDAO.selectDichVuDatMon(maHD, maTD);
+            if (chiTietDatMonDAO.selectThucDonChinh(maHD) != null) {
+                if (!chiTietDatMonDAO.selectThucDonChinh(maHD).equals(chiTietDatMonDAO.selectThucDonPhu(maHD))) {
+                    loadChiTietDatMonPhu();
+                    dichVuDatMon = chiTietDatMonDAO.selectDichVuDatMon(maHD, maTD);
 
+                }
             }
 
         } else {
@@ -210,13 +214,13 @@ public class DatMon extends javax.swing.JDialog {
         fillTableThucDon(listChiTietDatMon);
         filtedMonAn();
 
+        isView(isCreate);
         if (isThucDonPhu) {
             spnSoBanChinh.setValue(soLuongBan - soBanPhu);
             spnSoBanChinh.setEnabled(false);
             lblBanPhu.setText(soBanPhu + "");
         }
 
-        isView(isCreate);
     }
 
     public void isView(boolean isCreate) {
@@ -229,6 +233,7 @@ public class DatMon extends javax.swing.JDialog {
         tblMonAn.setEnabled(isCreate);
         tblThucDon.setEnabled(isCreate);
         taGhiChu.setEnabled(isCreate);
+        spnSoBanChinh.setEnabled(isCreate);
     }
 
     // các hàm lấy dữ liệu
@@ -240,11 +245,13 @@ public class DatMon extends javax.swing.JDialog {
             this.maTD = maTDP;
             int size = listThucDon.size();
             String maTDChinh = chiTietDatMonDAO.selectThucDonChinh(maHD);
-            if (!maTDChinh.equals(maTDPhu)) {
-                for (int i = 0; i < size; i++) {
-                    if (listThucDon.get(i).getMaTD().equals(maTDChinh)) {
-                        listThucDon.remove(i);
-                        break;
+            if (maTDP != null && maTDChinh != null) {
+                if (!maTDChinh.equals(maTDPhu)) {
+                    for (int i = 0; i < size; i++) {
+                        if (listThucDon.get(i).getMaTD().equals(maTDChinh)) {
+                            listThucDon.remove(i);
+                            break;
+                        }
                     }
                 }
             }
@@ -254,15 +261,16 @@ public class DatMon extends javax.swing.JDialog {
             this.maTD = maTDChinh;
             int size = listThucDon.size();
             String maTDPhu = chiTietDatMonDAO.selectThucDonPhu(maHD);
-
-            if (!maTDChinh.equals(maTDPhu)) {
-                for (int i = 0; i < size; i++) {
-                    if (listThucDon.get(i).getMaTD().equals(maTDPhu)) {
-                        listThucDon.remove(i);
-                        break;
+            if (maTDPhu != null && maTDChinh != null) {
+                if (!maTDChinh.equals(maTDPhu)) {
+                    for (int i = 0; i < size; i++) {
+                        if (listThucDon.get(i).getMaTD().equals(maTDPhu)) {
+                            listThucDon.remove(i);
+                            break;
+                        }
                     }
-                }
 
+                }
             }
 
         }
@@ -434,7 +442,7 @@ public class DatMon extends javax.swing.JDialog {
             ct.setChiPhiPhatSinh(ShareHelper.toMoney((String) tblThucDon.getValueAt(i, 4)));
             if (!tblThucDon.getValueAt(i, 5).toString().equals("CXD")) {
                 ct.setSoLuong(Integer.parseInt(tblThucDon.getValueAt(i, 5).toString()));
-             
+
             } else {
                 ct.setSoLuong(-1);
             }
@@ -460,7 +468,7 @@ public class DatMon extends javax.swing.JDialog {
         if (dichVuDatMon != null) {
             taGhiChu.setText(dichVuDatMon.getGhiChu());
             txtChiPhi.setText(ShareHelper.toMoney(dichVuDatMon.getChiPhi()));
-            txtTongCPPS.setText(ShareHelper.toMoney(dichVuDatMon.getChiPhiPhatSinh() * soLuongBan));
+            txtTongCPPS.setText(ShareHelper.toMoney(dichVuDatMon.getChiPhiPhatSinh()));
             txtTongChiPhi.setText(ShareHelper.toMoney(dichVuDatMon.getChiPhi() + dichVuDatMon.getChiPhiPhatSinh()));
         }
 
@@ -476,9 +484,10 @@ public class DatMon extends javax.swing.JDialog {
                 ShareHelper.toMoney(ct.getGia()),
                 ct.getGhiChu(),
                 ShareHelper.toMoney(ct.getChiPhiPhatSinh()),
-                ct.getSoLuong()
+                ct.getSoLuong(),
+                ct.getMaPL().equals("NUOC") ? "CXD" : ShareHelper.toMoney(ct.getGia() * (ct.getSoLuong()))
             };
-         
+
             tblThucDonModel.addRow(row);
 
         }
@@ -558,7 +567,7 @@ public class DatMon extends javax.swing.JDialog {
         listChiTietDatMon = getChiTietDatMon();
 
         for (ChiTietDatMon ct : listChiTietDatMon) {
-            if (ct.getSoLuong() == -1) {
+            if (ct.getSoLuong() == -1 || ct.getMaPL().equals("NUOC")) {
                 continue;
             }
             chiPhi += ct.getGia() * ct.getSoLuong();
@@ -730,7 +739,7 @@ public class DatMon extends javax.swing.JDialog {
         });
         jScrollPane3.setViewportView(tblMonAn);
 
-        jPanel1.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(890, 140, 390, 490));
+        jPanel1.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(1010, 140, 390, 490));
 
         btnBack.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/happywedding/assets/back.png"))); // NOI18N
         btnBack.setFocusPainted(false);
@@ -739,7 +748,7 @@ public class DatMon extends javax.swing.JDialog {
                 btnBackActionPerformed(evt);
             }
         });
-        jPanel1.add(btnBack, new org.netbeans.lib.awtextra.AbsoluteConstraints(820, 340, 50, 50));
+        jPanel1.add(btnBack, new org.netbeans.lib.awtextra.AbsoluteConstraints(940, 340, 50, 50));
 
         jLabel9.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel9.setText("Tổng chi phí");
@@ -827,7 +836,7 @@ public class DatMon extends javax.swing.JDialog {
                 cbbLoaiMonActionPerformed(evt);
             }
         });
-        jPanel1.add(cbbLoaiMon, new org.netbeans.lib.awtextra.AbsoluteConstraints(1110, 60, 160, 54));
+        jPanel1.add(cbbLoaiMon, new org.netbeans.lib.awtextra.AbsoluteConstraints(1230, 60, 160, 54));
 
         lblSearch.setBackground(new java.awt.Color(204, 204, 255));
         lblSearch.setForeground(new java.awt.Color(102, 0, 255));
@@ -838,7 +847,7 @@ public class DatMon extends javax.swing.JDialog {
                 lblSearchMouseClicked(evt);
             }
         });
-        jPanel1.add(lblSearch, new org.netbeans.lib.awtextra.AbsoluteConstraints(870, 80, -1, 33));
+        jPanel1.add(lblSearch, new org.netbeans.lib.awtextra.AbsoluteConstraints(990, 80, -1, 33));
 
         txtSearch.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         txtSearch.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(0, 0, 0)));
@@ -855,11 +864,11 @@ public class DatMon extends javax.swing.JDialog {
                 txtSearchKeyTyped(evt);
             }
         });
-        jPanel1.add(txtSearch, new org.netbeans.lib.awtextra.AbsoluteConstraints(910, 80, 190, 35));
+        jPanel1.add(txtSearch, new org.netbeans.lib.awtextra.AbsoluteConstraints(1030, 80, 190, 35));
 
         btnNext.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/happywedding/assets/next.png"))); // NOI18N
         btnNext.setFocusPainted(false);
-        jPanel1.add(btnNext, new org.netbeans.lib.awtextra.AbsoluteConstraints(820, 340, -1, -1));
+        jPanel1.add(btnNext, new org.netbeans.lib.awtextra.AbsoluteConstraints(940, 340, -1, -1));
 
         txtTongCPPS.setEditable(false);
         txtTongCPPS.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
@@ -871,14 +880,14 @@ public class DatMon extends javax.swing.JDialog {
 
         tblThucDon.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null}
+                {null, null, null, null, null, null, null}
             },
             new String [] {
-                "STT", "Tên món", "Giá", "Ghi chú", "Phát sinh", "Số lượng"
+                "STT", "Tên món", "Giá", "Ghi chú", "Phát sinh", "Số lượng", "Tổng giá"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, true, true, false
+                false, false, false, true, true, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -903,7 +912,7 @@ public class DatMon extends javax.swing.JDialog {
         });
         jScrollPane2.setViewportView(tblThucDon);
 
-        jPanel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 140, 765, 480));
+        jPanel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 140, 890, 480));
         jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 90, -1, -1));
 
         taGhiChu.setColumns(20);
@@ -955,7 +964,7 @@ public class DatMon extends javax.swing.JDialog {
         });
         jPanel1.add(btnThucDonPhu, new org.netbeans.lib.awtextra.AbsoluteConstraints(890, 790, -1, 30));
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1300, 850));
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1420, 850));
 
         pack();
         setLocationRelativeTo(null);
@@ -1010,23 +1019,29 @@ public class DatMon extends javax.swing.JDialog {
             }
         }
 
-        if (!isThucDonPhu) {
+        if (dichVuDatMon != null) {
+            if (!isThucDonPhu) {
 
-            if ((chiTietDatMonDAO.selectChiTietDatMon(maHD, chiTietDatMonDAO.selectThucDonPhu(maHD)).get(0).getSoLuong() != Integer.parseInt(lblBanPhu.getText())
-                    && (!chiTietDatMonDAO.selectThucDonChinh(maHD).equals(chiTietDatMonDAO.selectThucDonPhu(maHD))))) {
-                boolean rs = DialogHelper.confirm(this, "Bạn vừa thay đổi số bàn. Vui lòng xác nhận lại thông tin bên bàn phụ?");
-                if (rs) {
-                    return;
-                } else {
-                    return;
+                if ((chiTietDatMonDAO.selectThucDonChinh(maHD).equals(chiTietDatMonDAO.selectThucDonPhu(maHD)))) {
+                    if ((chiTietDatMonDAO.selectChiTietDatMon(maHD, chiTietDatMonDAO.selectThucDonPhu(maHD)).get(0).getSoLuong() != Integer.parseInt(lblBanPhu.getText())
+                            && (!chiTietDatMonDAO.selectThucDonChinh(maHD).equals(chiTietDatMonDAO.selectThucDonPhu(maHD))))) {
+                        boolean rs = DialogHelper.confirm(this, "Bạn vừa thay đổi số bàn. Vui lòng xác nhận lại thông tin bên bàn phụ?");
+                        if (rs) {
+                            return;
+                        } else {
+                            return;
+                        }
+                    }
                 }
             }
-        }
 
-        if (!isThucDonPhu) {
-            if ((chiTietDatMonDAO.selectThucDonChinh(maHD).equals(chiTietDatMonDAO.selectThucDonPhu(maHD))) && (Integer.parseInt(lblBanPhu.getText()) != 0)) {
-                DialogHelper.alertError(this, "Vui lòng chọn thực đơn cho bàn phụ");
-                return;
+            if (isDispose) {
+                if (!isThucDonPhu) {
+                    if ((chiTietDatMonDAO.selectThucDonChinh(maHD).equals(chiTietDatMonDAO.selectThucDonPhu(maHD))) && (Integer.parseInt(lblBanPhu.getText()) != 0)) {
+                        DialogHelper.alertError(this, "Vui lòng chọn thực đơn cho bàn phụ");
+                        return;
+                    }
+                }
             }
         }
 
@@ -1041,22 +1056,21 @@ public class DatMon extends javax.swing.JDialog {
                     return;
                 }
             }
-        }
-
-        if (!isThucDonPhu) {
-            if (!maTD.equals(chiTietDatMonDAO.selectThucDonChinh(maHD))) {
-                if (!isThucDonPhu) {
-                    chiTietDatMonDAO.deleteDichVuDatMon(maHD, chiTietDatMonDAO.selectThucDonChinh(maHD));
-                } else {
-                    chiTietDatMonDAO.deleteDichVuDatMon(maHD, chiTietDatMonDAO.selectThucDonPhu(maHD));
+            if (!isThucDonPhu) {
+                if (!maTD.equals(chiTietDatMonDAO.selectThucDonChinh(maHD))) {
+                    if (!isThucDonPhu) {
+                        chiTietDatMonDAO.deleteDichVuDatMon(maHD, chiTietDatMonDAO.selectThucDonChinh(maHD));
+                    } else {
+                        chiTietDatMonDAO.deleteDichVuDatMon(maHD, chiTietDatMonDAO.selectThucDonPhu(maHD));
+                    }
                 }
-            }
-        } else {
-            if (!maTD.equals(chiTietDatMonDAO.selectThucDonPhu(maHD)) && !chiTietDatMonDAO.selectThucDonPhu(maHD).equals(chiTietDatMonDAO.selectThucDonChinh(maHD))) {
-                if (!isThucDonPhu) {
-                    chiTietDatMonDAO.deleteDichVuDatMon(maHD, chiTietDatMonDAO.selectThucDonChinh(maHD));
-                } else {
-                    chiTietDatMonDAO.deleteDichVuDatMon(maHD, chiTietDatMonDAO.selectThucDonPhu(maHD));
+            } else {
+                if (!maTD.equals(chiTietDatMonDAO.selectThucDonPhu(maHD)) && !chiTietDatMonDAO.selectThucDonPhu(maHD).equals(chiTietDatMonDAO.selectThucDonChinh(maHD))) {
+                    if (!isThucDonPhu) {
+                        chiTietDatMonDAO.deleteDichVuDatMon(maHD, chiTietDatMonDAO.selectThucDonChinh(maHD));
+                    } else {
+                        chiTietDatMonDAO.deleteDichVuDatMon(maHD, chiTietDatMonDAO.selectThucDonPhu(maHD));
+                    }
                 }
             }
         }
@@ -1069,8 +1083,13 @@ public class DatMon extends javax.swing.JDialog {
             updateChiTietDatMon();
         }
 
-        AppStatus.lapHopDong.reloadHopDong();
-        this.dispose();
+        if (isDispose) {
+            AppStatus.lapHopDong.checkedDichVu("DATMON", true);
+            AppStatus.lapHopDong.reloadHopDong();
+            this.dispose();
+        } else {
+            dichVuDatMon = chiTietDatMonDAO.selectDichVuDatMon(maHD, maTD);
+        }
     }//GEN-LAST:event_btnSaveActionPerformed
 
     private void cbbThucDonItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbbThucDonItemStateChanged
@@ -1100,6 +1119,11 @@ public class DatMon extends javax.swing.JDialog {
             btnBack.setVisible(true);
             btnNext.setVisible(false);
             if (evt.getClickCount() >= 2) {
+
+                if (listFilted.isEmpty()) {
+                    return;
+                }
+
                 MonAn ma = listFilted.get(index);
 
                 ChiTietDatMon ct = new ChiTietDatMon();
@@ -1108,6 +1132,7 @@ public class DatMon extends javax.swing.JDialog {
                 ct.setTenMA(ma.getTenMA());
                 ct.setGia(ma.getGiaTien());
                 ct.setSoLuong(soLuongBan);
+                ct.setMaPL(ma.getMaPL());
 
                 int thuTu = listChiTietDatMon.get(listChiTietDatMon.size() - 1).getThuTu() + 1;
 
@@ -1232,10 +1257,24 @@ public class DatMon extends javax.swing.JDialog {
 
     private void btnThucDonPhuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThucDonPhuActionPerformed
         int soBanPhu = Integer.parseInt(lblBanPhu.getText());
-        if ((chiTietDatMonDAO.selectThucDonChinh(maHD).equals(chiTietDatMonDAO.selectThucDonPhu(maHD))) && (Integer.parseInt(lblBanPhu.getText()) == 0)) {
+        if (soBanPhu == 0) {
             DialogHelper.alertError(this, "Không có bàn phụ");
             return;
         }
+
+        if (chiTietDatMonDAO.selectThucDonChinh(maHD) == null && cbbThucDon.getSelectedIndex() == -1) {
+            DialogHelper.alertError(this, "Vui lòng chọn thực đơn chính trước");
+            return;
+        } else {
+            isDispose = false;
+            btnSave.doClick();
+            isDispose = true;
+        }
+
+//        if ((chiTietDatMonDAO.selectThucDonChinh(maHD).equals(chiTietDatMonDAO.selectThucDonPhu(maHD)))) {
+//            DialogHelper.alertError(this, "Không có bàn phụ");
+//            return;
+//        }
         new DatMon(new JFrame(), isCreate, maHD, soLuongBan, true, soBanPhu).setVisible(true);
     }//GEN-LAST:event_btnThucDonPhuActionPerformed
 
@@ -1244,10 +1283,10 @@ public class DatMon extends javax.swing.JDialog {
         loadMonAn();
         filtedMonAn();
         fillTableMonAn(listMonAn);
-        if (!isThucDonPhu) {
-            spnSoBanChinh.setValue(soLuongBan);
-            lblBanPhu.setText("0");
-        }
+//        if (!isThucDonPhu) {
+//            spnSoBanChinh.setValue(soLuongBan);
+//            lblBanPhu.setText("0");
+//        }
         cbbThucDon.setSelectedIndex(-1);
         txtChiPhi.setText("");
         txtTongCPPS.setText("");

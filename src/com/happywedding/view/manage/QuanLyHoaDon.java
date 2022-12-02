@@ -4,23 +4,355 @@
  */
 package com.happywedding.view.manage;
 
+import com.happywedding.dao.HoaDonDAO;
+import com.happywedding.helper.AppStatus;
+import com.happywedding.helper.DateHelper;
+import com.happywedding.helper.DialogHelper;
+import com.happywedding.helper.ShareHelper;
+import com.happywedding.model.HoaDon;
+import com.happywedding.model.HopDong;
+import com.happywedding.model.Sanh;
+import com.happywedding.model.TrangThaiHopDong;
+import com.ui.swing.datechooser.DateChooser;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author ACER
  */
 public class QuanLyHoaDon extends javax.swing.JPanel {
 
-    /**
-     * Creates new form QuanLyHoaDon
-     */
+    private DateChooser dtChooser1 = new DateChooser();
+    private DateChooser dtChooser2 = new DateChooser();
+    private DefaultTableModel tblModel;
+    private List<HoaDon> listHoaDon = new ArrayList<>();
+    private List<HoaDon> listFilted = new ArrayList<>();
+    private HoaDonDAO hoaDonDAO = new HoaDonDAO();
+
+    private boolean isLoad = false;
+
     public QuanLyHoaDon() {
         initComponents();
         init();
     }
-    
-    public void init(){
+
+    public void init() {
         tblHoaDon.fixTable(jScrollPane1);
+        tblModel = (DefaultTableModel) tblHoaDon.getModel();
         tblHoaDon.setAutoscrolls(true);
+        dtChooser1.setTextRefernce(txtNgayBatDau);
+        dtChooser2.setTextRefernce(txtNgayKetThuc);
+
+        isLoad = true;
+
+        txtNgayBatDau.setText("");
+        txtNgayKetThuc.setText("");
+        listHoaDon = hoaDonDAO.selectHoaDon();
+        for (HoaDon hd : listHoaDon) {
+            listFilted.add(hd);
+        }
+        fillToTable(listHoaDon);
+        initSort();
+
+    }
+
+    public void fillToTable(List<HoaDon> listHoaDon) {
+        tblModel.setRowCount(0);
+        try {
+
+            for (HoaDon hd : listHoaDon) {
+                Object[] row = {
+                    hd.getMaHD(),
+                    hd.getMaHoaDon(),
+                    DateHelper.toString(hd.getNgayLap(), "dd/MM/yyyy"),
+                    hd.getTenNV(),
+                    DateHelper.toString(hd.getNgayLapLan2(), "dd/MM/yyyy"),
+                    hd.getTenNLLan2(),
+                    ShareHelper.toMoney(hd.getTienCoc()),
+                    ShareHelper.toMoney(hd.getTongTien()),
+                    hd.getTrangTha() == 0 ? "Đã trả cọc" : "Đã trả hết"
+                };
+                tblModel.addRow(row);
+            }
+        } catch (Exception e) {
+            DialogHelper.alertError(this, "Lỗi truy vấn dữ liệu!");
+        }
+
+    }
+
+    public void filtedHoaDon() {
+        List<HoaDon> list = new ArrayList<>();
+        List<HoaDon> list2 = new ArrayList<>();
+        listFilted.clear();
+        String search = txtSearch.getText().trim();
+
+        for (HoaDon hd : listHoaDon) {
+            if (hd.getInfoSearch().toUpperCase().contains(search.toUpperCase())) {
+                list.add(hd);
+            }
+        }
+        for (HoaDon hd : list) {
+            if (cbbTrangThai.getSelectedIndex() == 0) {
+                list2.add(hd);
+
+                continue;
+            }
+            if (cbbTrangThai.getSelectedIndex() == 1) {
+                if (hd.getTrangTha() == 0) {
+                    list2.add(hd);
+                }
+            } else if (cbbTrangThai.getSelectedIndex() == 2) {
+                if (hd.getTrangTha() == 1) {
+                    list2.add(hd);
+                }
+            }
+        }
+
+        for (HoaDon hd : list2) {
+            if (cbbNgay.getSelectedIndex() == 0) {
+                if (txtNgayBatDau.getText().length() != 0 && txtNgayKetThuc.getText().length() == 0) {
+
+                    if (DateHelper.toString(hd.getNgayLap(), "dd/MM/yyyy").equals(txtNgayBatDau.getText())
+                            || hd.getNgayLap().after(DateHelper.toDate(txtNgayBatDau.getText(), "dd/MM/yyyy"))) {
+                        listFilted.add(hd);
+                    }
+
+                } else if (txtNgayBatDau.getText().length() == 0 && txtNgayKetThuc.getText().length() != 0) {
+                    if (DateHelper.toString(hd.getNgayLap(), "dd/MM/yyyy").equals(txtNgayKetThuc.getText())
+                            || hd.getNgayLap().before(DateHelper.toDate(txtNgayKetThuc.getText(), "dd/MM/yyyy"))) {
+                        listFilted.add(hd);
+                    }
+                } else if (txtNgayBatDau.getText().length() != 0 && txtNgayKetThuc.getText().length() != 0) {
+                    if (DateHelper.toString(hd.getNgayLap(), "dd/MM/yyyy").equals(txtNgayKetThuc.getText())
+                            || hd.getNgayLap().before(DateHelper.toDate(txtNgayKetThuc.getText(), "dd/MM/yyyy")
+                            )) {
+                        if (DateHelper.toString(hd.getNgayLap(), "dd/MM/yyyy").equals(txtNgayBatDau.getText())
+                                || hd.getNgayLap().after(DateHelper.toDate(txtNgayBatDau.getText(), "dd/MM/yyyy"))) {
+                            listFilted.add(hd);
+                        }
+                    }
+                } else {
+                    listFilted.add(hd);
+                }
+            } else if (cbbNgay.getSelectedIndex() == 1) {
+                if (txtNgayBatDau.getText().length() != 0 && txtNgayKetThuc.getText().length() == 0) {
+
+                    if (DateHelper.toString(hd.getNgayLapLan2(), "dd/MM/yyyy").equals(txtNgayBatDau.getText())
+                            || hd.getNgayLapLan2().after(DateHelper.toDate(txtNgayBatDau.getText(), "dd/MM/yyyy"))) {
+                        listFilted.add(hd);
+                    }
+
+                } else if (txtNgayBatDau.getText().length() == 0 && txtNgayKetThuc.getText().length() != 0) {
+                    if (DateHelper.toString(hd.getNgayLapLan2(), "dd/MM/yyyy").equals(txtNgayKetThuc.getText())
+                            || hd.getNgayLapLan2().before(DateHelper.toDate(txtNgayKetThuc.getText(), "dd/MM/yyyy"))) {
+                        listFilted.add(hd);
+                    }
+                } else if (txtNgayBatDau.getText().length() != 0 && txtNgayKetThuc.getText().length() != 0) {
+                    if (DateHelper.toString(hd.getNgayLapLan2(), "dd/MM/yyyy").equals(txtNgayKetThuc.getText())
+                            || hd.getNgayLapLan2().before(DateHelper.toDate(txtNgayKetThuc.getText(), "dd/MM/yyyy")
+                            )) {
+                        if (DateHelper.toString(hd.getNgayLapLan2(), "dd/MM/yyyy").equals(txtNgayBatDau.getText())
+                                || hd.getNgayLapLan2().after(DateHelper.toDate(txtNgayBatDau.getText(), "dd/MM/yyyy"))) {
+                            listFilted.add(hd);
+                        }
+                    }
+                } else {
+                    listFilted.add(hd);
+                }
+            }
+
+        }
+        fillToTable(listFilted);
+        int oldIndex = cbbSortBy.getSelectedIndex();
+        cbbSortBy.setSelectedIndex(-1);
+        cbbSortBy.setSelectedIndex(oldIndex);
+    }
+
+    public void showCalendar1() {
+        dtChooser1.showPopup();
+    }
+
+    public void showCalendar2() {
+        dtChooser2.showPopup();
+    }
+
+    public void initSort() {
+
+        cbbSortBy.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                switch (cbbSortBy.getSelectedIndex()) {
+                    case 0:
+                        if (cbbSort.getSelectedIndex() == 0) {
+                            // ten tang dan
+                            fillToTable(sortByTienCoc(false));
+                        } else if (cbbSort.getSelectedIndex() == 1) {
+                            // ten giam dan
+                            fillToTable(sortByTienCoc(true));
+                        }
+                        break;
+                    case 1:
+                        if (cbbSort.getSelectedIndex() == 0) {
+                            // ten tang dan
+                            fillToTable(sortByTongTien(false));
+                        } else if (cbbSort.getSelectedIndex() == 1) {
+                            // ten giam dan
+                            fillToTable(sortByTongTien(true));
+                        }
+                        break;
+                    case 2:
+                        if (cbbSort.getSelectedIndex() == 0) {
+                            // ten tang dan
+                            fillToTable(sortByNgayLapLan1(false));
+                        } else if (cbbSort.getSelectedIndex() == 1) {
+                            // ten giam dan
+                            fillToTable(sortByNgayLapLan1(true));
+                        } else {
+                            cbbSortBy.setSelectedIndex(0);
+                        }
+                        break;
+                    case 3:
+                        if (cbbSort.getSelectedIndex() == 0) {
+                            // ten tang dan
+                            fillToTable(sortByNgayLapLan2(false));
+                        } else if (cbbSort.getSelectedIndex() == 1) {
+                            // ten giam dan
+                            fillToTable(sortByNgayLapLan2(true));
+                        } else {
+                            cbbSortBy.setSelectedIndex(0);
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
+
+        cbbSort.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                switch (cbbSortBy.getSelectedIndex()) {
+                    case 0:
+                        if (cbbSort.getSelectedIndex() == 0) {
+                            // ten tang dan
+                            fillToTable(sortByTienCoc(false));
+                        } else if (cbbSort.getSelectedIndex() == 1) {
+                            // ten giam dan
+                            fillToTable(sortByTienCoc(true));
+                        }
+                        break;
+                    case 1:
+                        if (cbbSort.getSelectedIndex() == 0) {
+                            // ten tang dan
+                            fillToTable(sortByTongTien(false));
+                        } else if (cbbSort.getSelectedIndex() == 1) {
+                            // ten giam dan
+                            fillToTable(sortByTongTien(true));
+                        }
+                        break;
+                    case 2:
+                        if (cbbSort.getSelectedIndex() == 0) {
+                            // ten tang dan
+                            fillToTable(sortByNgayLapLan1(false));
+                        } else if (cbbSort.getSelectedIndex() == 1) {
+                            // ten giam dan
+                            fillToTable(sortByNgayLapLan1(true));
+                        } else {
+                            cbbSortBy.setSelectedIndex(0);
+                        }
+                        break;
+                    case 3:
+                        if (cbbSort.getSelectedIndex() == 0) {
+                            // ten tang dan
+                            fillToTable(sortByNgayLapLan2(false));
+                        } else if (cbbSort.getSelectedIndex() == 1) {
+                            // ten giam dan
+                            fillToTable(sortByNgayLapLan2(true));
+                        } else {
+                            cbbSortBy.setSelectedIndex(0);
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
+    }
+
+    public List<HoaDon> sortByNgayLapLan1(boolean isRevese) {
+        List<HoaDon> listSorted = listFilted;
+        Collections.sort(listSorted, new Comparator<HoaDon>() {
+            public int compare(HoaDon hoaDolon1, HoaDon hoaDolon2) {
+                return (hoaDolon1.getNgayLap().compareTo(hoaDolon2.getNgayLap()));
+
+            }
+        });
+
+        if (isRevese) {
+            Collections.reverse(listSorted);
+        }
+
+        return listSorted;
+    }
+
+    public List<HoaDon> sortByNgayLapLan2(boolean isRevese) {
+        List<HoaDon> listSorted = listFilted;
+        Collections.sort(listSorted, new Comparator<HoaDon>() {
+            public int compare(HoaDon hoaDolon1, HoaDon hoaDolon2) {
+                return (hoaDolon1.getNgayLapLan2().compareTo(hoaDolon2.getNgayLapLan2()));
+
+            }
+        });
+
+        if (isRevese) {
+            Collections.reverse(listSorted);
+        }
+
+        return listSorted;
+    }
+
+    public List<HoaDon> sortByTienCoc(boolean isRevese) {
+        List<HoaDon> listSorted = listFilted;
+        Collections.sort(listSorted, new Comparator<HoaDon>() {
+            public int compare(HoaDon hoaDon1, HoaDon hoaDon2) {
+                if (hoaDon1.getTienCoc() > hoaDon2.getTienCoc()) {
+                    return 1;
+                } else if (hoaDon1.getTienCoc() < hoaDon2.getTienCoc()) {
+                    return -1;
+                } else {
+                    return 0;
+                }
+            }
+        });
+
+        if (isRevese) {
+            Collections.reverse(listSorted);
+        }
+        return listSorted;
+    }
+
+    public List<HoaDon> sortByTongTien(boolean isRevese) {
+        List<HoaDon> listSorted = listFilted;
+        Collections.sort(listSorted, new Comparator<HoaDon>() {
+            public int compare(HoaDon hoaDon1, HoaDon hoaDon2) {
+                if (hoaDon1.getTongTien() > hoaDon2.getTongTien()) {
+                    return 1;
+                } else if (hoaDon1.getTongTien() < hoaDon2.getTongTien()) {
+                    return -1;
+                } else {
+                    return 0;
+                }
+            }
+        });
+
+        if (isRevese) {
+            Collections.reverse(listSorted);
+        }
+        return listSorted;
     }
 
     /**
@@ -38,11 +370,18 @@ public class QuanLyHoaDon extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         tblHoaDon = new com.ui.swing.Table();
         jLabel1 = new javax.swing.JLabel();
-        txtTimKiem = new javax.swing.JTextField();
-        cbbTangDanGiamDan = new com.ui.swing.Combobox();
-        cbbSapXepTheo = new com.ui.swing.Combobox();
+        txtSearch = new javax.swing.JTextField();
+        cbbSort = new com.ui.swing.Combobox();
+        cbbSortBy = new com.ui.swing.Combobox();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        lblHuyLoc = new javax.swing.JLabel();
+        txtNgayBatDau = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
+        cbbTrangThai = new com.ui.swing.Combobox();
+        txtNgayKetThuc = new javax.swing.JTextField();
+        cbbNgay = new com.ui.swing.Combobox();
 
         pnlEmplpyeeManager.setBackground(new java.awt.Color(255, 255, 255));
         pnlEmplpyeeManager.setMinimumSize(new java.awt.Dimension(1600, 838));
@@ -75,61 +414,154 @@ public class QuanLyHoaDon extends javax.swing.JPanel {
 
             },
             new String [] {
-                "Mã hợp đồng", "Mã hóa đơn", "Ngày lập", "Người lập", "Tiền cọc", "Phát sinh ", "Tổng tiền", "Trạng thái"
+                "Mã hợp đồng", "Mã hóa đơn", "Ngày lập", "Người lập", "Ngày lập lần 2", "Người lập lần 2", "Tiền cọc", "Tổng tiền", "Trạng thái"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false
+                false, false, false, false, false, true, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
+        tblHoaDon.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         jScrollPane1.setViewportView(tblHoaDon);
 
-        pnlEmplpyeeManager.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 90, 1610, 790));
+        pnlEmplpyeeManager.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 180, 1610, 700));
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/happywedding/assets/sort.png"))); // NOI18N
-        pnlEmplpyeeManager.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1340, 30, 40, 40));
+        pnlEmplpyeeManager.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1350, 110, 40, 40));
 
-        txtTimKiem.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
-        txtTimKiem.setToolTipText("");
-        txtTimKiem.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(0, 0, 0)));
-        txtTimKiem.addActionListener(new java.awt.event.ActionListener() {
+        txtSearch.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
+        txtSearch.setToolTipText("");
+        txtSearch.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(0, 0, 0)));
+        txtSearch.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtTimKiemActionPerformed(evt);
+                txtSearchActionPerformed(evt);
             }
         });
-        txtTimKiem.addKeyListener(new java.awt.event.KeyAdapter() {
+        txtSearch.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                txtTimKiemKeyReleased(evt);
+                txtSearchKeyReleased(evt);
             }
         });
-        pnlEmplpyeeManager.add(txtTimKiem, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 40, 610, 35));
+        pnlEmplpyeeManager.add(txtSearch, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 120, 610, 35));
 
-        cbbTangDanGiamDan.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tăng dần", "Giảm dần" }));
-        cbbTangDanGiamDan.setLabeText("");
-        cbbTangDanGiamDan.addActionListener(new java.awt.event.ActionListener() {
+        cbbSort.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tăng dần", "Giảm dần" }));
+        cbbSort.setLabeText("");
+        cbbSort.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbbTangDanGiamDanActionPerformed(evt);
+                cbbSortActionPerformed(evt);
             }
         });
-        pnlEmplpyeeManager.add(cbbTangDanGiamDan, new org.netbeans.lib.awtextra.AbsoluteConstraints(1400, 10, 120, 54));
+        pnlEmplpyeeManager.add(cbbSort, new org.netbeans.lib.awtextra.AbsoluteConstraints(1410, 90, 120, 54));
 
-        cbbSapXepTheo.setLabeText("Sắp xếp");
-        cbbSapXepTheo.addActionListener(new java.awt.event.ActionListener() {
+        cbbSortBy.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tiền Cọc", "Tổng Tiền", "Ngày Lập Lần 1", "Ngày Lập Lần 2" }));
+        cbbSortBy.setSelectedIndex(-1);
+        cbbSortBy.setLabeText("Sắp xếp");
+        cbbSortBy.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbbSapXepTheoActionPerformed(evt);
+                cbbSortByActionPerformed(evt);
             }
         });
-        pnlEmplpyeeManager.add(cbbSapXepTheo, new org.netbeans.lib.awtextra.AbsoluteConstraints(1180, 10, 120, 54));
+        pnlEmplpyeeManager.add(cbbSortBy, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 90, 240, 54));
 
         jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/happywedding/assets/Search.png"))); // NOI18N
-        pnlEmplpyeeManager.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 40, 40, 40));
+        pnlEmplpyeeManager.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 120, 40, 40));
 
         jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/happywedding/assets/sort.png"))); // NOI18N
-        pnlEmplpyeeManager.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(1130, 30, 40, 40));
+        pnlEmplpyeeManager.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(1020, 110, 40, 40));
+
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/happywedding/assets/filt.png"))); // NOI18N
+        pnlEmplpyeeManager.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 40, -1, -1));
+
+        lblHuyLoc.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        lblHuyLoc.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/happywedding/assets/notfiltd.png"))); // NOI18N
+        lblHuyLoc.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblHuyLocMouseClicked(evt);
+            }
+        });
+        pnlEmplpyeeManager.add(lblHuyLoc, new org.netbeans.lib.awtextra.AbsoluteConstraints(1360, 30, -1, 50));
+
+        txtNgayBatDau.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        txtNgayBatDau.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtNgayBatDauFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtNgayBatDauFocusLost(evt);
+            }
+        });
+        txtNgayBatDau.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                txtNgayBatDauMouseClicked(evt);
+            }
+        });
+        txtNgayBatDau.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtNgayBatDauActionPerformed(evt);
+            }
+        });
+        pnlEmplpyeeManager.add(txtNgayBatDau, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 40, 200, 35));
+
+        jLabel5.setFont(new java.awt.Font("Tahoma", 1, 15)); // NOI18N
+        jLabel5.setText("Trạng thái");
+        pnlEmplpyeeManager.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(910, 40, -1, 30));
+
+        cbbTrangThai.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tất cả", "Trả lần 1", "Trả lần 2" }));
+        cbbTrangThai.setToolTipText("");
+        cbbTrangThai.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        cbbTrangThai.setLabeText("");
+        cbbTrangThai.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cbbTrangThaiItemStateChanged(evt);
+            }
+        });
+        cbbTrangThai.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbbTrangThaiActionPerformed(evt);
+            }
+        });
+        pnlEmplpyeeManager.add(cbbTrangThai, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 20, 220, 50));
+
+        txtNgayKetThuc.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        txtNgayKetThuc.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtNgayKetThucFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtNgayKetThucFocusLost(evt);
+            }
+        });
+        txtNgayKetThuc.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                txtNgayKetThucMouseClicked(evt);
+            }
+        });
+        txtNgayKetThuc.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtNgayKetThucActionPerformed(evt);
+            }
+        });
+        pnlEmplpyeeManager.add(txtNgayKetThuc, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 40, 200, 35));
+
+        cbbNgay.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Ngày trả lần \t1", "Ngày trả lần 2" }));
+        cbbNgay.setToolTipText("");
+        cbbNgay.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        cbbNgay.setLabeText("");
+        cbbNgay.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cbbNgayItemStateChanged(evt);
+            }
+        });
+        cbbNgay.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbbNgayActionPerformed(evt);
+            }
+        });
+        pnlEmplpyeeManager.add(cbbNgay, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 30, 190, 40));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -150,37 +582,115 @@ public class QuanLyHoaDon extends javax.swing.JPanel {
     }//GEN-LAST:event_lblSearchMouseClicked
 
     private void btnChiTietActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChiTietActionPerformed
-        // TODO add your handling code here:
+        int currentIndex = tblHoaDon.getSelectedRow();
+        if (currentIndex >= 0) {
+            String maHD = (String) tblHoaDon.getValueAt(currentIndex, 0);
+            LapHopDong lapHopDong = new LapHopDong(false, maHD,true);
+            AppStatus.mainApp.showForm(lapHopDong);
+            AppStatus.MENU.setSelected(0);
+
+        } else {
+            DialogHelper.alertError(this, "Vui lòng chọn hợp đồng");
+        }
     }//GEN-LAST:event_btnChiTietActionPerformed
 
-    private void txtTimKiemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTimKiemActionPerformed
+    private void txtSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSearchActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtTimKiemActionPerformed
+    }//GEN-LAST:event_txtSearchActionPerformed
 
-    private void txtTimKiemKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTimKiemKeyReleased
+    private void txtSearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchKeyReleased
+        if (isLoad) {
+            filtedHoaDon();
+        }
+    }//GEN-LAST:event_txtSearchKeyReleased
 
-    }//GEN-LAST:event_txtTimKiemKeyReleased
-
-    private void cbbTangDanGiamDanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbbTangDanGiamDanActionPerformed
+    private void cbbSortActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbbSortActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_cbbTangDanGiamDanActionPerformed
+    }//GEN-LAST:event_cbbSortActionPerformed
 
-    private void cbbSapXepTheoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbbSapXepTheoActionPerformed
+    private void cbbSortByActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbbSortByActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_cbbSapXepTheoActionPerformed
+    }//GEN-LAST:event_cbbSortByActionPerformed
+
+    private void lblHuyLocMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblHuyLocMouseClicked
+        txtNgayBatDau.setText("");
+        txtNgayKetThuc.setText("");
+        txtSearch.setText("");
+        cbbTrangThai.setSelectedIndex(0);
+        cbbNgay.setSelectedIndex(0);
+
+        filtedHoaDon();
+    }//GEN-LAST:event_lblHuyLocMouseClicked
+
+    private void txtNgayBatDauFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtNgayBatDauFocusGained
+        filtedHoaDon();
+    }//GEN-LAST:event_txtNgayBatDauFocusGained
+
+    private void txtNgayBatDauFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtNgayBatDauFocusLost
+        // System.out.println("thay doi");
+    }//GEN-LAST:event_txtNgayBatDauFocusLost
+
+    private void txtNgayBatDauMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtNgayBatDauMouseClicked
+        showCalendar1();
+    }//GEN-LAST:event_txtNgayBatDauMouseClicked
+
+    private void txtNgayBatDauActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNgayBatDauActionPerformed
+
+    }//GEN-LAST:event_txtNgayBatDauActionPerformed
+
+    private void cbbTrangThaiItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbbTrangThaiItemStateChanged
+        if (isLoad) {
+            filtedHoaDon();
+        }
+    }//GEN-LAST:event_cbbTrangThaiItemStateChanged
+
+    private void cbbTrangThaiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbbTrangThaiActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbbTrangThaiActionPerformed
+
+    private void txtNgayKetThucFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtNgayKetThucFocusGained
+        filtedHoaDon();
+    }//GEN-LAST:event_txtNgayKetThucFocusGained
+
+    private void txtNgayKetThucFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtNgayKetThucFocusLost
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtNgayKetThucFocusLost
+
+    private void txtNgayKetThucMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtNgayKetThucMouseClicked
+        showCalendar2();
+    }//GEN-LAST:event_txtNgayKetThucMouseClicked
+
+    private void txtNgayKetThucActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNgayKetThucActionPerformed
+
+    }//GEN-LAST:event_txtNgayKetThucActionPerformed
+
+    private void cbbNgayItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbbNgayItemStateChanged
+        filtedHoaDon();
+    }//GEN-LAST:event_cbbNgayItemStateChanged
+
+    private void cbbNgayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbbNgayActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbbNgayActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.ui.swing.InkwellButton btnChiTiet;
-    private com.ui.swing.Combobox cbbSapXepTheo;
-    private com.ui.swing.Combobox cbbTangDanGiamDan;
+    private com.ui.swing.Combobox cbbNgay;
+    private com.ui.swing.Combobox cbbSort;
+    private com.ui.swing.Combobox cbbSortBy;
+    private com.ui.swing.Combobox cbbTrangThai;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblHuyLoc;
     private javax.swing.JLabel lblSearch;
     private javax.swing.JPanel pnlEmplpyeeManager;
     private com.ui.swing.Table tblHoaDon;
-    private javax.swing.JTextField txtTimKiem;
+    private javax.swing.JTextField txtNgayBatDau;
+    private javax.swing.JTextField txtNgayKetThuc;
+    private javax.swing.JTextField txtSearch;
     // End of variables declaration//GEN-END:variables
 }

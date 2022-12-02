@@ -28,36 +28,39 @@ public class ChiTietDichVuDiKemDAO {
     private final String UPDATE_HDDICHVUDIKEM = "UPDATE HopDongDichVuDiKem \n"
             + "SET ChiPhi = ?,ChiPhiPhatSinh = ?, GhiChu = ?\n"
             + "WHERE MaHD = ?";
-    
-    
 
     private final String INSERT_CHITIETDICHVUDIKEM = "INSERT ChiTietDichVuDiKem (MaHD, MaDV, GhiChu, ChiPhiPhatSinh, ChiPhi,SoLuong) VALUES (?, ?, ?, ?, ?,?)";
     private final String DELETE_ALL_CHITIETDICHVUDIKEM = "DELETE ChiTietDichVuDiKem WHERE MaHD = ?";
     private final String SELECT_CHITIETDICHVUDIKEM = "SELECT MaHD,dv.MaDV,dv.TenDV,dv.Gia AS ChiPhi,GhiChu,ChiPhiPhatSinh,SoLuong  FROM ChiTietDichVuDiKem ct\n"
             + "INNER JOIN DichVuDiKem  dv ON ct.MaDV = dv.MaDV\n"
             + "WHERE MaHD = ?";
-    
-    
-     public boolean insertHopDongDichVuDiKem(HopDongDichVuDiKem hd) {
-        int rs = JDBCHelper.executeUpdate(INSERT_HDDICHVUDIKEM, hd.getMaHD(),  hd.getChiPhi(), hd.getChiPhiPhatSinh(), hd.getGhiChu());
+    private final String SELECT_CHITIETDICHVUDIKEM_BY_MADV = "SELECT MaHD,dv.MaDV,dv.TenDV,dv.Gia AS ChiPhi,GhiChu,ChiPhiPhatSinh,SoLuong  FROM ChiTietDichVuDiKem ct\n"
+            + "INNER JOIN DichVuDiKem  dv ON ct.MaDV = dv.MaDV\n"
+            + "WHERE MaHD = ? AND ct.MaDV = ?";
+    private final String UPDATE_CHITIETDIKEM = "UPDATE ChiTietDichVuDiKem SET SoLuong = ? WHERE MaHD = ? AND MaDV = ?";
+
+    public boolean insertHopDongDichVuDiKem(HopDongDichVuDiKem hd) {
+        int rs = JDBCHelper.executeUpdate(INSERT_HDDICHVUDIKEM, hd.getMaHD(), hd.getChiPhi(), hd.getChiPhiPhatSinh(), hd.getGhiChu());
         return rs > 0;
     }
-    
-      public boolean updateHopDongDichVuDiKem(HopDongDichVuDiKem hd) {
-        int rs = JDBCHelper.executeUpdate(UPDATE_HDDICHVUDIKEM,  hd.getChiPhi(), hd.getChiPhiPhatSinh(), hd.getChiPhi(), hd.getMaHD());
+
+    public boolean updateHopDongDichVuDiKem(HopDongDichVuDiKem hd) {
+        int rs = JDBCHelper.executeUpdate(UPDATE_HDDICHVUDIKEM, hd.getChiPhi(), hd.getChiPhiPhatSinh(), hd.getChiPhi(), hd.getMaHD());
         return rs > 0;
     }
-      
-        public HopDongDichVuDiKem selectHopDongDichVuDiKem(String maHD) {
-       List<HopDongDichVuDiKem> list = selectHopDongDichVuDiKem(SELECT_HDDICHVUDIKEM, maHD, maHD);
+
+    public HopDongDichVuDiKem selectHopDongDichVuDiKem(String maHD) {
+        List<HopDongDichVuDiKem> list = selectHopDongDichVuDiKem(SELECT_HDDICHVUDIKEM, maHD, maHD);
         return list.size() > 0 ? list.get(0) : null;
     }
     
+    
+
     /*
     thêm vào bảng ChiTietDichVuDiKem
      */
     public boolean insertChiTietDichVuDiKem(ChiTietDichVuDiKem ct) {
-        int rs = JDBCHelper.executeUpdate(INSERT_CHITIETDICHVUDIKEM, ct.getMaHD(), ct.getMaDV(), ct.getGhiChu(), ct.getChiPhiPhatSinh(), ct.getChiPhi(),ct.getSoLuong());
+        int rs = JDBCHelper.executeUpdate(INSERT_CHITIETDICHVUDIKEM, ct.getMaHD(), ct.getMaDV(), ct.getGhiChu(), ct.getChiPhiPhatSinh(), ct.getChiPhi(), ct.getSoLuong());
         return rs > 0;
     }
 
@@ -68,6 +71,15 @@ public class ChiTietDichVuDiKemDAO {
 
     public List<ChiTietDichVuDiKem> selectChiTietDichVuDiKem(String maHD) {
         return selectChiTietDichVuDiKem(SELECT_CHITIETDICHVUDIKEM, maHD);
+    }
+    
+    public List<ChiTietDichVuDiKem> selectChiTietDichVuDiKemByMaDV(String maHD,String maDV) {
+        return selectChiTietDichVuDiKem(SELECT_CHITIETDICHVUDIKEM_BY_MADV, maHD,maDV);
+    }
+    
+    public boolean updateChiTietDiKem(ChiTietDichVuDiKem ct){
+        int rs = JDBCHelper.executeUpdate(UPDATE_CHITIETDIKEM, ct.getSoLuong(),ct.getMaHD(),ct.getMaDV());
+        return rs > 0;
     }
 
     /*
@@ -83,9 +95,8 @@ public class ChiTietDichVuDiKemDAO {
     public List<DichVuDiKem> selectDichVuDiKemNotinHopDong(String maHD) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    
-    
-     private List selectHopDongDichVuDiKem(String sql, Object... args) {
+
+    private List selectHopDongDichVuDiKem(String sql, Object... args) {
         List<HopDongDichVuDiKem> list = new ArrayList<>();
         try {
             ResultSet rs = null;
@@ -147,7 +158,5 @@ public class ChiTietDichVuDiKemDAO {
         return ctdv;
 
     }
-    
-    
 
 }

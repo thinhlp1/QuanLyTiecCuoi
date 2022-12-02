@@ -82,7 +82,7 @@ public class TrangTriBanTiec extends javax.swing.JDialog {
         ttBanTiec = chiTietDVDAO.selectDichVu(maHD, maDV);
 
         isView(isCreate);
-
+        isLoad = true;
         if (ttBanTiec != null) {
             if (ttBanTiec.getMaGoi() != null) {
                 for (GoiDichVu goi : listGoiDichVu) {
@@ -103,7 +103,6 @@ public class TrangTriBanTiec extends javax.swing.JDialog {
             }
 
         }
-        isLoad = true;
 
     }
 
@@ -196,6 +195,7 @@ public class TrangTriBanTiec extends javax.swing.JDialog {
         for (GoiDichVu s : listGoiDichVu) {
             cbbModel.addElement(s);
         }
+        cbbGoiDV.setSelectedIndex(-1);
     }
 
     public void loadCoSoVatChat() {
@@ -361,20 +361,23 @@ public class TrangTriBanTiec extends javax.swing.JDialog {
             if (cp instanceof JTextField) {
                 cp.setEnabled(isCreate);
             } else if (cp instanceof Combobox) {
-                cp.setEnabled(isCreate);
+                cp.setEnabled(false);
             }
 
         }
+        cbbGoiDV.setEnabled(true);
         btnSave.setVisible(isCreate);
         btnReset.setVisible(isCreate);
-        btnEdit.setVisible(isCreate);
+        //btnEdit.setVisible(isCreate);
         taGhiChu.setEnabled(isCreate);
     }
 
     public void isTuyChinhGoiDichVu(boolean is) {
-        cbbAoGhe.setEnabled(is);
-        cbbHoaTT.setEnabled(is);
-        cbbTham.setEnabled(is);
+        if (isCreate) {
+            cbbAoGhe.setEnabled(is);
+            cbbHoaTT.setEnabled(is);
+            cbbTham.setEnabled(is);
+        }
     }
 
     public boolean checkValid(JTextField txt) {
@@ -959,7 +962,7 @@ public class TrangTriBanTiec extends javax.swing.JDialog {
     }//GEN-LAST:event_txtCPHoaTTFocusLost
 
     private void cbbGoiDVItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbbGoiDVItemStateChanged
-        if (isLoad && cbbGoiDV.getSelectedIndex() != -1) {
+        if (isLoad && cbbGoiDV.getSelectedIndex() != -1 && isCreate) {
             fillFormByGoiDichVu((GoiDichVu) cbbGoiDV.getSelectedItem());
             isTuyChinhGoiDichVu(false);
             lblViewSlideShow.setVisible(true);

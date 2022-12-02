@@ -286,6 +286,9 @@ public class DichVuDiKem extends javax.swing.JDialog {
         listChiTietDichVu = getChiTietDichVu();
 
         for (ChiTietDichVuDiKem ct : listChiTietDichVu) {
+            if (ct.getSoLuong() == -1) {
+                continue;
+            }
             chiPhi += ct.getChiPhi();
             chiPhiPhatSinh += ct.getChiPhiPhatSinh();
         }
@@ -502,6 +505,7 @@ public class DichVuDiKem extends javax.swing.JDialog {
 
         txtChiPhi.setEditable(false);
         txtChiPhi.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        txtChiPhi.setText("0");
         txtChiPhi.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtChiPhiActionPerformed(evt);
@@ -515,10 +519,12 @@ public class DichVuDiKem extends javax.swing.JDialog {
 
         txtTongChiPhi.setEditable(false);
         txtTongChiPhi.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        txtTongChiPhi.setText("0");
         jPanel1.add(txtTongChiPhi, new org.netbeans.lib.awtextra.AbsoluteConstraints(940, 670, 240, 35));
 
         txtTongCPPS.setEditable(false);
         txtTongCPPS.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        txtTongCPPS.setText("0");
         jPanel1.add(txtTongCPPS, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 670, 220, 35));
 
         jLabel10.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
@@ -566,14 +572,22 @@ public class DichVuDiKem extends javax.swing.JDialog {
     }//GEN-LAST:event_txtSearchKeyReleased
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
-        if (ctdvDAO.selectChiTietDichVuDiKem(maHD) == null) {
+        
+        if (tblChiTietDichVu.getRowCount() == 0){
+            boolean rs = DialogHelper.confirm(this, "Xác nhận không chọn thêm dịch vụ");
+            if (!rs){
+                return;
+            }
+        }
+        
+        if (ctdvDAO.selectHopDongDichVuDiKem(maHD) == null) {
             insertDichVuDiKem();
             insertChiTietDichVuDiKem();
         } else {
             updateDichVuDiKem();
             updateChiTietDichVuDiKem();
         }
-
+        AppStatus.lapHopDong.checkedDichVu("DICHVUDIKEM ", true);
         AppStatus.lapHopDong.reloadHopDong();
         this.dispose();
 

@@ -21,9 +21,14 @@ import java.util.List;
 public class DichVuDiKemDAO {
 
     private final String SELECT = "SELECT * FROM DichVuDiKem";
-
+    
+    
     public List<DichVuDiKemModel> select() {
         return selectDichVuDiKem(SELECT);
+    }
+    
+    public List<DichVuDiKemModel> selectByID(String maDV) {
+        return selectDichVuDiKem(SELECT,maDV);
     }
 
     private List selectDichVuDiKem(String sql, Object... args) {
