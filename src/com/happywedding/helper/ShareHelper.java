@@ -32,6 +32,7 @@ public class ShareHelper {
         // Tải biểu tượng ứng dụng
         String file = "/com/happywedding/assets/logoWedding.png";
         APP_ICON = new ImageIcon(ShareHelper.class.getResource(file)).getImage();
+     
     }
 
     public static boolean saveLogo(File file) {

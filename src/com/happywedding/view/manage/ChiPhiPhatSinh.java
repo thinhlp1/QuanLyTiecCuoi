@@ -27,6 +27,7 @@ import javax.swing.AbstractCellEditor;
 import javax.swing.JComponent;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.event.ChangeEvent;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
@@ -266,13 +267,21 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
                 + ShareHelper.toMoney(txtNgheThuat.getText()) + ShareHelper.toMoney(txtDatMon.getText()) + ShareHelper.toMoney(txtDiKem.getText());
 
         listChiTietDatMon = getChiPhiDatMon();
+        int i = 0;
         for (ChiTietDatMon ct : listChiTietDatMon) {
             chiPhiDatMon += ct.getSoLuong() * ct.getGia();
+            tblThucDon.editingCanceled(new ChangeEvent(new Object()));
+            tblThucDon.setValueAt(ShareHelper.toMoney(ct.getGia() * ct.getSoLuong()), i, 3);
+            i++;
         }
 
         listChiTietDichVuDiKem = getChiPhiDiKem();
+        i = 0;
         for (ChiTietDichVuDiKem ct : listChiTietDichVuDiKem) {
             chiPhiDiKem += ct.getSoLuong() * ct.getChiPhi();
+            tblChiTietDichVu.editingCanceled(new ChangeEvent(new Object()));
+            tblChiTietDichVu.setValueAt(ShareHelper.toMoney(ct.getChiPhi() * ct.getSoLuong()), i, 3);
+            i++;
         }
 
         tongTien = chiPhiDatMon + chiPhiDiKem + chiPhiDichVu;
@@ -857,7 +866,7 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
         if (hoaDonDAO.selectByID(maHD) != null) {
             if (hoaDonDAO.selectByID(maHD).getTrangTha() == 0) {
                 if (insertChiPhiDichVu() && insertChiTietDatMon() && insertChiTietDichVuDiKem()) {
-                    hoaDonDAO.updateHoaDon(maHD,DateHelper.now(),AppStatus.USER.getMaNV());
+                    hoaDonDAO.updateHoaDon(maHD, DateHelper.now(), AppStatus.USER.getMaNV());
                     //btnXuatHoaDon.setVisible(false);
                     isView(false);
                     // DialogHelper.alert(this, "Xuất thành công");

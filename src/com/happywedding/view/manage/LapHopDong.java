@@ -102,6 +102,7 @@ public class LapHopDong extends javax.swing.JPanel {
     private boolean isCreate; // đang được tạo hay không
     private boolean isEdit; // có được chỉnh sữa hay
     private boolean isHoaDon;
+    private boolean isValid = true;
     private List<Boolean> checkedDichVu = new ArrayList<Boolean>(Collections.nCopies(6, false));
 
     private List<Sanh> listSanh = new ArrayList<>();
@@ -151,14 +152,20 @@ public class LapHopDong extends javax.swing.JPanel {
                     d2 = sdf.parse(ketThuc);
 
                     if (d2.getTime() - d1.getTime() < 2 * 3600000 && batDau != null && ketThuc != null) {
-                        DialogHelper.alertError(new JFrame(), "Thời gian đặt ít nhất là 2h");
+                        txtBatDau.setText(batDau);
+                        if (ketThuc == null) {
+                            d2.setTime(d1.getTime() + 2 * 3600000);
+                            timePickerKetThuc.setSelectedTime(d2);
+                            timePickerKetThuc.disPlayTime(sdf.format(d2));
+
+                        }
                     } else {
                         txtBatDau.setText(batDau);
                         if (ketThuc == null) {
                             d2.setTime(d1.getTime() + 2 * 3600000);
                             timePickerKetThuc.setSelectedTime(d2);
                             timePickerKetThuc.disPlayTime(sdf.format(d2));
-                            
+
                         }
 
                     }
@@ -954,7 +961,8 @@ public class LapHopDong extends javax.swing.JPanel {
             }
         }
 
-        String maHDDD = hopDongDAO.checkSanh(((Sanh) cbbSanh.getSelectedItem()).getMaSanh(), DateHelper.toDate(txtNgayToChuc.getText(), "dd/MM/yyyy"), txtBatDau.getText(), txtKetThuc.getText());
+        String maHDDD = hopDongDAO.checkSanh(((Sanh) cbbSanh.getSelectedItem()).getMaSanh(), DateHelper.toDate(txtNgayToChuc.getText(), "dd/MM/yyyy"),
+                txtBatDau.getText(), txtKetThuc.getText(), maHD);
         if (maHDDD != null) {
             DialogHelper.alertError(this, "Sảnh đã được đặt tại " + maHDDD);
             return false;
@@ -2039,17 +2047,19 @@ public class LapHopDong extends javax.swing.JPanel {
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
 
-        /// boolean isValid = true;
         for (int i = 0; i < checkedDichVu.size(); i++) {
             if (checkedDichVu.get(i) == false) {
                 DialogHelper.alertError(this, "Chọn đầy đủ dịch vụ");
+                isValid = false;
                 return;
             }
         }
 
         if (!validHopDong()) {
+            isValid = false;
             return;
         }
+        isValid = true;
 
         if (AppStatus.ROLE.equals("TIEPTAN")) {
             statusHopDong = StatusHopDong.CHODUYET;
@@ -2095,14 +2105,11 @@ public class LapHopDong extends javax.swing.JPanel {
 
     private void btnDuyetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDuyetActionPerformed
 
-        for (int i = 0; i < checkedDichVu.size(); i++) {
-            if (checkedDichVu.get(i) == false) {
-                DialogHelper.alertError(this, "Chọn đầy đủ dịch vụ");
-                return;
-            }
-        }
-
         btnSave.doClick();
+        
+       if (!isValid){
+           return;
+       }
 
         updateTrangThaiHopDong(StatusHopDong.CHODUYET);
         updateHopDong();
@@ -2384,7 +2391,7 @@ public class LapHopDong extends javax.swing.JPanel {
             return;
         }
 
-        maHD = hopDongDAO.checkSanh(((Sanh) cbbSanh.getSelectedItem()).getMaSanh(), DateHelper.toDate(txtNgayToChuc.getText(), "dd/MM/yyyy"), txtBatDau.getText(), txtKetThuc.getText());
+        maHD = hopDongDAO.checkSanh(((Sanh) cbbSanh.getSelectedItem()).getMaSanh(), DateHelper.toDate(txtNgayToChuc.getText(), "dd/MM/yyyy"), txtBatDau.getText(), txtKetThuc.getText(), this.maHD);
         if (maHD == null) {
             DialogHelper.alert(this, "Sảnh không có lịch đặt cọc");
         } else {

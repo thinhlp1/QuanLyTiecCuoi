@@ -29,6 +29,11 @@ public class JDBCHelper {
             throw new RuntimeException(ex);
         }
     }
+    
+    public static Connection getConnection() throws SQLException{
+        return DriverManager.getConnection(dburl, username, password);
+    }
+    
 
     /**
      * Xây dựng PreparedStatement
