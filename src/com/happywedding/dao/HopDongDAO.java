@@ -12,6 +12,7 @@ import com.happywedding.model.HopDong;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -43,6 +44,9 @@ public class HopDongDAO extends AbstractDAO<HopDong> {
     private final String UPDATE_SANH = "UPDATE HopDong SET Sanh = ? WHERE MaHD = ?";
     private final String TINH_TIEN = "EXEC tinhTien @MaHD = ?";
     private final String TINH_TIEN_VOI_SANH = "EXEC tinhTienVoiSanh @MaHD = ? , @MaSanh = ?,@SoLuongBan = ?";
+    private final String CHECK_SANH = "SELECT * FROM HopDong hd INNER JOIN Sanh s  ON hd.Sanh = s.MaSanh\n"
+            + "WHERE MaSanh = ? AND NgayToChuc = ? AND (  ( CAST(? AS Time)   BETWEEN ThoiGianBatDau AND ThoiGianKetThuc )"
+            + "OR  (  ( CAST(? AS Time)   BETWEEN ThoiGianBatDau AND ThoiGianKetThuc )   )   )";
 
     @Override
     public boolean insert(HopDong entity) {
@@ -86,6 +90,23 @@ public class HopDongDAO extends AbstractDAO<HopDong> {
     public boolean updateSanh(String maSanh, String maHD) {
         int rs = JDBCHelper.executeUpdate(UPDATE_SANH, maSanh, maHD);
         return rs > 0;
+    }
+
+    public String checkSanh(String maSanh, Date ngayToChuc, String batDau, String ketThuc) {
+        try {
+            ResultSet rs = null;
+            try {
+                rs = JDBCHelper.executeQuery(CHECK_SANH, maSanh, ngayToChuc, batDau, ketThuc);
+                while (rs.next()) {
+                    return rs.getString("MaHD");
+                }
+            } finally {
+                rs.getStatement().getConnection().close();
+            }
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
+        return null;
     }
 
     // trả về chi phí và chi phí phát sinh trong toàn bộ hợp đồng

@@ -34,7 +34,7 @@ public class Sanh {
     
     @Override
     public String toString(){
-        return tenSanh + " - " + sucChua ;
+        return tenSanh + " - " + sucChua / 10 + " bàn" ;
     }
     
     

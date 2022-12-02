@@ -711,14 +711,14 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
 
         tblThucDon.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null}
+                {null, null, null, null}
             },
             new String [] {
-                "Tên món", "Giá", "Số lượng"
+                "Tên món", "Giá", "Số lượng", "Tổng tiền"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, true
+                false, false, true, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -755,14 +755,14 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
 
         tblChiTietDichVu.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null}
+                {null, null, null, null}
             },
             new String [] {
-                "Dịch vụ", "Giá", "Số lượng"
+                "Dịch vụ", "Giá", "Số lượng", "Tổng tiền"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, true
+                false, false, true, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
