@@ -7,6 +7,7 @@ package com.happywedding.dao;
 
 import com.happywedding.helper.JDBCHelper;
 import com.happywedding.model.PhongBan;
+import com.happywedding.model.TaiKhoan;
 import com.happywedding.model.VaiTroTaiKhoan;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -19,12 +20,13 @@ import java.util.List;
  */
 public class PhongBanDAO {
 
-    private final String SELECT_VaiTroTaiKhoan = "SELECT * FROM PhongBan";
-
-    public List<PhongBan> select() {
-        return select(SELECT_VaiTroTaiKhoan);
-    }
-
+//    public List<PhongBan> select() {
+//
+//    }
+//
+//    public PhongBan findById(String id) {
+//
+//    }
     private List select(String sql, Object... args) {
         List<PhongBan> list = new ArrayList<>();
         try {
@@ -32,8 +34,8 @@ public class PhongBanDAO {
             try {
                 rs = JDBCHelper.executeQuery(sql, args);
                 while (rs.next()) {
-                    PhongBan pb = readFromResultSet(rs);
-                    list.add(pb);
+                    PhongBan PhongBan = readFromResultSet(rs);
+                    list.add(PhongBan);
                 }
             } finally {
                 rs.getStatement().getConnection().close();
@@ -45,10 +47,13 @@ public class PhongBanDAO {
     }
 
     private PhongBan readFromResultSet(ResultSet rs) throws SQLException {
-        PhongBan pb = new PhongBan();
-        pb.setMaPB(rs.getString("MaPB"));
-        pb.setTenPB(rs.getString("TenPB"));
-        return pb;
-
+        PhongBan PhongBan = new PhongBan();
+        return PhongBan;
     }
+    private final String SELECT_VaiTroTaiKhoan = "SELECT * FROM PhongBan";
+
+    public List<PhongBan> select() {
+        return select(SELECT_VaiTroTaiKhoan);
+    }
+
 }

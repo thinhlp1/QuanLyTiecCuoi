@@ -45,7 +45,11 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.File;
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -53,6 +57,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -63,6 +68,15 @@ import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JTextField;
+
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.util.JRLoader;
+import net.sf.jasperreports.view.JasperViewer;
+
 
 /**
  *
@@ -144,7 +158,7 @@ public class LapHopDong extends javax.swing.JPanel {
         // khởi tạo ngày và giờ
         timePickerBatDau.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
+           public void actionPerformed(ActionEvent e) {
                 String ketThuc = ShareHelper.to24Hour(timePickerKetThuc.getSelectedTime());
                 String batDau = ShareHelper.to24Hour(timePickerBatDau.getSelectedTime());
 
@@ -1094,6 +1108,7 @@ public class LapHopDong extends javax.swing.JPanel {
 
     }
 
+
     public boolean checkName(JTextField txtHoTen, JComponent nextFocus, KeyEvent evt) {
 
         String name = txtHoTen.getText().trim().replaceAll("\\s+", " ");
@@ -1194,6 +1209,22 @@ public class LapHopDong extends javax.swing.JPanel {
             }
         }
         return false;
+    }
+    private static net.sf.jasperreports.engine.JasperReport loadJasperReport(String reportName) {
+        try {
+            System.out.println(reportName);
+            File f = new File(reportName + ".jasper");
+            if (!f.exists()) {
+                JasperCompileManager.compileReportToFile(reportName + ".jrxml", reportName + ".jasper");
+                f = new File(reportName + ".jasper");
+            }
+            net.sf.jasperreports.engine.JasperReport jr = (net.sf.jasperreports.engine.JasperReport) JRLoader.loadObject(f);
+            return jr;
+        } catch (Exception e) {
+            System.out.println(e);
+//            e.printStackTrace();
+        }
+        return null;
     }
 
     /**
@@ -2415,65 +2446,59 @@ public class LapHopDong extends javax.swing.JPanel {
     }//GEN-LAST:event_btnHuyDuyetActionPerformed
 
     private void btnInHopDongActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInHopDongActionPerformed
-        //IN HOP DONG
-//        HopDongPDF hopDongPDF = new HopDongPDF();
-//        HopDong hopDong = hopDongDAO.findById(maHD);
-//        List<HopDong> listHopDong = new ArrayList<>();
-//        listHopDong.add(hopDong);
-//        hopDongPDF.setListHopDong(listHopDong);
-//
-//        ChiTietDatMonDAO datMonDAO = new ChiTietDatMonDAO();
-//        List<DichVuDatMon> listDichVuDatMon = new ArrayList<>();
-//        DichVuDatMon dvddm = datMonDAO.selectDichVuDatMon(maHD, datMonDAO.selectThucDonChinh(maHD));
-//        listDichVuDatMon.add(dvddm);
-//        hopDongPDF.setListDichVuDatMon(listDichVuDatMon);
-//
-//        List<ChiTietDatMon> listChiTietDatMon1 = datMonDAO.selectChiTietDatMon(maHD, datMonDAO.selectThucDonChinh(maHD));
-//        hopDongPDF.setListChiTietDatMon1(listChiTietDatMon1);
-//
-//        ChiTietDichVuDAO ctdvDAO = new ChiTietDichVuDAO();
-//        List<HopDongDichVu> listTTBanTiec = new ArrayList<>();
-//        HopDongDichVu ttBanTiec = ctdvDAO.selectDichVu(maHD, "TTBANTIEC");
-//        listTTBanTiec.add(ttBanTiec);
-//        hopDongPDF.setListTTBanTiec(listTTBanTiec);
-//        hopDongPDF.setListChiTietBanTiec(getListTTBanTiec());
-//
-//        List<HopDongDichVu> listTTCong = new ArrayList<>();
-//        HopDongDichVu ttCong = ctdvDAO.selectDichVu(maHD, "TTCONG");
-//        listTTCong.add(ttCong);
-//        hopDongPDF.setListTTCong(listTTCong);
-//        hopDongPDF.setListChiTietCong(getListTTCong());
-//
-//        List<HopDongDichVu> listTTSanKhau = new ArrayList<>();
-//        HopDongDichVu ttSanKhau = ctdvDAO.selectDichVu(maHD, "TTSANKHAU");
-//        listTTSanKhau.add(ttSanKhau);
-//        hopDongPDF.setListTTSanKhau(listTTSanKhau);
-//        hopDongPDF.setListChiTietSanKhau(getListTTSanKhau());
-//
-//        List<HopDongDichVu> listTTNgheThuat = new ArrayList<>();
-//        HopDongDichVu ttNgheThua = ctdvDAO.selectDichVu(maHD, "NGHETHUAT");
-//        listTTNgheThuat.add(ttNgheThua);
-//        hopDongPDF.setListNgheThuat(listTTNgheThuat);
-//        hopDongPDF.setListChiTietNgheThuat(getListNgheThuat());
+        hopDong = hopDongDAO.findById(maHD);
+        try {
+            Map<String, Object> parameters = new HashMap<String, Object>();
+            Connection con = JDBCHelper.getConnection();
 
-        // truyền cái HopDongPDF
-        long ttdv = dichVuDAO.selectDichVu(maHD, "TTCONG").getChiPhi()
-                + dichVuDAO.selectDichVu(maHD, "TTCONG").getChiPhiPhatSinh()
-                + dichVuDAO.selectDichVu(maHD, "TTBANTIEC").getChiPhi()
-                + dichVuDAO.selectDichVu(maHD, "TTBANTIEC").getChiPhiPhatSinh()
-                + dichVuDAO.selectDichVu(maHD, "TTSANKHAU").getChiPhi()
-                + dichVuDAO.selectDichVu(maHD, "TTSANKHAU").getChiPhiPhatSinh()
-                + dichVuDAO.selectDichVu(maHD, "NGHETHUAT").getChiPhi()
-                + dichVuDAO.selectDichVu(maHD, "NGHETHUAT").getChiPhiPhatSinh()
-                + datMonDAO.selectDichVuDatMon(maHD, datMonDAO.selectThucDonChinh(maHD)).getChiPhi()
-                + datMonDAO.selectDichVuDatMon(maHD, datMonDAO.selectThucDonChinh(maHD)).getChiPhiPhatSinh()
-                + datMonDAO.selectDichVuDatMon(maHD, datMonDAO.selectThucDonPhu(maHD)).getChiPhi()
-                + datMonDAO.selectDichVuDatMon(maHD, datMonDAO.selectThucDonPhu(maHD)).getChiPhiPhatSinh()
-                + dichVuDiKemDAO.selectHopDongDichVuDiKem(maHD).getChiPhi()
-                +dichVuDiKemDAO.selectHopDongDichVuDiKem(maHD).getChiPhiPhatSinh()
-                
-                ;
-        String tongTienDichVu = ShareHelper.toMoney(ttdv);
+            String maHD = this.maHD;
+            String maTD = datMonDAO.selectThucDonChinh(maHD);
+            String maTDPhu = datMonDAO.selectThucDonPhu(maHD);
+            if (maTDPhu.equals(maTD)) {
+                maTDPhu = "";
+            }
+            long ttdv = dichVuDAO.selectDichVu(maHD, "TTCONG").getChiPhi()
+                    + dichVuDAO.selectDichVu(maHD, "TTCONG").getChiPhiPhatSinh()
+                    + dichVuDAO.selectDichVu(maHD, "TTBANTIEC").getChiPhi()
+                    + dichVuDAO.selectDichVu(maHD, "TTBANTIEC").getChiPhiPhatSinh()
+                    + dichVuDAO.selectDichVu(maHD, "TTSANKHAU").getChiPhi()
+                    + dichVuDAO.selectDichVu(maHD, "TTSANKHAU").getChiPhiPhatSinh()
+                    + dichVuDAO.selectDichVu(maHD, "NGHETHUAT").getChiPhi()
+                    + dichVuDAO.selectDichVu(maHD, "NGHETHUAT").getChiPhiPhatSinh()
+                    + datMonDAO.selectDichVuDatMon(maHD, datMonDAO.selectThucDonChinh(maHD)).getChiPhi()
+                    + datMonDAO.selectDichVuDatMon(maHD, datMonDAO.selectThucDonChinh(maHD)).getChiPhiPhatSinh()
+                    + datMonDAO.selectDichVuDatMon(maHD, datMonDAO.selectThucDonPhu(maHD)).getChiPhi()
+                    + datMonDAO.selectDichVuDatMon(maHD, datMonDAO.selectThucDonPhu(maHD)).getChiPhiPhatSinh()
+                    + dichVuDiKemDAO.selectHopDongDichVuDiKem(maHD).getChiPhi()
+                    + dichVuDiKemDAO.selectHopDongDichVuDiKem(maHD).getChiPhiPhatSinh();
+            String tongTienDichVu = ShareHelper.toMoney(ttdv);
+            String thue = ShareHelper.toMoney((long) ((ShareHelper.toMoney(txtChiPhi.getText()) + ShareHelper.toMoney(txtChiPhiPhatSinh.getText())) * (10 / 100.0)));
+            String tongTien = ShareHelper.toMoney(hopDong.getTongTien());
+            String tienCoc = ShareHelper.toMoney(hopDong.getTienCoc());
+            String tienConLai = ShareHelper.toMoney(hopDong.getTongTien() - hopDong.getTienCoc());
+            String thanhChu = EnglishNumberToWords.convert(hopDong.getTongTien());
+            String thanhChu2 = EnglishNumberToWords.convert(ShareHelper.toMoney(tienConLai));
+            net.sf.jasperreports.engine.JasperReport rpt = JasperCompileManager.compileReport("src\\com\\happywedding\\Report\\XuatHopDong.jrxml");
+            parameters.put("MaHD", maHD);
+            parameters.put("MaTD_Chinh", maTD);
+            parameters.put("MaTD_Phu", maTDPhu);
+            parameters.put("ThanhTien", thanhChu);
+            parameters.put("ThanhTien2", thanhChu2);
+            parameters.put("Thue", thue + " VND");
+            parameters.put("TongTien", tongTien + " VND");
+            parameters.put("TienCoc", tienCoc + " VND");
+            parameters.put("TienConLai", tienConLai + " VND");
+            parameters.put("tongTienDichVu", tongTienDichVu);
+            parameters.put("SUBREPORT_DIR", "src\\com\\happywedding\\Report\\");
+            System.out.println(parameters);
+            JasperPrint p = JasperFillManager.fillReport(rpt, parameters, con);
+            JasperViewer.viewReport(p, false);
+
+        } catch (SQLException ex) {
+            Logger.getLogger(JasperReport.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (JRException ex) {
+            Logger.getLogger(JasperReport.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
 
     }//GEN-LAST:event_btnInHopDongActionPerformed

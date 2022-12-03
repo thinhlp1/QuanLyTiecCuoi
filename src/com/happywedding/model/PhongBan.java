@@ -1,19 +1,17 @@
-
 package com.happywedding.model;
 
 public class PhongBan {
-     private String maPB;
-     private String tenPB;
+
+    private String maPB;
+    private String tenPB;
+
+    public PhongBan() {
+    }
 
     public PhongBan(String maPB, String tenPB) {
         this.maPB = maPB;
         this.tenPB = tenPB;
     }
-
-    public PhongBan() {
-    }
-    
-    
 
     public String getMaPB() {
         return maPB;
@@ -31,5 +29,4 @@ public class PhongBan {
         this.tenPB = tenPB;
     }
 
-    
 }
