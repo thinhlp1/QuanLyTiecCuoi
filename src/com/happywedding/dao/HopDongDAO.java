@@ -40,7 +40,7 @@ public class HopDongDAO extends AbstractDAO<HopDong> {
             + "INNER JOIN Sanh s ON s.MaSanh = hd.Sanh\n"
             + "WHERE hd.MaHD = ?";
     private final String UPDATE_TRANGTHAI = "UPDATE dbo.HopDong SET TrangThai = ? WHERE MaHD = ?";
-    private final String UPDATE_CHIPHI = "UPDATE HopDong SET TongTien = ? , TienCoc = ? WHERE MaHD = ?";
+    private final String UPDATE_CHIPHI = "UPDATE HopDong SET TienCoc = ? , TongTien = ? WHERE MaHD = ?";
     private final String UPDATE_SANH = "UPDATE HopDong SET Sanh = ? WHERE MaHD = ?";
     private final String TINH_TIEN = "EXEC tinhTien @MaHD = ?";
     private final String TINH_TIEN_VOI_SANH = "EXEC tinhTienVoiSanh @MaHD = ? , @MaSanh = ?,@SoLuongBan = ?";

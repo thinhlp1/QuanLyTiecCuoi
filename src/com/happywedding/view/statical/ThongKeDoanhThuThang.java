@@ -20,32 +20,37 @@ import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.table.DefaultTableModel;
 
-
 /**
  *
  * @author ADMIN
  */
 public class ThongKeDoanhThuThang extends javax.swing.JPanel {
+
     private DefaultTableModel tblModel;
     private List<Object[]> listThongKe = new ArrayList<>();
+    private List<Object[]> listThongKeThang = new ArrayList<>();
     private List<Object[]> listFilted = new ArrayList<>();
     private ThongKeDAO thongKeDAO = new ThongKeDAO();
     private boolean isLoad = false;
+    private List<Integer> listThang = new ArrayList<>();
+
     /**
      * Creates new form ThongKeDoanhThuNam
      */
     public ThongKeDoanhThuThang() {
         initComponents();
+        init();
     }
-    
-     public void init() {
+
+    public void init() {
         tblModel = (DefaultTableModel) tblDoanhThu.getModel();
         tblDoanhThu.fixTable(jScrollPane1);
         loadThongKe();
+        loadThongKeThang((int) listThongKe.get(listThongKe.size() - 1)[0]);
         fillCombboxNam();
 
-        fillTable(listThongKe);
-       // fillChart(listThongKe);
+        fillTable(listThongKeThang);
+        // fillChart(listThongKe);
         isLoad = true;
         initSort();
 
@@ -68,9 +73,9 @@ public class ThongKeDoanhThuThang extends javax.swing.JPanel {
                         // ten tang dan
                         fillTable(sortBySLHD(false));
                     } else if (cbbSort.getSelectedIndex() == 1) {
-                        
+
                         // ten giam dan
-                       // a++;
+                        // a++;
                         fillTable(sortBySLHD(true));
                     }
                 } else if (cbbSortBy.getSelectedIndex() == 2) {
@@ -122,8 +127,8 @@ public class ThongKeDoanhThuThang extends javax.swing.JPanel {
                         // ten tang dan
                         fillTable(sortBySLHD(false));
                     } else if (cbbSort.getSelectedIndex() == 1) {
-                       // System.out.println("");
-                         //a++;
+                        // System.out.println("");
+                        //a++;
                         // ten giam dan
                         fillTable(sortBySLHD(true));
                     }
@@ -164,15 +169,20 @@ public class ThongKeDoanhThuThang extends javax.swing.JPanel {
 
     public void loadThongKe() {
         listThongKe = thongKeDAO.thongKeDoanhThuNam();
+    }
 
-        for (int i = 0; i < listThongKe.size(); i++) {
-            listFilted.add(listThongKe.get(i));
+    public void loadThongKeThang(int year) {
+        listThongKeThang = thongKeDAO.thongKeDoanhThuThang(year);
+
+        for (int i = 0; i < listThongKeThang.size(); i++) {
+            listFilted.add(listThongKeThang.get(i));
         }
     }
     int a = 0;
+
     public void fillTable(List<Object[]> list) {
         tblModel.setRowCount(0);
-       /// System.out.println(a);
+        /// System.out.println(a);
         for (int i = 0; i < list.size(); i++) {
             Object[] model = {
                 list.get(i)[0],
@@ -182,7 +192,7 @@ public class ThongKeDoanhThuThang extends javax.swing.JPanel {
                 ShareHelper.toMoney((long) list.get(i)[4])};
             tblModel.addRow(model);
         }
-        
+
         fillChart(list);
 
     }
@@ -196,28 +206,39 @@ public class ThongKeDoanhThuThang extends javax.swing.JPanel {
         }
         // new double[]{list.get(4)[[4]]};
         chartDoanhThu.removeAllData();
-        for (int i = 0; i < list.size(); i++) {
-            chartDoanhThu.addData(new ModelChart(String.valueOf(list.get(i)[0]), new long[]{(long) list.get(i)[4], (long) list.get(i)[3], (long) list.get(i)[2]}));
-        }
+        for (int i = 1; i <= 12; i++) {
+            boolean isExit = false;
+            for (int j = 0; j < list.size(); j++) {
+                if (i == ((int) listThongKeThang.get(j)[0])) {
+                    chartDoanhThu.addData(new ModelChart(String.valueOf(list.get(j)[0]), new long[]{(long) list.get(j)[4], (long) list.get(j)[3], (long) list.get(j)[2]}));
+                    isExit = true;
+                    break;
+                }
+            }
+            if (!isExit) {
+                chartDoanhThu.addData(new ModelChart(String.valueOf(i), new long[]{(long) 0, 0, 0}));
+                
+            }
 
+        }
     }
 
     public void fillCombboxNam() {
         List<Integer> year = new ArrayList<>();
 
         DefaultComboBoxModel cbbBatDauModel = (DefaultComboBoxModel) cbbNamBatDau.getModel();
- 
+
         cbbBatDauModel.removeAllElements();
-        
+
         try {
             int firstYear = (int) listThongKe.get(0)[0];
             int currentYear = Calendar.getInstance().get(Calendar.YEAR);
             for (int i = firstYear; i <= currentYear; i++) {
                 cbbBatDauModel.addElement(i);
             }
-          
+
             cbbBatDauModel.setSelectedItem(firstYear);
-           
+
         } catch (Exception ex) {
             //DialogHelper.alertError(this, "Có lỗi xảy ra. Vui lòng liên hệ hỗ trợ viên");
         }
@@ -230,16 +251,12 @@ public class ThongKeDoanhThuThang extends javax.swing.JPanel {
         listFilted.clear();
 
         int namBatDau = (int) cbbNamBatDau.getSelectedItem();
-     
-        if (namBatDau == 2021) {
-            System.out.println("");
-        }
-       
 
-        for (int i = 0; i < listThongKe.size(); i++) {
-            if (((int) listThongKe.get(i)[0]) == namBatDau ) {
-                listFilted.add(listThongKe.get(i));
-            }
+      
+        listThongKeThang = thongKeDAO.thongKeDoanhThuThang(namBatDau);
+        
+        for (int i = 0; i< listThongKeThang.size();i++){
+            listFilted.add(listThongKeThang.get(i));
         }
 
         fillTable(listFilted);
@@ -249,7 +266,7 @@ public class ThongKeDoanhThuThang extends javax.swing.JPanel {
 
     public List<Object[]> sortByDoanhThuLonNhat(boolean isRevese) {
         List<Object[]> listSorted = listFilted;
-        
+
         Collections.sort(listSorted, new Comparator<Object[]>() {
             public int compare(Object[] data1, Object[] data2) {
                 if (Long.parseLong(data1[3].toString()) > Long.parseLong(data2[3].toString())) {
@@ -394,7 +411,7 @@ public class ThongKeDoanhThuThang extends javax.swing.JPanel {
         ));
         jScrollPane1.setViewportView(tblDoanhThu);
 
-        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 590, 1530, 330));
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 590, 1630, 330));
         jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 50, -1, -1));
 
         jLabel4.setText("Năm");
