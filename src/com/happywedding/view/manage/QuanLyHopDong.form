@@ -253,11 +253,10 @@
         <Component class="com.ui.swing.Combobox" name="cbbSortBy">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="4">
+              <StringArray count="3">
                 <StringItem index="0" value="H&#x1ecd; T&#xea;n  Kh&#xe1;ch H&#xe0;ng"/>
                 <StringItem index="1" value="Ng&#xe0;y T&#x1ed5; Ch&#x1ee9;c"/>
                 <StringItem index="2" value="Ng&#xe0;y L&#x1ead;p"/>
-                <StringItem index="3" value="M&#xe3; H&#x1ee3;p &#x110;&#x1ed3;ng"/>
               </StringArray>
             </Property>
             <Property name="selectedIndex" type="int" value="-1"/>

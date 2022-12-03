@@ -471,7 +471,7 @@ INSERT ChiTietGoiDichVu (MaGoi, MaCSVC,ChiPhi, GhiChu) VALUES (N'TTBANTIEC1', N'
 
 INSERT ChiTietGoiDichVu (MaGoi, MaCSVC,ChiPhi, GhiChu) VALUES (N'TTBANTIEC3', N'AOGHEXANH',10000, '')
 INSERT ChiTietGoiDichVu (MaGoi, MaCSVC,ChiPhi, GhiChu) VALUES (N'TTBANTIEC3', N'HOAHONGXANH', 10000,'')
-INSERT ChiTietGoiDichVu (MaGoi, MaCSVC,ChiPhi, GhiChu) VALUES (N'TTBANTIEC3', N'HOAHUE',10000, '')
+INSERT ChiTietGoiDichVu (MaGoi, MaCSVC,ChiPhi, GhiChu) VALUES (N'TTBANTIEC3', N'TRAIBANVANG',10000, '')
 
 INSERT ChiTietGoiDichVu (MaGoi, MaCSVC,ChiPhi, GhiChu) VALUES (N'TTCONG1', N'CONGTRON',10000, N'màu xanh')
 INSERT ChiTietGoiDichVu (MaGoi, MaCSVC,ChiPhi, GhiChu) VALUES (N'TTCONG1', N'BANGTEN1',10000, '')
@@ -1436,3 +1436,18 @@ BEGIN
 END
 
 
+GO
+-- thống kê doanh thu theo năm
+CREATE PROC thongKeDoanhThuNam 
+AS
+BEGIN
+	--DECLARE		
+	SELECT SUM(IIF(hd.TrangThai = 0,TienCoc,TongTien )) AS TongDoanhThu ,
+	IIF(hd.TrangThai = 0, YEAR(hd.NgayLap),YEAR(NgayLapLan2)) AS Nam ,
+	MAX (  IIF(hd.TrangThai = 0,TienCoc,TongTien ) ) AS DoanhThuCaoNhat,
+	MIN ( IIF(hd.TrangThai = 0,TienCoc,TongTien ) ) AS DoanhThuThapNhat,
+	COUNT(hd.MaHD) AS SoLuongHopDong
+	FROM HopDong hdd INNER JOIN HoaDon hd ON hdd.MaHD = hd.MaHD 
+	GROUP BY  IIF(hd.TrangThai = 0, YEAR(hd.NgayLap),YEAR(NgayLapLan2))
+	ORDER BY Nam ASC
+END

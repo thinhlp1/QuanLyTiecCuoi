@@ -102,7 +102,7 @@ public class QuanLyHopDong extends javax.swing.JPanel {
                 tblModel.addRow(row);
             }
         } catch (Exception e) {
-            DialogHelper.alertError(this, "Lỗi truy vấn dữ liệu!");
+            DialogHelper.alertError(this, "Có lỗi xảy ra khi load dữ liệu.!");
         }
 
     }
@@ -308,14 +308,26 @@ public class QuanLyHopDong extends javax.swing.JPanel {
         Collections.sort(listSorted, new Comparator<HopDong>() {
             public int compare(HopDong hopDong1, HopDong hopDong2) {
                 int result = 0;
+                
+               
+                
                 String[] partNameEmployee1 = hopDong1.getTenKhachHang().split("\\s");
                 String[] partNameEmployee2 = hopDong2.getTenKhachHang().split("\\s");
+                 if (partNameEmployee1.length == 1){
+                     System.out.println("");
+                 }
 
                 int nameLenght1 = partNameEmployee1.length;
                 int nameLenght2 = partNameEmployee2.length;
 
                 if (nameLenght1 == 1 && nameLenght2 == 1) {
                     return hopDong1.getTenKhachHang().compareToIgnoreCase(hopDong2.getTenKhachHang());
+                }
+                
+                if (nameLenght1 == 1 && nameLenght2 != 1){
+                   return hopDong1.getTenKhachHang().compareToIgnoreCase(partNameEmployee2[nameLenght2-1]);
+                }else if (  nameLenght1 != -1 && nameLenght2 == 1  ) {
+                     return partNameEmployee1[nameLenght1-1].compareToIgnoreCase(hopDong2.getTenKhachHang());
                 }
 
                 int length = ((nameLenght1 > nameLenght2) ? nameLenght2 : nameLenght1);
@@ -557,7 +569,7 @@ public class QuanLyHopDong extends javax.swing.JPanel {
         });
         pnlQuanLyHopDong.add(cbbSanh, new org.netbeans.lib.awtextra.AbsoluteConstraints(780, 20, 140, 54));
 
-        cbbSortBy.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Họ Tên  Khách Hàng", "Ngày Tổ Chức", "Ngày Lập", "Mã Hợp Đồng" }));
+        cbbSortBy.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Họ Tên  Khách Hàng", "Ngày Tổ Chức", "Ngày Lập" }));
         cbbSortBy.setSelectedIndex(-1);
         cbbSortBy.setLabeText("Sort by");
         pnlQuanLyHopDong.add(cbbSortBy, new org.netbeans.lib.awtextra.AbsoluteConstraints(1110, 90, 270, 54));

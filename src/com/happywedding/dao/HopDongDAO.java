@@ -44,7 +44,7 @@ public class HopDongDAO extends AbstractDAO<HopDong> {
     private final String UPDATE_SANH = "UPDATE HopDong SET Sanh = ? WHERE MaHD = ?";
     private final String TINH_TIEN = "EXEC tinhTien @MaHD = ?";
     private final String TINH_TIEN_VOI_SANH = "EXEC tinhTienVoiSanh @MaHD = ? , @MaSanh = ?,@SoLuongBan = ?";
-    private final String CHECK_SANH = "SELECT MaHD FROM HopDong hd INNER JOIN Sanh s  ON hd.Sanh = s.MaSanh\n"
+    private final String CHECK_SANH = "SELECT * FROM HopDong hd INNER JOIN Sanh s  ON hd.Sanh = s.MaSanh\n"
             + "WHERE MaSanh = ? AND NgayToChuc = ? AND (  ( CAST(? AS Time)   BETWEEN ThoiGianBatDau AND ThoiGianKetThuc )"
             + "OR  (  ( CAST(? AS Time)   BETWEEN ThoiGianBatDau AND ThoiGianKetThuc )   )   ) AND MaHD != ?";
 
@@ -92,19 +92,26 @@ public class HopDongDAO extends AbstractDAO<HopDong> {
         return rs > 0;
     }
 
-    public String checkSanh(String maSanh, Date ngayToChuc, String batDau, String ketThuc, String maHD) {
+    public HopDong checkSanh(String maSanh, Date ngayToChuc, String batDau, String ketThuc, String maHD) {
         try {
             ResultSet rs = null;
-          
+            HopDong hopDong = new HopDong();
             try {
                 rs = JDBCHelper.executeQuery(CHECK_SANH, maSanh, ngayToChuc, batDau, ketThuc, maHD);
                 while (rs.next()) {
-                    return rs.getString("MaHD");
+                    hopDong.setMaHD(rs.getString("MaHD"));
+                    hopDong.setNgayLap(rs.getDate("NgayLap"));
+                    
+                  //  hopDong.setSdtKhachHang(rs.getString("SoDienThoai"));
+                    hopDong.setNgayToChuc(rs.getDate("NgayToChuc"));
+                    hopDong.setThoiGianBatDau(rs.getString("ThoiGianBatDau"));
+                    hopDong.setThoiGianKetThuc(rs.getString("ThoiGianKetThuc"));
+                    return hopDong;
                 }
             } finally {
-               if (rs != null){
+                if (rs != null) {
                     rs.getStatement().getConnection().close();
-               }
+                }
             }
         } catch (SQLException ex) {
             throw new RuntimeException(ex);

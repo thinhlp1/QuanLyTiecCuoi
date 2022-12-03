@@ -41,6 +41,7 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
@@ -58,8 +59,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListSelectionModel;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JTextField;
 
 /**
  *
@@ -104,6 +107,7 @@ public class LapHopDong extends javax.swing.JPanel {
     private boolean isHoaDon;
     private boolean isValid = true;
     private List<Boolean> checkedDichVu = new ArrayList<Boolean>(Collections.nCopies(6, false));
+    //private List<Boolean> checkIsValid = new ArrayList<>();
 
     private List<Sanh> listSanh = new ArrayList<>();
     private List<TrangThaiHopDong> listTrangThai = new ArrayList<>();
@@ -120,7 +124,7 @@ public class LapHopDong extends javax.swing.JPanel {
         this.maHD = maHD;
         this.isHoaDon = isHoaDon;
         init();
-
+        
         phanQuyen();
         if (isCreate) {
             isEdit();
@@ -136,7 +140,7 @@ public class LapHopDong extends javax.swing.JPanel {
     }
 
     public void init() {
-
+       
         // khởi tạo ngày và giờ
         timePickerBatDau.addActionListener(new ActionListener() {
             @Override
@@ -147,26 +151,34 @@ public class LapHopDong extends javax.swing.JPanel {
                 SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
                 Date d1;
                 Date d2;
+
                 try {
+
+                    if (txtKetThuc.getText().length() == 0) {
+                        d1 = sdf.parse(batDau);
+
+                        timePickerKetThuc.setSelectedTime(new Date(d1.getTime() + 2 * 3600000));
+                        txtKetThuc.setText((sdf.format(new Date(d1.getTime() + 2 * 3600000))));
+                        txtBatDau.setText(batDau);
+                        return;
+                    }
+
                     d1 = sdf.parse(batDau);
                     d2 = sdf.parse(ketThuc);
 
                     if (d2.getTime() - d1.getTime() < 2 * 3600000 && batDau != null && ketThuc != null) {
                         txtBatDau.setText(batDau);
-                        if (ketThuc == null) {
-                            d2.setTime(d1.getTime() + 2 * 3600000);
-                            timePickerKetThuc.setSelectedTime(d2);
-                            timePickerKetThuc.disPlayTime(sdf.format(d2));
 
-                        }
+                        d2.setTime(d1.getTime() + 2 * 3600000);
+                        timePickerKetThuc.setSelectedTime(d2);
+                        txtKetThuc.setText(sdf.format(d2));
+
                     } else {
                         txtBatDau.setText(batDau);
-                        if (ketThuc == null) {
-                            d2.setTime(d1.getTime() + 2 * 3600000);
-                            timePickerKetThuc.setSelectedTime(d2);
-                            timePickerKetThuc.disPlayTime(sdf.format(d2));
 
-                        }
+                        d2.setTime(d1.getTime() + 2 * 3600000);
+                        timePickerKetThuc.setSelectedTime(d2);
+                        txtKetThuc.setText(ketThuc);
 
                     }
                 } catch (ParseException ex) {
@@ -199,17 +211,39 @@ public class LapHopDong extends javax.swing.JPanel {
             public void actionPerformed(ActionEvent e) {
                 String ketThuc = ShareHelper.to24Hour(timePickerKetThuc.getSelectedTime());
                 String batDau = ShareHelper.to24Hour(timePickerBatDau.getSelectedTime());
+
                 SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
                 Date d1;
                 Date d2;
+
                 try {
+
+                    if (txtBatDau.getText().length() == 0) {
+                        d2 = sdf.parse(ketThuc);
+
+                        timePickerBatDau.setSelectedTime(new Date(d2.getTime() - 2 * 3600000));
+                        txtBatDau.setText((sdf.format(new Date(d2.getTime() - 2 * 3600000))));
+                        txtKetThuc.setText(ketThuc);
+                        return;
+                    }
+
                     d1 = sdf.parse(batDau);
                     d2 = sdf.parse(ketThuc);
 
                     if (d2.getTime() - d1.getTime() < 2 * 3600000 && batDau != null && ketThuc != null) {
-                        DialogHelper.alertError(new JFrame(), "Thời gian đặt ít nhất là 2h");
+                        txtKetThuc.setText(ketThuc);
+
+                        d1.setTime(d2.getTime() - 2 * 3600000);
+                        timePickerBatDau.setSelectedTime(d1);
+                        txtBatDau.setText(sdf.format(d1));
+
                     } else {
                         txtKetThuc.setText(ketThuc);
+
+                        d1.setTime(d2.getTime() - 2 * 3600000);
+                        timePickerBatDau.setSelectedTime(d1);
+                        txtBatDau.setText(batDau);
+
                     }
                 } catch (ParseException ex) {
                     Logger.getLogger(LapHopDong.class.getName()).log(Level.SEVERE, null, ex);
@@ -279,6 +313,7 @@ public class LapHopDong extends javax.swing.JPanel {
         if (khachHang != null) {
             try {
                 boolean rs = khachHangDAO.insert(khachHang);
+                this.khachHang = khachHangDAO.findById(maHD);
                 return true;
             } catch (Exception e) {
                 e.printStackTrace();
@@ -312,6 +347,7 @@ public class LapHopDong extends javax.swing.JPanel {
         if (hopDong != null) {
             try {
                 boolean rs = hopDongDAO.update(hopDong);
+                this.hopDong = hopDongDAO.findById(maHD);
                 return true;
             } catch (Exception e) {
                 e.printStackTrace();
@@ -326,6 +362,7 @@ public class LapHopDong extends javax.swing.JPanel {
         if (khacHang != null) {
             try {
                 boolean rs = khachHangDAO.update(khacHang);
+                this.khachHang = khachHangDAO.findById(maHD);
                 return true;
             } catch (Exception e) {
             }
@@ -922,6 +959,19 @@ public class LapHopDong extends javax.swing.JPanel {
 
     public boolean validHopDong() {
         boolean isValid = true;
+
+        if (!checkName(txtHoTenKhachHang, txtSDT, null)) {
+            return false;
+        } else if (!checkName(txtHoTenCoDau, txtSDT, null)) {
+            return false;
+        } else if (!checkName(txtHoTenChuRe, txtSDT, null)) {
+            return false;
+        } else if (!checkSDT(null)) {
+            return false;
+        } else if (!checkCCCD(null)) {
+            return false;
+        }
+
         if (txtHoTenKhachHang.getText().trim().length() == 0
                 || txtSDT.getText().trim().length() == 0
                 || txtCMND.getText().trim().length() == 0
@@ -939,8 +989,9 @@ public class LapHopDong extends javax.swing.JPanel {
         }
 
         if (txtNgayToChuc.getText().length() != 0) {
-            if (DateHelper.toDate(txtNgayToChuc.getText(), "dd/MM/yyyy").getTime() - DateHelper.now().getTime() < 24 * 3600000) {
-                DialogHelper.alertError(this, "Ngày tổ chức sau ít nhất 24h đặt tiệc");
+            if (DateHelper.toDate(txtNgayToChuc.getText(), "dd/MM/yyyy").getTime() - DateHelper.toDate(DateHelper.toString(DateHelper.now(), "dd/MM/yyyy"), "dd/MM/yyyy").getTime() < 24 * 3600000) {
+                DialogHelper.alertError(this, "Ngày tổ chức sau ít nhất một ngày đặt tiệc");
+                txtNgayToChuc.setText("");
                 return false;
             }
         }
@@ -961,13 +1012,20 @@ public class LapHopDong extends javax.swing.JPanel {
             }
         }
 
-        String maHDDD = hopDongDAO.checkSanh(((Sanh) cbbSanh.getSelectedItem()).getMaSanh(), DateHelper.toDate(txtNgayToChuc.getText(), "dd/MM/yyyy"),
+        HopDong hopDong = hopDongDAO.checkSanh(((Sanh) cbbSanh.getSelectedItem()).getMaSanh(), DateHelper.toDate(txtNgayToChuc.getText(), "dd/MM/yyyy"),
                 txtBatDau.getText(), txtKetThuc.getText(), maHD);
-        if (maHDDD != null) {
-            DialogHelper.alertError(this, "Sảnh đã được đặt tại " + maHDDD);
+        if (hopDong != null) {
+            taThongBaoSanh.setText("<html>Sảnh đã được đặt tại hợp đồng: " + hopDong.getMaHD()
+                    + "<br/>Ngày tổ chức: " + hopDong.getNgayToChuc()
+                    + "<br/>Giờ bắt đầu: " + hopDong.getThoiGianBatDau()
+                    + "<br/>Giờ kết thúc: " + hopDong.getThoiGianKetThuc() + "</html>"
+            );
             return false;
+        } else {
+            taThongBaoSanh.setText("");
+            return true;
         }
-        return true;
+
     }
 
     public List<ChiTietDichVu> getListTTBanTiec() {
@@ -1033,6 +1091,108 @@ public class LapHopDong extends javax.swing.JPanel {
 
         return list;
 
+    }
+
+    public boolean checkName(JTextField txtHoTen, JComponent nextFocus, KeyEvent evt) {
+
+        String name = txtHoTen.getText().trim().replaceAll("\\s+", " ");
+        if (evt == null) {
+            txtHoTen.setText(name);
+            return true;
+        }
+        char testChar = evt.getKeyChar();
+        if (name.length() > 50 && testChar != '\n') {
+            evt.consume();
+            return false;
+        }
+        if (((Character.isAlphabetic(testChar))) || Character.isWhitespace(testChar)) {
+            if (testChar == '\n') {
+                if (name.length() == 0) {
+                    nextFocus.requestFocus();
+                    return true;
+                }
+                txtHoTen.setText(name);
+                nextFocus.requestFocus();
+            }
+        } else {
+            evt.consume();
+        }
+        return false;
+    }
+
+    public boolean checkCCCD(KeyEvent evt) {
+
+        String cccd = txtCMND.getText();
+
+        if (evt == null) {
+            if (cccd.length() != 9 && cccd.length() != 12 && cccd.length() != 0) {
+                DialogHelper.alertError(this, "Số Căn cước/Chứng minh không đúng định dạng");
+                txtCMND.requestFocus();
+                return false;
+            } else {
+                return true;
+            }
+        }
+
+        char testChar = evt.getKeyChar();
+        if (txtCMND.getText().length() >= 12 && testChar != '\n') {
+            evt.consume();
+            return true;
+        }
+
+        if (!((Character.isDigit(testChar)))) {
+            if (testChar == '\n') {
+
+                if (cccd.length() != 9 && cccd.length() != 12 && cccd.length() != 0) {
+                    DialogHelper.alertError(this, "Số Căn cước/Chứng minh không đúng định dạng");
+                    txtCMND.requestFocus();
+                } else {
+                    txtHoTenCoDau.requestFocus();
+                }
+            } else {
+                evt.consume();
+            }
+        }
+        return false;
+    }
+
+    public boolean checkSDT(KeyEvent evt) {
+
+        String sdt = txtSDT.getText();
+        String numberPhone = "^(0|\\+84)(\\s|\\.)?((3[2-9])|(5[689])|(7[06-9])|(8[1-689])|(9[0-46-9]))(\\d)(\\s|\\.)?(\\d{3})(\\s|\\.)?(\\d{3})$";
+
+        if (evt == null) {
+            if (!sdt.matches(numberPhone) && sdt.length() != 0) {
+                DialogHelper.alertError(this, "Số điện thoại không đúng định dạng");
+                txtSDT.requestFocus();
+                return false;
+            } else {
+
+                return true;
+            }
+        }
+        char testChar = evt.getKeyChar();
+        if (txtSDT.getText().length() >= 10 && testChar != '\n') {
+            evt.consume();
+            return true;
+        }
+        if (!((Character.isDigit(testChar)))) {
+            if (testChar == '\n') {
+
+                if (!sdt.matches(numberPhone) && sdt.length() != 0) {
+                    DialogHelper.alertError(this, "Số điện thoại không đúng định dạng");
+                    txtSDT.requestFocus();
+                    return false;
+                } else {
+                    txtCMND.requestFocus();
+                    return true;
+                }
+
+            } else {
+                evt.consume();
+            }
+        }
+        return false;
     }
 
     /**
@@ -1101,6 +1261,8 @@ public class LapHopDong extends javax.swing.JPanel {
         lblMaNH24 = new javax.swing.JLabel();
         cbbSanh = new com.ui.swing.Combobox();
         lblKiemTra = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        taThongBaoSanh = new javax.swing.JTextArea();
         lbldv = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -1125,6 +1287,7 @@ public class LapHopDong extends javax.swing.JPanel {
         btnHuyDuyet = new com.ui.swing.HoverButton();
         btnChiPhiPhatSinh = new com.ui.swing.HoverButton();
         btnInHopDong = new com.ui.swing.HoverButton();
+        btnSaveInfo1 = new com.ui.swing.HoverButton();
 
         timePickerBatDau.setForeground(new java.awt.Color(255, 102, 102));
 
@@ -1159,6 +1322,16 @@ public class LapHopDong extends javax.swing.JPanel {
         jPanel2.add(lblMaNH, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 69, 100, 30));
 
         txtHoTenCoDau.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        txtHoTenCoDau.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtHoTenCoDauFocusLost(evt);
+            }
+        });
+        txtHoTenCoDau.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtHoTenCoDauKeyTyped(evt);
+            }
+        });
         jPanel2.add(txtHoTenCoDau, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 20, 340, 35));
 
         txtSDT.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
@@ -1193,17 +1366,37 @@ public class LapHopDong extends javax.swing.JPanel {
         jPanel2.add(txtCMND, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 130, 360, 35));
 
         txtHoTenChuRe.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        txtHoTenChuRe.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtHoTenChuReFocusLost(evt);
+            }
+        });
         txtHoTenChuRe.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtHoTenChuReActionPerformed(evt);
             }
         });
+        txtHoTenChuRe.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtHoTenChuReKeyTyped(evt);
+            }
+        });
         jPanel2.add(txtHoTenChuRe, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 70, 340, 35));
 
         txtHoTenKhachHang.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        txtHoTenKhachHang.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtHoTenKhachHangFocusLost(evt);
+            }
+        });
         txtHoTenKhachHang.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtHoTenKhachHangActionPerformed(evt);
+            }
+        });
+        txtHoTenKhachHang.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtHoTenKhachHangKeyTyped(evt);
             }
         });
         jPanel2.add(txtHoTenKhachHang, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 20, 360, 35));
@@ -1231,6 +1424,11 @@ public class LapHopDong extends javax.swing.JPanel {
         taDiaChi.setColumns(20);
         taDiaChi.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         taDiaChi.setRows(3);
+        taDiaChi.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                taDiaChiKeyTyped(evt);
+            }
+        });
         jScrollPane1.setViewportView(taDiaChi);
 
         jPanel2.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 130, 340, 80));
@@ -1333,11 +1531,14 @@ public class LapHopDong extends javax.swing.JPanel {
 
         lblMaNH14.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         lblMaNH14.setText("Ngày tổ chức");
-        jPanel4.add(lblMaNH14, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 20, 100, 30));
+        jPanel4.add(lblMaNH14, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 20, 100, 30));
 
         txtNgayToChuc.setEditable(false);
         txtNgayToChuc.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         txtNgayToChuc.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtNgayToChucFocusGained(evt);
+            }
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txtNgayToChucFocusLost(evt);
             }
@@ -1359,11 +1560,11 @@ public class LapHopDong extends javax.swing.JPanel {
                 txtNgayToChucActionPerformed(evt);
             }
         });
-        jPanel4.add(txtNgayToChuc, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 20, 360, 35));
+        jPanel4.add(txtNgayToChuc, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 20, 360, 35));
 
         lblMaNH3.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         lblMaNH3.setText("Kết thúc");
-        jPanel4.add(lblMaNH3, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 70, 70, 30));
+        jPanel4.add(lblMaNH3, new org.netbeans.lib.awtextra.AbsoluteConstraints(800, 70, 70, 30));
 
         txtBatDau.setEditable(false);
         txtBatDau.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
@@ -1377,11 +1578,11 @@ public class LapHopDong extends javax.swing.JPanel {
                 txtBatDauMouseClicked(evt);
             }
         });
-        jPanel4.add(txtBatDau, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 70, 120, 35));
+        jPanel4.add(txtBatDau, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 70, 120, 35));
 
         lblMaNH17.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         lblMaNH17.setText("Số lượng bàn");
-        jPanel4.add(lblMaNH17, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 120, 90, 30));
+        jPanel4.add(lblMaNH17, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 120, 90, 30));
 
         txtSLBan.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         txtSLBan.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -1399,15 +1600,15 @@ public class LapHopDong extends javax.swing.JPanel {
                 txtSLBanKeyTyped(evt);
             }
         });
-        jPanel4.add(txtSLBan, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 120, 360, 35));
+        jPanel4.add(txtSLBan, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 120, 360, 35));
 
         lblMaNH18.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         lblMaNH18.setText("Sảnh");
-        jPanel4.add(lblMaNH18, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 190, 90, 30));
+        jPanel4.add(lblMaNH18, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 190, 90, 30));
 
         lblMaNH4.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         lblMaNH4.setText("Bắt đầu");
-        jPanel4.add(lblMaNH4, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 70, 60, 30));
+        jPanel4.add(lblMaNH4, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 70, 60, 30));
 
         txtKetThuc.setEditable(false);
         txtKetThuc.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
@@ -1416,7 +1617,7 @@ public class LapHopDong extends javax.swing.JPanel {
                 txtKetThucMouseClicked(evt);
             }
         });
-        jPanel4.add(txtKetThuc, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 70, 140, 35));
+        jPanel4.add(txtKetThuc, new org.netbeans.lib.awtextra.AbsoluteConstraints(870, 70, 140, 35));
 
         lblMaNH19.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         lblMaNH19.setText("Thuế %");
@@ -1511,7 +1712,7 @@ public class LapHopDong extends javax.swing.JPanel {
                 cbbSanhActionPerformed(evt);
             }
         });
-        jPanel4.add(cbbSanh, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 170, 360, 40));
+        jPanel4.add(cbbSanh, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 170, 360, 40));
 
         lblKiemTra.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         lblKiemTra.setText("Kiểm tra");
@@ -1520,7 +1721,19 @@ public class LapHopDong extends javax.swing.JPanel {
                 lblKiemTraMouseClicked(evt);
             }
         });
-        jPanel4.add(lblKiemTra, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 240, -1, -1));
+        jPanel4.add(lblKiemTra, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 240, -1, -1));
+
+        jScrollPane2.setBorder(null);
+
+        taThongBaoSanh.setBackground(new java.awt.Color(248, 248, 248));
+        taThongBaoSanh.setColumns(20);
+        taThongBaoSanh.setFont(new java.awt.Font("Times New Roman", 0, 15)); // NOI18N
+        taThongBaoSanh.setLineWrap(true);
+        taThongBaoSanh.setRows(3);
+        taThongBaoSanh.setBorder(null);
+        jScrollPane2.setViewportView(taThongBaoSanh);
+
+        jPanel4.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 240, 290, 80));
 
         jPanel1.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 400, 1590, 340));
 
@@ -1666,7 +1879,7 @@ public class LapHopDong extends javax.swing.JPanel {
                 btnSaveInfoActionPerformed(evt);
             }
         });
-        jPanel1.add(btnSaveInfo, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 750, -1, 30));
+        jPanel1.add(btnSaveInfo, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 750, -1, 30));
 
         pnlBtn.setBackground(new java.awt.Color(255, 255, 255));
         pnlBtn.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
@@ -1881,6 +2094,24 @@ public class LapHopDong extends javax.swing.JPanel {
 
         jPanel1.add(pnlBtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 870, 1310, 50));
 
+        btnSaveInfo1.setBackground(new java.awt.Color(24, 153, 29));
+        btnSaveInfo1.setForeground(new java.awt.Color(255, 255, 255));
+        btnSaveInfo1.setText("Lưu thông tin");
+        btnSaveInfo1.setBorderColor(new java.awt.Color(24, 153, 29));
+        btnSaveInfo1.setColor(new java.awt.Color(24, 153, 29));
+        btnSaveInfo1.setColorClick(new java.awt.Color(0, 204, 0));
+        btnSaveInfo1.setColorOver(new java.awt.Color(0, 204, 0));
+        btnSaveInfo1.setFocusPainted(false);
+        btnSaveInfo1.setLabelColor(java.awt.Color.white);
+        btnSaveInfo1.setLableColorClick(java.awt.Color.white);
+        btnSaveInfo1.setRadius(15);
+        btnSaveInfo1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSaveInfo1ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(btnSaveInfo1, new org.netbeans.lib.awtextra.AbsoluteConstraints(920, 60, -1, 30));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -2047,6 +2278,7 @@ public class LapHopDong extends javax.swing.JPanel {
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
 
+        //lblMaNH.requestFocus();
         for (int i = 0; i < checkedDichVu.size(); i++) {
             if (checkedDichVu.get(i) == false) {
                 DialogHelper.alertError(this, "Chọn đầy đủ dịch vụ");
@@ -2106,10 +2338,10 @@ public class LapHopDong extends javax.swing.JPanel {
     private void btnDuyetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDuyetActionPerformed
 
         btnSave.doClick();
-        
-       if (!isValid){
-           return;
-       }
+
+        if (!isValid) {
+            return;
+        }
 
         updateTrangThaiHopDong(StatusHopDong.CHODUYET);
         updateHopDong();
@@ -2129,7 +2361,7 @@ public class LapHopDong extends javax.swing.JPanel {
         if (rs) {
             try {
                 hopDongDAO.delete(maHD);
-                khachHangDAO.delete(khachHang.getMaKH() + "");
+                khachHangDAO.delete(maHD);
                 btnBack.doClick();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -2191,45 +2423,45 @@ public class LapHopDong extends javax.swing.JPanel {
 
     private void btnInHopDongActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInHopDongActionPerformed
         //IN HOP DONG
-        HopDongPDF hopDongPDF = new HopDongPDF();
-        HopDong hopDong = hopDongDAO.findById(maHD);
-        List<HopDong> listHopDong = new ArrayList<>();
-        listHopDong.add(hopDong);
-        hopDongPDF.setListHopDong(listHopDong);
-
-        ChiTietDatMonDAO datMonDAO = new ChiTietDatMonDAO();
-        List<DichVuDatMon> listDichVuDatMon = new ArrayList<>();
-        DichVuDatMon dvddm = datMonDAO.selectDichVuDatMon(maHD, datMonDAO.selectThucDonChinh(maHD));
-        listDichVuDatMon.add(dvddm);
-        hopDongPDF.setListDichVuDatMon(listDichVuDatMon);
-
-        List<ChiTietDatMon> listChiTietDatMon1 = datMonDAO.selectChiTietDatMon(maHD, datMonDAO.selectThucDonChinh(maHD));
-        hopDongPDF.setListChiTietDatMon1(listChiTietDatMon1);
-
-        ChiTietDichVuDAO ctdvDAO = new ChiTietDichVuDAO();
-        List<HopDongDichVu> listTTBanTiec = new ArrayList<>();
-        HopDongDichVu ttBanTiec = ctdvDAO.selectDichVu(maHD, "TTBANTIEC");
-        listTTBanTiec.add(ttBanTiec);
-        hopDongPDF.setListTTBanTiec(listTTBanTiec);
-        hopDongPDF.setListChiTietBanTiec(getListTTBanTiec());
-
-        List<HopDongDichVu> listTTCong = new ArrayList<>();
-        HopDongDichVu ttCong = ctdvDAO.selectDichVu(maHD, "TTCONG");
-        listTTCong.add(ttCong);
-        hopDongPDF.setListTTCong(listTTCong);
-        hopDongPDF.setListChiTietCong(getListTTCong());
-
-        List<HopDongDichVu> listTTSanKhau = new ArrayList<>();
-        HopDongDichVu ttSanKhau = ctdvDAO.selectDichVu(maHD, "TTSANKHAU");
-        listTTSanKhau.add(ttSanKhau);
-        hopDongPDF.setListTTSanKhau(listTTSanKhau);
-        hopDongPDF.setListChiTietSanKhau(getListTTSanKhau());
-
-        List<HopDongDichVu> listTTNgheThuat = new ArrayList<>();
-        HopDongDichVu ttNgheThua = ctdvDAO.selectDichVu(maHD, "NGHETHUAT");
-        listTTNgheThuat.add(ttNgheThua);
-        hopDongPDF.setListNgheThuat(listTTNgheThuat);
-        hopDongPDF.setListChiTietNgheThuat(getListNgheThuat());
+//        HopDongPDF hopDongPDF = new HopDongPDF();
+//        HopDong hopDong = hopDongDAO.findById(maHD);
+//        List<HopDong> listHopDong = new ArrayList<>();
+//        listHopDong.add(hopDong);
+//        hopDongPDF.setListHopDong(listHopDong);
+//
+//        ChiTietDatMonDAO datMonDAO = new ChiTietDatMonDAO();
+//        List<DichVuDatMon> listDichVuDatMon = new ArrayList<>();
+//        DichVuDatMon dvddm = datMonDAO.selectDichVuDatMon(maHD, datMonDAO.selectThucDonChinh(maHD));
+//        listDichVuDatMon.add(dvddm);
+//        hopDongPDF.setListDichVuDatMon(listDichVuDatMon);
+//
+//        List<ChiTietDatMon> listChiTietDatMon1 = datMonDAO.selectChiTietDatMon(maHD, datMonDAO.selectThucDonChinh(maHD));
+//        hopDongPDF.setListChiTietDatMon1(listChiTietDatMon1);
+//
+//        ChiTietDichVuDAO ctdvDAO = new ChiTietDichVuDAO();
+//        List<HopDongDichVu> listTTBanTiec = new ArrayList<>();
+//        HopDongDichVu ttBanTiec = ctdvDAO.selectDichVu(maHD, "TTBANTIEC");
+//        listTTBanTiec.add(ttBanTiec);
+//        hopDongPDF.setListTTBanTiec(listTTBanTiec);
+//        hopDongPDF.setListChiTietBanTiec(getListTTBanTiec());
+//
+//        List<HopDongDichVu> listTTCong = new ArrayList<>();
+//        HopDongDichVu ttCong = ctdvDAO.selectDichVu(maHD, "TTCONG");
+//        listTTCong.add(ttCong);
+//        hopDongPDF.setListTTCong(listTTCong);
+//        hopDongPDF.setListChiTietCong(getListTTCong());
+//
+//        List<HopDongDichVu> listTTSanKhau = new ArrayList<>();
+//        HopDongDichVu ttSanKhau = ctdvDAO.selectDichVu(maHD, "TTSANKHAU");
+//        listTTSanKhau.add(ttSanKhau);
+//        hopDongPDF.setListTTSanKhau(listTTSanKhau);
+//        hopDongPDF.setListChiTietSanKhau(getListTTSanKhau());
+//
+//        List<HopDongDichVu> listTTNgheThuat = new ArrayList<>();
+//        HopDongDichVu ttNgheThua = ctdvDAO.selectDichVu(maHD, "NGHETHUAT");
+//        listTTNgheThuat.add(ttNgheThua);
+//        hopDongPDF.setListNgheThuat(listTTNgheThuat);
+//        hopDongPDF.setListChiTietNgheThuat(getListNgheThuat());
 
         // truyền cái HopDongPDF
 
@@ -2302,17 +2534,30 @@ public class LapHopDong extends javax.swing.JPanel {
     }//GEN-LAST:event_cbbSanhActionPerformed
 
     private void txtSDTKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSDTKeyTyped
-        char testChar = evt.getKeyChar();
-        if (!((Character.isDigit(testChar)))) {
-            evt.consume();
-        }
+        checkSDT(evt);
     }//GEN-LAST:event_txtSDTKeyTyped
 
     private void txtCMNDKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCMNDKeyTyped
-        char testChar = evt.getKeyChar();
-        if (!((Character.isDigit(testChar)))) {
-            evt.consume();
-        }
+        checkCCCD(evt);
+//        char testChar = evt.getKeyChar();
+//        if (txtCMND.getText().length() >= 12 && testChar != '\n') {
+//            evt.consume();
+//            return;
+//        }
+//
+//        if (!((Character.isDigit(testChar)))) {
+//            if (testChar == '\n') {
+//                String cccd = txtCMND.getText();
+//                if (cccd.length() != 9 && cccd.length() != 12 && cccd.length() != 0) {
+//                    DialogHelper.alertError(this, "Số Căn cước/Chứng minh không đúng định dạng");
+//                    txtCMND.requestFocus();
+//                } else {
+//                    txtHoTenCoDau.requestFocus();
+//                }
+//            } else {
+//                evt.consume();
+//            }
+//        }
     }//GEN-LAST:event_txtCMNDKeyTyped
 
     private void txtSLBanFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtSLBanFocusLost
@@ -2361,27 +2606,15 @@ public class LapHopDong extends javax.swing.JPanel {
     }//GEN-LAST:event_txtNgayToChucInputMethodTextChanged
 
     private void txtSDTFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtSDTFocusLost
-        String sdt = txtSDT.getText();
-        if (txtSDT.getText().length() == 0) {
-            return;
-        }
-        String numberPhone = "^(0|\\+84)(\\s|\\.)?((3[2-9])|(5[689])|(7[06-9])|(8[1-689])|(9[0-46-9]))(\\d)(\\s|\\.)?(\\d{3})(\\s|\\.)?(\\d{3})$";
-        if (!sdt.matches(numberPhone)) {
-            DialogHelper.alertError(this, "Số điện thoại không đúng định dạng");
-            txtSDT.requestFocus();
-        }
+        checkSDT(null);
     }//GEN-LAST:event_txtSDTFocusLost
 
     private void txtCMNDFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtCMNDFocusLost
-        String cccd = txtCMND.getText();
-        if (cccd.length() != 9 && cccd.length() != 12 && cccd.length() != 0) {
-            DialogHelper.alertError(this, "Số Căn cước/Chứng minh không đúng định dạng");
-            txtCMND.requestFocus();
-        }
+        checkCCCD(null);
     }//GEN-LAST:event_txtCMNDFocusLost
 
     private void lblKiemTraMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblKiemTraMouseClicked
-        String maHD;
+      
         if (txtNgayToChuc.getText().length() == 0 || txtBatDau.getText().length() == 0 || txtKetThuc.getText().length() == 0) {
             DialogHelper.alertError(this, "Nhập đầy đủ thời gian");
             return;
@@ -2391,13 +2624,84 @@ public class LapHopDong extends javax.swing.JPanel {
             return;
         }
 
-        maHD = hopDongDAO.checkSanh(((Sanh) cbbSanh.getSelectedItem()).getMaSanh(), DateHelper.toDate(txtNgayToChuc.getText(), "dd/MM/yyyy"), txtBatDau.getText(), txtKetThuc.getText(), this.maHD);
-        if (maHD == null) {
-            DialogHelper.alert(this, "Sảnh không có lịch đặt cọc");
+        HopDong hopDong = hopDongDAO.checkSanh(((Sanh) cbbSanh.getSelectedItem()).getMaSanh(), DateHelper.toDate(txtNgayToChuc.getText(), "dd/MM/yyyy"),
+                txtBatDau.getText(), txtKetThuc.getText(), this.maHD);
+        if (hopDong != null) {
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+                taThongBaoSanh.setText("Sảnh đã được đặt tại hợp đồng: " + hopDong.getMaHD()
+                        + "\nNgày tổ chức: " + DateHelper.toString(hopDong.getNgayToChuc(), "dd/MM/yyyy")
+                        + "\nGiờ bắt đầu: " + sdf.format(sdf.parse(hopDong.getThoiGianBatDau()))
+                        + "\nGiờ kết thúc: " +sdf.format(sdf.parse(hopDong.getThoiGianKetThuc()))
+                );
+                return;
+            } catch (ParseException ex) {
+                Logger.getLogger(LapHopDong.class.getName()).log(Level.SEVERE, null, ex);
+            }
         } else {
-            DialogHelper.alertError(this, "Sảnh đã được đặt tại " + maHD);
+            taThongBaoSanh.setText("Sảnh chưa có lịch đặt tiệc");
+            return;
         }
     }//GEN-LAST:event_lblKiemTraMouseClicked
+
+    private void txtHoTenKhachHangKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtHoTenKhachHangKeyTyped
+        checkName(txtHoTenKhachHang, txtSDT, evt);
+    }//GEN-LAST:event_txtHoTenKhachHangKeyTyped
+
+    private void txtHoTenCoDauKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtHoTenCoDauKeyTyped
+        checkName(txtHoTenCoDau, txtHoTenChuRe, evt);
+    }//GEN-LAST:event_txtHoTenCoDauKeyTyped
+
+    private void txtHoTenChuReKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtHoTenChuReKeyTyped
+        checkName(txtHoTenChuRe, taDiaChi, evt);
+    }//GEN-LAST:event_txtHoTenChuReKeyTyped
+
+    private void taDiaChiKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_taDiaChiKeyTyped
+        char testChar = evt.getKeyChar();
+
+        String name = taDiaChi.getText().trim().replaceAll("\\s+", " ");
+        if (name.length() > 255 && testChar != '\n') {
+            evt.consume();
+            return;
+        }
+
+        if (testChar == '\n') {
+            if (name.length() == 0) {
+                return;
+            }
+            taDiaChi.setText(name);
+
+        }
+
+    }//GEN-LAST:event_taDiaChiKeyTyped
+
+    private void txtHoTenKhachHangFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtHoTenKhachHangFocusLost
+        checkName(txtHoTenKhachHang, txtSDT, null);
+    }//GEN-LAST:event_txtHoTenKhachHangFocusLost
+
+    private void txtHoTenCoDauFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtHoTenCoDauFocusLost
+        checkName(txtHoTenCoDau, txtHoTenChuRe, null);
+    }//GEN-LAST:event_txtHoTenCoDauFocusLost
+
+    private void txtHoTenChuReFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtHoTenChuReFocusLost
+        checkName(txtHoTenChuRe, taDiaChi, null);
+    }//GEN-LAST:event_txtHoTenChuReFocusLost
+
+    private void txtNgayToChucFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtNgayToChucFocusGained
+
+        if (txtNgayToChuc.getText().length() != 0) {
+            if (DateHelper.toDate(txtNgayToChuc.getText(), "dd/MM/yyyy").getTime() - DateHelper.toDate(DateHelper.toString(DateHelper.now(), "dd/MM/yyyy"), "dd/MM/yyyy").getTime() < 24 * 3600000) {
+                DialogHelper.alertError(this, "Ngày tổ chức sau ít nhất một ngày đặt tiệc");
+                txtNgayToChuc.setText("");
+                txtNgayToChuc.requestFocus();
+                dateChooser.showPopup();
+            }
+        }
+    }//GEN-LAST:event_txtNgayToChucFocusGained
+
+    private void btnSaveInfo1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveInfo1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnSaveInfo1ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -2416,6 +2720,7 @@ public class LapHopDong extends javax.swing.JPanel {
     private com.ui.swing.HoverButton btnPhanCong;
     private com.ui.swing.HoverButton btnSave;
     private com.ui.swing.HoverButton btnSaveInfo;
+    private com.ui.swing.HoverButton btnSaveInfo1;
     private com.ui.swing.HoverButton btnTTBan;
     private com.ui.swing.HoverButton btnTTSanKhau;
     private com.ui.swing.HoverButton btnTrangTriCong;
@@ -2429,6 +2734,7 @@ public class LapHopDong extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel lblKiemTra;
     private javax.swing.JLabel lblMaNH;
     private javax.swing.JLabel lblMaNH1;
@@ -2459,6 +2765,7 @@ public class LapHopDong extends javax.swing.JPanel {
     private javax.swing.JPanel pnlBtn;
     private javax.swing.JPanel pnlDichVu;
     private javax.swing.JTextArea taDiaChi;
+    private javax.swing.JTextArea taThongBaoSanh;
     private com.ui.swing.timepicker.TimePicker timePickerBatDau;
     private com.ui.swing.timepicker.TimePicker timePickerKetThuc;
     private javax.swing.JTextField txtBatDau;
