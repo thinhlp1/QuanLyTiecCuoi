@@ -35,7 +35,8 @@ public class AppStatus {
    
     public static HappyWeddingApp mainApp = null;
     public static LapHopDong lapHopDong = null;
-    public static Menu menu = null;
+    public static Menu MENU = null;
+   
     
     //0 is not load
     //1 is loading

@@ -4,6 +4,8 @@ import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
@@ -16,6 +18,7 @@ public class ListMenu<E extends Object> extends JList<E> {
     private int selectedIndex = -1;
     private int overIndex = -1;
     private EventMenuSelected event;
+    private List<MenuItem> listMenuItem = new ArrayList<>();
 
     public void addEventMenuSelected(EventMenuSelected event) {
         this.event = event;
@@ -74,6 +77,24 @@ public class ListMenu<E extends Object> extends JList<E> {
             }
         });
     }
+    
+    public void setSelected(int index){
+        for (int i = 0; i < listMenuItem.size();i++){
+            if (index == i){
+                listMenuItem.get(i).setSelected(true);
+            }
+        }
+    }
+
+    public List<MenuItem> getListMenuItem() {
+        return listMenuItem;
+    }
+
+    public void setListMenuItem(List<MenuItem> listMenuItem) {
+        this.listMenuItem = listMenuItem;
+    }
+    
+    
 
     @Override
     public ListCellRenderer<? super E> getCellRenderer() {
@@ -86,7 +107,9 @@ public class ListMenu<E extends Object> extends JList<E> {
                 } else {
                     data = new Model_Menu("", o + "", Model_Menu.MenuType.EMPTY);
                 }
+                listMenuItem.clear();
                 MenuItem item = new MenuItem(data);
+                listMenuItem.add(item);
                 item.setSelected(selectedIndex == index);
                 item.setOver(overIndex == index);
                 return item;

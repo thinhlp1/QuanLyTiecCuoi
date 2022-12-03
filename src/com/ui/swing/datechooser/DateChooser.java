@@ -1,6 +1,7 @@
 package com.ui.swing.datechooser;
 
-
+import com.happywedding.helper.DateHelper;
+import com.happywedding.helper.DialogHelper;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
@@ -15,6 +16,9 @@ import java.util.List;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import com.ui.swing.datechooser.Slider;
+import java.awt.event.ComponentAdapter;
+import javax.swing.JFrame;
+import javax.swing.JPopupMenu;
 
 public final class DateChooser extends javax.swing.JPanel {
 
@@ -36,6 +40,7 @@ public final class DateChooser extends javax.swing.JPanel {
     private int startYear;
     private SelectedDate selectedDate = new SelectedDate();
     private List<EventDateChooser> events;
+    private boolean isNgayToChuc = false;
 
     public DateChooser() {
         initComponents();
@@ -89,6 +94,14 @@ public final class DateChooser extends javax.swing.JPanel {
             event.dateSelected(action, selectedDate);
         }
     }
+    
+    public JPopupMenu getPopup(){
+        return this.popup;
+    }
+    
+    public void setPopupListner(ComponentAdapter action){
+        popup.addComponentListener(action);
+    }
 
     private Event getEventDay(Dates dates) {
         return (MouseEvent evt, int num) -> {
@@ -101,6 +114,8 @@ public final class DateChooser extends javax.swing.JPanel {
             setText(true, 1);
             if (evt != null && evt.getClickCount() == 2 && SwingUtilities.isLeftMouseButton(evt)) {
                 popup.setVisible(false);
+               
+
             }
         };
     }
@@ -213,8 +228,22 @@ public final class DateChooser extends javax.swing.JPanel {
 
     public void hidePopup() {
         popup.setVisible(false);
+         if (isNgayToChuc) {
+                    String date = textRefernce.getText();
+                    Date date2 = DateHelper.toDate(date, "dd/MM/yyyy");
+                    Date now = DateHelper.now();
+                    if (date2.getTime() - now.getTime() < 3 * 24 * 3600000) {
+                        DialogHelper.alertError(new JFrame(), "Ngày tổ chức tối thiểu phải 3 ngày");
+                    }
+                }
     }
 
+    public void setIsNgayToChuc(boolean isNgayToChuc) {
+        this.isNgayToChuc = isNgayToChuc;
+    }
+    
+    
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {

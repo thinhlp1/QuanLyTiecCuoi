@@ -7,8 +7,11 @@ public class HoaDon { // hoa don
     private int maHoaDon;
     private String MaHD;
     private Date ngayLap;
+    private Date ngayLapLan2;
     private String maNV;
     private String tenNV;
+    private String MaNLLan2;
+    private String tenNLLan2;
     private long trangTriCong;
     private long trangTriSanKhau;
     private long trangTriBanTiec;
@@ -41,6 +44,35 @@ public class HoaDon { // hoa don
     }
 
     public HoaDon() {
+    }
+    
+    public String getInfoSearch(){
+        return maNV + MaHD + MaNLLan2 + tenNV + tenNLLan2;
+    }
+    
+    
+    public Date getNgayLapLan2() {
+        return ngayLapLan2;
+    }
+
+    public void setNgayLapLan2(Date ngayLapLan2) {
+        this.ngayLapLan2 = ngayLapLan2;
+    }
+
+    public String getMaNLLan2() {
+        return MaNLLan2;
+    }
+
+    public void setMaNLLan2(String MaNLLan2) {
+        this.MaNLLan2 = MaNLLan2;
+    }
+
+    public String getTenNLLan2() {
+        return tenNLLan2;
+    }
+
+    public void setTenNLLan2(String tenNLLan2) {
+        this.tenNLLan2 = tenNLLan2;
     }
     
      

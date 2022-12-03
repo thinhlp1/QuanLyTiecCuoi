@@ -79,6 +79,10 @@ public class TimePicker extends javax.swing.JPanel {
             displayText.setText(cmdHour.getText() + ":" + cmdMinute.getText() + " " + (cmdAM.getForeground() == Color.WHITE ? "AM" : "MP"));
         }
     }
+    
+    public  void disPlayTime(String time){
+        displayText.setText(time);
+    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
