@@ -77,7 +77,6 @@ import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.util.JRLoader;
 import net.sf.jasperreports.view.JasperViewer;
 
-
 /**
  *
  * @author ADMIN
@@ -158,7 +157,7 @@ public class LapHopDong extends javax.swing.JPanel {
         // khởi tạo ngày và giờ
         timePickerBatDau.addActionListener(new ActionListener() {
             @Override
-           public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent e) {
                 String ketThuc = ShareHelper.to24Hour(timePickerKetThuc.getSelectedTime());
                 String batDau = ShareHelper.to24Hour(timePickerBatDau.getSelectedTime());
 
@@ -309,9 +308,6 @@ public class LapHopDong extends javax.swing.JPanel {
         btnSaveInfo.setVisible(false);
         fillFormHopDong(khachHang, hopDong);
 
-        if (hoaDonDAO.selectByID(maHD) != null) {
-            btnXuatHoaDonTam.setVisible(false);
-        }
         reloadStatus();
         reloadHopDong();
 
@@ -816,17 +812,13 @@ public class LapHopDong extends javax.swing.JPanel {
                 isView();
                 btnSave.setVisible(false);
                 btnKyKet.setVisible(false);
-                btnInHopDong.setVisible(false);
+                btnInHopDong.setVisible(true);
                 btnDuyet.setVisible(false);
                 btnDanhDauXoa.setVisible(false);
                 btnPhanCong.setVisible(true);
                 btnChiPhiPhatSinh.setVisible(false);
 
-                if (hoaDonDAO.selectByID(maHD) == null) {
-                    btnXuatHoaDonTam.setVisible(true);
-                } else {
-                    btnXuatHoaDonTam.setVisible(false);
-                }
+                btnXuatHoaDonTam.setVisible(true);
 
                 try {
 
@@ -930,16 +922,12 @@ public class LapHopDong extends javax.swing.JPanel {
                 btnDanhDauXoa.setVisible(false);
                 btnPhanCong.setVisible(false);
                 btnChiPhiPhatSinh.setVisible(false);
-                if (hoaDonDAO.selectByID(maHD) == null) {
-                    btnXuatHoaDonTam.setVisible(true);
-                } else {
-                    btnXuatHoaDonTam.setVisible(false);
-                }
+                btnXuatHoaDonTam.setVisible(true);
                 btnChiPhiPhatSinh.setVisible(true);
                 btnComfimHoanThanh.setVisible(false);
                 btnHuyHopDong.setVisible(false);
                 btnHuyDuyet.setVisible(false);
-                btnInHopDong.setVisible(false);
+                btnInHopDong.setVisible(true);
 
             } else if (statusHopDong.equals(StatusHopDong.DATHUCHIEN)) {
                 isView();
@@ -1108,7 +1096,6 @@ public class LapHopDong extends javax.swing.JPanel {
 
     }
 
-
     public boolean checkName(JTextField txtHoTen, JComponent nextFocus, KeyEvent evt) {
 
         String name = txtHoTen.getText().trim().replaceAll("\\s+", " ");
@@ -1210,6 +1197,7 @@ public class LapHopDong extends javax.swing.JPanel {
         }
         return false;
     }
+
     private static net.sf.jasperreports.engine.JasperReport loadJasperReport(String reportName) {
         try {
             System.out.println(reportName);
@@ -1310,16 +1298,17 @@ public class LapHopDong extends javax.swing.JPanel {
         btnSaveInfo = new com.ui.swing.HoverButton();
         pnlBtn = new javax.swing.JPanel();
         btnSave = new com.ui.swing.HoverButton();
-        btnXuatHoaDonTam = new com.ui.swing.HoverButton();
-        btnPhanCong = new com.ui.swing.HoverButton();
         btnKyKet = new com.ui.swing.HoverButton();
         btnDuyet = new com.ui.swing.HoverButton();
         btnDanhDauXoa = new com.ui.swing.HoverButton();
         btnComfimHoanThanh = new com.ui.swing.HoverButton();
         btnHuyHopDong = new com.ui.swing.HoverButton();
         btnHuyDuyet = new com.ui.swing.HoverButton();
-        btnChiPhiPhatSinh = new com.ui.swing.HoverButton();
+        pnlInHoaDOn = new javax.swing.JPanel();
         btnInHopDong = new com.ui.swing.HoverButton();
+        btnXuatHoaDonTam = new com.ui.swing.HoverButton();
+        btnPhanCong = new com.ui.swing.HoverButton();
+        btnChiPhiPhatSinh = new com.ui.swing.HoverButton();
 
         timePickerBatDau.setForeground(new java.awt.Color(255, 102, 102));
 
@@ -1946,44 +1935,6 @@ public class LapHopDong extends javax.swing.JPanel {
         });
         pnlBtn.add(btnSave);
 
-        btnXuatHoaDonTam.setBackground(new java.awt.Color(77, 76, 125));
-        btnXuatHoaDonTam.setForeground(new java.awt.Color(255, 255, 255));
-        btnXuatHoaDonTam.setText("Xuất hóa đơn tạm");
-        btnXuatHoaDonTam.setBorderColor(new java.awt.Color(77, 76, 125));
-        btnXuatHoaDonTam.setColor(new java.awt.Color(77, 76, 125));
-        btnXuatHoaDonTam.setColorClick(new java.awt.Color(77, 0, 196));
-        btnXuatHoaDonTam.setColorOver(new java.awt.Color(77, 0, 196));
-        btnXuatHoaDonTam.setFocusPainted(false);
-        btnXuatHoaDonTam.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        btnXuatHoaDonTam.setLabelColor(java.awt.Color.white);
-        btnXuatHoaDonTam.setLableColorClick(java.awt.Color.white);
-        btnXuatHoaDonTam.setRadius(15);
-        btnXuatHoaDonTam.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnXuatHoaDonTamActionPerformed(evt);
-            }
-        });
-        pnlBtn.add(btnXuatHoaDonTam);
-
-        btnPhanCong.setBackground(new java.awt.Color(77, 76, 125));
-        btnPhanCong.setForeground(new java.awt.Color(255, 255, 255));
-        btnPhanCong.setText("Phân công");
-        btnPhanCong.setBorderColor(new java.awt.Color(77, 76, 125));
-        btnPhanCong.setColor(new java.awt.Color(77, 76, 125));
-        btnPhanCong.setColorClick(new java.awt.Color(77, 0, 196));
-        btnPhanCong.setColorOver(new java.awt.Color(77, 0, 196));
-        btnPhanCong.setFocusPainted(false);
-        btnPhanCong.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        btnPhanCong.setLabelColor(java.awt.Color.white);
-        btnPhanCong.setLableColorClick(java.awt.Color.white);
-        btnPhanCong.setRadius(15);
-        btnPhanCong.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnPhanCongActionPerformed(evt);
-            }
-        });
-        pnlBtn.add(btnPhanCong);
-
         btnKyKet.setBackground(new java.awt.Color(24, 37, 153));
         btnKyKet.setForeground(new java.awt.Color(255, 255, 255));
         btnKyKet.setText("Ký kết");
@@ -2096,24 +2047,11 @@ public class LapHopDong extends javax.swing.JPanel {
         });
         pnlBtn.add(btnHuyDuyet);
 
-        btnChiPhiPhatSinh.setBackground(new java.awt.Color(77, 76, 125));
-        btnChiPhiPhatSinh.setForeground(new java.awt.Color(255, 255, 255));
-        btnChiPhiPhatSinh.setText("Chi phí phát sinh");
-        btnChiPhiPhatSinh.setBorderColor(new java.awt.Color(77, 76, 125));
-        btnChiPhiPhatSinh.setColor(new java.awt.Color(77, 76, 125));
-        btnChiPhiPhatSinh.setColorClick(new java.awt.Color(77, 0, 196));
-        btnChiPhiPhatSinh.setColorOver(new java.awt.Color(77, 0, 196));
-        btnChiPhiPhatSinh.setFocusPainted(false);
-        btnChiPhiPhatSinh.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        btnChiPhiPhatSinh.setLabelColor(java.awt.Color.white);
-        btnChiPhiPhatSinh.setLableColorClick(java.awt.Color.white);
-        btnChiPhiPhatSinh.setRadius(15);
-        btnChiPhiPhatSinh.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnChiPhiPhatSinhActionPerformed(evt);
-            }
-        });
-        pnlBtn.add(btnChiPhiPhatSinh);
+        jPanel1.add(pnlBtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 890, 750, 50));
+
+        pnlInHoaDOn.setBackground(new java.awt.Color(255, 255, 255));
+        pnlInHoaDOn.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        pnlInHoaDOn.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT, 15, 5));
 
         btnInHopDong.setBackground(new java.awt.Color(77, 76, 125));
         btnInHopDong.setForeground(new java.awt.Color(255, 255, 255));
@@ -2132,9 +2070,66 @@ public class LapHopDong extends javax.swing.JPanel {
                 btnInHopDongActionPerformed(evt);
             }
         });
-        pnlBtn.add(btnInHopDong);
+        pnlInHoaDOn.add(btnInHopDong);
 
-        jPanel1.add(pnlBtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 870, 1310, 50));
+        btnXuatHoaDonTam.setBackground(new java.awt.Color(77, 76, 125));
+        btnXuatHoaDonTam.setForeground(new java.awt.Color(255, 255, 255));
+        btnXuatHoaDonTam.setText("Xuất hóa đơn tạm");
+        btnXuatHoaDonTam.setBorderColor(new java.awt.Color(77, 76, 125));
+        btnXuatHoaDonTam.setColor(new java.awt.Color(77, 76, 125));
+        btnXuatHoaDonTam.setColorClick(new java.awt.Color(77, 0, 196));
+        btnXuatHoaDonTam.setColorOver(new java.awt.Color(77, 0, 196));
+        btnXuatHoaDonTam.setFocusPainted(false);
+        btnXuatHoaDonTam.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        btnXuatHoaDonTam.setLabelColor(java.awt.Color.white);
+        btnXuatHoaDonTam.setLableColorClick(java.awt.Color.white);
+        btnXuatHoaDonTam.setRadius(15);
+        btnXuatHoaDonTam.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnXuatHoaDonTamActionPerformed(evt);
+            }
+        });
+        pnlInHoaDOn.add(btnXuatHoaDonTam);
+
+        btnPhanCong.setBackground(new java.awt.Color(77, 76, 125));
+        btnPhanCong.setForeground(new java.awt.Color(255, 255, 255));
+        btnPhanCong.setText("Phân công");
+        btnPhanCong.setBorderColor(new java.awt.Color(77, 76, 125));
+        btnPhanCong.setColor(new java.awt.Color(77, 76, 125));
+        btnPhanCong.setColorClick(new java.awt.Color(77, 0, 196));
+        btnPhanCong.setColorOver(new java.awt.Color(77, 0, 196));
+        btnPhanCong.setFocusPainted(false);
+        btnPhanCong.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        btnPhanCong.setLabelColor(java.awt.Color.white);
+        btnPhanCong.setLableColorClick(java.awt.Color.white);
+        btnPhanCong.setRadius(15);
+        btnPhanCong.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPhanCongActionPerformed(evt);
+            }
+        });
+        pnlInHoaDOn.add(btnPhanCong);
+
+        btnChiPhiPhatSinh.setBackground(new java.awt.Color(77, 76, 125));
+        btnChiPhiPhatSinh.setForeground(new java.awt.Color(255, 255, 255));
+        btnChiPhiPhatSinh.setText("Chi phí phát sinh");
+        btnChiPhiPhatSinh.setBorderColor(new java.awt.Color(77, 76, 125));
+        btnChiPhiPhatSinh.setColor(new java.awt.Color(77, 76, 125));
+        btnChiPhiPhatSinh.setColorClick(new java.awt.Color(77, 0, 196));
+        btnChiPhiPhatSinh.setColorOver(new java.awt.Color(77, 0, 196));
+        btnChiPhiPhatSinh.setFocusPainted(false);
+        btnChiPhiPhatSinh.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        btnChiPhiPhatSinh.setLabelColor(java.awt.Color.white);
+        btnChiPhiPhatSinh.setLableColorClick(java.awt.Color.white);
+        btnChiPhiPhatSinh.setRadius(15);
+        btnChiPhiPhatSinh.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnChiPhiPhatSinhActionPerformed(evt);
+            }
+        });
+        pnlInHoaDOn.add(btnChiPhiPhatSinh);
+
+        jPanel1.add(pnlInHoaDOn, new org.netbeans.lib.awtextra.AbsoluteConstraints(1060, 880, 550, 50));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -2197,19 +2192,6 @@ public class LapHopDong extends javax.swing.JPanel {
         new DichVuDiKem(new JFrame(), isEdit, maHD).setVisible(true);
     }//GEN-LAST:event_btnDVDKActionPerformed
 
-    private void btnKyKetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKyKetActionPerformed
-        updateTrangThaiHopDong(StatusHopDong.CHOKYKET);
-
-        // update trạng thái hợp đồng sang chờ ký kết
-        if (hopDongDAO.updateTrangThai(maHD, statusHopDong)) {
-            phanQuyen();
-            reloadStatus();
-
-        } else {
-            DialogHelper.alertError(this, "Lưu không thành công");
-        }
-    }//GEN-LAST:event_btnKyKetActionPerformed
-
     private void btnTTBanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTTBanActionPerformed
 
         TrangTriBanTiec tr = new TrangTriBanTiec(new JFrame(), isEdit, maHD, (int) hopDong.getSoLuongBan());
@@ -2238,22 +2220,6 @@ public class LapHopDong extends javax.swing.JPanel {
         NgheThuat tr = new NgheThuat(new JFrame(), isEdit, maHD);
         tr.setVisible(true);
     }//GEN-LAST:event_btnNgheThuatActionPerformed
-
-    private void btnXuatHoaDonTamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXuatHoaDonTamActionPerformed
-
-        HoaDon hd = new HoaDon();
-        hd.setMaHD(maHD);
-        hd.setNgayLap(DateHelper.now());
-        hd.setMaNV(AppStatus.USER.getMaNV());
-        hd.setTrangTha(0);
-
-        hoaDonDAO.insertHoaDon(hd);
-        phanQuyen();
-    }//GEN-LAST:event_btnXuatHoaDonTamActionPerformed
-
-    private void btnPhanCongActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPhanCongActionPerformed
-        new PhanCong(new JFrame(), (statusHopDong.equals("DATHUCHIEN") || statusHopDong.equals("XOA") ? false : true), maHD).setVisible(true);
-    }//GEN-LAST:event_btnPhanCongActionPerformed
 
     private void txtNgayToChucActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNgayToChucActionPerformed
 
@@ -2299,209 +2265,6 @@ public class LapHopDong extends javax.swing.JPanel {
 
 
     }//GEN-LAST:event_btnSaveInfoActionPerformed
-
-    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
-
-        //lblMaNH.requestFocus();
-        for (int i = 0; i < checkedDichVu.size(); i++) {
-            if (checkedDichVu.get(i) == false) {
-                DialogHelper.alertError(this, "Chọn đầy đủ dịch vụ");
-                isValid = false;
-                return;
-            }
-        }
-
-        if (!validHopDong()) {
-            isValid = false;
-            return;
-        }
-        isValid = true;
-
-        if (AppStatus.ROLE.equals("TIEPTAN")) {
-            statusHopDong = StatusHopDong.CHODUYET;
-            boolean rs = DialogHelper.confirm(this, "Sau khi lưu được chờ duyệt và không thể thay đổi.");
-            if (rs) {
-                // update thong tin hop dong thành trạng thái đang chờ duyệt
-                if (updateHopDong()) {
-                    phanQuyen();
-                    saveHopDong();
-                    reloadStatus();
-                    reloadHopDong();
-                } else {
-                    DialogHelper.alertError(this, "Lưu không thành công");
-                }
-            }
-
-        } else {
-            statusHopDong = StatusHopDong.CHODUYET;
-            if (updateHopDong()) {
-                phanQuyen();
-                saveHopDong();
-                reloadStatus();
-                reloadHopDong();
-                fillFormHopDong(khachHang, hopDong);
-            } else {
-                DialogHelper.alertError(this, "Lưu không thành công");
-            }
-        }
-
-
-    }//GEN-LAST:event_btnSaveActionPerformed
-
-    private void btnChiPhiPhatSinhActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChiPhiPhatSinhActionPerformed
-        boolean isEdit = false;
-        if (hoaDonDAO.selectByID(maHD) != null) {
-            if (hoaDonDAO.selectByID(maHD).getTrangTha() == 0 && !hopDong.getTrangThai().equals(StatusHopDong.XOA)) {
-                isEdit = true;
-            }
-        }
-        new ChiPhiPhatSinh(maHD, isEdit).setVisible(true);
-
-    }//GEN-LAST:event_btnChiPhiPhatSinhActionPerformed
-
-    private void btnDuyetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDuyetActionPerformed
-
-        btnSave.doClick();
-
-        if (!isValid) {
-            return;
-        }
-
-        updateTrangThaiHopDong(StatusHopDong.CHODUYET);
-        updateHopDong();
-        // update trạng thái hợp đồng sang chờ ký kết
-        if (hopDongDAO.updateTrangThai(maHD, statusHopDong)) {
-
-            phanQuyen();
-            reloadStatus();
-
-        } else {
-            DialogHelper.alertError(this, "Lưu không thành công");
-        }
-    }//GEN-LAST:event_btnDuyetActionPerformed
-
-    private void btnDanhDauXoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDanhDauXoaActionPerformed
-        boolean rs = DialogHelper.confirm(this, "Xóa hợp đồng này ?");
-        if (rs) {
-            try {
-                hopDongDAO.delete(maHD);
-                khachHangDAO.delete(maHD);
-                btnBack.doClick();
-            } catch (Exception e) {
-                e.printStackTrace();
-                DialogHelper.alertError(this, "Xóa không thành công");
-            }
-
-        }
-
-    }//GEN-LAST:event_btnDanhDauXoaActionPerformed
-
-    private void btnComfimHoanThanhActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnComfimHoanThanhActionPerformed
-        boolean rs = DialogHelper.confirm(this, "Xác nhận hoàn thành tiệc? Không thể quay lại sau thao tác này ?");
-
-        if (rs) {
-
-            updateTrangThaiHopDong(StatusHopDong.THUCHIEN);
-            if (hopDongDAO.updateTrangThai(maHD, statusHopDong)) {
-                phanQuyen();
-                reloadStatus();
-            } else {
-                DialogHelper.alertError(this, "Lưu không thành công");
-            }
-
-        }
-
-        // hopDongDAO.updateTrangThai( maHD,  statusHopDong);
-        //phanQuyen();
-    }//GEN-LAST:event_btnComfimHoanThanhActionPerformed
-
-    private void btnHuyHopDongActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHuyHopDongActionPerformed
-        boolean rs = DialogHelper.confirm(this, "Đánh dấu xóa? Không thể quay lại sau thao tác này ?");
-
-        if (rs) {
-
-            updateTrangThaiHopDong(StatusHopDong.DATHUCHIEN);
-            if (hopDongDAO.updateTrangThai(maHD, statusHopDong)) {
-                phanQuyen();
-                reloadStatus();
-            } else {
-                DialogHelper.alertError(this, "Lưu không thành công");
-            }
-
-        }
-
-    }//GEN-LAST:event_btnHuyHopDongActionPerformed
-
-    private void btnHuyDuyetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHuyDuyetActionPerformed
-        statusHopDong = StatusHopDong.CHODUYET;
-
-        if (hopDongDAO.updateTrangThai(maHD, statusHopDong)) {
-            phanQuyen();
-            reloadStatus();
-            isEdit();
-
-        } else {
-            DialogHelper.alertError(this, "Lưu không thành công");
-        }
-    }//GEN-LAST:event_btnHuyDuyetActionPerformed
-
-    private void btnInHopDongActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInHopDongActionPerformed
-        hopDong = hopDongDAO.findById(maHD);
-        try {
-            Map<String, Object> parameters = new HashMap<String, Object>();
-            Connection con = JDBCHelper.getConnection();
-
-            String maHD = this.maHD;
-            String maTD = datMonDAO.selectThucDonChinh(maHD);
-            String maTDPhu = datMonDAO.selectThucDonPhu(maHD);
-            if (maTDPhu.equals(maTD)) {
-                maTDPhu = "";
-            }
-            long ttdv = dichVuDAO.selectDichVu(maHD, "TTCONG").getChiPhi()
-                    + dichVuDAO.selectDichVu(maHD, "TTCONG").getChiPhiPhatSinh()
-                    + dichVuDAO.selectDichVu(maHD, "TTBANTIEC").getChiPhi()
-                    + dichVuDAO.selectDichVu(maHD, "TTBANTIEC").getChiPhiPhatSinh()
-                    + dichVuDAO.selectDichVu(maHD, "TTSANKHAU").getChiPhi()
-                    + dichVuDAO.selectDichVu(maHD, "TTSANKHAU").getChiPhiPhatSinh()
-                    + dichVuDAO.selectDichVu(maHD, "NGHETHUAT").getChiPhi()
-                    + dichVuDAO.selectDichVu(maHD, "NGHETHUAT").getChiPhiPhatSinh()
-                    + datMonDAO.selectDichVuDatMon(maHD, datMonDAO.selectThucDonChinh(maHD)).getChiPhi()
-                    + datMonDAO.selectDichVuDatMon(maHD, datMonDAO.selectThucDonChinh(maHD)).getChiPhiPhatSinh()
-                    + datMonDAO.selectDichVuDatMon(maHD, datMonDAO.selectThucDonPhu(maHD)).getChiPhi()
-                    + datMonDAO.selectDichVuDatMon(maHD, datMonDAO.selectThucDonPhu(maHD)).getChiPhiPhatSinh()
-                    + dichVuDiKemDAO.selectHopDongDichVuDiKem(maHD).getChiPhi()
-                    + dichVuDiKemDAO.selectHopDongDichVuDiKem(maHD).getChiPhiPhatSinh();
-            String tongTienDichVu = ShareHelper.toMoney(ttdv);
-            String thue = ShareHelper.toMoney((long) ((ShareHelper.toMoney(txtChiPhi.getText()) + ShareHelper.toMoney(txtChiPhiPhatSinh.getText())) * (10 / 100.0)));
-            String tongTien = ShareHelper.toMoney(hopDong.getTongTien());
-            String tienCoc = ShareHelper.toMoney(hopDong.getTienCoc());
-            String tienConLai = ShareHelper.toMoney(hopDong.getTongTien() - hopDong.getTienCoc());
-            String thanhChu = EnglishNumberToWords.convert(hopDong.getTongTien());
-            String thanhChu2 = EnglishNumberToWords.convert(ShareHelper.toMoney(tienConLai));
-            net.sf.jasperreports.engine.JasperReport rpt = JasperCompileManager.compileReport("src\\com\\happywedding\\Report\\XuatHopDong.jrxml");
-            parameters.put("MaHD", maHD);
-            parameters.put("MaTD_Chinh", maTD);
-            parameters.put("MaTD_Phu", maTDPhu);
-            parameters.put("ThanhTien", thanhChu);
-            parameters.put("ThanhTien2", thanhChu2);
-            parameters.put("Thue", thue + " VND");
-            parameters.put("TongTien", tongTien + " VND");
-            parameters.put("TienCoc", tienCoc + " VND");
-            parameters.put("TienConLai", tienConLai + " VND");
-            parameters.put("tongTienDichVu", tongTienDichVu);
-            parameters.put("SUBREPORT_DIR", "src\\com\\happywedding\\Report\\");
-            System.out.println(parameters);
-            JasperPrint p = JasperFillManager.fillReport(rpt, parameters, con);
-            JasperViewer.viewReport(p, false);
-
-        } catch (SQLException ex) {
-            Logger.getLogger(JasperReport.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (JRException ex) {
-            Logger.getLogger(JasperReport.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-
-    }//GEN-LAST:event_btnInHopDongActionPerformed
 
     private void txtSLBanKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSLBanKeyTyped
         char testChar = evt.getKeyChar();
@@ -2739,6 +2502,247 @@ public class LapHopDong extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtThueThanhTienActionPerformed
 
+    private void btnInHopDongActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInHopDongActionPerformed
+        hopDong = hopDongDAO.findById(maHD);
+        try {
+            Map<String, Object> parameters = new HashMap<String, Object>();
+            Connection con = JDBCHelper.getConnection();
+
+            String maHD = this.maHD;
+            String maTD = datMonDAO.selectThucDonChinh(maHD);
+            String maTDPhu = datMonDAO.selectThucDonPhu(maHD);
+            if (maTDPhu.equals(maTD)) {
+                maTDPhu = "";
+            }
+           
+            
+            long ttdv = dichVuDAO.selectDichVu(maHD, "TTCONG").getChiPhi()
+                    + dichVuDAO.selectDichVu(maHD, "TTCONG").getChiPhiPhatSinh()
+                    + dichVuDAO.selectDichVu(maHD, "TTBANTIEC").getChiPhi()
+                    + dichVuDAO.selectDichVu(maHD, "TTBANTIEC").getChiPhiPhatSinh()
+                    + dichVuDAO.selectDichVu(maHD, "TTSANKHAU").getChiPhi()
+                    + dichVuDAO.selectDichVu(maHD, "TTSANKHAU").getChiPhiPhatSinh()
+                    + dichVuDAO.selectDichVu(maHD, "NGHETHUAT").getChiPhi()
+                    + dichVuDAO.selectDichVu(maHD, "NGHETHUAT").getChiPhiPhatSinh()
+                    + datMonDAO.selectDichVuDatMon(maHD, datMonDAO.selectThucDonChinh(maHD)).getChiPhi()
+                    + datMonDAO.selectDichVuDatMon(maHD, datMonDAO.selectThucDonChinh(maHD)).getChiPhiPhatSinh()
+                    + datMonDAO.selectDichVuDatMon(maHD, datMonDAO.selectThucDonPhu(maHD)).getChiPhi()
+                    + datMonDAO.selectDichVuDatMon(maHD, datMonDAO.selectThucDonPhu(maHD)).getChiPhiPhatSinh()
+                    + dichVuDiKemDAO.selectHopDongDichVuDiKem(maHD).getChiPhi()
+                    + dichVuDiKemDAO.selectHopDongDichVuDiKem(maHD).getChiPhiPhatSinh();
+            String tongTienDichVu = ShareHelper.toMoney(ttdv);
+            String thue = ShareHelper.toMoney((long) ((ShareHelper.toMoney(txtChiPhi.getText()) + ShareHelper.toMoney(txtChiPhiPhatSinh.getText())) * (10 / 100.0)));
+            String tongTien = ShareHelper.toMoney(hopDong.getTongTien());
+            String tienCoc = ShareHelper.toMoney(hopDong.getTienCoc());
+            String tienConLai = ShareHelper.toMoney(hopDong.getTongTien() - hopDong.getTienCoc());
+            String thanhChu = EnglishNumberToWords.convert(hopDong.getTongTien());
+            String thanhChu2 = EnglishNumberToWords.convert(ShareHelper.toMoney(tienConLai));
+            net.sf.jasperreports.engine.JasperReport rpt = JasperCompileManager.compileReport("src\\com\\happywedding\\Report\\XuatHopDong.jrxml");
+            parameters.put("MaHD", maHD);
+            parameters.put("MaTD_Chinh", maTD);
+            parameters.put("MaTD_Phu", maTDPhu);
+            parameters.put("ThanhTien", thanhChu);
+            parameters.put("ThanhTien2", thanhChu2);
+            parameters.put("Thue", thue + " VND");
+            parameters.put("TongTien", tongTien + " VND");
+            parameters.put("TienCoc", tienCoc + " VND");
+            parameters.put("TienConLai", tienConLai + " VND");
+            parameters.put("tongTienDichVu", tongTienDichVu);
+            parameters.put("SUBREPORT_DIR", "src\\com\\happywedding\\Report\\");
+            System.out.println(parameters);
+            JasperPrint p = JasperFillManager.fillReport(rpt, parameters, con);
+            JasperViewer.viewReport(p, false);
+
+        } catch (SQLException ex) {
+            Logger.getLogger(JasperReport.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (JRException ex) {
+            Logger.getLogger(JasperReport.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }//GEN-LAST:event_btnInHopDongActionPerformed
+
+    private void btnChiPhiPhatSinhActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChiPhiPhatSinhActionPerformed
+        boolean isEdit = false;
+        if (hoaDonDAO.selectByID(maHD) != null) {
+            if (hoaDonDAO.selectByID(maHD).getTrangTha() == 0 && !hopDong.getTrangThai().equals(StatusHopDong.XOA)) {
+                isEdit = true;
+            }
+        }
+        new ChiPhiPhatSinh(maHD, isEdit).setVisible(true);
+    }//GEN-LAST:event_btnChiPhiPhatSinhActionPerformed
+
+    private void btnHuyDuyetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHuyDuyetActionPerformed
+        statusHopDong = StatusHopDong.CHODUYET;
+
+        if (hopDongDAO.updateTrangThai(maHD, statusHopDong)) {
+            phanQuyen();
+            reloadStatus();
+            isEdit();
+
+        } else {
+            DialogHelper.alertError(this, "Lưu không thành công");
+        }
+    }//GEN-LAST:event_btnHuyDuyetActionPerformed
+
+    private void btnHuyHopDongActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHuyHopDongActionPerformed
+        boolean rs = DialogHelper.confirm(this, "Đánh dấu xóa? Không thể quay lại sau thao tác này ?");
+
+        if (rs) {
+
+            updateTrangThaiHopDong(StatusHopDong.DATHUCHIEN);
+            if (hopDongDAO.updateTrangThai(maHD, statusHopDong)) {
+                phanQuyen();
+                reloadStatus();
+            } else {
+                DialogHelper.alertError(this, "Lưu không thành công");
+            }
+
+        }
+    }//GEN-LAST:event_btnHuyHopDongActionPerformed
+
+    private void btnComfimHoanThanhActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnComfimHoanThanhActionPerformed
+        boolean rs = DialogHelper.confirm(this, "Xác nhận hoàn thành tiệc? Không thể quay lại sau thao tác này ?");
+
+        if (rs) {
+
+            updateTrangThaiHopDong(StatusHopDong.THUCHIEN);
+            if (hopDongDAO.updateTrangThai(maHD, statusHopDong)) {
+                phanQuyen();
+                reloadStatus();
+            } else {
+                DialogHelper.alertError(this, "Lưu không thành công");
+            }
+
+        }
+
+        // hopDongDAO.updateTrangThai( maHD,  statusHopDong);
+        //phanQuyen();
+    }//GEN-LAST:event_btnComfimHoanThanhActionPerformed
+
+    private void btnDanhDauXoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDanhDauXoaActionPerformed
+        boolean rs = DialogHelper.confirm(this, "Xóa hợp đồng này ?");
+        if (rs) {
+            try {
+                hopDongDAO.delete(maHD);
+                khachHangDAO.delete(maHD);
+                btnBack.doClick();
+            } catch (Exception e) {
+                e.printStackTrace();
+                DialogHelper.alertError(this, "Xóa không thành công");
+            }
+
+        }
+    }//GEN-LAST:event_btnDanhDauXoaActionPerformed
+
+    private void btnDuyetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDuyetActionPerformed
+
+        btnSave.doClick();
+
+        if (!isValid) {
+            return;
+        }
+
+        updateTrangThaiHopDong(StatusHopDong.CHODUYET);
+        updateHopDong();
+        // update trạng thái hợp đồng sang chờ ký kết
+        if (hopDongDAO.updateTrangThai(maHD, statusHopDong)) {
+
+            phanQuyen();
+            reloadStatus();
+
+        } else {
+            DialogHelper.alertError(this, "Lưu không thành công");
+        }
+    }//GEN-LAST:event_btnDuyetActionPerformed
+
+    private void btnKyKetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKyKetActionPerformed
+        updateTrangThaiHopDong(StatusHopDong.CHOKYKET);
+
+        // update trạng thái hợp đồng sang chờ ký kết
+        if (hopDongDAO.updateTrangThai(maHD, statusHopDong)) {
+            phanQuyen();
+            reloadStatus();
+
+        } else {
+            DialogHelper.alertError(this, "Lưu không thành công");
+        }
+    }//GEN-LAST:event_btnKyKetActionPerformed
+
+    private void btnPhanCongActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPhanCongActionPerformed
+        new PhanCong(new JFrame(), (statusHopDong.equals("DATHUCHIEN") || statusHopDong.equals("XOA") ? false : true), maHD).setVisible(true);
+    }//GEN-LAST:event_btnPhanCongActionPerformed
+
+    private void btnXuatHoaDonTamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXuatHoaDonTamActionPerformed
+        
+          if (hoaDonDAO.selectByID(maHD) != null) {
+           boolean rs = DialogHelper.confirm(this, "Hóa đơn đã được lập. Xuất lại");
+           if (rs){
+               
+               // Xuất hóa đơn
+               return;
+           }
+        }
+        
+        HoaDon hd = new HoaDon();
+        hd.setMaHD(maHD);
+        hd.setNgayLap(DateHelper.now());
+        hd.setMaNV(AppStatus.USER.getMaNV());
+        hd.setTrangTha(0);
+
+        hoaDonDAO.insertHoaDon(hd);
+        phanQuyen();
+        
+        
+        // In hóa đơn
+    }//GEN-LAST:event_btnXuatHoaDonTamActionPerformed
+
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+
+        //lblMaNH.requestFocus();
+        for (int i = 0; i < checkedDichVu.size(); i++) {
+            if (checkedDichVu.get(i) == false) {
+                DialogHelper.alertError(this, "Chọn đầy đủ dịch vụ");
+                isValid = false;
+                return;
+            }
+        }
+
+        if (!validHopDong()) {
+            isValid = false;
+            return;
+        }
+        isValid = true;
+
+        if (AppStatus.ROLE.equals("TIEPTAN")) {
+            statusHopDong = StatusHopDong.CHODUYET;
+            boolean rs = DialogHelper.confirm(this, "Sau khi lưu được chờ duyệt và không thể thay đổi.");
+            if (rs) {
+                // update thong tin hop dong thành trạng thái đang chờ duyệt
+                if (updateHopDong()) {
+                    phanQuyen();
+                    saveHopDong();
+                    reloadStatus();
+                    reloadHopDong();
+                } else {
+                    DialogHelper.alertError(this, "Lưu không thành công");
+                }
+            }
+
+        } else {
+            statusHopDong = StatusHopDong.CHODUYET;
+            if (updateHopDong()) {
+                phanQuyen();
+                saveHopDong();
+                reloadStatus();
+                reloadHopDong();
+                fillFormHopDong(khachHang, hopDong);
+            } else {
+                DialogHelper.alertError(this, "Lưu không thành công");
+            }
+        }
+
+    }//GEN-LAST:event_btnSaveActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.ui.swing.InkwellButton btnBack;
@@ -2799,6 +2803,7 @@ public class LapHopDong extends javax.swing.JPanel {
     private javax.swing.JLabel lbldv;
     private javax.swing.JPanel pnlBtn;
     private javax.swing.JPanel pnlDichVu;
+    private javax.swing.JPanel pnlInHoaDOn;
     private javax.swing.JTextArea taDiaChi;
     private javax.swing.JTextArea taThongBaoSanh;
     private com.ui.swing.timepicker.TimePicker timePickerBatDau;
