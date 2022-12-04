@@ -36,6 +36,7 @@ import javax.swing.JTextField;
 import javax.swing.SpinnerDateModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingUtilities;
+import javax.swing.event.ChangeEvent;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.plaf.basic.BasicSpinnerUI;
@@ -128,22 +129,25 @@ public class DatMon extends javax.swing.JDialog {
 
                 int col = tblThucDon.getEditingColumn();
                 int row = tblThucDon.getEditingRow();
-
+                if (col == 6){
+                    return;
+                }
+  
                 if (col > -1 && row > -1) {
                     if (col == 4) {
                         editingCell = (String) tblThucDon.getValueAt(row, col);
-
-                        if (editingCell.equals(ShareHelper.toMoney(ShareHelper.toMoney(editingCell)))) {
+                        if (editingCell.equals("")) {
+                            tblThucDon.setValueAt("0", row, col);
+                            return;
+                        }
+                        if (editingCell.equals(ShareHelper.toMoney(ShareHelper.toMoney(editingCell)))) {                   
                             tinhTien();
                             return;
                         }
-
-                        if (editingCell.equals("")) {
-                            tblThucDon.setValueAt("0", row, col);
-
-                        } else if (ShareHelper.toMoney(editingCell) < 1000 && !editingCell.equals("0")) {
+                        if (ShareHelper.toMoney(editingCell) < 1000 && !editingCell.equals("0")) {
                             tblThucDon.setValueAt("1000", row, col);
                             tinhTien();
+
 //                            DialogHelper.alertError(null, "Chi phí thấp nhất là 1.000 VNĐ");
 //                              tblThucDon.setCellSelectionEnabled(true);
 ////                            tblThucDon.changeSelection(row, col, false, true);
@@ -153,12 +157,13 @@ public class DatMon extends javax.swing.JDialog {
 //                                tblThucDon.setColumnSelectionInterval(col, col);
 //                                tblThucDon.requestFocus();
 //                              tblThucDon.setCellSelectionEnabled(false);
-
                         } else {
                             tblThucDon.setValueAt(ShareHelper.toMoney(ShareHelper.toMoney(editingCell)), row, col);
 
                         }
 
+                    } else {
+                        return;
                     }
 
                 }
@@ -565,13 +570,18 @@ public class DatMon extends javax.swing.JDialog {
         long tongChiPhi = 0;
 
         listChiTietDatMon = getChiTietDatMon();
-
+        int i = 0;
         for (ChiTietDatMon ct : listChiTietDatMon) {
+
             if (ct.getSoLuong() == -1 || ct.getMaPL().equals("NUOC")) {
+                i++;
                 continue;
             }
             chiPhi += ct.getGia() * ct.getSoLuong();
             chiPhiPhatSinh += ct.getChiPhiPhatSinh() * ct.getSoLuong();
+            tblThucDon.editingCanceled(new ChangeEvent(new Object()));
+            tblThucDon.setValueAt(ShareHelper.toMoney(ct.getGia() * ct.getSoLuong() + ct.getChiPhiPhatSinh() * ct.getSoLuong()), i, 6);  
+            i++;
         }
 
         tongChiPhi = (chiPhi + chiPhiPhatSinh);
@@ -582,6 +592,8 @@ public class DatMon extends javax.swing.JDialog {
         //txtTongCPPS.setToolTipText(chiPhiPhatSinh + " x " + soLuongBan + "bàn");
         txtTongChiPhi.setText(ShareHelper.toMoney(tongChiPhi));
 
+//        listChiTietDatMon = getChiTietDatMon();
+//        fillTableThucDon(listChiTietDatMon);
     }
 
     public void autoSetSoLuong() {
@@ -1100,6 +1112,8 @@ public class DatMon extends javax.swing.JDialog {
             fillTableThucDon(listChiTietDatMon);
 
             tinhTien();
+            listChiTietDatMon = getChiTietDatMon();
+            fillTableThucDon(listChiTietDatMon);
             filtedMonAn();
         }
     }//GEN-LAST:event_cbbThucDonItemStateChanged
@@ -1120,7 +1134,8 @@ public class DatMon extends javax.swing.JDialog {
             btnNext.setVisible(false);
             if (evt.getClickCount() >= 2) {
 
-                if (listFilted.isEmpty()) {
+                if (listFilted.isEmpty() || tblThucDon.getRowCount() == 0) {
+                    DialogHelper.alert(this, "Vui lòng chọn thực đơn trước");
                     return;
                 }
 
@@ -1152,6 +1167,8 @@ public class DatMon extends javax.swing.JDialog {
                 filtedMonAn();
 
                 tinhTien();
+                listChiTietDatMon = getChiTietDatMon();
+                fillTableThucDon(listChiTietDatMon);
             }
         }
 
@@ -1171,6 +1188,8 @@ public class DatMon extends javax.swing.JDialog {
                 filtedMonAn();
                 autoSetThuTu();
                 tinhTien();
+                listChiTietDatMon = getChiTietDatMon();
+                fillTableThucDon(listChiTietDatMon);
             }
 //            else if (SwingUtilities.isRightMouseButton(evt)) {
 //                int soBanPhu = Integer.parseInt(lblBanPhu.getText());
@@ -1244,6 +1263,8 @@ public class DatMon extends javax.swing.JDialog {
                 lblBanPhu.setText(soBanPhu + "");
                 autoSetSoLuong();
                 tinhTien();
+                listChiTietDatMon = getChiTietDatMon();
+                fillTableThucDon(listChiTietDatMon);
             } else {
                 spnSoBanChinh.setValue(soBanChinh + 1);
 
@@ -1280,6 +1301,9 @@ public class DatMon extends javax.swing.JDialog {
 
     private void btnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetActionPerformed
         tblThucDonModel.setRowCount(0);
+        listChiTietDatMon.clear();
+        listFilted.clear();
+        
         loadMonAn();
         filtedMonAn();
         fillTableMonAn(listMonAn);

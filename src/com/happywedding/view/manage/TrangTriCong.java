@@ -90,6 +90,7 @@ public class TrangTriCong extends javax.swing.JDialog {
                         isTuyChinhGoiDichVu(false);
                         lblViewSlideShow.setVisible(true);
                         fillForm();
+                        tinhTien();
                     }
 
 //                isTuyChinhGoiDichVu(true);
@@ -99,6 +100,7 @@ public class TrangTriCong extends javax.swing.JDialog {
                 cbbGoiDV.setSelectedIndex(-1);
                 lblViewSlideShow.setVisible(false);
                 fillForm();
+                tinhTien();
             }
 
         }
@@ -1199,6 +1201,7 @@ public class TrangTriCong extends javax.swing.JDialog {
         if (isLoad && cbbGoiDV.getSelectedIndex() != -1 && isCreate) {
             fillFormByGoiDichVu((GoiDichVu) cbbGoiDV.getSelectedItem());
             isTuyChinhGoiDichVu(false);
+            tinhTien();
             lblViewSlideShow.setVisible(true);
             btnEdit.setVisible(true);
         } else {

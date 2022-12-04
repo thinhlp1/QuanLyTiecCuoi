@@ -44,9 +44,9 @@ public class HopDongDAO extends AbstractDAO<HopDong> {
     private final String UPDATE_SANH = "UPDATE HopDong SET Sanh = ? WHERE MaHD = ?";
     private final String TINH_TIEN = "EXEC tinhTien @MaHD = ?";
     private final String TINH_TIEN_VOI_SANH = "EXEC tinhTienVoiSanh @MaHD = ? , @MaSanh = ?,@SoLuongBan = ?";
-    private final String CHECK_SANH = "SELECT * FROM HopDong hd INNER JOIN Sanh s  ON hd.Sanh = s.MaSanh\n"
+    private final String CHECK_SANH = "SELECT MaHD FROM HopDong hd INNER JOIN Sanh s  ON hd.Sanh = s.MaSanh\n"
             + "WHERE MaSanh = ? AND NgayToChuc = ? AND (  ( CAST(? AS Time)   BETWEEN ThoiGianBatDau AND ThoiGianKetThuc )"
-            + "OR  (  ( CAST(? AS Time)   BETWEEN ThoiGianBatDau AND ThoiGianKetThuc )   )   )";
+            + "OR  (  ( CAST(? AS Time)   BETWEEN ThoiGianBatDau AND ThoiGianKetThuc )   )   ) AND MaHD != ?";
 
     @Override
     public boolean insert(HopDong entity) {
@@ -92,16 +92,19 @@ public class HopDongDAO extends AbstractDAO<HopDong> {
         return rs > 0;
     }
 
-    public String checkSanh(String maSanh, Date ngayToChuc, String batDau, String ketThuc) {
+    public String checkSanh(String maSanh, Date ngayToChuc, String batDau, String ketThuc, String maHD) {
         try {
             ResultSet rs = null;
+          
             try {
-                rs = JDBCHelper.executeQuery(CHECK_SANH, maSanh, ngayToChuc, batDau, ketThuc);
+                rs = JDBCHelper.executeQuery(CHECK_SANH, maSanh, ngayToChuc, batDau, ketThuc, maHD);
                 while (rs.next()) {
                     return rs.getString("MaHD");
                 }
             } finally {
-                rs.getStatement().getConnection().close();
+               if (rs != null){
+                    rs.getStatement().getConnection().close();
+               }
             }
         } catch (SQLException ex) {
             throw new RuntimeException(ex);

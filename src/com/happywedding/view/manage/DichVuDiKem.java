@@ -22,6 +22,7 @@ import javax.swing.AbstractCellEditor;
 import javax.swing.JComponent;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.event.ChangeEvent;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
@@ -85,25 +86,27 @@ public class DichVuDiKem extends javax.swing.JDialog {
                 int col = tblChiTietDichVu.getEditingColumn();
                 int row = tblChiTietDichVu.getEditingRow();
 
+                if (col == 5) {
+                    return;
+                }
+
                 if (col > -1 && row > -1) {
                     if (col == 3) {
                         editingCell = (String) tblChiTietDichVu.getValueAt(row, col);
 
+                        if (editingCell.equals("")) {
+                            tblChiTietDichVu.setValueAt("0", row, col);
+                            return;
+                        }
                         if (editingCell.equals(ShareHelper.toMoney(ShareHelper.toMoney(editingCell)))) {
                             tinhTien();
                             return;
                         }
-
-                        if (editingCell.equals("")) {
-                            tblChiTietDichVu.setValueAt("0", row, col);
-
-                        } else if (ShareHelper.toMoney(editingCell) < 1000 && !editingCell.equals("0")) {
+                        if (ShareHelper.toMoney(editingCell) < 1000 && !editingCell.equals("0")) {
                             tblChiTietDichVu.setValueAt("1000", row, col);
                             tinhTien();
-
                         } else {
                             tblChiTietDichVu.setValueAt(ShareHelper.toMoney(ShareHelper.toMoney(editingCell)), row, col);
-
                         }
 
                     }
@@ -285,12 +288,16 @@ public class DichVuDiKem extends javax.swing.JDialog {
 
         listChiTietDichVu = getChiTietDichVu();
 
+        int i = 0;
         for (ChiTietDichVuDiKem ct : listChiTietDichVu) {
             if (ct.getSoLuong() == -1) {
+                i++;
                 continue;
             }
             chiPhi += ct.getChiPhi();
             chiPhiPhatSinh += ct.getChiPhiPhatSinh();
+          //  tblChiTietDichVu.editingCanceled(new ChangeEvent(new Object()));
+           // tblChiTietDichVu.setValueAt(ShareHelper.toMoney(ct.getChiPhi() * ct.getSoLuong() + ct.getChiPhiPhatSinh() * ct.getSoLuong()), i, 5);
         }
 
         tongChiPhi = (chiPhi + chiPhiPhatSinh);
@@ -572,14 +579,14 @@ public class DichVuDiKem extends javax.swing.JDialog {
     }//GEN-LAST:event_txtSearchKeyReleased
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
-        
-        if (tblChiTietDichVu.getRowCount() == 0){
+
+        if (tblChiTietDichVu.getRowCount() == 0) {
             boolean rs = DialogHelper.confirm(this, "Xác nhận không chọn thêm dịch vụ");
-            if (!rs){
+            if (!rs) {
                 return;
             }
         }
-        
+
         if (ctdvDAO.selectHopDongDichVuDiKem(maHD) == null) {
             insertDichVuDiKem();
             insertChiTietDichVuDiKem();
