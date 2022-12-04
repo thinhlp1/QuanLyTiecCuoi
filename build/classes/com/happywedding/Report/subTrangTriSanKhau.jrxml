@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="subTrangTriSanKhau" language="groovy" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="cad115c8-61a0-4334-b61c-41c959a1198f">
-	<property name="ireport.zoom" value="8.140274938683989"/>
-	<property name="ireport.x" value="1617"/>
-	<property name="ireport.y" value="277"/>
+	<property name="ireport.zoom" value="2.3579476910000023"/>
+	<property name="ireport.x" value="19"/>
+	<property name="ireport.y" value="0"/>
 	<parameter name="MaHD" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
@@ -209,42 +209,27 @@ WHERE ct.MaHD = $P{MaHD} AND  hddv.MaDV = 'TTSANKHAU' AND ct.MaDV = 'TTSANKHAU']
 				</textElement>
 				<text><![CDATA[Tổng chi phí phát sinh :]]></text>
 			</staticText>
-			<textField>
-				<reportElement x="138" y="20" width="100" height="20" uuid="8174f1d9-8dbe-4c51-843a-126f33f086a2"/>
+			<textField pattern="#,### VNĐ">
+				<reportElement x="138" y="20" width="414" height="20" uuid="8174f1d9-8dbe-4c51-843a-126f33f086a2"/>
 				<textElement verticalAlignment="Middle">
 					<font size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{TongCPPS}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="138" y="0" width="100" height="20" uuid="d7eda937-8cab-432d-bbd4-be6d62b070f0"/>
+			<textField pattern="#,### VNĐ">
+				<reportElement x="138" y="0" width="414" height="20" uuid="d7eda937-8cab-432d-bbd4-be6d62b070f0"/>
 				<textElement verticalAlignment="Middle">
 					<font size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{TongChiPhiDV}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="138" y="40" width="100" height="20" uuid="3e8ec552-9e66-4b4c-bf40-e86231b5baf3"/>
+			<textField pattern="#,### VNĐ">
+				<reportElement x="138" y="40" width="414" height="20" uuid="3e8ec552-9e66-4b4c-bf40-e86231b5baf3"/>
 				<textElement verticalAlignment="Middle">
 					<font size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{TongChiPhiPhaiTra}]]></textFieldExpression>
 			</textField>
-			<staticText>
-				<reportElement x="238" y="20" width="113" height="20" uuid="d891dc9c-0445-4e35-9453-5153920d8491"/>
-				<textElement verticalAlignment="Middle"/>
-				<text><![CDATA[VND]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="238" y="40" width="113" height="20" uuid="79400338-6976-4ec4-9384-75d00d7fed1a"/>
-				<textElement verticalAlignment="Middle"/>
-				<text><![CDATA[VND]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="238" y="0" width="113" height="20" uuid="ae74816a-a3f4-43be-86d4-4bb3b9f05f77"/>
-				<textElement verticalAlignment="Middle"/>
-				<text><![CDATA[VND]]></text>
-			</staticText>
 		</band>
 	</summary>
 </jasperReport>
