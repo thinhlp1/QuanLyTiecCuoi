@@ -232,7 +232,7 @@ public class ChiTietDatMonDAO {
         ChiTietDatMon ctdm = new ChiTietDatMon();
 
         ctdm.setMaHD(rs.getString("MaHD"));
-        ctdm.setMaTD("MaTD");
+        ctdm.setMaTD(rs.getString("MaTD"));
         ctdm.setMaMA(rs.getString("MaMA"));
         ctdm.setTenMA(rs.getString("TenMA"));
         ctdm.setMaPL(rs.getString("MaPL"));

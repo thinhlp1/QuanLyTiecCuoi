@@ -1215,6 +1215,63 @@ public class LapHopDong extends javax.swing.JPanel {
         return null;
     }
 
+    void In() {
+        hopDong = hopDongDAO.findById(maHD);
+        try {
+            Map<String, Object> parameters = new HashMap<String, Object>();
+            Connection con = JDBCHelper.getConnection();
+
+            String maHD = this.maHD;
+            String maTD = datMonDAO.selectThucDonChinh(maHD);
+            String maTDPhu = datMonDAO.selectThucDonPhu(maHD);
+            if (maTDPhu.equals(maTD)) {
+                maTDPhu = "";
+            }
+
+            long ttdv = dichVuDAO.selectDichVu(maHD, "TTCONG").getChiPhi()
+                    + dichVuDAO.selectDichVu(maHD, "TTCONG").getChiPhiPhatSinh()
+                    + dichVuDAO.selectDichVu(maHD, "TTBANTIEC").getChiPhi()
+                    + dichVuDAO.selectDichVu(maHD, "TTBANTIEC").getChiPhiPhatSinh()
+                    + dichVuDAO.selectDichVu(maHD, "TTSANKHAU").getChiPhi()
+                    + dichVuDAO.selectDichVu(maHD, "TTSANKHAU").getChiPhiPhatSinh()
+                    + dichVuDAO.selectDichVu(maHD, "NGHETHUAT").getChiPhi()
+                    + dichVuDAO.selectDichVu(maHD, "NGHETHUAT").getChiPhiPhatSinh()
+                    + datMonDAO.selectDichVuDatMon(maHD, datMonDAO.selectThucDonChinh(maHD)).getChiPhi()
+                    + datMonDAO.selectDichVuDatMon(maHD, datMonDAO.selectThucDonChinh(maHD)).getChiPhiPhatSinh()
+                    + datMonDAO.selectDichVuDatMon(maHD, datMonDAO.selectThucDonPhu(maHD)).getChiPhi()
+                    + datMonDAO.selectDichVuDatMon(maHD, datMonDAO.selectThucDonPhu(maHD)).getChiPhiPhatSinh()
+                    + dichVuDiKemDAO.selectHopDongDichVuDiKem(maHD).getChiPhi()
+                    + dichVuDiKemDAO.selectHopDongDichVuDiKem(maHD).getChiPhiPhatSinh();
+            String tongTienDichVu = ShareHelper.toMoney(ttdv);
+            String thue = ShareHelper.toMoney((long) ((ShareHelper.toMoney(txtChiPhi.getText()) + ShareHelper.toMoney(txtChiPhiPhatSinh.getText())) * (10 / 100.0)));
+            String tongTien = ShareHelper.toMoney(hopDong.getTongTien());
+            String tienCoc = ShareHelper.toMoney(hopDong.getTienCoc());
+            String tienConLai = ShareHelper.toMoney(hopDong.getTongTien() - hopDong.getTienCoc());
+            String thanhChu = EnglishNumberToWords.convert(hopDong.getTongTien());
+            String thanhChu2 = EnglishNumberToWords.convert(ShareHelper.toMoney(tienConLai));
+            net.sf.jasperreports.engine.JasperReport rpt = JasperCompileManager.compileReport("src\\com\\happywedding\\Report\\HoaDon.jrxml");
+            parameters.put("MaHD", maHD);
+            parameters.put("MaTD_Chinh", maTD);
+            parameters.put("MaTD_Phu", maTDPhu);
+            parameters.put("ThanhTien", thanhChu);
+            parameters.put("ThanhTien2", thanhChu2);
+            parameters.put("Thue", thue + " VND");
+            parameters.put("TongTien", tongTien + " VND");
+            parameters.put("TienCoc", tienCoc + " VND");
+            parameters.put("TienConLai", tienConLai + " VND");
+            parameters.put("tongTienDichVu", tongTienDichVu);
+            parameters.put("SUBREPORT_DIR", "src\\com\\happywedding\\Report\\");
+            System.out.println(parameters);
+            JasperPrint p = JasperFillManager.fillReport(rpt, parameters, con);
+            JasperViewer.viewReport(p, false);
+
+        } catch (SQLException ex) {
+            Logger.getLogger(JasperReport.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (JRException ex) {
+            Logger.getLogger(JasperReport.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -2514,8 +2571,7 @@ public class LapHopDong extends javax.swing.JPanel {
             if (maTDPhu.equals(maTD)) {
                 maTDPhu = "";
             }
-           
-            
+
             long ttdv = dichVuDAO.selectDichVu(maHD, "TTCONG").getChiPhi()
                     + dichVuDAO.selectDichVu(maHD, "TTCONG").getChiPhiPhatSinh()
                     + dichVuDAO.selectDichVu(maHD, "TTBANTIEC").getChiPhi()
@@ -2673,16 +2729,17 @@ public class LapHopDong extends javax.swing.JPanel {
     }//GEN-LAST:event_btnPhanCongActionPerformed
 
     private void btnXuatHoaDonTamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXuatHoaDonTamActionPerformed
-        
-          if (hoaDonDAO.selectByID(maHD) != null) {
-           boolean rs = DialogHelper.confirm(this, "Hóa đơn đã được lập. Xuất lại");
-           if (rs){
-               
-               // Xuất hóa đơn
-               return;
-           }
+
+        if (hoaDonDAO.selectByID(maHD) != null) {
+            boolean rs = DialogHelper.confirm(this, "Hóa đơn đã được lập. Xuất lại");
+            if (rs) {
+                In();
+                // Xuất hóa đơn
+                return;
+            }
+            return;
         }
-        
+
         HoaDon hd = new HoaDon();
         hd.setMaHD(maHD);
         hd.setNgayLap(DateHelper.now());
@@ -2690,11 +2747,12 @@ public class LapHopDong extends javax.swing.JPanel {
         hd.setTrangTha(0);
 
         hoaDonDAO.insertHoaDon(hd);
+
         phanQuyen();
-        
-        
+        In();
         // In hóa đơn
     }//GEN-LAST:event_btnXuatHoaDonTamActionPerformed
+
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
 
