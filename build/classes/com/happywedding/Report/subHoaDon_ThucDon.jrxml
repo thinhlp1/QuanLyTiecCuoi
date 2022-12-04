@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="subHoaDon_ThucDon" language="groovy" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="bb880c52-9252-4c68-9c0b-555ac16cafcf">
+	<property name="ireport.zoom" value="2.3579476910000086"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="MaHD" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT  ROW_NUMBER() over(ORDER BY X.MaTD ) AS STT,* FROM (  SELECT DISTINCT  td.MaTD,td.TenTD,TenMA, ct.ThuTu,
+	 IIF(ct.SoLuong = -1,'CXD',CAST(ct.SoLuong AS varchar)) AS SoLuong ,
+		(  IIF ( ct.SoLuong * ma.GiaTien < 0, 'CXD',CAST(( ct.SoLuong * ma.GiaTien + ct.ChiPhiPhatSinh ) AS varchar) )  )AS TongChiPhi,
+
+		( ( SELECT SUM(ChiPhi) FROM DichVuDatMon WHERE MaHD = $P{MaHD} )  + 
+		  ( SELECT SUM(ChiPhiPhatSinh * SoLuong)  FROM ChiTietDatMon WHERE MaHD = $P{MaHD}  )  ) AS TongPhaiTra
+	 FROM ChiTietDatMon ct
+		INNER JOIN MonAn ma ON ct.MaMA = ma.MaMA 
+		INNER JOIN DichVuDatMon dv ON dv.MaTD = ct.MaTD
+		INNER JOIN ThucDon td ON dv.MaTD = td.MaTD
+		WHERE ct.MaHD =  $P{MaHD}
+		
+		) AS X]]>
+	</queryString>
+	<field name="STT" class="java.lang.Long"/>
+	<field name="MaTD" class="java.lang.String"/>
+	<field name="TenTD" class="java.lang.String"/>
+	<field name="TenMA" class="java.lang.String"/>
+	<field name="ThuTu" class="java.lang.Integer"/>
+	<field name="SoLuong" class="java.lang.String"/>
+	<field name="TongChiPhi" class="java.lang.String"/>
+	<field name="TongPhaiTra" class="java.lang.Long"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="22" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="70" height="22" uuid="bea43363-e7e6-4805-af55-907a8240032e"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[STT]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="70" y="0" width="206" height="22" uuid="164c2d95-a110-4784-9579-90c294c67538"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tên món ăn]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="276" y="0" width="138" height="22" uuid="361cb96b-890e-46f6-9e32-c16a1f72cf4a"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Số lượng]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="414" y="0" width="141" height="22" uuid="db6f732b-b8bf-4ba6-b44c-df1d1ccacd0b"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tổng chi phí từng món ăn]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="22" splitType="Stretch">
+			<textField>
+				<reportElement x="276" y="0" width="138" height="22" uuid="6ad15653-709e-4d2c-b586-34f44a340768"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SoLuong}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0 VND">
+				<reportElement x="414" y="0" width="141" height="22" uuid="c15b5ff9-c290-448b-bbcf-778d90f11e40"/>
+				<box rightPadding="0">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TongChiPhi}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="70" y="0" width="206" height="22" uuid="977e475b-5025-417c-9156-a0fd0d95efb8"/>
+				<box leftPadding="5">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TenMA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="0" width="70" height="22" uuid="6c0245b3-81d8-4cef-b7d6-e3f3b967af13"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{STT}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="21" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Transparent" x="0" y="0" width="414" height="21" forecolor="#000000" backcolor="#FFFFFF" uuid="bbcd0905-a4de-4aba-be32-bda67acd1c82"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Tổng chi phí]]></text>
+			</staticText>
+			<textField pattern="#,##0 VND">
+				<reportElement x="414" y="0" width="141" height="21" uuid="9bedf9f1-a4b1-4377-a17d-84b2bbcf34ff"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="15" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TongPhaiTra}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

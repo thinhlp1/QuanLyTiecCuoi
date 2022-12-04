@@ -1,37 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
-<<<<<<< HEAD
-    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="2">
-        <file>
-            <url>src/com/happywedding/view/manage/LapHopDong.java</url>
-            <bookmark id="2">
-                <name/>
-                <line>2479</line>
-                <key/>
-            </bookmark>
-        </file>
-        <file>
-            <url>src/com/happywedding/view/manage/QuanLyHopDong.java</url>
-            <bookmark id="1">
-                <name/>
-                <line>7</line>
-                <key/>
-            </bookmark>
-        </file>
-    </editor-bookmarks>
-    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/D:/FPT%20POLYTECHNIC/KY%20IIII/Du%20An%201/Project/HappyWedding/src/com/happywedding/app/HappyWeddingApp.java</file>
-            <file>file:/D:/FPT%20POLYTECHNIC/KY%20IIII/Du%20An%201/Project/HappyWedding/src/com/happywedding/view/statical/ThongKeDoanhThuNam.java</file>
-            <file>file:/D:/FPT%20POLYTECHNIC/KY%20IIII/Du%20An%201/Project/HappyWedding/src/com/happywedding/dao/ChiTietDichVuDAO.java</file>
-            <file>file:/D:/FPT%20POLYTECHNIC/KY%20IIII/Du%20An%201/Project/HappyWedding/src/com/happywedding/dao/ThongKeDAO.java</file>
-            <file>file:/D:/FPT%20POLYTECHNIC/KY%20IIII/Du%20An%201/Project/HappyWedding/src/com/happywedding/view/manage/LapHopDong.java</file>
-            <file>file:/D:/FPT%20POLYTECHNIC/KY%20IIII/Du%20An%201/Project/HappyWedding/src/com/happywedding/view/statical/ThongKeDoanhThuThang.java</file>
-        </group>
-=======
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
->>>>>>> origin/dev_vinh
+        <group>
+            <file>file:/C:/Users/ACER/Desktop/QuanLyTiecCuoi/src/com/happywedding/Report/subTrangTriSanKhau.jrxml</file>
+            <file>file:/C:/Users/ACER/Desktop/QuanLyTiecCuoi/src/com/happywedding/app/HappyWeddingApp.java</file>
+            <file>file:/C:/Users/ACER/Desktop/QuanLyTiecCuoi/src/com/happywedding/Report/XuatHopDong.jrxml</file>
+            <file>file:/C:/Users/ACER/Desktop/QuanLyTiecCuoi/src/com/happywedding/Report/HoaDon.jrxml</file>
+        </group>
     </open-files>
 </project-private>

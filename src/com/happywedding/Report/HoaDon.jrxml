@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="511b9514-f766-451c-bf93-51cae47cf750">
+	<property name="ireport.zoom" value="1.500000000000001"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="MaHD" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["C:\\Users\\ACER\\Desktop\\QuanLyTiecCuoi\\src\\com\\happywedding\\Report\\"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+     HopDong."MaHD" AS HopDong_MaHD,
+     HopDong."MaNL" AS HopDong_MaNL,
+     HopDong."SoLuongBan" AS HopDong_SoLuongBan,
+     HopDong."Sanh" AS HopDong_Sanh,
+     HopDong."NgayLap" AS HopDong_NgayLap,
+     HopDong."NgayDuyet" AS HopDong_NgayDuyet,
+     HopDong."MaND" AS HopDong_MaND,
+     HopDong."NgayToChuc" AS HopDong_NgayToChuc,
+     HopDong."ThoiGianBatDau" AS HopDong_ThoiGianBatDau,
+     HopDong."ThoiGianKetThuc" AS HopDong_ThoiGianKetThuc,
+     HopDong."TrangThai" AS HopDong_TrangThai,
+     HopDong."The" AS HopDong_The,
+     HopDong."TienCoc" AS HopDong_TienCoc,
+     HopDong."ChiPhiPhatSinh" AS HopDong_ChiPhiPhatSinh,
+     HopDong."TongTien" AS HopDong_TongTien,
+     KhachHang."MaKH" AS KhachHang_MaKH,
+     KhachHang."MaHD" AS KhachHang_MaHD,
+     KhachHang."HoTen" AS KhachHang_HoTen,
+     KhachHang."SoDienThoai" AS KhachHang_SoDienThoai,
+     KhachHang."CCCD" AS KhachHang_CCCD,
+     KhachHang."DiaChi" AS KhachHang_DiaChi,
+     KhachHang."HoTenCoDau" AS KhachHang_HoTenCoDau,
+     KhachHang."HoTenChuRe" AS KhachHang_HoTenChuRe,
+     NhanVien."MaNV" AS NhanVien_MaNV,
+     NhanVien."HoTen" AS NhanVien_HoTen,
+     NhanVien."NgaySinh" AS NhanVien_NgaySinh,
+     NhanVien."GioiTinh" AS NhanVien_GioiTinh,
+     NhanVien."SoDienThoai" AS NhanVien_SoDienThoai,
+     NhanVien."CCCD_CMND" AS NhanVien_CCCD_CMND,
+     NhanVien."Email" AS NhanVien_Email,
+     NhanVien."HinhAnh" AS NhanVien_HinhAnh,
+     NhanVien."MaPB" AS NhanVien_MaPB,
+     NhanVien."MaVT" AS NhanVien_MaVT,
+     NhanVien."TrangThai" AS NhanVien_TrangThai,
+     Sanh."TenSanh" AS Sanh_TenSanh,
+     Sanh."GiaBan" AS Sanh_GiaBan,
+     Sanh."GiaThueSanh" AS Sanh_GiaThueSanh
+FROM
+     "dbo"."HopDong" HopDong INNER JOIN "dbo"."KhachHang" KhachHang ON HopDong."MaHD" = KhachHang."MaHD"
+     INNER JOIN "dbo"."NhanVien" NhanVien ON HopDong."MaNL" = NhanVien."MaNV"
+     INNER JOIN "dbo"."Sanh" Sanh ON HopDong."Sanh" = Sanh."MaSanh"
+WHERE
+     HopDong.MaHD = $P{MaHD}]]>
+	</queryString>
+	<field name="HopDong_MaHD" class="java.lang.String"/>
+	<field name="HopDong_MaNL" class="java.lang.String"/>
+	<field name="HopDong_SoLuongBan" class="java.lang.Long"/>
+	<field name="HopDong_Sanh" class="java.lang.String"/>
+	<field name="HopDong_NgayLap" class="java.sql.Date"/>
+	<field name="HopDong_NgayDuyet" class="java.sql.Date"/>
+	<field name="HopDong_MaND" class="java.lang.String"/>
+	<field name="HopDong_NgayToChuc" class="java.sql.Date"/>
+	<field name="HopDong_ThoiGianBatDau" class="java.sql.Time"/>
+	<field name="HopDong_ThoiGianKetThuc" class="java.sql.Time"/>
+	<field name="HopDong_TrangThai" class="java.lang.String"/>
+	<field name="HopDong_The" class="java.lang.Long"/>
+	<field name="HopDong_TienCoc" class="java.lang.Long"/>
+	<field name="HopDong_ChiPhiPhatSinh" class="java.lang.Long"/>
+	<field name="HopDong_TongTien" class="java.lang.Long"/>
+	<field name="KhachHang_MaKH" class="java.lang.Integer"/>
+	<field name="KhachHang_MaHD" class="java.lang.String"/>
+	<field name="KhachHang_HoTen" class="java.lang.String"/>
+	<field name="KhachHang_SoDienThoai" class="java.lang.String"/>
+	<field name="KhachHang_CCCD" class="java.lang.String"/>
+	<field name="KhachHang_DiaChi" class="java.lang.String"/>
+	<field name="KhachHang_HoTenCoDau" class="java.lang.String"/>
+	<field name="KhachHang_HoTenChuRe" class="java.lang.String"/>
+	<field name="NhanVien_MaNV" class="java.lang.String"/>
+	<field name="NhanVien_HoTen" class="java.lang.String"/>
+	<field name="NhanVien_NgaySinh" class="java.sql.Date"/>
+	<field name="NhanVien_GioiTinh" class="java.lang.Boolean"/>
+	<field name="NhanVien_SoDienThoai" class="java.lang.String"/>
+	<field name="NhanVien_CCCD_CMND" class="java.lang.String"/>
+	<field name="NhanVien_Email" class="java.lang.String"/>
+	<field name="NhanVien_HinhAnh" class="java.lang.String"/>
+	<field name="NhanVien_MaPB" class="java.lang.String"/>
+	<field name="NhanVien_MaVT" class="java.lang.String"/>
+	<field name="NhanVien_TrangThai" class="java.lang.Long"/>
+	<field name="Sanh_TenSanh" class="java.lang.String"/>
+	<field name="Sanh_GiaBan" class="java.lang.Long"/>
+	<field name="Sanh_GiaThueSanh" class="java.lang.Long"/>
+	<title>
+		<band height="71" splitType="Stretch">
+			<staticText>
+				<reportElement x="200" y="0" width="157" height="71" uuid="625f01b3-37f4-4a10-946e-f47df1c3c3eb"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="24" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Hóa đơn
+(tạm)]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="65" splitType="Stretch">
+			<subreport>
+				<reportElement x="0" y="20" width="200" height="44" uuid="c2d56278-0ba5-4b72-8391-a531604ba68f"/>
+				<subreportParameter name="MaHD">
+					<subreportParameterExpression><![CDATA[$P{MaHD}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="SUBREPORT_DIR">
+					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "subHoaDon_ThucDon.jasper"]]></subreportExpression>
+			</subreport>
+			<staticText>
+				<reportElement x="0" y="0" width="555" height="20" uuid="1a368d29-7716-4fcf-820a-5f81ccab0ec9"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font fontName="Arial" size="15" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Danh sách các món ăn]]></text>
+			</staticText>
+		</band>
+		<band height="65">
+			<staticText>
+				<reportElement x="0" y="0" width="555" height="20" uuid="d39f1d91-5af7-406c-909a-f66627981878"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font fontName="Arial" size="15" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Danh sách các dịch vụ]]></text>
+			</staticText>
+			<subreport>
+				<reportElement x="0" y="20" width="200" height="41" uuid="abbf98fe-528f-42b0-be12-0fc7e9314d48"/>
+				<subreportParameter name="MaHD">
+					<subreportParameterExpression><![CDATA[$P{MaHD}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="SUBREPORT_DIR">
+					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "subHoaDon_DichVu.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="43" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="101" height="41" uuid="1ea476b2-cd0c-4406-9b81-5ca16f508391"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font fontName="Arial" size="20" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Tổng tiền ]]></text>
+			</staticText>
+			<textField pattern="#,## VND">
+				<reportElement mode="Transparent" x="101" y="0" width="454" height="41" forecolor="#000000" backcolor="#FFFFFF" uuid="f8c6c3b0-c236-4f83-967b-7a44eeff5ee3"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="20" isBold="true" isItalic="false" isUnderline="true" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{HopDong_TongTien}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>
