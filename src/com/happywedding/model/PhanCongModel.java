@@ -1,18 +1,18 @@
 package com.happywedding.model;
 
-public class PhanCong {
+public class PhanCongModel {
 
     private int maPC;
     private String maHD;
     private String maNguoiPC;
 
-    public PhanCong(int maPC, String maHD, String maNguoiPC) {
+    public PhanCongModel(int maPC, String maHD, String maNguoiPC) {
         this.maPC = maPC;
         this.maHD = maHD;
         this.maNguoiPC = maNguoiPC;
     }
 
-    public PhanCong() {
+    public PhanCongModel() {
     }
 
     public int getMaPC() {

@@ -5,6 +5,15 @@
  */
 package com.happywedding.view.manage;
 
+import com.happywedding.helper.ShareHelper;
+import com.happywedding.model.ChiTietDatMon;
+import com.happywedding.model.MonAn;
+import com.happywedding.model.NhanVien;
+import com.happywedding.model.PhanCongModel;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author ADMIN
@@ -14,11 +23,23 @@ public class ChonNhanVien extends javax.swing.JDialog {
     /**
      * Creates new form ChonNhanVien
      */
+    private DefaultTableModel tblNhanVienModel;
+    private List<NhanVien> listNhanVien = new ArrayList<>();
+    
     public ChonNhanVien(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         this.setVisible(true);
-       jPanel1.setVisible(true);
+        jPanel1.setVisible(true);
+    }
+
+    public void fillTableNhanVien(List<NhanVien> list) {
+        tblNhanVienModel.setRowCount(0);
+        tblNhanVien.resetRowColor();
+        for (NhanVien nv : list) {
+            Object[] row = {nv.getMaNV(), nv.getHoTen(), nv.getTenVT()};
+            tblNhanVienModel.addRow(row);
+        }
     }
 
     /**
