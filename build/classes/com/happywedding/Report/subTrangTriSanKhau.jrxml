@@ -8,7 +8,7 @@
 	</parameter>
 	<queryString>
 		<![CDATA[SELECT hddv.MaHD,csvc.MaCSVC,csvc.TenCSVC, hddv.MaDV,
-IIF(ct.ChiPhi = 0, csvc.GiaThue * hd.SoLuongBan ,ct.ChiPhi ) AS ChiPhi ,ct.ChiPhiPhatSinh,ct.GhiChu ,
+IIF(ct.ChiPhi = 0, csvc.GiaThue ,ct.ChiPhi ) AS ChiPhi ,ct.ChiPhiPhatSinh,ct.GhiChu ,
 TenGoi, hddv.ChiPhi AS TongChiPhiDV ,
  (SELECT SUM(ChiPhiPhatSinh) AS ChiPhiPhatSinh FROM HopDongDichVu hddv 
 INNER JOIN ChiTietDichVu ct ON hddv.MaHD = ct.MaHD
