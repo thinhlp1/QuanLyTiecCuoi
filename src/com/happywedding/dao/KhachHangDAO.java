@@ -21,8 +21,8 @@ public class KhachHangDAO extends AbstractDAO<KhachHang> {
     private final String INSERT_KHACHHANG = "INSERT INTO KhachHang ( MaHD,HoTen, SoDienThoai, CCCD, DiaChi, HoTenCoDau, HoTenChuRe) VALUES ( ?,?, ?, ?, ?, ?, ?)";
 
     private final String UPDATE_KHACHANG = "UPDATE KhachHang SET HoTen=?, SoDienThoai=?, CCCD=?, DiaChi=?, HoTenCoDau=?, HoTenChuRe=? WHERE \n"
-            + "MaKH=?";
-    private final String DELELTE_KHACHHANG = "DELETE FROM KhachHang WHERE MaKH=?";
+            + "MaHD=?";
+    private final String DELELTE_KHACHHANG = "DELETE FROM KhachHang WHERE MaHD=?";
     private final String SELECT_ALL = "SELECT * FROM KhachHang";
     private final String SELECT_LAST = "SELECT TOP 1 * FROM KhachHang ORDER BY MaKH DESC";
     private final String SELECT_BY_ID = "SELECT * FROM KhachHang WHERE MaHD=?";
@@ -47,7 +47,7 @@ public class KhachHangDAO extends AbstractDAO<KhachHang> {
                 khachHang.getDiaChi(),
                 khachHang.getHoTenCoDau(),
                 khachHang.getHoTenChuRe(),
-                khachHang.getMaKH());
+                khachHang.getMaHD());
         return rs > 0;
     }
 

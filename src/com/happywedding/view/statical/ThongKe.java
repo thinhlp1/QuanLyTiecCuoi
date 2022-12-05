@@ -116,6 +116,8 @@ public class ThongKe extends javax.swing.JPanel {
             }
         });
 
+        btnDoanhThuNam.setEndColor("#f12711");
+        btnDoanhThuNam.setSelected(true);
         btnDoanhThuNam.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnDoanhThuNamMouseClicked(evt);
@@ -128,6 +130,8 @@ public class ThongKe extends javax.swing.JPanel {
         jLabel1.setText("Doanh thu năm");
         btnDoanhThuNam.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 0, -1, 40));
 
+        btnDoanhThuThang.setEnabled(false);
+        btnDoanhThuThang.setEndColor("#f12711");
         btnDoanhThuThang.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnDoanhThuThangMouseClicked(evt);
@@ -138,8 +142,9 @@ public class ThongKe extends javax.swing.JPanel {
         jLabel5.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
         jLabel5.setText("Doanh thu tháng");
-        btnDoanhThuThang.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 0, -1, 40));
+        btnDoanhThuThang.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(18, 0, 130, 40));
 
+        btnDichVu.setEndColor("#f12711");
         btnDichVu.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnDichVuMouseClicked(evt);
@@ -150,7 +155,7 @@ public class ThongKe extends javax.swing.JPanel {
         jLabel6.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
         jLabel6.setText("Dịch vụ");
-        btnDichVu.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 10, -1, -1));
+        btnDichVu.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 0, -1, 40));
 
         javax.swing.GroupLayout tabPaneLayout = new javax.swing.GroupLayout(tabPane);
         tabPane.setLayout(tabPaneLayout);
@@ -159,9 +164,9 @@ public class ThongKe extends javax.swing.JPanel {
             .addGroup(tabPaneLayout.createSequentialGroup()
                 .addGap(59, 59, 59)
                 .addComponent(btnDoanhThuNam, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(92, 92, 92)
+                .addGap(82, 82, 82)
                 .addComponent(btnDoanhThuThang, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(49, 49, 49)
+                .addGap(59, 59, 59)
                 .addComponent(btnDichVu, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(942, Short.MAX_VALUE))
         );
@@ -171,9 +176,8 @@ public class ThongKe extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(tabPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(btnDichVu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(tabPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(btnDoanhThuThang, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnDoanhThuNam, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(btnDoanhThuThang, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnDoanhThuNam, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(25, Short.MAX_VALUE))
         );
 

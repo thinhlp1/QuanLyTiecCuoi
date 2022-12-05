@@ -30,7 +30,9 @@ import java.util.List;
 import javax.swing.AbstractCellEditor;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComponent;
+import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
+import javax.swing.JSpinner;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SpinnerDateModel;
@@ -96,6 +98,7 @@ public class DatMon extends javax.swing.JDialog {
         this.soBanPhu = soBanPhu;
         initComponents();
         init();
+        
     }
 
     public void init() {
@@ -129,10 +132,10 @@ public class DatMon extends javax.swing.JDialog {
 
                 int col = tblThucDon.getEditingColumn();
                 int row = tblThucDon.getEditingRow();
-                if (col == 6){
+                if (col == 6) {
                     return;
                 }
-  
+
                 if (col > -1 && row > -1) {
                     if (col == 4) {
                         editingCell = (String) tblThucDon.getValueAt(row, col);
@@ -140,7 +143,7 @@ public class DatMon extends javax.swing.JDialog {
                             tblThucDon.setValueAt("0", row, col);
                             return;
                         }
-                        if (editingCell.equals(ShareHelper.toMoney(ShareHelper.toMoney(editingCell)))) {                   
+                        if (editingCell.equals(ShareHelper.toMoney(ShareHelper.toMoney(editingCell)))) {
                             tinhTien();
                             return;
                         }
@@ -170,9 +173,12 @@ public class DatMon extends javax.swing.JDialog {
             }
 
         });
+        
+      
 
         spnSoBanChinh.setModel(new SpinnerNumberModel(soLuongBan, soLuongBan - 3, soLuongBan, 1));
-
+          JFormattedTextField tf = ((JSpinner.DefaultEditor) spnSoBanChinh.getEditor()).getTextField();
+        tf.setEditable(false);
         spnSoBanChinh.setUI(new BasicSpinnerUI());
 
         loadPhanLoaiMonAn();
@@ -580,7 +586,7 @@ public class DatMon extends javax.swing.JDialog {
             chiPhi += ct.getGia() * ct.getSoLuong();
             chiPhiPhatSinh += ct.getChiPhiPhatSinh() * ct.getSoLuong();
             tblThucDon.editingCanceled(new ChangeEvent(new Object()));
-            tblThucDon.setValueAt(ShareHelper.toMoney(ct.getGia() * ct.getSoLuong() + ct.getChiPhiPhatSinh() * ct.getSoLuong()), i, 6);  
+            tblThucDon.setValueAt(ShareHelper.toMoney(ct.getGia() * ct.getSoLuong() + ct.getChiPhiPhatSinh() * ct.getSoLuong()), i, 6);
             i++;
         }
 
@@ -948,6 +954,11 @@ public class DatMon extends javax.swing.JDialog {
                 spnSoBanChinhStateChanged(evt);
             }
         });
+        spnSoBanChinh.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                spnSoBanChinhKeyTyped(evt);
+            }
+        });
         jPanel1.add(spnSoBanChinh, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 84, 60, 30));
 
         jLabel3.setText("Bàn phụ");
@@ -1303,7 +1314,7 @@ public class DatMon extends javax.swing.JDialog {
         tblThucDonModel.setRowCount(0);
         listChiTietDatMon.clear();
         listFilted.clear();
-        
+
         loadMonAn();
         filtedMonAn();
         fillTableMonAn(listMonAn);
@@ -1320,6 +1331,10 @@ public class DatMon extends javax.swing.JDialog {
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnBackActionPerformed
+
+    private void spnSoBanChinhKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_spnSoBanChinhKeyTyped
+        evt.consume();
+    }//GEN-LAST:event_spnSoBanChinhKeyTyped
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

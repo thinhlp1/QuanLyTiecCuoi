@@ -9,7 +9,7 @@ import com.happywedding.helper.JDBCHelper;
 import com.happywedding.model.ChiTietPhanCong;
 import com.happywedding.model.HopDong;
 import com.happywedding.model.NhanVien;
-import com.happywedding.model.PhanCong;
+import com.happywedding.model.PhanCongModel;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -36,12 +36,12 @@ public class PhanCongDAO {
     private final String SECLECT_ALL_CHITIETPHANCONG = "SELECT * FROM dbo.ChiTietPhanCong";
     private final String SECLECT_BYID_CHITIETPHANCONG = "SELECT * FROM dbo.ChiTietPhanCong WHERE MaPC = ?";
 
-    public boolean insertPhanCong(PhanCong pc) {
+    public boolean insertPhanCong(PhanCongModel pc) {
         int rs = JDBCHelper.executeUpdate(INSERT_PHANCONG, pc.getMaHD(), pc.getMaNguoiPC());
         return rs > 0;
     }
 
-    public boolean updatePhanCong(PhanCong entity) {
+    public boolean updatePhanCong(PhanCongModel entity) {
         int rs = JDBCHelper.executeUpdate(UPDATE_PHANCONG, entity.getMaHD(), entity.getMaNguoiPC());
         return rs > 0;
     }
@@ -56,19 +56,19 @@ public class PhanCongDAO {
 
     }
 
-    public PhanCong findById(String id) {
-        List<PhanCong> list = selectPhanCong(SECLECT_BYID_PHANCONG, id);
+    public PhanCongModel findById(String id) {
+        List<PhanCongModel> list = selectPhanCong(SECLECT_BYID_PHANCONG, id);
         return list.size() > 0 ? list.get(0) : null;
     }
 
     private List selectPhanCong(String sql, Object... args) {
-        List<PhanCong> list = new ArrayList<>();
+        List<PhanCongModel> list = new ArrayList<>();
         try {
             ResultSet rs = null;
             try {
                 rs = JDBCHelper.executeQuery(sql, args);
                 while (rs.next()) {
-                    PhanCong phanCong = readFromResultSetPhanCong(rs);
+                    PhanCongModel phanCong = readFromResultSetPhanCong(rs);
                     list.add(phanCong);
                 }
             } finally {
@@ -80,8 +80,8 @@ rs.getStatement().getConnection().close();
         return list;
     }
 
-    private PhanCong readFromResultSetPhanCong(ResultSet rs) throws SQLException {
-        PhanCong phanCong = new PhanCong();
+    private PhanCongModel readFromResultSetPhanCong(ResultSet rs) throws SQLException {
+        PhanCongModel phanCong = new PhanCongModel();
         phanCong.setMaPC(rs.getInt("MaPC"));
         phanCong.setMaHD(rs.getString("MaHD"));
         phanCong.setMaNguoiPC(rs.getString("MaNguoiPC"));

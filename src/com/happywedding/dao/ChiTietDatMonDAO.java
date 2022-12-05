@@ -76,6 +76,10 @@ public class ChiTietDatMonDAO {
         return list.size() > 0 ? list.get(0) : null;
     }
 
+//    public List<ChiTietDatMon> selectDichVuDatMon() {
+//        List<DichVuDatMon> list = selectDichVuDatMon(, args);
+//        return null;
+//    }
     public String selectThucDonChinh(String maHD) {
         List<String> list2 = new ArrayList<>();
         list2.add(maHD);

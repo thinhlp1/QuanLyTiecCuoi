@@ -21,9 +21,10 @@ import javax.swing.JOptionPane;
  */
 public class DangNhap extends javax.swing.JDialog {
 
-    /**
-     * Creates new form DangNhap
-     */
+    
+    //public static List<TaiKhoan> soTaiKhoan;
+    public static String tenTaiKhoan;
+    
     public DangNhap(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
@@ -165,8 +166,21 @@ public class DangNhap extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnQuenMatKhauMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnQuenMatKhauMouseClicked
-        this.dispose();
-        new QuenMatKhau(new JFrame(), true).setVisible(true);
+        
+        if(txtTenDangNhap.getText().trim().equals("")){
+            JOptionPane.showMessageDialog(this, "Mời nhập tên đăng nhập");
+            return;
+        }
+        
+        boolean coTenDangNhap = quenMatKhau(txtTenDangNhap.getText());
+        if(!coTenDangNhap){
+            JOptionPane.showMessageDialog(this, "Tên đăng nhập không tồn tại");
+            return;
+        }else{
+            this.dispose();
+            new QuenMatKhau(new JFrame(), true).setVisible(true);
+        }  
+        
     }//GEN-LAST:event_btnQuenMatKhauMouseClicked
 
     private void btnDangNhapMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnDangNhapMouseClicked
@@ -195,10 +209,24 @@ public class DangNhap extends javax.swing.JDialog {
         showPassword(false);
     }//GEN-LAST:event_lblHidePasswordMouseClicked
     
+    public boolean quenMatKhau(String username){
+        
+        TaiKhoanDAO taiKhoanDAO = new TaiKhoanDAO();
+        List<TaiKhoan> soTaiKhoan;
+        soTaiKhoan = taiKhoanDAO.selectTenDangNhap(username.trim());
+        
+        if(soTaiKhoan.size() == 0){
+            return false;
+        }
+        return true;
+    }
+    
     public boolean hasUser(String username){
         
         TaiKhoanDAO taiKhoanDAO = new TaiKhoanDAO();
-        List<TaiKhoan> soTaiKhoan = taiKhoanDAO.selectTenDangNhap(username.trim());
+        List<TaiKhoan> soTaiKhoan;
+        soTaiKhoan = taiKhoanDAO.selectTenDangNhap(username.trim());
+        tenTaiKhoan = soTaiKhoan.get(0).getTenDangNhap();
         
         if(soTaiKhoan.size() == 0){
             return false;
@@ -217,9 +245,7 @@ public class DangNhap extends javax.swing.JDialog {
                 
                 return true;
             }
-        }
-        
-        
+        }  
  
     }
     

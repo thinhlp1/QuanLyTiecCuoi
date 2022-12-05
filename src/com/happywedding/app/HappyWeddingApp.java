@@ -1,4 +1,6 @@
-package com.happywedding.app;
+
+    package com.happywedding.app;
+
 
 import com.happywedding.dao.NhanVienDAO;
 import com.happywedding.helper.AppStatus;
@@ -277,7 +279,7 @@ public class HappyWeddingApp extends javax.swing.JFrame {
     }
 
     public void showForm(Component form) {
-        
+
         mainPane.remove(mainPane.getComponentCount() - 1);
         mainPane.add(form, "w 100%, h 100%");
         repaint();
@@ -388,7 +390,7 @@ public class HappyWeddingApp extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                
+
                 new HappyWeddingApp().setVisible(true);
             }
         });

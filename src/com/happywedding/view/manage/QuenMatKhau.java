@@ -4,6 +4,7 @@
  */
 package com.happywedding.view.manage;
 
+import com.happywedding.dao.NhanVienDAO;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 
@@ -18,23 +19,30 @@ import javax.swing.JOptionPane;
 
 import java.util.concurrent.ThreadLocalRandom;
 
+import com.happywedding.dao.TaiKhoanDAO;
+import com.happywedding.helper.AppStatus;
+import com.happywedding.model.NhanVien;
+//import static com.happywedding.view.manage.DangNhap.soTaiKhoan;
 /**
  *
  * @author ACER
  */
 public class QuenMatKhau extends javax.swing.JDialog implements Runnable{
-
-    /**
-     * Creates new form QuenMatKhau
-     */
+    
+    private final String UPDATE = "UPDATE dbo.TaiKhoan SET MatKhau = ? WHERE MaTaiKhoan = ?";
+    
     public QuenMatKhau(java.awt.Frame parent, boolean modal) {
+        
         super(parent, modal);
         initComponents();
         txtEmail.setBorder(BorderFactory.createCompoundBorder(txtEmail.getBorder(), BorderFactory.createEmptyBorder(0, 5, 0, 0)));
         txtMaXacNhan.setBorder(BorderFactory.createCompoundBorder(txtMaXacNhan.getBorder(), BorderFactory.createEmptyBorder(0, 5, 0, 0)));
         txtMatKhauMoi.setBorder(BorderFactory.createCompoundBorder(txtMatKhauMoi.getBorder(), BorderFactory.createEmptyBorder(0, 5, 0, 0)));
         
-        btnXacNhan.setVisible(false);
+        //btnXacNhan.setVisible(false);
+        
+        lblHidePassword.setVisible(false);
+        
     }
 
     /**
@@ -46,6 +54,8 @@ public class QuenMatKhau extends javax.swing.JDialog implements Runnable{
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        lblHidePassword = new javax.swing.JLabel();
+        lblShowPassword = new javax.swing.JLabel();
         btnGuiMaXacNhan = new javax.swing.JButton();
         pictureBox2 = new com.ui.swing.PictureBox();
         pictureBox1 = new com.ui.swing.PictureBox();
@@ -64,6 +74,22 @@ public class QuenMatKhau extends javax.swing.JDialog implements Runnable{
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Quên mật khẩu");
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        lblHidePassword.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/happywedding/assets/HidePassword.png"))); // NOI18N
+        lblHidePassword.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblHidePasswordMouseClicked(evt);
+            }
+        });
+        getContentPane().add(lblHidePassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 440, 50, 50));
+
+        lblShowPassword.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/happywedding/assets/ShowPassword.png"))); // NOI18N
+        lblShowPassword.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblShowPasswordMouseClicked(evt);
+            }
+        });
+        getContentPane().add(lblShowPassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 440, 50, 50));
 
         btnGuiMaXacNhan.setText("Gửi mã xác nhận");
         btnGuiMaXacNhan.addActionListener(new java.awt.event.ActionListener() {
@@ -190,10 +216,45 @@ public class QuenMatKhau extends javax.swing.JDialog implements Runnable{
     }//GEN-LAST:event_btnGuiMaXacNhanActionPerformed
 
     private void btnXacNhanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnXacNhanMouseClicked
+        
+        TaiKhoanDAO taiKhoanDAO = new TaiKhoanDAO();
+        String tenDangNhap = DangNhap.tenTaiKhoan;
+        
+        if(String.valueOf(txtMatKhauMoi.getPassword()).trim().equals("")){
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập mật khẩu");
+            return;
+        }
+        
+        taiKhoanDAO.update(UPDATE, String.valueOf(txtMatKhauMoi.getPassword()));
+        
         JOptionPane.showMessageDialog(this, "Đổi mật khẩu thành công");
         this.dispose();
         new DangNhap(new JFrame(), true).setVisible(true);
+        
+        
     }//GEN-LAST:event_btnXacNhanMouseClicked
+
+    public void showPassword(boolean a){
+        
+        if(a){
+            txtMatKhauMoi.setEchoChar((char)0);
+        }else{
+            txtMatKhauMoi.setEchoChar('*');
+        }
+        
+        
+        lblShowPassword.setVisible(!a);
+        lblHidePassword.setVisible(a);
+        
+    }
+    
+    private void lblShowPasswordMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblShowPasswordMouseClicked
+        showPassword(true);
+    }//GEN-LAST:event_lblShowPasswordMouseClicked
+
+    private void lblHidePasswordMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblHidePasswordMouseClicked
+        showPassword(false);
+    }//GEN-LAST:event_lblHidePasswordMouseClicked
    
     String taiKhoan = "baomqpc03196@fpt.edu.vn";
     String matKhau = "matkhaulagidayta";
@@ -326,6 +387,8 @@ public class QuenMatKhau extends javax.swing.JDialog implements Runnable{
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel lblHidePassword;
+    private javax.swing.JLabel lblShowPassword;
     private javax.swing.JLabel lblXacNhan;
     private com.ui.swing.PictureBox pictureBox1;
     private com.ui.swing.PictureBox pictureBox2;

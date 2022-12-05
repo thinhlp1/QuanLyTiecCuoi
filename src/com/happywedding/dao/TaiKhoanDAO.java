@@ -7,6 +7,7 @@ package com.happywedding.dao;
 
 import com.happywedding.helper.JDBCHelper;
 import com.happywedding.model.HopDong;
+import com.happywedding.model.NhanVien;
 import com.happywedding.model.TaiKhoan;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -28,7 +29,7 @@ public class TaiKhoanDAO extends AbstractDAO<TaiKhoan> {
             + ")\n"
             + "VALUES\n"
             + "(?,?,?,?)";
-    private final String UPDATE = "UPDATE dbo.TaiKhoan SET MaNhanVien = ?, TenDangNhap = ?, MatKhau = ? , VaiTro = ? WHERE MaTaiKhoan = ?";
+    private final String UPDATE = "UPDATE dbo.TaiKhoan SET MatKhau = ? WHERE MaTaiKhoan = ?";
     private final String SECLECT_ALL = "SELECT * FROM dbo.TaiKhoan";
     private final String SECLECT_BYID = "SELECT * FROM dbo.TaiKhoan WHERE MaTaiKhoan = ?";
     private final String SECLECT_TENDANGNHAP = "SELECT MaNhanVien, TenDangNhap, MatKhau, VaiTro FROM dbo.TaiKhoan where TenDangNhap=?";
@@ -42,7 +43,7 @@ public class TaiKhoanDAO extends AbstractDAO<TaiKhoan> {
 
     @Override
     public boolean update(TaiKhoan entity) {
-        int rs = JDBCHelper.executeUpdate(UPDATE, entity.getMaNhanVien(), entity.getMaTaiKhoan(), entity.getMatKhau(), entity.getVaiTro());
+        int rs = JDBCHelper.executeUpdate(UPDATE, entity.getMatKhau());
         return rs > 0;
     }
 
@@ -105,4 +106,5 @@ public class TaiKhoanDAO extends AbstractDAO<TaiKhoan> {
     public List<TaiKhoan> select() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
+
 }

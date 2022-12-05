@@ -19,6 +19,7 @@ public class JDBCHelper {
     private static String password = "sa";
 
     /*
+ /*
  * Nạp driver
      */
     static {
@@ -34,7 +35,6 @@ public class JDBCHelper {
         return DriverManager.getConnection(dburl, username, password);
     }
     
-
     /**
      * Xây dựng PreparedStatement
      *
@@ -80,7 +80,7 @@ public class JDBCHelper {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        
+
     }
 
     /**
