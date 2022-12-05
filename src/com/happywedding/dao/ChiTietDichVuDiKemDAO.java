@@ -45,7 +45,7 @@ public class ChiTietDichVuDiKemDAO {
     }
 
     public boolean updateHopDongDichVuDiKem(HopDongDichVuDiKem hd) {
-        int rs = JDBCHelper.executeUpdate(UPDATE_HDDICHVUDIKEM, hd.getChiPhi(), hd.getChiPhiPhatSinh(), hd.getChiPhi(), hd.getMaHD());
+        int rs = JDBCHelper.executeUpdate(UPDATE_HDDICHVUDIKEM, hd.getChiPhi(), hd.getChiPhiPhatSinh(), hd.getGhiChu(), hd.getMaHD());
         return rs > 0;
     }
 

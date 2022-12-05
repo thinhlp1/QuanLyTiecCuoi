@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="subHoaDon_ThucDon" language="groovy" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="bb880c52-9252-4c68-9c0b-555ac16cafcf">
 	<property name="ireport.zoom" value="2.3579476910000086"/>
-	<property name="ireport.x" value="0"/>
+	<property name="ireport.x" value="245"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="MaHD" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
@@ -114,7 +114,7 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{SoLuong}]]></textFieldExpression>
 			</textField>
-			<textField pattern="#,##0 VND">
+			<textField pattern="#,### VND">
 				<reportElement x="414" y="0" width="141" height="22" uuid="c15b5ff9-c290-448b-bbcf-778d90f11e40"/>
 				<box rightPadding="0">
 					<pen lineWidth="1.0"/>

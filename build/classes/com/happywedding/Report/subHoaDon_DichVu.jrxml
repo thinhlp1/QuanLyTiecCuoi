@@ -15,7 +15,7 @@ INNER JOIN DanhMucCon dmc ON dmc.MaDMC = csvc.MaDMC
 INNER JOIN GoiDichVu goi ON hddv.MaGoi = goi.MaGoi
 INNER JOIN HopDong hd ON hd.MaHD = ct.MaHD
 INNER JOIN DichVu dv ON dv.MaDV = ct.MaDV
-WHERE ct.MaHD = 'HD20221201006'  
+WHERE ct.MaHD =  $P{MaHD} 
 GROUP BY hd.MaHD,csvc.MaCSVC,csvc.TenCSVC,IIF(ct.ChiPhi = 0, csvc.GiaThue * hd.SoLuongBan ,ct.ChiPhi ) * IIF(csvc.MaDMC = 'AOGHE' , 10,1 + ct.ChiPhiPhatSinh),dv.TenDV ) AS X ) AS TongChiPhi
 ,SUM((IIF(ct.ChiPhi = 0, csvc.GiaThue * IIF ( csvc.MaDMC = 'AOGHE' OR csvc.MaDMC = 'TRAIBAN',10,1 ) ,ct.ChiPhi ) * IIF(csvc.MaDMC = 'AOGHE' , 10,1)) + ct.ChiPhiPhatSinh )/4 AS ChiPhi 
 FROM HopDongDichVu hddv 

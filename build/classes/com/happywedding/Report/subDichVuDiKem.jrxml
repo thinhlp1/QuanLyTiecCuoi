@@ -1,27 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="subDichVuDiKem" language="groovy" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="5706d5c9-cc73-475f-9c35-61b4e18b5e28">
-	<property name="ireport.zoom" value="2.1435888100000047"/>
-	<property name="ireport.x" value="0"/>
+	<property name="ireport.zoom" value="2.5937424601000076"/>
+	<property name="ireport.x" value="16"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="MaHD" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT ct.MaHD,dv.MaDV,dv.TenDV,dv.Gia AS ChiPhi,ct.GhiChu,ct.ChiPhiPhatSinh,SoLuong ,
-hddv.ChiPhi AS TongChiPhi, ( SELECT SUM(ChiPhiPhatSinh)  FROM ChiTietDichVuDiKem WHERE MaHD = $P{MaHD} ) AS TongChiPhiPhatSinh,
-( hddv.ChiPhi +  (SELECT SUM(ChiPhiPhatSinh)  FROM ChiTietDichVuDiKem WHERE MaHD = $P{MaHD})) AS TongChiPhiPhaiTra
+		<![CDATA[SELECT ROW_NUMBER() OVER ( ORDER BY ct.MaHD ASC ) AS STT,ct.MaHD,dv.MaDV,dv.TenDV, IIF(ct.SoLuong = -1,'CXD',CAST(Gia AS varchar)) AS ChiPhi,ct.GhiChu,ct.ChiPhiPhatSinh, IIF(ct.SoLuong = -1,'CXD',CAST(ct.SoLuong AS varchar)) AS SoLuong ,
+  hddv.ChiPhi AS TongChiPhi, ( SELECT SUM(ChiPhiPhatSinh)  FROM ChiTietDichVuDiKem WHERE MaHD = $P{MaHD} ) AS TongChiPhiPhatSinh, 
+( hddv.ChiPhi +  (SELECT SUM(ChiPhiPhatSinh)  FROM ChiTietDichVuDiKem WHERE MaHD =$P{MaHD} )) AS TongChiPhiPhaiTra
 FROM ChiTietDichVuDiKem ct
 INNER JOIN DichVuDiKem  dv ON ct.MaDV = dv.MaDV
 INNER JOIN HopDongDichVuDiKem hddv ON hddv.MaHD = ct.MaHD
 WHERE ct.MaHD = $P{MaHD}]]>
 	</queryString>
+	<field name="STT" class="java.lang.Long"/>
 	<field name="MaHD" class="java.lang.String"/>
 	<field name="MaDV" class="java.lang.String"/>
 	<field name="TenDV" class="java.lang.String"/>
-	<field name="ChiPhi" class="java.lang.Long"/>
+	<field name="ChiPhi" class="java.lang.String"/>
 	<field name="GhiChu" class="java.lang.String"/>
 	<field name="ChiPhiPhatSinh" class="java.lang.Long"/>
-	<field name="SoLuong" class="java.lang.Integer"/>
+	<field name="SoLuong" class="java.lang.String"/>
 	<field name="TongChiPhi" class="java.lang.Long"/>
 	<field name="TongChiPhiPhatSinh" class="java.lang.Long"/>
 	<field name="TongChiPhiPhaiTra" class="java.lang.Long"/>
@@ -51,7 +52,7 @@ WHERE ct.MaHD = $P{MaHD}]]>
 				<text><![CDATA[Chi phí phát sinh]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="138" y="0" width="138" height="20" uuid="5c5835c1-9b1e-4941-ae06-e3f22be8cef4"/>
+				<reportElement x="204" y="0" width="72" height="20" uuid="5c5835c1-9b1e-4941-ae06-e3f22be8cef4"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -92,12 +93,27 @@ WHERE ct.MaHD = $P{MaHD}]]>
 				</textElement>
 				<text><![CDATA[Tên dịch vụ]]></text>
 			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="138" y="0" width="66" height="21" forecolor="#000000" backcolor="#FFFFFF" uuid="10364ee1-4945-4735-b1e8-a318745bae13"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Số lượng]]></text>
+			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
 		<band height="22" splitType="Stretch">
 			<textField>
-				<reportElement x="138" y="0" width="138" height="22" uuid="f879ea3e-1aa4-42a4-8342-4a849fc6e08f"/>
+				<reportElement x="204" y="0" width="72" height="22" uuid="f879ea3e-1aa4-42a4-8342-4a849fc6e08f"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -152,6 +168,21 @@ WHERE ct.MaHD = $P{MaHD}]]>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{TenDV}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="138" y="-1" width="66" height="23" forecolor="#000000" backcolor="#FFFFFF" uuid="a7f6b57e-5f2d-458b-9da1-c3afbe2348f6"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SoLuong}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
