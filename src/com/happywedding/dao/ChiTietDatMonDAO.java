@@ -53,7 +53,7 @@ public class ChiTietDatMonDAO {
             + "INNER JOIN MonAn ma ON ct.MaMA = ma.MaMA \n"
             + "WHERE MaHD = ? AND MaPL = ?";
     
-    private final String UPDATE_SOLUONG = "UPDATE ChiTietDatMon SET SoLuong = ? WHERE MaHD = ? AND MaMA = ?";
+    private final String UPDATE_SOLUONG = "UPDATE ChiTietDatMon SET SoLuong = ? WHERE MaTD = ? AND MaMA = ?";
     
     private final String SELECT_MONAN_NOTIN_HOPDONG = "SELECT * FROM MonAn WHERE MaMA NOT IN( SELECT MaMA FROM ChiTietDatMon WHERE MaHD = ?  ) ";
     private final String SELECT_MONAN_NOTIN_THUCDON = "SELECT * FROM MonAn WHERE MaMA NOT IN( SELECT MaMA FROM ChiTietThucDon WHERE MaTD = ?  )";
@@ -132,7 +132,7 @@ public class ChiTietDatMonDAO {
     }
     
     public boolean updateChiTietDatMon(ChiTietDatMon ct){
-        int rs = JDBCHelper.executeUpdate(UPDATE_SOLUONG,ct.getSoLuong(), ct.getMaHD(),ct.getMaMA());
+        int rs = JDBCHelper.executeUpdate(UPDATE_SOLUONG,ct.getSoLuong(), ct.getMaTD(),ct.getMaMA());
         return rs > 0;
     }
 

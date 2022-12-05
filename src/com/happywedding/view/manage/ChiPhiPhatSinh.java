@@ -11,6 +11,7 @@ import com.happywedding.dao.ChiTietDichVuDiKemDAO;
 import com.happywedding.dao.DichVuDiKemDAO;
 import com.happywedding.dao.HoaDonDAO;
 import com.happywedding.dao.HopDongDAO;
+import com.happywedding.dao.SanhDAO;
 import com.happywedding.helper.AppStatus;
 import com.happywedding.helper.DateHelper;
 import com.happywedding.helper.DialogHelper;
@@ -25,6 +26,7 @@ import com.happywedding.model.DichVuDiKemModel;
 import com.happywedding.model.HoaDon;
 import com.happywedding.model.HopDong;
 import com.happywedding.model.HopDongDichVuDiKem;
+import com.happywedding.model.Sanh;
 import com.ui.swing.Combobox;
 import java.awt.Component;
 import java.awt.event.KeyAdapter;
@@ -433,17 +435,28 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
 
     public boolean insertChiTietDichVuDiKem() {
         List<ChiTietDichVuDiKem> list = getChiPhiDiKem();
-
+        long tongTienDiKem = 0;
+        
         try {
             for (ChiTietDichVuDiKem ct : list) {
                 diKemDAO.updateChiTietDiKem(ct);
+                tongTienDiKem += ct.getChiPhi() * ct.getSoLuong();
             }
+            updateHopDongDichVuDiKem(tongTienDiKem);
             return true;
         } catch (Exception e) {
             e.printStackTrace();
             DialogHelper.alertError(this, "Xuất không thành công");
             return false;
         }
+    }
+    
+    public void updateHopDongDichVuDiKem(long tongTienDiKem){
+        HopDongDichVuDiKem hddv = diKemDAO.selectHopDongDichVuDiKem(maHD);
+        long tongTien = tongTienDiKem + hddv.getChiPhi();
+        hddv.setChiPhi(tongTien );
+        diKemDAO.updateHopDongDichVuDiKem(hddv);
+        
     }
 
     class CheckNumber extends KeyAdapter {
@@ -825,11 +838,15 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(pnlChiTiet, javax.swing.GroupLayout.DEFAULT_SIZE, 916, Short.MAX_VALUE)
+            .addGap(0, 916, Short.MAX_VALUE)
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(pnlChiTiet, javax.swing.GroupLayout.DEFAULT_SIZE, 916, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(pnlChiTiet, javax.swing.GroupLayout.DEFAULT_SIZE, 949, Short.MAX_VALUE)
+            .addGap(0, 949, Short.MAX_VALUE)
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(pnlChiTiet, javax.swing.GroupLayout.DEFAULT_SIZE, 949, Short.MAX_VALUE))
         );
 
         pack();
@@ -909,9 +926,10 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
                     if (dvdm1 != null) {
                         for (int i = 0; i < tblThucDon.getRowCount(); i++) {
                             for (int j = 0; j < list1.size(); j++) {
-                                if (list1.get(j).getMaTD().equals(maTD) && list1.get(j).getMaPL().equals("NUOC")) {
+                                if (listChiTietDatMon.get(i).getMaTD().equals(maTD) && list1.get(j).getMaPL().equals("NUOC") 
+                                        && listChiTietDatMon.get(i).getMaMA().equals(list1.get(j).getMaMA())  ) {
                                     tongChiPhiDatMon1 += list1.get(j).getGia() * (Integer.parseInt(tblThucDon.getValueAt(i, 2) + ""));
-
+                                    
                                 }
                             }
                         };
@@ -924,9 +942,10 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
                     if (dvdm2 != null) {
                         for (int i = 0; i < tblThucDon.getRowCount(); i++) {
                             for (int j = 0; j < list2.size(); j++) {
-                                if (list1.get(j).getMaTD().equals(maTDPhu) && list1.get(j).getMaPL().equals("NUOC")) {
-                                    tongChiPhiDatMon2 += list1.get(j).getGia() * (Integer.parseInt(tblThucDon.getValueAt(i, 2) + ""));
-
+                                if (listChiTietDatMon.get(i).getMaTD().equals(maTDPhu) && list2.get(j).getMaPL().equals("NUOC") 
+                                        && listChiTietDatMon.get(i).getMaMA().equals(list2.get(j).getMaMA())  ) {
+                                    tongChiPhiDatMon2 += list2.get(j).getGia() * (Integer.parseInt(tblThucDon.getValueAt(i, 2) + ""));
+                                    
                                 }
                             }
                         };
@@ -954,9 +973,15 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
                         String maHD = this.maHD;
 
                         ChiTietDichVuDiKemDAO dichVuDiKemDAO = new ChiTietDichVuDiKemDAO();
-                        if (maTDPhu.equals(maTD)) {
+                        long giaThucDonPhu = 0;
+                        if (!maTDPhu.equals(maTD)) {
+//                maTDPhu = "";
+                            giaThucDonPhu = datMonDAO.selectDichVuDatMon(maHD, datMonDAO.selectThucDonPhu(maHD)).getChiPhi()
+                                    + datMonDAO.selectDichVuDatMon(maHD, datMonDAO.selectThucDonPhu(maHD)).getChiPhiPhatSinh();
+                        } else {
                             maTDPhu = "";
                         }
+                        Sanh sanh = new SanhDAO().findByName((hopDong.getSanh()));
 
                         long ttdv = dichVuDAO.selectDichVu(maHD, "TTCONG").getChiPhi()
                                 + dichVuDAO.selectDichVu(maHD, "TTCONG").getChiPhiPhatSinh()
@@ -966,26 +991,27 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
                                 + dichVuDAO.selectDichVu(maHD, "TTSANKHAU").getChiPhiPhatSinh()
                                 + dichVuDAO.selectDichVu(maHD, "NGHETHUAT").getChiPhi()
                                 + dichVuDAO.selectDichVu(maHD, "NGHETHUAT").getChiPhiPhatSinh()
-                                + datMonDAO.selectDichVuDatMon(maHD, datMonDAO.selectThucDonChinh(maHD)).getChiPhi()
-                                + datMonDAO.selectDichVuDatMon(maHD, datMonDAO.selectThucDonChinh(maHD)).getChiPhiPhatSinh()
-                                + datMonDAO.selectDichVuDatMon(maHD, datMonDAO.selectThucDonPhu(maHD)).getChiPhi()
-                                + datMonDAO.selectDichVuDatMon(maHD, datMonDAO.selectThucDonPhu(maHD)).getChiPhiPhatSinh()
-                                + dichVuDiKemDAO.selectHopDongDichVuDiKem(maHD).getChiPhi()
+                                + datMonDAO.selectDichVuDatMon(maHD, maTD).getChiPhi()
+                                + datMonDAO.selectDichVuDatMon(maHD, maTD).getChiPhiPhatSinh()
+                                + dichVuDiKemDAO.selectHopDongDichVuDiKem(maHD).getChiPhi() + giaThucDonPhu
                                 + dichVuDiKemDAO.selectHopDongDichVuDiKem(maHD).getChiPhiPhatSinh();
+                        //  + (sanh.getGiaBan() * hopDong.getSoLuongBan()) + sanh.getGiaThueSanh();
+                        long giaSanh = (sanh.getGiaBan() * hopDong.getSoLuongBan()) + sanh.getGiaThueSanh();
+                        ttdv += giaSanh;
                         String tongTienDichVu = ShareHelper.toMoney(ttdv);
-                        String thue = "" + (((chiPhi.get(0) + chiPhi.get(1))) * 10 / 100.0);
+                        String thue = ShareHelper.toMoney( (long)(((chiPhi.get(0) + chiPhi.get(1))) * 10 / 100.0)); 
                         String tongTien = ShareHelper.toMoney(hopDong.getTongTien());
                         String tienCoc = ShareHelper.toMoney(hopDong.getTienCoc());
                         String tienConLai = ShareHelper.toMoney(hopDong.getTongTien() - hopDong.getTienCoc());
                         String thanhChu = EnglishNumberToWords.convert(hopDong.getTongTien());
                         String thanhChu2 = EnglishNumberToWords.convert(ShareHelper.toMoney(tienConLai));
-                        net.sf.jasperreports.engine.JasperReport rpt = JasperCompileManager.compileReport("src\\com\\happywedding\\Report\\HoaDon.jrxml");
+                        net.sf.jasperreports.engine.JasperReport rpt = JasperCompileManager.compileReport("src\\com\\happywedding\\Report\\HoaDonChinhThuc.jrxml");
                         parameters.put("MaHD", maHD);
                         parameters.put("MaTD_Chinh", maTD);
                         parameters.put("MaTD_Phu", maTDPhu);
                         parameters.put("ThanhTien", thanhChu);
                         parameters.put("ThanhTien2", thanhChu2);
-                        parameters.put("Thue", thue);
+                        parameters.put("Thue", thue + "VND");
                         parameters.put("TongTien", tongTien);
                         parameters.put("TienCoc", tienCoc);
                         parameters.put("TienConLai", tienConLai);
@@ -1031,9 +1057,15 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
                         String maHD = this.maHD;
 
                         ChiTietDichVuDiKemDAO dichVuDiKemDAO = new ChiTietDichVuDiKemDAO();
-                        if (maTDPhu.equals(maTD)) {
+                        long giaThucDonPhu = 0;
+                        if (!maTDPhu.equals(maTD)) {
+//                maTDPhu = "";
+                            giaThucDonPhu = datMonDAO.selectDichVuDatMon(maHD, datMonDAO.selectThucDonPhu(maHD)).getChiPhi()
+                                    + datMonDAO.selectDichVuDatMon(maHD, datMonDAO.selectThucDonPhu(maHD)).getChiPhiPhatSinh();
+                        } else {
                             maTDPhu = "";
                         }
+                        Sanh sanh = new SanhDAO().findByName((hopDong.getSanh()));
 
                         long ttdv = dichVuDAO.selectDichVu(maHD, "TTCONG").getChiPhi()
                                 + dichVuDAO.selectDichVu(maHD, "TTCONG").getChiPhiPhatSinh()
@@ -1043,20 +1075,21 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
                                 + dichVuDAO.selectDichVu(maHD, "TTSANKHAU").getChiPhiPhatSinh()
                                 + dichVuDAO.selectDichVu(maHD, "NGHETHUAT").getChiPhi()
                                 + dichVuDAO.selectDichVu(maHD, "NGHETHUAT").getChiPhiPhatSinh()
-                                + datMonDAO.selectDichVuDatMon(maHD, datMonDAO.selectThucDonChinh(maHD)).getChiPhi()
-                                + datMonDAO.selectDichVuDatMon(maHD, datMonDAO.selectThucDonChinh(maHD)).getChiPhiPhatSinh()
-                                + datMonDAO.selectDichVuDatMon(maHD, datMonDAO.selectThucDonPhu(maHD)).getChiPhi()
-                                + datMonDAO.selectDichVuDatMon(maHD, datMonDAO.selectThucDonPhu(maHD)).getChiPhiPhatSinh()
-                                + dichVuDiKemDAO.selectHopDongDichVuDiKem(maHD).getChiPhi()
+                                + datMonDAO.selectDichVuDatMon(maHD, maTD).getChiPhi()
+                                + datMonDAO.selectDichVuDatMon(maHD, maTD).getChiPhiPhatSinh()
+                                + dichVuDiKemDAO.selectHopDongDichVuDiKem(maHD).getChiPhi() + giaThucDonPhu
                                 + dichVuDiKemDAO.selectHopDongDichVuDiKem(maHD).getChiPhiPhatSinh();
+                        //  + (sanh.getGiaBan() * hopDong.getSoLuongBan()) + sanh.getGiaThueSanh();
+                        long giaSanh = (sanh.getGiaBan() * hopDong.getSoLuongBan()) + sanh.getGiaThueSanh();
+                        ttdv += giaSanh;
                         String tongTienDichVu = ShareHelper.toMoney(ttdv);
-                        String thue = "" + (((chiPhi.get(0) + chiPhi.get(1))) * 10 / 100.0);
+                     String thue = ShareHelper.toMoney( (long)(((chiPhi.get(0) + chiPhi.get(1))) * 10 / 100.0)); 
                         String tongTien = ShareHelper.toMoney(hopDong.getTongTien());
                         String tienCoc = ShareHelper.toMoney(hopDong.getTienCoc());
                         String tienConLai = ShareHelper.toMoney(hopDong.getTongTien() - hopDong.getTienCoc());
                         String thanhChu = EnglishNumberToWords.convert(hopDong.getTongTien());
                         String thanhChu2 = EnglishNumberToWords.convert(ShareHelper.toMoney(tienConLai));
-                        net.sf.jasperreports.engine.JasperReport rpt = JasperCompileManager.compileReport("src\\com\\happywedding\\Report\\HoaDon.jrxml");
+                        net.sf.jasperreports.engine.JasperReport rpt = JasperCompileManager.compileReport("src\\com\\happywedding\\Report\\HoaDonChinhThuc.jrxml");
                         parameters.put("MaHD", maHD);
                         parameters.put("MaTD_Chinh", maTD);
                         parameters.put("MaTD_Phu", maTDPhu);
@@ -1067,6 +1100,7 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
                         parameters.put("TienCoc", tienCoc + " VND");
                         parameters.put("TienConLai", tienConLai + " VND");
                         parameters.put("tongTienDichVu", tongTienDichVu);
+                        
                         parameters.put("SUBREPORT_DIR", "src\\com\\happywedding\\Report\\");
                         System.out.println(parameters);
                         JasperPrint p = JasperFillManager.fillReport(rpt, parameters, con);
