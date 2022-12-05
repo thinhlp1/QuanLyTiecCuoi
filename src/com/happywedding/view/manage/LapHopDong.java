@@ -821,24 +821,23 @@ public class LapHopDong extends javax.swing.JPanel {
                 btnXuatHoaDonTam.setVisible(true);
 
                 try {
-
-                    Date date = DateHelper.toDate(DateHelper.toString(hopDong.getNgayToChuc(), "dd/MM/yyyy"), "dd/MM/yyyy");
+                    SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+                    String ngayToChuc = DateHelper.toString(hopDong.getNgayToChuc(), "dd/MM/yyyy");
+                    String thoiGianKetThuc =  hopDong.getThoiGianKetThuc();
+                    
+                    String dateHopDong = ngayToChuc + " " + thoiGianKetThuc ;
+                    Date date = format.parse(dateHopDong);
+                    
                     Date date2 = DateHelper.now();
                     if (date.equals(date2) || date2.after(date)) {
-                        String timeNow = DateHelper.toString(date2, "HH:mm");
-                        String timeEnd = hopDong.getThoiGianKetThuc();
-                        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-                        Date d1 = sdf.parse(timeNow);
-                        Date d2 = sdf.parse(timeEnd);
-                        if (d1.getTime() > d2.getTime()) {
-                            btnComfimHoanThanh.setVisible(true);
-                        } else {
-                            btnComfimHoanThanh.setVisible(false);
-                        }
+                         btnComfimHoanThanh.setVisible(true);
+
                     } else {
                         btnComfimHoanThanh.setVisible(false);
                     }
                 } catch (Exception e) {
+                    
+                    
                 }
 
                 btnHuyHopDong.setVisible(true);

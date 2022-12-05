@@ -48,7 +48,7 @@ IIF(ct.ChiPhi = 0, csvc.GiaThue * IIF ( csvc.MaDMC = 'AOGHE' OR csvc.MaDMC = 'TR
 	<columnHeader>
 		<band height="20" splitType="Stretch">
 			<staticText>
-				<reportElement x="0" y="0" width="185" height="20" uuid="de75ebc5-1c0f-493d-abb8-ecce4ca8c79b"/>
+				<reportElement x="0" y="0" width="71" height="20" uuid="de75ebc5-1c0f-493d-abb8-ecce4ca8c79b"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -62,7 +62,7 @@ IIF(ct.ChiPhi = 0, csvc.GiaThue * IIF ( csvc.MaDMC = 'AOGHE' OR csvc.MaDMC = 'TR
 				<text><![CDATA[STT]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="185" y="0" width="185" height="20" uuid="8ef0f58c-5fd4-4594-af54-91b6b1c745bf"/>
+				<reportElement x="71" y="0" width="108" height="20" uuid="8ef0f58c-5fd4-4594-af54-91b6b1c745bf"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -89,12 +89,8 @@ IIF(ct.ChiPhi = 0, csvc.GiaThue * IIF ( csvc.MaDMC = 'AOGHE' OR csvc.MaDMC = 'TR
 				</textElement>
 				<text><![CDATA[Chi phí]]></text>
 			</staticText>
-		</band>
-	</columnHeader>
-	<detail>
-		<band height="20" splitType="Stretch">
-			<textField>
-				<reportElement x="0" y="0" width="185" height="20" uuid="bd2774e2-9f03-49a7-88e2-df27269d386d"/>
+			<staticText>
+				<reportElement mode="Transparent" x="179" y="0" width="191" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="f485c732-0edf-450b-b464-9152d50edc63"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -102,11 +98,32 @@ IIF(ct.ChiPhi = 0, csvc.GiaThue * IIF ( csvc.MaDMC = 'AOGHE' OR csvc.MaDMC = 'TR
 					<bottomPen lineWidth="1.0"/>
 					<rightPen lineWidth="1.0"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="14" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[TenCSVC]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="71" height="20" uuid="bd2774e2-9f03-49a7-88e2-df27269d386d"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$F{STT}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="185" y="0" width="185" height="20" uuid="cad22bed-62dc-43af-a7e0-55efc0eeeaa2"/>
+				<reportElement x="71" y="0" width="108" height="20" uuid="cad22bed-62dc-43af-a7e0-55efc0eeeaa2"/>
 				<box leftPadding="10">
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -114,7 +131,9 @@ IIF(ct.ChiPhi = 0, csvc.GiaThue * IIF ( csvc.MaDMC = 'AOGHE' OR csvc.MaDMC = 'TR
 					<bottomPen lineWidth="1.0"/>
 					<rightPen lineWidth="1.0"/>
 				</box>
-				<textElement textAlignment="Justified" verticalAlignment="Middle"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$F{TenDV}]]></textFieldExpression>
 			</textField>
 			<textField>
@@ -126,8 +145,25 @@ IIF(ct.ChiPhi = 0, csvc.GiaThue * IIF ( csvc.MaDMC = 'AOGHE' OR csvc.MaDMC = 'TR
 					<bottomPen lineWidth="1.0"/>
 					<rightPen lineWidth="1.0"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$F{ChiPhi}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="179" y="0" width="191" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="4a5482f4-d9b9-4c77-b6de-5244bc058c71"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="SansSerif" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TenCSVC}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
