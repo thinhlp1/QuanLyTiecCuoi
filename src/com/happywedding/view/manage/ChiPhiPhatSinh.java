@@ -1005,49 +1005,11 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
                 boolean rs = DialogHelper.confirm(this, "Xuất lại hóa đơn");
                 if (rs) {
 
-                           String maTD = datMonDAO.selectThucDonChinh(maHD);
+                    String maTD = datMonDAO.selectThucDonChinh(maHD);
                     String maTDPhu = datMonDAO.selectThucDonPhu(maHD);
 
                     if (maTD.equals(maTDPhu)) {
                         maTDPhu = "";
-                    }
-
-                    List<ChiTietDatMon> list1 = datMonDAO.selectChiTietDatMon(maHD, maTD);
-                    List<ChiTietDatMon> list2 = datMonDAO.selectChiTietDatMon(maHD, maTDPhu);
-                    DichVuDatMon dvdm1 = datMonDAO.selectDichVuDatMon(maHD, maTD);
-                    DichVuDatMon dvdm2 = datMonDAO.selectDichVuDatMon(maHD, maTDPhu);
-
-                    long tongChiPhiDatMon1 = 0;
-                    long tongChiPhiDatMon2 = 0;
-
-                    if (dvdm1 != null) {
-                        for (int i = 0; i < tblThucDon.getRowCount(); i++) {
-                            for (int j = 0; j < list1.size(); j++) {
-                                if (list1.get(j).getMaTD().equals(maTD) && list1.get(j).getMaPL().equals("NUOC")) {
-                                    tongChiPhiDatMon1 += list1.get(j).getGia() * (Integer.parseInt(tblThucDon.getValueAt(i, 2) + ""));
-
-                                }
-                            }
-                        };
-
-                        tongChiPhiDatMon1 += dvdm1.getChiPhi();
-                        dvdm1.setChiPhi(tongChiPhiDatMon1);
-                        datMonDAO.updateDichVuDatMon(dvdm1, maTD);
-                    }
-
-                    if (dvdm2 != null) {
-                        for (int i = 0; i < tblThucDon.getRowCount(); i++) {
-                            for (int j = 0; j < list2.size(); j++) {
-                                if (list1.get(j).getMaTD().equals(maTD) && list1.get(j).getMaPL().equals("NUOC")) {
-                                    tongChiPhiDatMon2 += list1.get(j).getGia() * (Integer.parseInt(tblThucDon.getValueAt(i, 2) + ""));
-
-                                }
-                            }
-                        };
-
-                        tongChiPhiDatMon2 += dvdm2.getChiPhi();
-                        dvdm2.setChiPhi(tongChiPhiDatMon2);
-                        datMonDAO.updateDichVuDatMon(dvdm2, maTDPhu);
                     }
 
                     if (!hoaDonDAO.updateHoaDon(maHD, DateHelper.now(), AppStatus.USER.getMaNV())) {
