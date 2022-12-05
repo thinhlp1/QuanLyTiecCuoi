@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="511b9514-f766-451c-bf93-51cae47cf750">
 	<property name="ireport.zoom" value="1.500000000000002"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="336"/>
+
 	<parameter name="MaHD" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
@@ -115,12 +115,7 @@ WHERE
 	<field name="HoaDon_TrangThai" class="java.lang.Integer"/>
 	<field name="HoaDon_MaNLLan2" class="java.lang.String"/>
 	<background>
-		<band height="802">
-			<image>
-				<reportElement x="0" y="92" width="555" height="710" uuid="129e2802-c2e8-4610-a999-2c159d6e4567"/>
-				<imageExpression><![CDATA["C:\\Users\\ACER\\Desktop\\bgReport.jpg"]]></imageExpression>
-			</image>
-		</band>
+
 	</background>
 	<title>
 		<band height="222" splitType="Stretch">

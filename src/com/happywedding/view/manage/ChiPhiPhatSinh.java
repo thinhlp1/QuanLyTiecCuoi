@@ -418,6 +418,7 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
         List<ChiTietDatMon> list = getChiPhiDatMon();
         try {
             for (ChiTietDatMon ct : list) {
+                ct.getSoLuong();
                 datMonDAO.updateChiTietDatMon(ct);
 
             }
@@ -923,7 +924,7 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
                     if (dvdm2 != null) {
                         for (int i = 0; i < tblThucDon.getRowCount(); i++) {
                             for (int j = 0; j < list2.size(); j++) {
-                                if (list1.get(j).getMaTD().equals(maTD) && list1.get(j).getMaPL().equals("NUOC")) {
+                                if (list1.get(j).getMaTD().equals(maTDPhu) && list1.get(j).getMaPL().equals("NUOC")) {
                                     tongChiPhiDatMon2 += list1.get(j).getGia() * (Integer.parseInt(tblThucDon.getValueAt(i, 2) + ""));
 
                                 }
