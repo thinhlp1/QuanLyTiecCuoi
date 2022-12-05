@@ -279,20 +279,15 @@
 	</pageFooter>
 	<summary>
 		<band height="63" splitType="Stretch">
-			<staticText>
-				<reportElement x="249" y="20" width="100" height="20" uuid="68afb558-9c1a-4f47-8446-2d9bdf9091a1"/>
-				<textElement verticalAlignment="Middle"/>
-				<text><![CDATA[VND]]></text>
-			</staticText>
-			<textField>
-				<reportElement x="136" y="20" width="113" height="20" uuid="0ee171ab-4182-49f7-85de-4988941e8282"/>
+			<textField pattern="#,### VNĐ">
+				<reportElement x="136" y="20" width="459" height="20" uuid="0ee171ab-4182-49f7-85de-4988941e8282"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Arial" size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{TongChiPhiPhatSinhDM}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="136" y="0" width="113" height="20" uuid="fafd8889-aba8-47d2-a199-afd5783b6266"/>
+			<textField pattern="#,### VNĐ">
+				<reportElement x="136" y="0" width="459" height="20" uuid="fafd8889-aba8-47d2-a199-afd5783b6266"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Arial" size="12" isBold="true"/>
 				</textElement>
@@ -305,23 +300,13 @@
 				</textElement>
 				<text><![CDATA[Tổng chi phí :]]></text>
 			</staticText>
-			<staticText>
-				<reportElement x="249" y="40" width="100" height="20" uuid="552880ce-b29d-4e45-8f93-7b2ee87ee8b5"/>
-				<textElement verticalAlignment="Middle"/>
-				<text><![CDATA[VND]]></text>
-			</staticText>
-			<textField>
-				<reportElement x="136" y="40" width="113" height="20" uuid="8461dc42-09fd-4033-95a8-139d903c6759"/>
+			<textField pattern="#,### VNĐ">
+				<reportElement x="136" y="40" width="459" height="20" uuid="8461dc42-09fd-4033-95a8-139d903c6759"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Arial" size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{TongPhaiTra}]]></textFieldExpression>
 			</textField>
-			<staticText>
-				<reportElement x="249" y="0" width="100" height="20" uuid="11ffc47e-6f0b-4ea0-ba75-be1b6c5c4dbe"/>
-				<textElement verticalAlignment="Middle"/>
-				<text><![CDATA[VND]]></text>
-			</staticText>
 			<staticText>
 				<reportElement x="0" y="20" width="136" height="20" uuid="42939dea-6934-4efd-b4ea-0ba5510b0802"/>
 				<textElement verticalAlignment="Middle">

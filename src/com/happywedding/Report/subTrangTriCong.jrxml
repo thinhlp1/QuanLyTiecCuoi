@@ -209,42 +209,27 @@ WHERE ct.MaHD = $P{MaHD} AND  hddv.MaDV = 'TTCONG' AND ct.MaDV = 'TTCONG']]>
 				</textElement>
 				<text><![CDATA[Tổng chi phí phải trả :]]></text>
 			</staticText>
-			<textField>
-				<reportElement x="138" y="0" width="100" height="20" uuid="ba3e3237-6005-4c0b-b999-9b7f94a6cd18"/>
+			<textField pattern="#,### VNĐ">
+				<reportElement x="138" y="0" width="414" height="20" uuid="ba3e3237-6005-4c0b-b999-9b7f94a6cd18"/>
 				<textElement verticalAlignment="Middle">
 					<font size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{TongChiPhiDV}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="138" y="20" width="100" height="20" uuid="d66a2b48-22ee-406d-95f2-739741f8a12c"/>
+			<textField pattern="#,### VNĐ">
+				<reportElement x="138" y="20" width="414" height="20" uuid="d66a2b48-22ee-406d-95f2-739741f8a12c"/>
 				<textElement verticalAlignment="Middle">
 					<font size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{TongCPPS}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="138" y="40" width="100" height="20" uuid="1f9e79e5-4385-4388-8c0e-6b4b56265e72"/>
+			<textField pattern="#,### VNĐ">
+				<reportElement x="138" y="40" width="414" height="20" uuid="1f9e79e5-4385-4388-8c0e-6b4b56265e72"/>
 				<textElement verticalAlignment="Middle">
 					<font size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{TongChiPhiPhaiTra}]]></textFieldExpression>
 			</textField>
-			<staticText>
-				<reportElement x="238" y="0" width="113" height="20" uuid="7b8a96ce-e0b7-4fcb-b69f-97d756be0bae"/>
-				<textElement verticalAlignment="Middle"/>
-				<text><![CDATA[VND]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="238" y="20" width="113" height="20" uuid="a57fafef-7403-40e4-8e5e-40734d8ada7e"/>
-				<textElement verticalAlignment="Middle"/>
-				<text><![CDATA[VND]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="238" y="40" width="113" height="20" uuid="57d3aa70-94c8-4423-ba3d-242036d5ab81"/>
-				<textElement verticalAlignment="Middle"/>
-				<text><![CDATA[VND]]></text>
-			</staticText>
 		</band>
 	</summary>
 </jasperReport>

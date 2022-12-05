@@ -984,10 +984,10 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
                         parameters.put("MaTD_Phu", maTDPhu);
                         parameters.put("ThanhTien", thanhChu);
                         parameters.put("ThanhTien2", thanhChu2);
-                        parameters.put("Thue", thue + " VND");
-                        parameters.put("TongTien", tongTien + " VND");
-                        parameters.put("TienCoc", tienCoc + " VND");
-                        parameters.put("TienConLai", tienConLai + " VND");
+                        parameters.put("Thue", thue);
+                        parameters.put("TongTien", tongTien);
+                        parameters.put("TienCoc", tienCoc);
+                        parameters.put("TienConLai", tienConLai);
                         parameters.put("tongTienDichVu", tongTienDichVu);
                         parameters.put("SUBREPORT_DIR", "src\\com\\happywedding\\Report\\");
                         System.out.println(parameters);
