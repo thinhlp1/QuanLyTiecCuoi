@@ -17,7 +17,10 @@ public class DanhMucCon {
     public DanhMucCon() {
     }
     
-    
+    @Override
+    public String toString() {
+        return maDMC  ;
+    }
 
     public String getMaDMC() {
         return maDMC;

@@ -817,7 +817,7 @@ public class LapHopDong extends javax.swing.JPanel {
                 btnDanhDauXoa.setVisible(false);
                 btnPhanCong.setVisible(true);
                 btnChiPhiPhatSinh.setVisible(false);
-
+               // btnComfimHoanThanh.setVisible(true);
                 btnXuatHoaDonTam.setVisible(true);
 
                 try {
@@ -825,16 +825,17 @@ public class LapHopDong extends javax.swing.JPanel {
                     Date date = DateHelper.toDate(DateHelper.toString(hopDong.getNgayToChuc(), "dd/MM/yyyy"), "dd/MM/yyyy");
                     Date date2 = DateHelper.now();
                     if (date.equals(date2) || date2.after(date)) {
-                        String timeNow = DateHelper.toString(date2, "HH:mm");
-                        String timeEnd = hopDong.getThoiGianKetThuc();
-                        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-                        Date d1 = sdf.parse(timeNow);
-                        Date d2 = sdf.parse(timeEnd);
-                        if (d1.getTime() > d2.getTime()) {
-                            btnComfimHoanThanh.setVisible(true);
-                        } else {
-                            btnComfimHoanThanh.setVisible(false);
-                        }
+                        btnComfimHoanThanh.setVisible(true);
+//                        String timeNow = DateHelper.toString(date2, "HH:mm");
+//                        String timeEnd = hopDong.getThoiGianKetThuc();
+//                        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+//                        Date d1 = sdf.parse(timeNow);
+//                        Date d2 = sdf.parse(timeEnd);
+//                        if (d1.getTime() > d2.getTime()) {
+//                            btnComfimHoanThanh.setVisible(true);
+//                        } else {
+//                            btnComfimHoanThanh.setVisible(false);
+//                        }
                     } else {
                         btnComfimHoanThanh.setVisible(false);
                     }

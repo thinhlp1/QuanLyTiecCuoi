@@ -4,7 +4,31 @@
  */
 package com.happywedding.view.manage;
 
+import com.happywedding.dao.NhanVienDAO;
+import com.happywedding.dao.PhongBanDAO;
+import com.happywedding.dao.VaiTroDAO;
+import com.happywedding.model.NhanVien;
+import com.happywedding.model.PhongBan;
+import com.happywedding.model.VaiTro;
+
 import com.ui.swing.datechooser.DateChooser;
+import com.happywedding.helper.DateHelper;
+import com.happywedding.helper.DialogHelper;
+import com.happywedding.helper.ShareHelper;
+import java.awt.CardLayout;
+import java.awt.HeadlessException;
+import java.awt.Rectangle;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
+
+import com.ui.swing.datechooser.DateChooser;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
 
 /**
  *
@@ -12,27 +36,340 @@ import com.ui.swing.datechooser.DateChooser;
  */
 public class QuanLyNhanVien extends javax.swing.JPanel {
 
-    
-    
-      private DateChooser dtChooser1 = new DateChooser();
-    
+    private int currentIndex = 0;
+    private NhanVienDAO dao = new NhanVienDAO();
+    private DefaultTableModel tblModel;
+    private List<NhanVien> listAllEmployee;
+    private List<PhongBan> listAllPhongBan;
+    private List<VaiTro> listAllVaiTro;
+
+    private VaiTroDAO daoVT = new VaiTroDAO();
+    private PhongBanDAO daoPB = new PhongBanDAO();
+    private DateChooser dtChooser1 = new DateChooser();
+
     /**
      * Creates new form QuanLyNhanVien
      */
     public QuanLyNhanVien() {
         initComponents();
-     
+        init();
     }
-    
-    public void init(){
-           
+
+    public void init() {
+
         dtChooser1.setTextRefernce(txtNgaySinh);
         tblNhanVien.fixTable(jScrollPane1);
         tblNhanVien.setAutoscrolls(true);
+
+        tblModel = (DefaultTableModel) tblNhanVien.getModel();
+        loadEmployee();
+        fillTable(listAllEmployee);
+        
+        loadPhongBan();
+        loadVaiTro();
+
+        initSort();
+    }
+
+    public void showCalendar1() {
+        dtChooser1.showPopup();
+    }
+
+    void loadEmployee() {
+        listAllEmployee = dao.select();
+    }
+
+    void filtEmployee(String keyword) {
+        List<NhanVien> list = new ArrayList<>();
+        keyword = keyword.toUpperCase();
+        for (int i = 0; i < listAllEmployee.size(); i++) {
+
+            if (listAllEmployee.get(i).toString().toUpperCase().contains(keyword)) {
+
+                list.add(listAllEmployee.get(i));
+            }
+        }
+        fillTable(list);
+
+    }
+
+    NhanVien getModel() {
+
+        List<String> listErorr = validation();
+
+        if (listErorr.size() != 0) {
+            DialogHelper.alertError(this, listErorr.toString());
+            return null;
+        }
+
+        NhanVien model = new NhanVien();
+        model.setMaNV(txtMaNhanVien.getText());
+        model.setHoTen(txtHoTen.getText());
+        model.setNgaySinh(DateHelper.toDate(txtNgaySinh.getText()));
+        model.setGioiTinh(rdoNam.isSelected());
+        model.setSoDienThoai(txtSoDienThoai.getText());
+        model.setEmail(txtEmail.getText());
+        model.setCMND_CCCD(txtCCCD.getText());
+        model.setMaPB(((PhongBan) cbbPhongBan.getSelectedItem() ).getMaPB());
+        model.setMaVT(((VaiTro) cbbVaiTro.getSelectedItem() ).getMaVT());
+        model.setHinhAnh("");
+        return model;
+    }
+
+    void setModel(NhanVien model) {
+        txtMaNhanVien.setText(model.getMaNV());
+        txtHoTen.setText(model.getHoTen());
+        txtNgaySinh.setText(model.getNgaySinh() != null ? DateHelper.toString(model.getNgaySinh()) : "");
+        rdoNam.setSelected(model.isGioiTinh());
+        rdoNu.setSelected(!model.isGioiTinh());
+        
+        txtSoDienThoai.setText(model.getSoDienThoai());
+        txtEmail.setText(model.getEmail());
+        txtCCCD.setText(model.getCMND_CCCD());
+        for (int i = 0; i < listAllPhongBan.size(); i++) {
+            if (model.getMaPB().equals(listAllPhongBan.get(i).getMaPB())) {
+                cbbPhongBan.setSelectedIndex(i);
+            }
+        }
+        for (int i = 0; i < listAllVaiTro.size(); i++) {
+            if (model.getMaVT().equals(listAllVaiTro.get(i).getMaVT())) {
+                cbbVaiTro.setSelectedIndex(i);
+            }
+        }
+//        lblHinhAnh.setToolTipText(model.getHinhAnh());
+//        if (model.getHinhAnh() != null) {
+//            ImageIcon icon = ShareHelper.readLogo(model.getHinhAnh());
+//            lblHinhAnh.setIcon(icon);
+//        }
+        
+    }
+
+    public List<String> validation() {
+
+        List<String> listError = new ArrayList<>();
+
+        if (txtMaNhanVien.getText().equals("")) {
+            listError.add("Mã nhân viên không được bỏ trống");
+            return listError;
+        } else if (txtHoTen.getText().equals("")) {
+            listError.add("Họ tên không được để trống");
+            return listError;
+        } else if (txtCCCD.getText().equals("")) {
+            listError.add("CMND không được để trống");
+            return listError;
+        }
+
+        //check xong hết
+        return listError;
+    }
+
+    // các hàm lấy dữ liệu từ cơ sở dữ liệu
+    public void loadPhongBan() {
+        listAllPhongBan = daoPB.select();
+        DefaultComboBoxModel cbbModel = (DefaultComboBoxModel) cbbPhongBan.getModel();
+        cbbModel.removeAllElements();
+        for (PhongBan s : listAllPhongBan) {
+            cbbModel.addElement(s);
+        }
+        cbbPhongBan.setSelectedIndex(-1);
     }
     
-     public void showCalendar1() {
-        dtChooser1.showPopup();
+    public void loadVaiTro() {
+        listAllVaiTro = daoVT.select();
+        DefaultComboBoxModel cbbModel = (DefaultComboBoxModel) cbbVaiTro.getModel();
+        cbbModel.removeAllElements();
+        for (VaiTro s : listAllVaiTro) {
+            cbbModel.addElement(s);
+        }
+        cbbVaiTro.setSelectedIndex(-1);
+    }
+
+    //Hiển thị lên textfied
+    void edit() {
+        try {
+            String manv = (String) tblNhanVien.getValueAt(this.currentIndex, 0);
+            NhanVien model = dao.findById(manv);
+            if (model != null) {
+                this.setModel(model);
+                //isView(true);
+            }
+        } catch (Exception e) {
+            DialogHelper.alertError(this, "Lỗi truy vấn dữ liệu!");
+        }
+    }
+
+    //Clear
+    void clear() {
+        txtMaNhanVien.setText("");
+        txtHoTen.setText("");
+        txtNgaySinh.setText("");
+        txtSoDienThoai.setText("");
+        txtEmail.setText("");
+        rdoNam.setVisible(false);
+        rdoNu.setVisible(false);
+        txtCCCD.setText("");
+        cbbPhongBan.setVisible(false);
+        cbbVaiTro.setVisible(false);
+    }
+
+    //Add
+    void insert() {
+        NhanVien model = getModel();
+        if (model == null) {
+            return;
+        }
+        try {
+            dao.insert(model);
+            loadEmployee();
+            this.fillTable(listAllEmployee);
+            this.clear();
+            DialogHelper.alert(this, "Thêm mới thành công!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            DialogHelper.alertError(this, "Thêm mới thất bại!");
+        }
+    }
+
+    //Update
+    void update() {
+        NhanVien model = getModel();
+        if (model == null) {
+            return;
+        }
+        try {
+            dao.update(model);
+            loadEmployee();
+            this.fillTable(listAllEmployee);
+            DialogHelper.alert(this, "Cập nhật thành công!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            DialogHelper.alertError(this, "Cập nhật thất bại!");
+        }
+    }
+
+    //Delete
+    void delete() {
+        if (DialogHelper.confirm(this, "Bạn thực sự muốn xóa người học này?")) {
+            String nv = txtMaNhanVien.getText();
+            try {
+                dao.delete(nv);
+                loadEmployee();
+                this.fillTable(listAllEmployee);
+                this.clear();
+                DialogHelper.alert(this, "Xóa thanh công!");
+            } catch (HeadlessException e) {
+                DialogHelper.alertError(this, "Xóa thất bại!");
+            }
+        }
+    }
+
+    //Di chuyển
+    public void setTblSelected(int row) {
+        tblNhanVien.setRowSelectionInterval(row, row);
+        tblNhanVien.scrollRectToVisible(new Rectangle(tblNhanVien.getCellRect(row, 0, true)));
+
+    }
+
+    //Tìm kiếm
+    void fillTable(List<NhanVien> list) {
+
+        tblModel.setRowCount(0);
+        try {
+            String keyword = txtTimKiem.getText();
+
+            for (NhanVien nv : list) {
+                Object[] row = {
+                    nv.getMaNV(),
+                    nv.getHoTen(),
+                    nv.getNgaySinh(),
+                    nv.isGioiTinh(),
+                    nv.getSoDienThoai(),
+                    nv.getEmail(),
+                    nv.getCMND_CCCD(),
+                    nv.getHinhAnh(),
+                    nv.getMaPB(),
+                    nv.getMaVT()
+                };
+                tblModel.addRow(row);
+            }
+        } catch (Exception e) {
+            DialogHelper.alertError(this, "Lỗi truy vấn dữ liệu!");
+        }
+    }
+
+    //Tăng giảm
+    public void initSort() {
+
+        cbbSortBy.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if (cbbSortBy.getSelectedIndex() == 0) {
+                    if (cbbSort.getSelectedIndex() == 0) {
+                        // ten tang dan
+                        fillTable(sortByName(false));
+                    } else if (cbbSort.getSelectedIndex() == 1) {
+                        // ten giam dan
+                        fillTable(sortByName(true));
+                    }
+                } else {
+                    cbbSortBy.setSelectedIndex(0);
+                }
+            }
+        });
+
+        cbbSort.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if (cbbSort.getSelectedIndex() == 0) {
+                    if (cbbSort.getSelectedIndex() == 0) {
+                        // ten tang dan
+                        fillTable(sortByName(false));
+                    } else if (cbbSort.getSelectedIndex() == 1) {
+                        // ten giam dan
+                        fillTable(sortByName(true));
+                    }
+                } else {
+                    cbbSortBy.setSelectedIndex(0);
+                }
+            }
+        });
+    }
+
+    public List<NhanVien> sortByName(boolean isRevese) {
+        List<NhanVien> listSorted = listAllEmployee;
+        Collections.sort(listSorted, new Comparator<NhanVien>() {
+            public int compare(NhanVien employee1, NhanVien employee2) {
+                int result = 0;
+                String[] partNameEmployee1 = employee1.getHoTen().split("\\s");
+                String[] partNameEmployee2 = employee2.getHoTen().split("\\s");
+
+                int nameLenght1 = partNameEmployee1.length;
+                int nameLenght2 = partNameEmployee2.length;
+
+                if (nameLenght1 == 1 && nameLenght2 == 1) {
+                    return employee1.getHoTen().compareToIgnoreCase(employee2.getHoTen());
+                }
+
+                int length = ((nameLenght1 > nameLenght2) ? nameLenght2 : nameLenght1);
+                for (int i = 1; i < length; i++) {
+                    result = (partNameEmployee1[nameLenght1 - i]).compareToIgnoreCase(partNameEmployee2[nameLenght2 - i]);
+                    if (result != 0) {
+                        return result;
+                    }
+                }
+                if (nameLenght1 > nameLenght2) {
+                    return 1;
+                } else if (nameLenght1 < nameLenght2) {
+                    return -1;
+                }
+
+                return 0;
+            }
+        });
+
+        if (isRevese) {
+            Collections.reverse(listSorted);
+        }
+
+        return listSorted;
     }
 
     /**
@@ -55,9 +392,9 @@ public class QuanLyNhanVien extends javax.swing.JPanel {
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         lblHinhAnh = new javax.swing.JLabel();
-        cbbSapXepTheo = new com.ui.swing.Combobox();
+        cbbSortBy = new com.ui.swing.Combobox();
         lblSort = new javax.swing.JLabel();
-        cbbSapXepTangGiam = new com.ui.swing.Combobox();
+        cbbSort = new com.ui.swing.Combobox();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblNhanVien = new com.ui.swing.Table();
         jLabel1 = new javax.swing.JLabel();
@@ -92,7 +429,6 @@ public class QuanLyNhanVien extends javax.swing.JPanel {
         pnlUpdate3.setPreferredSize(new java.awt.Dimension(1680, 1000));
         pnlUpdate3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        txtTimKiem.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
         txtTimKiem.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(0, 0, 0)));
         txtTimKiem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -119,15 +455,12 @@ public class QuanLyNhanVien extends javax.swing.JPanel {
         jLabel4.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         jLabel4.setText("Mã nhân viên");
         pnlUpdate3.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 200, -1, -1));
-
-        txtMaNhanVien.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
         pnlUpdate3.add(txtMaNhanVien, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 220, 340, 35));
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         jLabel5.setText("Họ và tên");
         pnlUpdate3.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 270, -1, -1));
 
-        txtHoTen.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
         txtHoTen.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtHoTenActionPerformed(evt);
@@ -155,15 +488,15 @@ public class QuanLyNhanVien extends javax.swing.JPanel {
         });
         pnlUpdate3.add(lblHinhAnh, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 20, 130, 160));
 
-        cbbSapXepTheo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Học Phí", "Thời Lượng" }));
-        cbbSapXepTheo.setSelectedIndex(-1);
-        cbbSapXepTheo.setLabeText("Sort by");
-        cbbSapXepTheo.addActionListener(new java.awt.event.ActionListener() {
+        cbbSortBy.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Mã Nhân Viên", "Tên Nhân Viên" }));
+        cbbSortBy.setSelectedIndex(-1);
+        cbbSortBy.setLabeText("Sort by");
+        cbbSortBy.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbbSapXepTheoActionPerformed(evt);
+                cbbSortByActionPerformed(evt);
             }
         });
-        pnlUpdate3.add(cbbSapXepTheo, new org.netbeans.lib.awtextra.AbsoluteConstraints(940, 0, 270, 54));
+        pnlUpdate3.add(cbbSortBy, new org.netbeans.lib.awtextra.AbsoluteConstraints(940, 0, 270, 54));
 
         lblSort.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -172,23 +505,28 @@ public class QuanLyNhanVien extends javax.swing.JPanel {
         });
         pnlUpdate3.add(lblSort, new org.netbeans.lib.awtextra.AbsoluteConstraints(890, 30, 32, 35));
 
-        cbbSapXepTangGiam.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tăng dần", "Giảm dần" }));
-        cbbSapXepTangGiam.setLabeText("");
-        cbbSapXepTangGiam.addActionListener(new java.awt.event.ActionListener() {
+        cbbSort.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tăng dần", "Giảm dần" }));
+        cbbSort.setLabeText("");
+        cbbSort.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbbSapXepTangGiamActionPerformed(evt);
+                cbbSortActionPerformed(evt);
             }
         });
-        pnlUpdate3.add(cbbSapXepTangGiam, new org.netbeans.lib.awtextra.AbsoluteConstraints(1240, 0, 120, 54));
+        pnlUpdate3.add(cbbSort, new org.netbeans.lib.awtextra.AbsoluteConstraints(1240, 0, 120, 54));
 
         tblNhanVien.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Mã nhân viên", "Họ tên nhân viên", "Ngày sinh", "Giới tính", "Số điện thoại", "CCCD/CMND", "Hình ảnh", "Phòng ban", "Vai trò"
+                "Mã nhân viên", "Họ tên nhân viên", "Ngày sinh", "Giới tính", "Số điện thoại", "Email", "CCCD/CMND", "Hình ảnh", "Phòng ban", "Vai trò"
             }
         ));
+        tblNhanVien.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblNhanVienMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tblNhanVien);
 
         pnlUpdate3.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 70, 1200, 870));
@@ -214,8 +552,6 @@ public class QuanLyNhanVien extends javax.swing.JPanel {
         jLabel11.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         jLabel11.setText("Phòng ban");
         pnlUpdate3.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 680, -1, -1));
-
-        txtNgaySinh.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
         pnlUpdate3.add(txtNgaySinh, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 350, 290, 35));
 
         buttonGroup1.add(rdoNam);
@@ -232,11 +568,7 @@ public class QuanLyNhanVien extends javax.swing.JPanel {
         rdoNu.setText("Nữ");
         rdoNu.setContentAreaFilled(false);
         pnlUpdate3.add(rdoNu, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 430, 50, -1));
-
-        txtSoDienThoai.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
         pnlUpdate3.add(txtSoDienThoai, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 500, 340, 35));
-
-        txtCCCD.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
         pnlUpdate3.add(txtCCCD, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 640, 340, 35));
 
         btnMoi.setBackground(new java.awt.Color(24, 37, 153));
@@ -263,7 +595,7 @@ public class QuanLyNhanVien extends javax.swing.JPanel {
 
         btnSua.setBackground(new java.awt.Color(0, 153, 0));
         btnSua.setForeground(new java.awt.Color(255, 255, 255));
-        btnSua.setText("Sửa");
+        btnSua.setText("Lưu");
         btnSua.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         btnSua.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -281,7 +613,7 @@ public class QuanLyNhanVien extends javax.swing.JPanel {
                 btnThemActionPerformed(evt);
             }
         });
-        pnlUpdate3.add(btnThem, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 840, 80, -1));
+        pnlUpdate3.add(btnThem, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 840, 80, -1));
 
         cbbVaiTro.setLabeText("");
         cbbVaiTro.addActionListener(new java.awt.event.ActionListener() {
@@ -302,8 +634,6 @@ public class QuanLyNhanVien extends javax.swing.JPanel {
         jLabel12.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         jLabel12.setText("Email");
         pnlUpdate3.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 540, -1, -1));
-
-        txtEmail.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
         pnlUpdate3.add(txtEmail, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 570, 340, 35));
 
         btnFirst.setBackground(new java.awt.Color(51, 0, 255));
@@ -323,6 +653,11 @@ public class QuanLyNhanVien extends javax.swing.JPanel {
         btnLast.setText("|<");
         btnLast.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         btnLast.setPreferredSize(new java.awt.Dimension(45, 27));
+        btnLast.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLastActionPerformed(evt);
+            }
+        });
         pnlUpdate3.add(btnLast, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 890, 70, 30));
 
         btnPre.setBackground(new java.awt.Color(51, 0, 255));
@@ -330,6 +665,11 @@ public class QuanLyNhanVien extends javax.swing.JPanel {
         btnPre.setText("<<");
         btnPre.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         btnPre.setPreferredSize(new java.awt.Dimension(45, 27));
+        btnPre.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPreActionPerformed(evt);
+            }
+        });
         pnlUpdate3.add(btnPre, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 890, 80, 30));
 
         btnNext.setBackground(new java.awt.Color(51, 0, 255));
@@ -337,6 +677,11 @@ public class QuanLyNhanVien extends javax.swing.JPanel {
         btnNext.setText(">>");
         btnNext.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         btnNext.setPreferredSize(new java.awt.Dimension(45, 27));
+        btnNext.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNextActionPerformed(evt);
+            }
+        });
         pnlUpdate3.add(btnNext, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 890, 80, 30));
 
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/happywedding/assets/Calendar.png"))); // NOI18N
@@ -364,11 +709,11 @@ public class QuanLyNhanVien extends javax.swing.JPanel {
     }//GEN-LAST:event_txtTimKiemActionPerformed
 
     private void txtTimKiemKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTimKiemKeyReleased
-        
+        filtEmployee(txtTimKiem.getText());
     }//GEN-LAST:event_txtTimKiemKeyReleased
 
     private void lblSearchMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblSearchMouseClicked
-     
+
     }//GEN-LAST:event_lblSearchMouseClicked
 
     private void txtHoTenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtHoTenActionPerformed
@@ -376,20 +721,20 @@ public class QuanLyNhanVien extends javax.swing.JPanel {
     }//GEN-LAST:event_txtHoTenActionPerformed
 
     private void lblHinhAnhMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblHinhAnhMouseClicked
-        
+
     }//GEN-LAST:event_lblHinhAnhMouseClicked
 
-    private void cbbSapXepTheoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbbSapXepTheoActionPerformed
+    private void cbbSortByActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbbSortByActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_cbbSapXepTheoActionPerformed
+    }//GEN-LAST:event_cbbSortByActionPerformed
 
     private void lblSortMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblSortMouseClicked
 
     }//GEN-LAST:event_lblSortMouseClicked
 
-    private void cbbSapXepTangGiamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbbSapXepTangGiamActionPerformed
+    private void cbbSortActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbbSortActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_cbbSapXepTangGiamActionPerformed
+    }//GEN-LAST:event_cbbSortActionPerformed
 
     private void rdoNamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdoNamActionPerformed
         // TODO add your handling code here:
@@ -397,18 +742,24 @@ public class QuanLyNhanVien extends javax.swing.JPanel {
 
     private void btnMoiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMoiActionPerformed
         // TODO add your handling code here:
+        clear();
     }//GEN-LAST:event_btnMoiActionPerformed
 
     private void btnXoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXoaActionPerformed
         // TODO add your handling code here:
+        delete();
     }//GEN-LAST:event_btnXoaActionPerformed
 
     private void btnSuaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuaActionPerformed
         // TODO add your handling code here:
+        // isUpdate(true);
+        update();
+        //  isView(true);
     }//GEN-LAST:event_btnSuaActionPerformed
 
     private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemActionPerformed
         // TODO add your handling code here:
+        insert();
     }//GEN-LAST:event_btnThemActionPerformed
 
     private void cbbVaiTroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbbVaiTroActionPerformed
@@ -421,11 +772,52 @@ public class QuanLyNhanVien extends javax.swing.JPanel {
 
     private void btnFirstActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFirstActionPerformed
         // TODO add your handling code here:
+        currentIndex = tblNhanVien.getRowCount() - 1;
+        setTblSelected(currentIndex);
+        //isUpdate(false);
+        edit();
     }//GEN-LAST:event_btnFirstActionPerformed
 
     private void jLabel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MouseClicked
-      showCalendar1();
+        showCalendar1();
     }//GEN-LAST:event_jLabel2MouseClicked
+
+    private void tblNhanVienMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblNhanVienMouseClicked
+        // TODO add your handling code here:
+        currentIndex = tblNhanVien.rowAtPoint(evt.getPoint());
+
+        if (this.currentIndex >= 0) {
+            this.edit();
+            if (evt.getClickCount() == 2) {
+                // isUpdate(true);
+
+            }
+        }
+    }//GEN-LAST:event_tblNhanVienMouseClicked
+
+    private void btnLastActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLastActionPerformed
+        // TODO add your handling code here:
+        currentIndex = 0;
+        setTblSelected(currentIndex);
+        //isUpdate(false);
+        edit();
+    }//GEN-LAST:event_btnLastActionPerformed
+
+    private void btnPreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPreActionPerformed
+        // TODO add your handling code here:
+        currentIndex--;
+        setTblSelected(currentIndex);
+        //isUpdate(false);
+        edit();
+    }//GEN-LAST:event_btnPreActionPerformed
+
+    private void btnNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNextActionPerformed
+        // TODO add your handling code here:
+        currentIndex++;
+        setTblSelected(currentIndex);
+        // isUpdate(false);
+        edit();
+    }//GEN-LAST:event_btnNextActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -439,8 +831,8 @@ public class QuanLyNhanVien extends javax.swing.JPanel {
     private com.ui.swing.InkwellButton btnXoa;
     private javax.swing.ButtonGroup buttonGroup1;
     private com.ui.swing.Combobox cbbPhongBan;
-    private com.ui.swing.Combobox cbbSapXepTangGiam;
-    private com.ui.swing.Combobox cbbSapXepTheo;
+    private com.ui.swing.Combobox cbbSort;
+    private com.ui.swing.Combobox cbbSortBy;
     private com.ui.swing.Combobox cbbVaiTro;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;

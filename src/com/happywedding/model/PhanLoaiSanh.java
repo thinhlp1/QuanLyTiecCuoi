@@ -11,7 +11,10 @@ public class PhanLoaiSanh{
 
     public PhanLoaiSanh() {
     }
-    
+     @Override
+    public String toString() {
+      return tenPL ;
+    }
     
     
     public String getMaPL() {

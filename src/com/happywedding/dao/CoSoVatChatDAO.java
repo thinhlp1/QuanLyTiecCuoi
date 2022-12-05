@@ -21,7 +21,8 @@ public class CoSoVatChatDAO extends AbstractDAO<CoSoVatChat> {
     private final String INSERT_CSVC = "INSERT INTO CoSoVatChat(MaCSVC,TenCSVC,MaDMC,SoLuong,GiaThue,GhiChu)VALUES(?,?,?,?,?,?)";
     private final String UPDATE_CSVC = "UPDATE CoSoVatChat SET TenCSVC = ?,MaDMC = ?,SoLuong = ?,GiaThue = ?,GhiChu = ? WHERE MaCSVC = ?";
     private final String DELELTE_CSVC = "DELETE FROM CoSoVatChat WHERE MaCSVC = ?";
-    private final String SELECT_ALL = "SELECT MaCSVC,TenCSVC,csvc.MaDMC,SoLuong,GiaThue,GhiChu,dm.MaDM FROM CoSoVatChat csvc INNER JOIN DanhMucCon dmc ON csvc.MaDMC = dmc.MaDMC \n"
+    private final String SELECT_ALL = "SELECT csvc.MaCSVC,csvc.TenCSVC,dmc.MaDMC,dmc.TenDM,csvc.SoLuong,csvc.GiaThue,csvc.GhiChu,dm.MaDM,dm.TenDM FROM CoSoVatChat csvc INNER JOIN DanhMucCon dmc ON csvc.MaDMC = dmc.MaDMC INNER JOIN DanhMuc dm ON dm.MaDM = dmc.MaDM";       
+    private final String SELECT_ALL_CSVC = "SELECT MaCSVC,TenCSVC,csvc.MaDMC,SoLuong,GiaThue,GhiChu,dm.MaDM FROM CoSoVatChat csvc INNER JOIN DanhMucCon dmc ON csvc.MaDMC = dmc.MaDMC \n"
             + "INNER JOIN DanhMuc dm ON dm.MaDM = dmc.MaDM";
     private final String SELECT_BY_ID = "SELECT MaCSVC,TenCSVC,csvc.MaDMC,SoLuong,GiaThue,GhiChu,dm.MaDM FROM CoSoVatChat csvc INNER JOIN DanhMucCon dmc ON csvc.MaDMC = dmc.MaDMC \n"
             + "INNER JOIN DanhMuc dm ON dm.MaDM = dmc.MaDM WHERE MaCSVC = ?";
@@ -95,9 +96,11 @@ public class CoSoVatChatDAO extends AbstractDAO<CoSoVatChat> {
         CoSoVatChat model = new CoSoVatChat();
         model.setMaCSVC(rs.getString("MaCSVC"));
         model.setTenCSVC(rs.getString("TenCSVC"));
-        model.setMaCSVC(rs.getString("MaCSVC"));
+        
         model.setMaDanhMuc(rs.getString("MaDM"));
+    //    model.setTenDanhMuc(rs.getString("TenDM"));
         model.setMaDanhMucCon(rs.getString("MaDMC"));
+       // model.setMaDanhMucCon(rs.getString("MaDMC"));
         model.setGiaThue(rs.getLong("GiaThue"));
         model.setSoLuong(rs.getInt("SoLuong"));
         model.setGhiChu(rs.getString("GhiChu"));
