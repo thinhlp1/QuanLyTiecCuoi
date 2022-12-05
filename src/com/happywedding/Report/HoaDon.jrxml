@@ -115,12 +115,7 @@ WHERE
 	<field name="HoaDon_TrangThai" class="java.lang.Integer"/>
 	<field name="HoaDon_MaNLLan2" class="java.lang.String"/>
 	<background>
-		<band height="802">
-			<image>
-				<reportElement x="169" y="268" width="225" height="225" uuid="e6ea0fad-78b6-4dbd-8e39-8025a950126a"/>
-				<imageExpression><![CDATA["C:\\Users\\ACER\\Desktop\\QuanLyTiecCuoi\\src\\com\\happywedding\\assets\\bgReport.jpg"]]></imageExpression>
-			</image>
-		</band>
+		<band height="802"/>
 	</background>
 	<title>
 		<band height="222" splitType="Stretch">
