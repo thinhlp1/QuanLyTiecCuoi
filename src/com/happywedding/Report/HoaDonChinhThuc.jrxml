@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="765aa5ba-2f0e-4d12-b60d-212bb4bc325f">
 	<property name="ireport.zoom" value="1.3310000000000026"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="371"/>
+	<property name="ireport.y" value="297"/>
 	<parameter name="MaHD" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
@@ -317,7 +317,7 @@ WHERE
 		<band splitType="Stretch"/>
 	</pageFooter>
 	<summary>
-		<band height="147" splitType="Stretch">
+		<band height="127" splitType="Stretch">
 			<staticText>
 				<reportElement x="184" y="59" width="65" height="18" uuid="b0f0be6a-6816-417a-b0b6-a3451537e439"/>
 				<textElement verticalAlignment="Middle">
@@ -354,7 +354,7 @@ WHERE
 				<text><![CDATA[Đã đặt cọc vào ngày]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="-1" y="129" width="68" height="18" uuid="ad1964b9-4cf4-4c92-8b21-ab5e95c44407"/>
+				<reportElement x="-1" y="105" width="68" height="18" uuid="ad1964b9-4cf4-4c92-8b21-ab5e95c44407"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Arial" size="12" isBold="false" isUnderline="false"/>
 				</textElement>

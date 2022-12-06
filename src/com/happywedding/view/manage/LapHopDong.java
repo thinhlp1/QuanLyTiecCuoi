@@ -1196,6 +1196,28 @@ public class LapHopDong extends javax.swing.JPanel {
         return false;
     }
 
+    public boolean checkSanh() {
+        HopDong hopDong = hopDongDAO.checkSanh(((Sanh) cbbSanh.getSelectedItem()).getMaSanh(), DateHelper.toDate(txtNgayToChuc.getText(), "dd/MM/yyyy"),
+                txtBatDau.getText(), txtKetThuc.getText(), this.maHD);
+        if (hopDong != null) {
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+                taThongBaoSanh.setText("Sảnh đã được đặt tại hợp đồng: " + hopDong.getMaHD()
+                        + "\nNgày tổ chức: " + DateHelper.toString(hopDong.getNgayToChuc(), "dd/MM/yyyy")
+                        + "\nGiờ bắt đầu: " + sdf.format(sdf.parse(hopDong.getThoiGianBatDau()))
+                        + "\nGiờ kết thúc: " + sdf.format(sdf.parse(hopDong.getThoiGianKetThuc()))
+                );
+                return true;
+            } catch (ParseException ex) {
+                Logger.getLogger(LapHopDong.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            taThongBaoSanh.setText("Sảnh chưa có lịch đặt tiệc");
+            return false;
+        }
+        return false;
+    }
+
     private static net.sf.jasperreports.engine.JasperReport loadJasperReport(String reportName) {
         try {
             System.out.println(reportName);
@@ -1820,7 +1842,7 @@ public class LapHopDong extends javax.swing.JPanel {
 
         txtThueThanhTien.setEditable(false);
         txtThueThanhTien.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
-        txtThueThanhTien.setText("10");
+        txtThueThanhTien.setText("0");
         txtThueThanhTien.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtThueThanhTienActionPerformed(evt);
@@ -2379,9 +2401,13 @@ public class LapHopDong extends javax.swing.JPanel {
                         txtTongTien.setText(ShareHelper.toMoney(tongTien));
                         txtTienCoc.setText(ShareHelper.toMoney(tienCoc));
                         lblThanhChu.setText("( " + EnglishNumberToWords.convert(tongTien) + " )");
+                        txtThueThanhTien.setText((ShareHelper.toMoney(tienThue)));
                     } else {
                         reloadHopDongVoiSanh(((Sanh) cbbSanh.getSelectedItem()).getMaSanh(), (Integer.parseInt(txtSLBan.getText())));
+                        
                     }
+                    checkSanh();
+                    lblKiemTra.requestFocus();
                 }
             } catch (Exception e) {
             }
@@ -2444,10 +2470,12 @@ public class LapHopDong extends javax.swing.JPanel {
                         txtChiPhi.setText(ShareHelper.toMoney(chiPhi));
                         txtTongTien.setText(ShareHelper.toMoney(tongTien));
                         txtTienCoc.setText(ShareHelper.toMoney(tienCoc));
+                        txtThueThanhTien.setText((ShareHelper.toMoney(tienThue)));
                         lblThanhChu.setText("( " + EnglishNumberToWords.convert(tongTien) + " )");
                     } else {
                         reloadHopDongVoiSanh(((Sanh) cbbSanh.getSelectedItem()).getMaSanh(), (Integer.parseInt(txtSLBan.getText())));
                     }
+                    lblKiemTra.requestFocus();
                 }
             } catch (Exception e) {
             }

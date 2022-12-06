@@ -1451,3 +1451,33 @@ BEGIN
 	GROUP BY  IIF(hd.TrangThai = 0, YEAR(hd.NgayLap),YEAR(NgayLapLan2))
 	ORDER BY Nam ASC
 END
+
+
+
+
+GO
+CREATE PROC thongKeDoanhThuThang @Nam int
+AS
+BEGIN
+	--DECLARE		
+	SELECT SUM(IIF(hd.TrangThai = 0,TienCoc,TongTien )) AS TongDoanhThu ,
+	IIF(hd.TrangThai = 0, MONTH(hd.NgayLap),MONTH(NgayLapLan2)) AS Thang ,
+	MAX (  IIF(hd.TrangThai = 0,TienCoc,TongTien ) ) AS DoanhThuCaoNhat,
+	MIN ( IIF(hd.TrangThai = 0,TienCoc,TongTien ) ) AS DoanhThuThapNhat,
+	COUNT(hd.MaHD) AS SoLuongHopDong
+	FROM HopDong hdd INNER JOIN HoaDon hd ON hdd.MaHD = hd.MaHD 
+	WHERE IIF(hd.TrangThai = 0, YEAR(hd.NgayLap),YEAR(NgayLapLan2)) = @Nam
+	GROUP BY  IIF(hd.TrangThai = 0, MONTH(hd.NgayLap),MONTH(NgayLapLan2))
+	ORDER BY Thang
+	
+END
+
+
+
+GO
+CREATE FUNCTION formatMoney (@Tien bigint)
+RETURNS VARCHAR(255)
+AS
+BEGIN
+RETURN SUBSTRING(FORMAT(@Tien, 'c', 'vi-VN'),0, LEN(FORMAT(@Tien, 'c', 'vi-VN'))-4)
+END

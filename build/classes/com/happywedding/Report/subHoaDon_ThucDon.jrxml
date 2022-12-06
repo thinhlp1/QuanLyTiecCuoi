@@ -7,21 +7,19 @@
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT  ROW_NUMBER() over(ORDER BY X.MaTD ) AS STT,* FROM (  SELECT DISTINCT  td.MaTD,td.TenTD,TenMA, ct.ThuTu,
-	 IIF(ct.SoLuong = -1,'CXD',CAST(ct.SoLuong AS varchar)) AS SoLuong ,
+		<![CDATA[SELECT DISTINCT td.MaTD,td.TenTD,TenMA, ct.ThuTu,
+		 IIF(ct.SoLuong = -1,'CXD',CAST(ct.SoLuong AS varchar)) AS SoLuong ,
 		(  IIF ( ct.SoLuong * ma.GiaTien < 0, 'CXD',CAST(( ct.SoLuong * ma.GiaTien + ct.ChiPhiPhatSinh ) AS varchar) )  )AS TongChiPhi,
-
-		( ( SELECT SUM(ChiPhi) FROM DichVuDatMon WHERE MaHD = $P{MaHD} )  + 
-		  ( SELECT SUM(ChiPhiPhatSinh * SoLuong)  FROM ChiTietDatMon WHERE MaHD = $P{MaHD}  )  ) AS TongPhaiTra
-	 FROM ChiTietDatMon ct
+		( ( SELECT SUM(ChiPhi) FROM DichVuDatMon WHERE MaHD = 'HD20221206001' )  +  ( SELECT SUM(IIF(ChiPhiPhatSinh IS NULL,0,ChiPhiPhatSinh)) FROM DichVuDatMon WHERE MaHD =  $P{MaHD} ) + 
+		  ( SELECT SUM(ChiPhiPhatSinh * SoLuong)  FROM ChiTietDatMon WHERE MaHD =  $P{MaHD} )  ) AS TongPhaiTra
+		FROM ChiTietDatMon ct
 		INNER JOIN MonAn ma ON ct.MaMA = ma.MaMA 
 		INNER JOIN DichVuDatMon dv ON dv.MaTD = ct.MaTD
 		INNER JOIN ThucDon td ON dv.MaTD = td.MaTD
-		WHERE ct.MaHD =  $P{MaHD}
+		WHERE ct.MaHD =  $P{MaHD} 
 		
-		) AS X]]>
+		order by td.MaTD,thutu asc]]>
 	</queryString>
-	<field name="STT" class="java.lang.Long"/>
 	<field name="MaTD" class="java.lang.String"/>
 	<field name="TenTD" class="java.lang.String"/>
 	<field name="TenMA" class="java.lang.String"/>

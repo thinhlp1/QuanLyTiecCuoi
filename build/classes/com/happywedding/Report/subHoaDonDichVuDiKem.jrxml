@@ -7,15 +7,14 @@
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT ROW_NUMBER() OVER ( ORDER BY ct.MaHD ASC ) AS STT,ct.MaHD,dv.MaDV,dv.TenDV, IIF(ct.SoLuong = -1,'CXD',CAST(Gia * SoLuong AS varchar)) AS ChiPhi,ct.GhiChu,ct.ChiPhiPhatSinh, IIF(ct.SoLuong = -1,'CXD',CAST(ct.SoLuong AS varchar)) AS SoLuong ,
-  hddv.ChiPhi AS TongChiPhi, ( SELECT SUM(ChiPhiPhatSinh)  FROM ChiTietDichVuDiKem WHERE MaHD = $P{MaHD} ) AS TongChiPhiPhatSinh, 
-( hddv.ChiPhi +  (SELECT SUM(ChiPhiPhatSinh)  FROM ChiTietDichVuDiKem WHERE MaHD = $P{MaHD})) AS TongChiPhiPhaiTra
+		<![CDATA[SELECT ct.MaHD,dv.MaDV,dv.TenDV, IIF(ct.SoLuong = -1,'CXD',CAST(Gia AS varchar))  AS ChiPhi,ct.GhiChu,ct.ChiPhiPhatSinh, IIF(ct.SoLuong = -1,'CXD',CAST(ct.SoLuong AS varchar)) AS SoLuong ,
+hddv.ChiPhi AS TongChiPhi, ( SELECT SUM(ChiPhiPhatSinh)  FROM ChiTietDichVuDiKem WHERE MaHD = $P{MaHD} ) AS TongChiPhiPhatSinh, 
+( hddv.ChiPhi +  (SELECT SUM(ChiPhiPhatSinh)  FROM ChiTietDichVuDiKem WHERE MaHD =$P{MaHD} ) + hddv.ChiPhiPhatSinh ) AS TongChiPhiPhaiTra
 FROM ChiTietDichVuDiKem ct
 INNER JOIN DichVuDiKem  dv ON ct.MaDV = dv.MaDV
 INNER JOIN HopDongDichVuDiKem hddv ON hddv.MaHD = ct.MaHD
 WHERE ct.MaHD = $P{MaHD}]]>
 	</queryString>
-	<field name="STT" class="java.lang.Long"/>
 	<field name="MaHD" class="java.lang.String"/>
 	<field name="MaDV" class="java.lang.String"/>
 	<field name="TenDV" class="java.lang.String"/>
