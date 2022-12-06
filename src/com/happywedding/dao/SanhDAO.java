@@ -24,6 +24,7 @@ public class SanhDAO extends AbstractDAO<Sanh>{
     private final String DELELTE_SANH = "DELETE FROM Sanh WHERE MaSanh=?";
     private final String SELECT_ALL = "SELECT MaSanh, TenSanh, Sanh.MaPL, TenPL, SucChua, GiaThueSanh, GiaBan from Sanh inner join PhanLoaiSanh on Sanh.MaPL = PhanLoaiSanh.MaPL";
     private final String SELECT_BY_ID = "SELECT MaSanh, TenSanh, Sanh.MaPL, TenPL, SucChua, GiaThueSanh, GiaBan from Sanh inner join PhanLoaiSanh on Sanh.MaPL = PhanLoaiSanh.MaPL WHERE MaSanh=?";
+    private final String SELECT_BY_NAME = "SELECT MaSanh, TenSanh, Sanh.MaPL, TenPL, SucChua, GiaThueSanh, GiaBan from Sanh inner join PhanLoaiSanh on Sanh.MaPL = PhanLoaiSanh.MaPL WHERE TenSanh=?";
    
 
     public boolean insert(Sanh sanh) {
@@ -62,6 +63,12 @@ public class SanhDAO extends AbstractDAO<Sanh>{
     public Sanh findById(String id) {
         //System.out.println("Đang thực hiện tìm theo mã");
         List<Sanh> list = select(SELECT_BY_ID, id);
+        return list.size() > 0 ? list.get(0) : null;
+    }
+    
+       public Sanh findByName(String id) {
+        //System.out.println("Đang thực hiện tìm theo mã");
+        List<Sanh> list = select(SELECT_BY_NAME, id);
         return list.size() > 0 ? list.get(0) : null;
     }
 

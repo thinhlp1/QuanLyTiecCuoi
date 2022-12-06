@@ -98,7 +98,7 @@ public class DatMon extends javax.swing.JDialog {
         this.soBanPhu = soBanPhu;
         initComponents();
         init();
-        
+
     }
 
     public void init() {
@@ -173,11 +173,9 @@ public class DatMon extends javax.swing.JDialog {
             }
 
         });
-        
-      
 
         spnSoBanChinh.setModel(new SpinnerNumberModel(soLuongBan, soLuongBan - 3, soLuongBan, 1));
-          JFormattedTextField tf = ((JSpinner.DefaultEditor) spnSoBanChinh.getEditor()).getTextField();
+        JFormattedTextField tf = ((JSpinner.DefaultEditor) spnSoBanChinh.getEditor()).getTextField();
         tf.setEditable(false);
         spnSoBanChinh.setUI(new BasicSpinnerUI());
 
@@ -224,13 +222,14 @@ public class DatMon extends javax.swing.JDialog {
 
         fillTableThucDon(listChiTietDatMon);
         filtedMonAn();
-
+       
         isView(isCreate);
         if (isThucDonPhu) {
             spnSoBanChinh.setValue(soLuongBan - soBanPhu);
             spnSoBanChinh.setEnabled(false);
             lblBanPhu.setText(soBanPhu + "");
         }
+        tinhTien();
 
     }
 
@@ -504,9 +503,9 @@ public class DatMon extends javax.swing.JDialog {
         }
         autoSetSoLuong();
 
-        if (isThucDonPhu) {
+        //if (isThucDonPhu) {
             tinhTien();
-        }
+       // }
     }
 
     public void fillTableMonAn(List<MonAn> list) {
@@ -1061,6 +1060,17 @@ public class DatMon extends javax.swing.JDialog {
             if (isDispose) {
                 if (!isThucDonPhu) {
                     if ((chiTietDatMonDAO.selectThucDonChinh(maHD).equals(chiTietDatMonDAO.selectThucDonPhu(maHD))) && (Integer.parseInt(lblBanPhu.getText()) != 0)) {
+                        DialogHelper.alertError(this, "Vui lòng chọn thực đơn cho bàn phụ");
+                        return;
+                    }
+                }
+            }
+        }
+
+        if (!isThucDonPhu) {
+            if (isDispose) {
+                if (chiTietDatMonDAO.selectThucDonChinh(maHD) == null && chiTietDatMonDAO.selectThucDonPhu(maHD) == null) {
+                    if ((Integer.parseInt(lblBanPhu.getText()) != 0)) {
                         DialogHelper.alertError(this, "Vui lòng chọn thực đơn cho bàn phụ");
                         return;
                     }
