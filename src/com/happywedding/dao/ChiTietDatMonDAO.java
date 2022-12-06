@@ -23,7 +23,7 @@ public class ChiTietDatMonDAO {
 
     private final String INSERT_DICHVUDATMON = "INSERT DichVuDatMon (MaHD,MaTD,ChiPhi, GhiChu) VALUES (?,?,?,?)";
     private final String UPDATE_DICHVUDATMON = "UPDATE DichVuDatMon\n"
-            + "SET MaTD = ?, ChiPhi = ?, GhiChu = ?\n"
+            + "SET MaTD = ?, ChiPhi = ?,ChiPhiPhatSinh = ? ,GhiChu = ?\n"
             + "WHERE MaHD = ? AND MaTD = ?";
     private final String SELECT_DICHVUDATMON = "SELECT MaHD,MaTD,ChiPhi, \n"
             + "( SELECT SUM(ChiPhiPhatSinh * SoLuong)  FROM ChiTietDatMon WHERE MaHD = ? AND  MaTD = ? ) AS ChiPhiPhatSinh,\n"
@@ -53,7 +53,7 @@ public class ChiTietDatMonDAO {
             + "INNER JOIN MonAn ma ON ct.MaMA = ma.MaMA \n"
             + "WHERE MaHD = ? AND MaPL = ?";
     
-    private final String UPDATE_SOLUONG = "UPDATE ChiTietDatMon SET SoLuong = ? WHERE MaHD = ? AND MaMA = ?";
+    private final String UPDATE_SOLUONG = "UPDATE ChiTietDatMon SET SoLuong = ? WHERE MaTD = ? AND MaMA = ?";
     
     private final String SELECT_MONAN_NOTIN_HOPDONG = "SELECT * FROM MonAn WHERE MaMA NOT IN( SELECT MaMA FROM ChiTietDatMon WHERE MaHD = ?  ) ";
     private final String SELECT_MONAN_NOTIN_THUCDON = "SELECT * FROM MonAn WHERE MaMA NOT IN( SELECT MaMA FROM ChiTietThucDon WHERE MaTD = ?  )";
@@ -67,7 +67,7 @@ public class ChiTietDatMonDAO {
     }
 
     public boolean updateDichVuDatMon(DichVuDatMon dvdm, String maTD) {
-        int rs = JDBCHelper.executeUpdate(UPDATE_DICHVUDATMON, dvdm.getMaTD(), dvdm.getChiPhi(), dvdm.getGhiChu(), dvdm.getMaHD(), dvdm.getMaTD());
+        int rs = JDBCHelper.executeUpdate(UPDATE_DICHVUDATMON, dvdm.getMaTD(), dvdm.getChiPhi(), dvdm.getChiPhiPhatSinh(),dvdm.getGhiChu(), dvdm.getMaHD(), dvdm.getMaTD());
         return rs > 0;
     }
 
@@ -132,7 +132,7 @@ public class ChiTietDatMonDAO {
     }
     
     public boolean updateChiTietDatMon(ChiTietDatMon ct){
-        int rs = JDBCHelper.executeUpdate(UPDATE_SOLUONG,ct.getSoLuong(), ct.getMaHD(),ct.getMaMA());
+        int rs = JDBCHelper.executeUpdate(UPDATE_SOLUONG,ct.getSoLuong(), ct.getMaTD(),ct.getMaMA());
         return rs > 0;
     }
 
