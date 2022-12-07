@@ -1365,10 +1365,10 @@ BEGIN
 	DECLARE @ChiPhi bigint,@ChiPhiPhatSinh bigint;
 	DECLARE @chiPhiHopDongDichVu bigint, @chiPhiDatMon bigint, @chiPhiDiKem bigint,@chiPhiSanh bigint , @chiPhiPSDichVu bigint, @chiPhiPSDatMon bigint, @chiPhiPSDiKem bigint;
 	
-	SELECT @chiPhiHopDongDichVu = ( SELECT  SUM( distinct hddv.ChiPhi) AS ChiPhi  FROM HopDongDichVu hddv WHERE hddv.MaHD =  @MaHD) 
+	SELECT @chiPhiHopDongDichVu = ( SELECT  SUM( distinct hddv.ChiPhi) AS ChiPhi  FROM HopDongDichVu hddv WHERE hddv.MaHD = @MaHD) 
 	SELECT @chiPhiDatMon = ( SELECT SUM(ChiPhi) FROM DichVuDatMon WHERE MaHD = @MaHD)
 	SELECT @chiPhiDiKem = ( SELECT ChiPhi FROM HopDongDichVuDiKem WHERE MaHD =@MaHD )
-	SELECT @chiPhiSanh = ( (SELECT (GiaThueSanh + ( GiaBan * hd.SoLuongBan )) AS ChiPhi FROM Sanh s INNER JOIN HopDong hd ON s.MaSanh = hd.Sanh WHERE MaHD =  @MaHD) )
+	SELECT @chiPhiSanh = ( (SELECT (GiaThueSanh + ( GiaBan * hd.SoLuongBan )) AS ChiPhi FROM Sanh s INNER JOIN HopDong hd ON s.MaSanh = hd.Sanh WHERE MaHD = @MaHD) )
 
 	IF @chiPhiHopDongDichVu IS NULL SET @chiPhiHopDongDichVu = 0
 	IF @chiPhiDatMon IS NULL SET @chiPhiDatMon = 0
@@ -1383,7 +1383,7 @@ BEGIN
 							FROM ( SELECT SUM ( distinct ChiPhiPhatSinh)  AS ChiPhiPhatSinh FROM HopDongDichVu hddv INNER JOIN ChiTietDichVu ct ON hddv.MaHD = ct.MaHD
 							WHERE hddv.MaHD = @MaHD GROUP BY ct.MaCSVC ) a )
 	SELECT @chiPhiPSDatMon = ( SELECT SUM( ChiPhiPhatSinh * SoLuong )  FROM ChiTietDatMon WHERE MaHD = @MaHD )
-	SELECT @chiPhiPSDiKem = ( SELECT SUM(ct.ChiPhiPhatSinh) FROM HopDongDichVuDiKem dv INNER JOIN ChiTietDichVuDiKem ct ON dv.MaHD = ct.MaHD WHERE dv.MaHD = @MaHD )
+	SELECT @chiPhiPSDiKem = ( SELECT SUM(ct.ChiPhiPhatSinh * ct.SoLuong) FROM ChiTietDichVuDiKem ct WHERE ct.MaHD = @MaHD )
 
 	IF @chiPhiPSDichVu IS NULL SET @chiPhiPSDichVu = 0
 	IF @chiPhiPSDatMon IS NULL SET @chiPhiPSDatMon = 0
@@ -1422,7 +1422,7 @@ BEGIN
 							FROM ( SELECT SUM ( distinct ChiPhiPhatSinh)  AS ChiPhiPhatSinh FROM HopDongDichVu hddv INNER JOIN ChiTietDichVu ct ON hddv.MaHD = ct.MaHD
 							WHERE hddv.MaHD = @MaHD GROUP BY ct.MaCSVC ) a )
 	SELECT @chiPhiPSDatMon = ( SELECT SUM( ChiPhiPhatSinh * SoLuong )  FROM ChiTietDatMon WHERE MaHD = @MaHD )
-	SELECT @chiPhiPSDiKem = ( SELECT SUM(ct.ChiPhiPhatSinh) FROM HopDongDichVuDiKem dv INNER JOIN ChiTietDichVuDiKem ct ON dv.MaHD = ct.MaHD WHERE dv.MaHD = @MaHD )
+	SELECT @chiPhiPSDiKem = ( SELECT SUM(ct.ChiPhiPhatSinh * ct.SoLuong) FROM ChiTietDichVuDiKem ct WHERE ct.MaHD = @MaHD )
 
 	IF @chiPhiPSDichVu IS NULL SET @chiPhiPSDichVu = 0
 	IF @chiPhiPSDatMon IS NULL SET @chiPhiPSDatMon = 0

@@ -4,26 +4,96 @@
  */
 package com.happywedding.view.manage;
 
+import com.happywedding.dao.SanhDAO;
+import com.happywedding.helper.DateHelper;
+import com.happywedding.helper.DialogHelper;
+import com.happywedding.model.TaiKhoan;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 
+import com.happywedding.dao.TaiKhoanDAO;
+import com.happywedding.helper.AppStatus;
+import com.happywedding.model.HopDong;
+import javax.swing.JOptionPane;
+
+import com.happywedding.dao.VaiTroTaiKhoanDAO;
+import com.happywedding.model.VaiTroTaiKhoan;
 /**
  *
  * @author ACER
  */
 public class QuanLyTaiKhoan extends javax.swing.JPanel {
 
-    /**
-     * Creates new form QuanLyTaiKhoan
-     */
+    private DefaultTableModel tblModel;
+    private int currentIndex = 0;
+    
+    private List<TaiKhoan> listTaiKhoan = new ArrayList<>();
+    private List<TaiKhoan> listFilted = new ArrayList<>();
+    private List<VaiTroTaiKhoan> vaiTroTaiKhoan = new ArrayList<>();
+    
+    private TaiKhoanDAO taiKhoanDAO = new TaiKhoanDAO();
+    
     public QuanLyTaiKhoan() {
         initComponents();
         init();
     }
     
     public void init(){
+        
+        allowEdit(false);
+        
         tblTaiKhoan.fixTable(jScrollPane1);
+        tblModel = (DefaultTableModel) tblTaiKhoan.getModel();
         tblTaiKhoan.setAutoscrolls(true);
+        listTaiKhoan = taiKhoanDAO.select();
+        for (TaiKhoan tk : listTaiKhoan) {
+            listFilted.add(tk);
+        }
+        fillToTable(listTaiKhoan);
+        loadVaiTro();
     }
     
+    public void loadTaiKhoan(int currentIndex){
+       
+        txtMaNhanVien.setText(String.valueOf(tblTaiKhoan.getValueAt(this.currentIndex, 1)));
+        txtTenDangNhap.setText(String.valueOf(tblTaiKhoan.getValueAt(this.currentIndex, 2)));
+        txtMatKhau.setText(String.valueOf(tblTaiKhoan.getValueAt(this.currentIndex, 2)));
+        
+    }
+    
+    public void loadVaiTro(){
+    
+        VaiTroTaiKhoanDAO vaiTroTaiKhoanDAO = new VaiTroTaiKhoanDAO();
+        
+        vaiTroTaiKhoan = vaiTroTaiKhoanDAO.select();
+        for (int i = 0; i < vaiTroTaiKhoan.size(); i++) {
+            String tenVaiTro = vaiTroTaiKhoan.get(i).getTenVT();
+            cbbVaiTro.addItem(tenVaiTro);
+        }
+        
+    }
+    
+    public void fillToTable(List<TaiKhoan> listHopDong) {
+        tblModel.setRowCount(0);
+        try {
+
+            for (TaiKhoan tk : listTaiKhoan) {
+                Object[] row = {
+                    tk.getMaTaiKhoan(),
+                    tk.getMaNhanVien(),
+                    tk.getTenDangNhap(),
+                    tk.getMatKhau(),
+                    tk.getVaiTro()
+                };
+                tblModel.addRow(row);
+            }
+        } catch (Exception e) {
+            DialogHelper.alertError(this, "Có lỗi xảy ra khi load dữ liệu.!");
+        }
+
+    }
     
     public static void main(String[] args) {
        
@@ -41,17 +111,16 @@ public class QuanLyTaiKhoan extends javax.swing.JPanel {
         pnlEmplpyeeManager = new javax.swing.JPanel();
         txtTimKiem = new javax.swing.JTextField();
         lblSearch = new javax.swing.JLabel();
-        txtMaNhanVien = new javax.swing.JTextField();
+        txtTenDangNhap = new javax.swing.JTextField();
         jLabel25 = new javax.swing.JLabel();
         jLabel27 = new javax.swing.JLabel();
         txtMatKhau = new javax.swing.JPasswordField();
         jLabel28 = new javax.swing.JLabel();
         txtXacNhanMatKhau = new javax.swing.JPasswordField();
         jLabel29 = new javax.swing.JLabel();
-        cbbSapXepTheo = new com.ui.swing.Combobox();
+        cbbVaiTro = new com.ui.swing.Combobox();
         cbbSapXepTangGiam = new com.ui.swing.Combobox();
         jLabel31 = new javax.swing.JLabel();
-        txtTenDangNhap = new javax.swing.JPasswordField();
         btnMoi = new com.ui.swing.InkwellButton();
         btnFirst = new com.ui.swing.InkwellButton();
         btnThem = new com.ui.swing.InkwellButton();
@@ -65,6 +134,7 @@ public class QuanLyTaiKhoan extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         cbbSapXepTheo1 = new com.ui.swing.Combobox();
+        txtMaNhanVien = new javax.swing.JTextField();
 
         setPreferredSize(new java.awt.Dimension(1650, 950));
 
@@ -99,13 +169,13 @@ public class QuanLyTaiKhoan extends javax.swing.JPanel {
         });
         pnlEmplpyeeManager.add(lblSearch, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 20, -1, 35));
 
-        txtMaNhanVien.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
-        txtMaNhanVien.addActionListener(new java.awt.event.ActionListener() {
+        txtTenDangNhap.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
+        txtTenDangNhap.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtMaNhanVienActionPerformed(evt);
+                txtTenDangNhapActionPerformed(evt);
             }
         });
-        pnlEmplpyeeManager.add(txtMaNhanVien, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 180, 340, 35));
+        pnlEmplpyeeManager.add(txtTenDangNhap, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 260, 340, 35));
 
         jLabel25.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
         jLabel25.setText("Mã nhân viên");
@@ -134,13 +204,13 @@ public class QuanLyTaiKhoan extends javax.swing.JPanel {
         jLabel29.setText("Vai trò");
         pnlEmplpyeeManager.add(jLabel29, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 480, 130, -1));
 
-        cbbSapXepTheo.setLabeText("");
-        cbbSapXepTheo.addActionListener(new java.awt.event.ActionListener() {
+        cbbVaiTro.setLabeText("");
+        cbbVaiTro.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbbSapXepTheoActionPerformed(evt);
+                cbbVaiTroActionPerformed(evt);
             }
         });
-        pnlEmplpyeeManager.add(cbbSapXepTheo, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 510, 340, 35));
+        pnlEmplpyeeManager.add(cbbVaiTro, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 510, 340, 35));
 
         cbbSapXepTangGiam.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tăng dần", "Giảm dần" }));
         cbbSapXepTangGiam.setLabeText("");
@@ -154,14 +224,6 @@ public class QuanLyTaiKhoan extends javax.swing.JPanel {
         jLabel31.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
         jLabel31.setText("Tên đăng nhập");
         pnlEmplpyeeManager.add(jLabel31, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 230, 130, -1));
-
-        txtTenDangNhap.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
-        txtTenDangNhap.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtTenDangNhapActionPerformed(evt);
-            }
-        });
-        pnlEmplpyeeManager.add(txtTenDangNhap, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 260, 340, 35));
 
         btnMoi.setBackground(new java.awt.Color(81, 194, 225));
         btnMoi.setForeground(new java.awt.Color(255, 255, 255));
@@ -242,7 +304,20 @@ public class QuanLyTaiKhoan extends javax.swing.JPanel {
             new String [] {
                 "Mã tài khoản", "Mã nhân viên", "Tên tài khoản", "Mật khẩu", "Vai trò"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tblTaiKhoan.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblTaiKhoanMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tblTaiKhoan);
 
         pnlEmplpyeeManager.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 100, 1250, 820));
@@ -262,6 +337,14 @@ public class QuanLyTaiKhoan extends javax.swing.JPanel {
             }
         });
         pnlEmplpyeeManager.add(cbbSapXepTheo1, new org.netbeans.lib.awtextra.AbsoluteConstraints(940, 0, 270, 54));
+
+        txtMaNhanVien.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
+        txtMaNhanVien.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtMaNhanVienActionPerformed(evt);
+            }
+        });
+        pnlEmplpyeeManager.add(txtMaNhanVien, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 180, 340, 35));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -306,32 +389,49 @@ public class QuanLyTaiKhoan extends javax.swing.JPanel {
     private void lblSearchMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblSearchMouseClicked
     }//GEN-LAST:event_lblSearchMouseClicked
 
-    private void txtMaNhanVienActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtMaNhanVienActionPerformed
+    private void txtTenDangNhapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTenDangNhapActionPerformed
 
-    }//GEN-LAST:event_txtMaNhanVienActionPerformed
+    }//GEN-LAST:event_txtTenDangNhapActionPerformed
 
     private void txtMatKhauActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtMatKhauActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtMatKhauActionPerformed
 
-    private void cbbSapXepTheoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbbSapXepTheoActionPerformed
+    private void cbbVaiTroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbbVaiTroActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_cbbSapXepTheoActionPerformed
+    }//GEN-LAST:event_cbbVaiTroActionPerformed
 
     private void cbbSapXepTangGiamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbbSapXepTangGiamActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_cbbSapXepTangGiamActionPerformed
 
-    private void txtTenDangNhapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTenDangNhapActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtTenDangNhapActionPerformed
-
     private void btnMoiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMoiActionPerformed
-        // TODO add your handling code here:
+        txtMaNhanVien.setText("");
+        txtTenDangNhap.setText("");
+        txtMatKhau.setText("");
     }//GEN-LAST:event_btnMoiActionPerformed
 
+    public void them(){
+        TaiKhoanDAO taiKhoanDAO = new TaiKhoanDAO();
+        
+        String maNhanVien = txtMaNhanVien.getText();
+        String tenDangNhap = DangNhap.tenTaiKhoan;
+        String matKhau = String.valueOf(txtMatKhau.getPassword());
+        
+        
+        TaiKhoan tk = new TaiKhoan();
+        tk.setTenDangNhap(tenDangNhap);
+        tk.setMatKhau(mk);
+        if(String.valueOf(txtMatKhauMoi.getPassword()).trim().equals("")){
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập mật khẩu");
+            return;
+        }
+        
+        taiKhoanDAO.insert(tk);
+    }
+    
     private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemActionPerformed
-        // TODO add your handling code here:
+        them();
     }//GEN-LAST:event_btnThemActionPerformed
 
     private void btnSuaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuaActionPerformed
@@ -346,6 +446,32 @@ public class QuanLyTaiKhoan extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_cbbSapXepTheo1ActionPerformed
 
+    private void tblTaiKhoanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblTaiKhoanMouseClicked
+        currentIndex = tblTaiKhoan.rowAtPoint(evt.getPoint());
+        if (currentIndex >= 0) {
+            if (evt.getClickCount() == 2) {
+                
+                
+                allowEdit(true);
+            }else{
+                //String maTaiKhoan = String.valueOf(tblTaiKhoan.getValueAt(this.currentIndex, 0));
+                //System.out.println(maTaiKhoan);
+                allowEdit(false);
+                loadTaiKhoan(currentIndex);
+            }
+        }
+    }//GEN-LAST:event_tblTaiKhoanMouseClicked
+
+    private void txtMaNhanVienActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtMaNhanVienActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtMaNhanVienActionPerformed
+
+    public void allowEdit(boolean a){
+        txtTenDangNhap.setEditable(a);
+        txtTenDangNhap.setEditable(a);
+        txtMatKhau.setEditable(a);
+        txtXacNhanMatKhau.setEditable(a);
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.ui.swing.InkwellButton btnFirst;
@@ -357,8 +483,8 @@ public class QuanLyTaiKhoan extends javax.swing.JPanel {
     private com.ui.swing.InkwellButton btnThem;
     private com.ui.swing.InkwellButton btnXoa;
     private com.ui.swing.Combobox cbbSapXepTangGiam;
-    private com.ui.swing.Combobox cbbSapXepTheo;
     private com.ui.swing.Combobox cbbSapXepTheo1;
+    private com.ui.swing.Combobox cbbVaiTro;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel25;
@@ -373,7 +499,7 @@ public class QuanLyTaiKhoan extends javax.swing.JPanel {
     private com.ui.swing.Table tblTaiKhoan;
     private javax.swing.JTextField txtMaNhanVien;
     private javax.swing.JPasswordField txtMatKhau;
-    private javax.swing.JPasswordField txtTenDangNhap;
+    private javax.swing.JTextField txtTenDangNhap;
     private javax.swing.JTextField txtTimKiem;
     private javax.swing.JPasswordField txtXacNhanMatKhau;
     // End of variables declaration//GEN-END:variables

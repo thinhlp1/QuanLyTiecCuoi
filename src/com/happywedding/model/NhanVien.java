@@ -21,6 +21,12 @@ public class NhanVien {
     public NhanVien() {
         
     }
+
+    @Override
+    public String toString() {
+        return maNV+   hoTen;
+    }
+    
     
     
     

@@ -222,13 +222,14 @@ public class DatMon extends javax.swing.JDialog {
 
         fillTableThucDon(listChiTietDatMon);
         filtedMonAn();
-
+       
         isView(isCreate);
         if (isThucDonPhu) {
             spnSoBanChinh.setValue(soLuongBan - soBanPhu);
             spnSoBanChinh.setEnabled(false);
             lblBanPhu.setText(soBanPhu + "");
         }
+        tinhTien();
 
     }
 
@@ -502,9 +503,9 @@ public class DatMon extends javax.swing.JDialog {
         }
         autoSetSoLuong();
 
-        if (isThucDonPhu) {
+        //if (isThucDonPhu) {
             tinhTien();
-        }
+       // }
     }
 
     public void fillTableMonAn(List<MonAn> list) {
@@ -1067,14 +1068,14 @@ public class DatMon extends javax.swing.JDialog {
         }
 
         if (!isThucDonPhu) {
-           if (isDispose){
+            if (isDispose) {
                 if (chiTietDatMonDAO.selectThucDonChinh(maHD) == null && chiTietDatMonDAO.selectThucDonPhu(maHD) == null) {
-                if ((Integer.parseInt(lblBanPhu.getText()) != 0)) {
-                    DialogHelper.alertError(this, "Vui lòng chọn thực đơn cho bàn phụ");
-                    return;
+                    if ((Integer.parseInt(lblBanPhu.getText()) != 0)) {
+                        DialogHelper.alertError(this, "Vui lòng chọn thực đơn cho bàn phụ");
+                        return;
+                    }
                 }
             }
-           }
         }
 
         if (isThucDonPhu) {

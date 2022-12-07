@@ -5,25 +5,371 @@
 package com.happywedding.view.manage;
 
 
+
+import com.happywedding.dao.CoSoVatChatDAO;
+import com.happywedding.dao.DanhMucConDAO;
+import com.happywedding.dao.DanhMucDAO;
+import com.ui.swing.datechooser.DateChooser;
+import com.happywedding.helper.DateHelper;
+import com.happywedding.helper.DialogHelper;
+import com.happywedding.model.CoSoVatChat;
+import com.happywedding.model.DanhMuc;
+import com.happywedding.model.DanhMucCon;
+import java.awt.CardLayout;
+import java.awt.HeadlessException;
+import java.awt.Rectangle;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
+
+import com.ui.swing.datechooser.DateChooser;
+import javax.swing.DefaultComboBoxModel;
+
 /**
  *
  * @author ACER
  */
 public class QuanLyKho extends javax.swing.JPanel {
 
+    private int currentIndex = 0;
+    private CoSoVatChatDAO dao = new CoSoVatChatDAO();
+    private DefaultTableModel tblModel;
+    private List<CoSoVatChat> listAllCSVC;
+    private List<DanhMuc> listAllDanhMuc;
+    private List<DanhMucCon> listAllDanhMucCon;
+
+    private DanhMucDAO daoDM = new DanhMucDAO();
+    private DanhMucConDAO daoDMC = new DanhMucConDAO();
+    private DateChooser dtChooser1 = new DateChooser();
+
+    
     /**
      * Creates new form QuanLyKho
      */
     public QuanLyKho() {
         initComponents();
-      
+        init();
     }
         
     public void init(){
         tblCoSoVatChat.fixTable(jScrollPane1);
         tblCoSoVatChat.setAutoscrolls(true);
+        
+            
+        tblModel = (DefaultTableModel) tblCoSoVatChat.getModel();
+        loadCSVC();
+        loadDanhMuc();
+        loadDanhMucCon();
+        fillTable(listAllCSVC);
+
+        initSort();
     }
     
+    
+    public void showCalendar1() {
+        dtChooser1.showPopup();
+    }
+
+    void loadCSVC() {
+        listAllCSVC = dao.select();
+    }
+    void loadDM() {
+        listAllDanhMuc = daoDM.select();
+    }
+    void loadDMC() {
+        listAllDanhMucCon = daoDMC.select();
+    }
+    
+    
+
+    void filtCSVC(String keyword) {
+        List<CoSoVatChat> list = new ArrayList<>();
+        keyword = keyword.toUpperCase();
+        for (int i = 0; i < listAllCSVC.size(); i++) {
+
+            if (listAllCSVC.get(i).toString().toUpperCase().contains(keyword)) {
+
+                list.add(listAllCSVC.get(i));
+            }
+        }
+        fillTable(list);
+
+    }
+
+    CoSoVatChat getModel() {
+
+        List<String> listErorr = validation();
+
+        if (listErorr.size() != 0) {
+            DialogHelper.alertError(this, listErorr.toString());
+            return null;
+        }
+       
+        
+        CoSoVatChat model = new CoSoVatChat();
+         model.setMaDanhMuc(((DanhMuc) cbbDanhMuc.getSelectedItem() ).getMaDM());
+        model.setMaDanhMucCon(((DanhMucCon) cbbDanhMucCon.getSelectedItem() ).getMaDMC());
+        model.setMaCSVC(txtMaCSVC.getText());
+        model.setTenCSVC(txtTenCSVC.getText());
+        model.setSoLuong(Integer.valueOf(txtSoLuong.getText()));
+        model.setGiaThue(Integer.valueOf(txtGiaThue.getText()));
+        model.setGhiChu(txtGhiChu.getText());
+        
+        return model;
+    }
+
+    void setModel(CoSoVatChat model) {
+        for (int i = 0; i < listAllDanhMuc.size(); i++) {
+            if (model.getMaDanhMuc().equals(listAllDanhMuc.get(i).getMaDM())) {
+                cbbDanhMuc.setSelectedIndex(i);
+            }
+        }
+        for (int i = 0; i < listAllDanhMucCon.size(); i++) {
+            if (model.getMaDanhMucCon().equals(listAllDanhMucCon.get(i).getMaDMC())) {
+                cbbDanhMucCon.setSelectedIndex(i);
+            }
+        }
+        txtMaCSVC.setText(model.getMaCSVC());
+        txtTenCSVC.setText(model.getTenCSVC());
+        txtSoLuong.setText(String.valueOf(model.getSoLuong()));
+        txtGiaThue.setText(String.valueOf(model.getGiaThue()));
+        txtGhiChu.setText(model.getGhiChu());
+    }
+
+    public List<String> validation() {
+
+        List<String> listError = new ArrayList<>();
+
+        if (txtMaCSVC.getText().equals("")) {
+            listError.add("Mã CSVC không được bỏ trống");
+            return listError;
+        } else if (txtTenCSVC.getText().equals("")) {
+            listError.add("Tên CSVC không được để trống");
+            return listError;
+        } else if (txtSoLuong.getText().equals("")) {
+            listError.add("Số lượng không được để trống");
+            return listError;
+        }
+
+        //check xong hết
+        return listError;
+    }
+
+    // các hàm lấy dữ liệu từ cơ sở dữ liệu
+    public void loadDanhMuc() {
+        listAllDanhMuc = daoDM.select();
+        DefaultComboBoxModel cbbModel = (DefaultComboBoxModel) cbbDanhMuc.getModel();
+        cbbModel.removeAllElements();
+        for (DanhMuc s : listAllDanhMuc) {
+            cbbModel.addElement(s);
+        }
+        cbbDanhMuc.setSelectedIndex(-1);
+    }
+    
+    public void loadDanhMucCon() {
+        listAllDanhMucCon = daoDMC.select();
+        DefaultComboBoxModel cbbModel = (DefaultComboBoxModel) cbbDanhMucCon.getModel();
+        cbbModel.removeAllElements();
+        for (DanhMucCon s : listAllDanhMucCon) {
+            cbbModel.addElement(s);
+        }
+        cbbDanhMucCon.setSelectedIndex(-1);
+    }
+    
+    
+
+    //Hiển thị lên textfied
+    void edit() {
+        try {
+            String manv = (String) tblCoSoVatChat.getValueAt(this.currentIndex, 0);
+            CoSoVatChat model = dao.findById(manv);
+            if (model != null) {
+                this.setModel(model);
+                //isView(true);
+            }
+        } catch (Exception e) {
+            DialogHelper.alertError(this, "Lỗi truy vấn dữ liệu!");
+        }
+    }
+
+    //Clear
+    void clear() {
+        
+        cbbDanhMuc.setVisible(false);
+        cbbDanhMucCon.setVisible(false);
+        txtMaCSVC.setText("");
+        txtTenCSVC.setText("");
+        txtSoLuong.setText("");
+        txtGiaThue.setText("");
+        txtGhiChu.setText("");
+    
+        
+        //isView(true);
+
+    }
+
+    //Add
+    void insert() {
+        CoSoVatChat model = getModel();
+        if (model == null) {
+            return;
+        }
+        try {
+            dao.insert(model);
+            loadCSVC();
+            this.fillTable(listAllCSVC);
+            this.clear();
+            DialogHelper.alert(this, "Thêm mới thành công!");
+        } catch (Exception e) {
+             e.printStackTrace();
+            DialogHelper.alertError(this, "Thêm mới thất bại!");
+        }
+        
+        
+    }
+
+    //Update
+    void update() {
+        CoSoVatChat model = getModel();
+        if (model == null) {
+            return;
+        }
+        try {
+            dao.update(model);
+            loadCSVC();
+            this.fillTable(listAllCSVC);
+            DialogHelper.alert(this, "Cập nhật thành công!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            DialogHelper.alertError(this, "Cập nhật thất bại!");
+        }
+    }
+
+    //Delete
+    void delete() {
+        if (DialogHelper.confirm(this, "Bạn thực sự muốn xóa người học này?")) {
+            String csvc = txtMaCSVC.getText();
+            try {
+                dao.delete(csvc);
+                loadCSVC();
+                this.fillTable(listAllCSVC);
+                this.clear();
+                DialogHelper.alert(this, "Xóa thanh công!");
+            } catch (HeadlessException e) {
+                e.printStackTrace();
+                DialogHelper.alertError(this, "Xóa thất bại!");
+            }
+        }
+    }
+
+    //Di chuyển
+    public void setTblSelected(int row) {
+        tblCoSoVatChat.setRowSelectionInterval(row, row);
+        tblCoSoVatChat.scrollRectToVisible(new Rectangle(tblCoSoVatChat.getCellRect(row, 0, true)));
+
+    }
+
+    //Tìm kiếm
+    void fillTable(List<CoSoVatChat> list) {
+
+        tblModel.setRowCount(0);
+        try {
+            String keyword = txtTimKiem.getText();
+
+            for (CoSoVatChat csvc : list) {
+                Object[] row = {
+                    csvc.getMaCSVC(),
+                    csvc.getTenCSVC(),
+                    csvc.getSoLuong(),                   
+                    csvc.getGiaThue(),
+                    csvc.getGhiChu()
+   
+                };
+                tblModel.addRow(row);
+            }
+        } catch (Exception e) {
+            DialogHelper.alertError(this, "Lỗi truy vấn dữ liệu!");
+        }
+    }
+
+    //Tăng giảm
+    public void initSort() {
+
+        cbbSortBy.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if (cbbSortBy.getSelectedIndex() == 0) {
+                    if (cbbSort.getSelectedIndex() == 0) {
+                        // ten tang dan
+                        fillTable(sortByName(false));
+                    } else if (cbbSort.getSelectedIndex() == 1) {
+                        // ten giam dan
+                        fillTable(sortByName(true));
+                    }
+                } else {
+                    cbbSortBy.setSelectedIndex(0);
+                }
+            }
+        });
+
+        cbbSort.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if (cbbSort.getSelectedIndex() == 0) {
+                    if (cbbSort.getSelectedIndex() == 0) {
+                        // ten tang dan
+                        fillTable(sortByName(false));
+                    } else if (cbbSort.getSelectedIndex() == 1) {
+                        // ten giam dan
+                        fillTable(sortByName(true));
+                    }
+                } else {
+                    cbbSortBy.setSelectedIndex(0);
+                }
+            }
+        });
+    }
+
+    public List<CoSoVatChat> sortByName(boolean isRevese) {
+        List<CoSoVatChat> listSorted = listAllCSVC;
+        Collections.sort(listSorted, new Comparator<CoSoVatChat>() {
+            public int compare(CoSoVatChat employee1, CoSoVatChat employee2) {
+                int result = 0;
+                String[] partNameEmployee1 = employee1.getTenCSVC().split("\\s");
+                String[] partNameEmployee2 = employee2.getTenCSVC().split("\\s");
+
+                int nameLenght1 = partNameEmployee1.length;
+                int nameLenght2 = partNameEmployee2.length;
+
+                if (nameLenght1 == 1 && nameLenght2 == 1) {
+                    return employee1.getTenCSVC().compareToIgnoreCase(employee2.getTenCSVC());
+                }
+
+                int length = ((nameLenght1 > nameLenght2) ? nameLenght2 : nameLenght1);
+                for (int i = 1; i < length; i++) {
+                    result = (partNameEmployee1[nameLenght1 - i]).compareToIgnoreCase(partNameEmployee2[nameLenght2 - i]);
+                    if (result != 0) {
+                        return result;
+                    }
+                }
+                if (nameLenght1 > nameLenght2) {
+                    return 1;
+                } else if (nameLenght1 < nameLenght2) {
+                    return -1;
+                }
+
+                return 0;
+            }
+        });
+
+        if (isRevese) {
+            Collections.reverse(listSorted);
+        }
+
+        return listSorted;
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -37,11 +383,9 @@ public class QuanLyKho extends javax.swing.JPanel {
         lblSearch = new javax.swing.JLabel();
         jLabel25 = new javax.swing.JLabel();
         jLabel27 = new javax.swing.JLabel();
-        txtMaCoSoVatChat = new javax.swing.JPasswordField();
         jLabel28 = new javax.swing.JLabel();
-        txtTenCoSoVatChat = new javax.swing.JPasswordField();
         jLabel30 = new javax.swing.JLabel();
-        txtSoLuong = new javax.swing.JTextField();
+        txtMaCSVC = new javax.swing.JTextField();
         jLabel29 = new javax.swing.JLabel();
         cbbDanhMucCon = new com.ui.swing.Combobox();
         jLabel31 = new javax.swing.JLabel();
@@ -59,8 +403,8 @@ public class QuanLyKho extends javax.swing.JPanel {
         cbbSapXepDanhMucCon = new com.ui.swing.Combobox();
         jLabel1 = new javax.swing.JLabel();
         txtTimKiem = new javax.swing.JTextField();
-        cbbTangDanGiamDan = new com.ui.swing.Combobox();
-        cbbSapXepTheo = new com.ui.swing.Combobox();
+        cbbSort = new com.ui.swing.Combobox();
+        cbbSortBy = new com.ui.swing.Combobox();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -69,7 +413,9 @@ public class QuanLyKho extends javax.swing.JPanel {
         cbbDanhMuc = new com.ui.swing.Combobox();
         lblHinhAnh = new javax.swing.JLabel();
         jLabel32 = new javax.swing.JLabel();
-        txtSoLuong1 = new javax.swing.JTextField();
+        txtGiaThue = new javax.swing.JTextField();
+        txtSoLuong = new javax.swing.JTextField();
+        txtTenCSVC = new javax.swing.JTextField();
 
         pnlEmplpyeeManager.setBackground(new java.awt.Color(255, 255, 255));
         pnlEmplpyeeManager.setMinimumSize(new java.awt.Dimension(1600, 838));
@@ -86,42 +432,25 @@ public class QuanLyKho extends javax.swing.JPanel {
         });
         pnlEmplpyeeManager.add(lblSearch, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 20, -1, 35));
 
-        jLabel25.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
         jLabel25.setText("Danh mục");
         pnlEmplpyeeManager.add(jLabel25, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 310, 92, -1));
 
-        jLabel27.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
         jLabel27.setText("Mã cơ sở vật chất");
         pnlEmplpyeeManager.add(jLabel27, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 450, 130, -1));
 
-        txtMaCoSoVatChat.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
-        txtMaCoSoVatChat.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtMaCoSoVatChatActionPerformed(evt);
-            }
-        });
-        pnlEmplpyeeManager.add(txtMaCoSoVatChat, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 480, 340, 35));
-
-        jLabel28.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
         jLabel28.setText("Tên cơ sở vật chất");
         pnlEmplpyeeManager.add(jLabel28, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 530, 130, -1));
 
-        txtTenCoSoVatChat.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
-        pnlEmplpyeeManager.add(txtTenCoSoVatChat, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 560, 340, 35));
-
-        jLabel30.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
         jLabel30.setText("Số lượng");
         pnlEmplpyeeManager.add(jLabel30, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 610, 130, -1));
 
-        txtSoLuong.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
-        txtSoLuong.addActionListener(new java.awt.event.ActionListener() {
+        txtMaCSVC.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtSoLuongActionPerformed(evt);
+                txtMaCSVCActionPerformed(evt);
             }
         });
-        pnlEmplpyeeManager.add(txtSoLuong, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 640, 340, 35));
+        pnlEmplpyeeManager.add(txtMaCSVC, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 480, 340, 35));
 
-        jLabel29.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
         jLabel29.setText("Ghi chú");
         pnlEmplpyeeManager.add(jLabel29, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 750, 60, -1));
 
@@ -133,7 +462,6 @@ public class QuanLyKho extends javax.swing.JPanel {
         });
         pnlEmplpyeeManager.add(cbbDanhMucCon, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 410, 340, 35));
 
-        jLabel31.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
         jLabel31.setText("Danh mục con");
         pnlEmplpyeeManager.add(jLabel31, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 390, 130, -1));
 
@@ -173,7 +501,7 @@ public class QuanLyKho extends javax.swing.JPanel {
 
         btnSua.setBackground(new java.awt.Color(0, 153, 0));
         btnSua.setForeground(new java.awt.Color(255, 255, 255));
-        btnSua.setText("Sửa");
+        btnSua.setText("Lưu");
         btnSua.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         btnSua.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -198,6 +526,11 @@ public class QuanLyKho extends javax.swing.JPanel {
         btnLast.setText("|<");
         btnLast.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         btnLast.setPreferredSize(new java.awt.Dimension(45, 27));
+        btnLast.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLastActionPerformed(evt);
+            }
+        });
         pnlEmplpyeeManager.add(btnLast, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 930, 70, 30));
 
         btnPre.setBackground(new java.awt.Color(51, 0, 255));
@@ -205,6 +538,11 @@ public class QuanLyKho extends javax.swing.JPanel {
         btnPre.setText("<<");
         btnPre.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         btnPre.setPreferredSize(new java.awt.Dimension(45, 27));
+        btnPre.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPreActionPerformed(evt);
+            }
+        });
         pnlEmplpyeeManager.add(btnPre, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 930, 80, 30));
 
         btnNext.setBackground(new java.awt.Color(51, 0, 255));
@@ -212,6 +550,11 @@ public class QuanLyKho extends javax.swing.JPanel {
         btnNext.setText(">>");
         btnNext.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         btnNext.setPreferredSize(new java.awt.Dimension(45, 27));
+        btnNext.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNextActionPerformed(evt);
+            }
+        });
         pnlEmplpyeeManager.add(btnNext, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 930, 80, 30));
 
         tblCoSoVatChat.setModel(new javax.swing.table.DefaultTableModel(
@@ -228,6 +571,11 @@ public class QuanLyKho extends javax.swing.JPanel {
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
+            }
+        });
+        tblCoSoVatChat.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblCoSoVatChatMouseClicked(evt);
             }
         });
         jScrollPane1.setViewportView(tblCoSoVatChat);
@@ -250,9 +598,13 @@ public class QuanLyKho extends javax.swing.JPanel {
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/happywedding/assets/sort.png"))); // NOI18N
         pnlEmplpyeeManager.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1340, 110, 40, 40));
 
-        txtTimKiem.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
         txtTimKiem.setToolTipText("");
         txtTimKiem.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(0, 0, 0)));
+        txtTimKiem.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                txtTimKiemMouseClicked(evt);
+            }
+        });
         txtTimKiem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtTimKiemActionPerformed(evt);
@@ -265,22 +617,22 @@ public class QuanLyKho extends javax.swing.JPanel {
         });
         pnlEmplpyeeManager.add(txtTimKiem, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 110, 610, 35));
 
-        cbbTangDanGiamDan.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tăng dần", "Giảm dần" }));
-        cbbTangDanGiamDan.setLabeText("");
-        cbbTangDanGiamDan.addActionListener(new java.awt.event.ActionListener() {
+        cbbSort.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tăng dần", "Giảm dần" }));
+        cbbSort.setLabeText("");
+        cbbSort.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbbTangDanGiamDanActionPerformed(evt);
+                cbbSortActionPerformed(evt);
             }
         });
-        pnlEmplpyeeManager.add(cbbTangDanGiamDan, new org.netbeans.lib.awtextra.AbsoluteConstraints(1400, 90, 120, 54));
+        pnlEmplpyeeManager.add(cbbSort, new org.netbeans.lib.awtextra.AbsoluteConstraints(1400, 90, 120, 54));
 
-        cbbSapXepTheo.setLabeText("Sắp xếp");
-        cbbSapXepTheo.addActionListener(new java.awt.event.ActionListener() {
+        cbbSortBy.setLabeText("Sắp xếp");
+        cbbSortBy.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbbSapXepTheoActionPerformed(evt);
+                cbbSortByActionPerformed(evt);
             }
         });
-        pnlEmplpyeeManager.add(cbbSapXepTheo, new org.netbeans.lib.awtextra.AbsoluteConstraints(1180, 90, 120, 54));
+        pnlEmplpyeeManager.add(cbbSortBy, new org.netbeans.lib.awtextra.AbsoluteConstraints(1180, 90, 120, 54));
 
         jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/happywedding/assets/Search.png"))); // NOI18N
         pnlEmplpyeeManager.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 110, 40, 40));
@@ -289,7 +641,6 @@ public class QuanLyKho extends javax.swing.JPanel {
         pnlEmplpyeeManager.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(1130, 110, 40, 40));
 
         txtGhiChu.setColumns(20);
-        txtGhiChu.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
         txtGhiChu.setRows(5);
         jScrollPane2.setViewportView(txtGhiChu);
 
@@ -323,17 +674,29 @@ public class QuanLyKho extends javax.swing.JPanel {
         });
         pnlEmplpyeeManager.add(lblHinhAnh, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 90, 180, 190));
 
-        jLabel32.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
         jLabel32.setText("Giá thuê");
         pnlEmplpyeeManager.add(jLabel32, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 680, 130, -1));
 
-        txtSoLuong1.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
-        txtSoLuong1.addActionListener(new java.awt.event.ActionListener() {
+        txtGiaThue.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtSoLuong1ActionPerformed(evt);
+                txtGiaThueActionPerformed(evt);
             }
         });
-        pnlEmplpyeeManager.add(txtSoLuong1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 710, 340, 35));
+        pnlEmplpyeeManager.add(txtGiaThue, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 710, 340, 35));
+
+        txtSoLuong.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtSoLuongActionPerformed(evt);
+            }
+        });
+        pnlEmplpyeeManager.add(txtSoLuong, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 640, 340, 35));
+
+        txtTenCSVC.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtTenCSVCActionPerformed(evt);
+            }
+        });
+        pnlEmplpyeeManager.add(txtTenCSVC, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 560, 340, 35));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -353,13 +716,9 @@ public class QuanLyKho extends javax.swing.JPanel {
 
     }//GEN-LAST:event_lblSearchMouseClicked
 
-    private void txtMaCoSoVatChatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtMaCoSoVatChatActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtMaCoSoVatChatActionPerformed
+    private void txtMaCSVCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtMaCSVCActionPerformed
 
-    private void txtSoLuongActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSoLuongActionPerformed
-
-    }//GEN-LAST:event_txtSoLuongActionPerformed
+    }//GEN-LAST:event_txtMaCSVCActionPerformed
 
     private void cbbDanhMucConActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbbDanhMucConActionPerformed
         // TODO add your handling code here:
@@ -367,18 +726,24 @@ public class QuanLyKho extends javax.swing.JPanel {
 
     private void btnMoiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMoiActionPerformed
         // TODO add your handling code here:
+        clear();
     }//GEN-LAST:event_btnMoiActionPerformed
 
     private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemActionPerformed
         // TODO add your handling code here:
+        insert();
     }//GEN-LAST:event_btnThemActionPerformed
 
     private void btnSuaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuaActionPerformed
         // TODO add your handling code here:
+         // isUpdate(true);
+        update();
+        //  isView(true);
     }//GEN-LAST:event_btnSuaActionPerformed
 
     private void btnXoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXoaActionPerformed
         // TODO add your handling code here:
+         delete();
     }//GEN-LAST:event_btnXoaActionPerformed
 
     private void cbbSapXepDanhMucConActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbbSapXepDanhMucConActionPerformed
@@ -390,16 +755,16 @@ public class QuanLyKho extends javax.swing.JPanel {
     }//GEN-LAST:event_txtTimKiemActionPerformed
 
     private void txtTimKiemKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTimKiemKeyReleased
-
+        filtCSVC(txtTimKiem.getText());
     }//GEN-LAST:event_txtTimKiemKeyReleased
 
-    private void cbbTangDanGiamDanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbbTangDanGiamDanActionPerformed
+    private void cbbSortActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbbSortActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_cbbTangDanGiamDanActionPerformed
+    }//GEN-LAST:event_cbbSortActionPerformed
 
-    private void cbbSapXepTheoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbbSapXepTheoActionPerformed
+    private void cbbSortByActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbbSortByActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_cbbSapXepTheoActionPerformed
+    }//GEN-LAST:event_cbbSortByActionPerformed
 
     private void cbbSapXepDanhMucActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbbSapXepDanhMucActionPerformed
         // TODO add your handling code here:
@@ -411,15 +776,68 @@ public class QuanLyKho extends javax.swing.JPanel {
 
     private void btnFirstActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFirstActionPerformed
         // TODO add your handling code here:
+        currentIndex = tblCoSoVatChat.getRowCount() - 1;
+        setTblSelected(currentIndex);
+        //isUpdate(false);
+        edit();
     }//GEN-LAST:event_btnFirstActionPerformed
 
     private void lblHinhAnhMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblHinhAnhMouseClicked
 
     }//GEN-LAST:event_lblHinhAnhMouseClicked
 
-    private void txtSoLuong1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSoLuong1ActionPerformed
+    private void txtGiaThueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtGiaThueActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtSoLuong1ActionPerformed
+    }//GEN-LAST:event_txtGiaThueActionPerformed
+
+    private void txtSoLuongActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSoLuongActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtSoLuongActionPerformed
+
+    private void txtTenCSVCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTenCSVCActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtTenCSVCActionPerformed
+
+    private void tblCoSoVatChatMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblCoSoVatChatMouseClicked
+        // TODO add your handling code here:
+        currentIndex = tblCoSoVatChat.rowAtPoint(evt.getPoint());
+
+        if (this.currentIndex >= 0) {
+            this.edit();
+            if (evt.getClickCount() == 2) {
+                // isUpdate(true);
+
+            }
+        }
+    }//GEN-LAST:event_tblCoSoVatChatMouseClicked
+
+    private void btnLastActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLastActionPerformed
+        // TODO add your handling code here:
+        currentIndex = 0;
+        setTblSelected(currentIndex);
+        //isUpdate(false);
+        edit();
+    }//GEN-LAST:event_btnLastActionPerformed
+
+    private void btnPreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPreActionPerformed
+        // TODO add your handling code here:
+        currentIndex--;
+        setTblSelected(currentIndex);
+        //isUpdate(false);
+        edit();
+    }//GEN-LAST:event_btnPreActionPerformed
+
+    private void btnNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNextActionPerformed
+        // TODO add your handling code here:
+        currentIndex++;
+        setTblSelected(currentIndex);
+        // isUpdate(false);
+        edit();
+    }//GEN-LAST:event_btnNextActionPerformed
+
+    private void txtTimKiemMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtTimKiemMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtTimKiemMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -435,8 +853,8 @@ public class QuanLyKho extends javax.swing.JPanel {
     private com.ui.swing.Combobox cbbDanhMucCon;
     private com.ui.swing.Combobox cbbSapXepDanhMuc;
     private com.ui.swing.Combobox cbbSapXepDanhMucCon;
-    private com.ui.swing.Combobox cbbSapXepTheo;
-    private com.ui.swing.Combobox cbbTangDanGiamDan;
+    private com.ui.swing.Combobox cbbSort;
+    private com.ui.swing.Combobox cbbSortBy;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel25;
@@ -455,10 +873,10 @@ public class QuanLyKho extends javax.swing.JPanel {
     private javax.swing.JPanel pnlEmplpyeeManager;
     private com.ui.swing.Table tblCoSoVatChat;
     private javax.swing.JTextArea txtGhiChu;
-    private javax.swing.JPasswordField txtMaCoSoVatChat;
+    private javax.swing.JTextField txtGiaThue;
+    private javax.swing.JTextField txtMaCSVC;
     private javax.swing.JTextField txtSoLuong;
-    private javax.swing.JTextField txtSoLuong1;
-    private javax.swing.JPasswordField txtTenCoSoVatChat;
+    private javax.swing.JTextField txtTenCSVC;
     private javax.swing.JTextField txtTimKiem;
     // End of variables declaration//GEN-END:variables
 }

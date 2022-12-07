@@ -22,6 +22,8 @@ import java.util.concurrent.ThreadLocalRandom;
 import com.happywedding.dao.TaiKhoanDAO;
 import com.happywedding.helper.AppStatus;
 import com.happywedding.model.NhanVien;
+import com.happywedding.model.TaiKhoan;
+import sun.misc.Signal;
 //import static com.happywedding.view.manage.DangNhap.soTaiKhoan;
 /**
  *
@@ -39,10 +41,11 @@ public class QuenMatKhau extends javax.swing.JDialog implements Runnable{
         txtMaXacNhan.setBorder(BorderFactory.createCompoundBorder(txtMaXacNhan.getBorder(), BorderFactory.createEmptyBorder(0, 5, 0, 0)));
         txtMatKhauMoi.setBorder(BorderFactory.createCompoundBorder(txtMatKhauMoi.getBorder(), BorderFactory.createEmptyBorder(0, 5, 0, 0)));
         
-        //btnXacNhan.setVisible(false);
+        btnXacNhan.setVisible(false);
         
         lblHidePassword.setVisible(false);
         
+        System.out.println(DangNhap.tenTaiKhoan);
     }
 
     /**
@@ -205,6 +208,11 @@ public class QuenMatKhau extends javax.swing.JDialog implements Runnable{
     
     private void btnGuiMaXacNhanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuiMaXacNhanActionPerformed
             
+//        if(!txtEmail.getText().equals(DangNhap.email.trim())){
+//            JOptionPane.showMessageDialog(this, "Sai email");      
+//            return;
+//        }
+
         if(!txtEmail.getText().equals("baomqpc03196@fpt.edu.vn")){
             JOptionPane.showMessageDialog(this, "Sai email");      
             return;
@@ -217,15 +225,23 @@ public class QuenMatKhau extends javax.swing.JDialog implements Runnable{
 
     private void btnXacNhanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnXacNhanMouseClicked
         
+        if(txtMaXacNhan.getText().equals(randomNumber) || txtMaXacNhan.equals("0")){
+            btnXacNhan.setVisible(false);
+        }
+        
         TaiKhoanDAO taiKhoanDAO = new TaiKhoanDAO();
         String tenDangNhap = DangNhap.tenTaiKhoan;
-        
+        String mk = String.valueOf(txtMatKhauMoi.getPassword());
+        System.out.println(mk);
+        TaiKhoan tk = new TaiKhoan();
+        tk.setTenDangNhap(tenDangNhap);
+        tk.setMatKhau(mk);
         if(String.valueOf(txtMatKhauMoi.getPassword()).trim().equals("")){
             JOptionPane.showMessageDialog(this, "Vui lòng nhập mật khẩu");
             return;
         }
         
-        taiKhoanDAO.update(UPDATE, String.valueOf(txtMatKhauMoi.getPassword()));
+        taiKhoanDAO.update(tk);
         
         JOptionPane.showMessageDialog(this, "Đổi mật khẩu thành công");
         this.dispose();
@@ -258,11 +274,11 @@ public class QuenMatKhau extends javax.swing.JDialog implements Runnable{
    
     String taiKhoan = "baomqpc03196@fpt.edu.vn";
     String matKhau = "matkhaulagidayta";
+    //String guiDen = DangNhap.email;
     String guiDen = "baomqpc03196@fpt.edu.vn";
     String tieuDe = "Mã xác minh tài khoản email";
     
     int randomNumber = 0;
-    
     
     public void goiMail(){
             
@@ -325,7 +341,7 @@ public class QuenMatKhau extends javax.swing.JDialog implements Runnable{
                     btnXacNhan.setVisible(true);
                 }
                 if(giaTri == 0){
-                    btnXacNhan.setEnabled(false);
+                    btnXacNhan.setVisible(false);
                     btnGuiMaXacNhan.setText("Gửi mã xác nhận");
                     btnGuiMaXacNhan.setEnabled(true);
                     t1.stop();

@@ -103,7 +103,7 @@ public class HappyWeddingApp extends javax.swing.JFrame {
             AppStatus.loadApp();
         }
         
-        AppStatus.USER = new NhanVienDAO().findById("NV001");
+    //    AppStatus.USER = new NhanVienDAO().findById("NV001");
         AppStatus.loadApp();
         initComponents();
         init();

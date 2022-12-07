@@ -24,6 +24,7 @@ public class DangNhap extends javax.swing.JDialog {
     
     //public static List<TaiKhoan> soTaiKhoan;
     public static String tenTaiKhoan;
+    public static String email;
     
     public DangNhap(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -174,6 +175,7 @@ public class DangNhap extends javax.swing.JDialog {
         
         boolean coTenDangNhap = quenMatKhau(txtTenDangNhap.getText());
         if(!coTenDangNhap){
+            tenTaiKhoan = txtTenDangNhap.getText();
             JOptionPane.showMessageDialog(this, "Tên đăng nhập không tồn tại");
             return;
         }else{
@@ -212,8 +214,13 @@ public class DangNhap extends javax.swing.JDialog {
     public boolean quenMatKhau(String username){
         
         TaiKhoanDAO taiKhoanDAO = new TaiKhoanDAO();
+        
         List<TaiKhoan> soTaiKhoan;
         soTaiKhoan = taiKhoanDAO.selectTenDangNhap(username.trim());
+        tenTaiKhoan = soTaiKhoan.get(0).getTenDangNhap();
+        
+        email = String.valueOf(new NhanVienDAO().findById(soTaiKhoan.get(0).getMaNhanVien()).getEmail());
+        System.out.println("Email: "+ email);
         
         if(soTaiKhoan.size() == 0){
             return false;
@@ -238,6 +245,7 @@ public class DangNhap extends javax.swing.JDialog {
             }else{
                 NhanVien nv = new NhanVienDAO().findById(soTaiKhoan.get(0).getMaNhanVien());
                 AppStatus.USER = nv;
+                AppStatus.ROLE = soTaiKhoan.get(0).getVaiTro();
                 
                 System.out.println(soTaiKhoan.get(0).getTenDangNhap());
                 System.out.println(soTaiKhoan.get(0).getMatKhau());
@@ -266,7 +274,7 @@ public class DangNhap extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(this, "Tài khoản hoặc mật khẩu không đúng");
         }else{
             JOptionPane.showMessageDialog(this, "Đăng nhập thành công");
-            JOptionPane.showMessageDialog(this, "Xin chào" + txtTenDangNhap.getText());
+            JOptionPane.showMessageDialog(this, "Xin chào " + txtTenDangNhap.getText());
             
             //new HappyWeddingApp().setVisible(true);
             this.dispose();

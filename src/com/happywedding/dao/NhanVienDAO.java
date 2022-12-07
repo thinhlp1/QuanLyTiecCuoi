@@ -11,7 +11,8 @@ public class NhanVienDAO extends AbstractDAO<NhanVien> {
  private final String INSERT_NV = "INSERT NhanVien (MaNV, HoTen, NgaySinh, GioiTinh, SoDienThoai,Email, CCCD_CMND, HinhAnh, MaPB, MaVT, TrangThai)VALUES(?,?,?,?,?,?,?,?,?,?,?)";
     private final String UPDATE_NV = "UPDATE NhanVien SET HoTen = ?,NgaySinh = ?,GioiTinh = ?,SoDienThoai = ?,CCCD_CMND = ?,Email = ?,HinhAnh = ?,MaPB = ?,MaVT = ?,TrangThai = ? WHERE MaNV = ?" ;
     private final String DELELTE_NV = "DELETE FROM NhanVien WHERE MaNV=?";
-    private final String SELECT_ALL = "SELECT * FROM NhanVien";
+    private final String SELECT_ALL_NhanVien = "SELECT * FROM NhanVien";
+    private final String SELECT_ALL = "SELECT  nv.MaNV,nv.HoTen,nv.NgaySinh,nv.GioiTinh,nv.SoDienThoai,nv.CCCD_CMND,nv.Email,nv.HinhAnh,nv.MaPB,pb.TenPB,nv.MaVT,vt.TenVT,TrangThai FROM  NhanVien nv INNER JOIN PhongBan pb ON nv.MaPB = pb.MaPB INNER JOIN VaiTro vt ON nv.MaVT = vt.MaVT " ;
     private final String SELECT_BY_ID = "SELECT * FROM NhanVien WHERE MaNV=?";
     private final String SELECT_BY_PHONGBAN = "SELECT  MaNV,HoTen,NgaySinh,GioiTinh,SoDienThoai,CCCD_CMND,Email,HinhAnh,nv.MaPB,pb.TenPB,nv.MaVT,vt.TenVT,TrangThai FROM  NhanVien nv INNER JOIN PhongBan pb ON nv.MaPB = pb.MaPB INNER JOIN VaiTro vt ON nv.MaVT = vt.MaVT WHERE  nv.MaPB = ?";
     private final String SELECT_BY_VaiTro = "SELECT  MaNV,HoTen,NgaySinh,GioiTinh,SoDienThoai,CCCD_CMND,Email,HinhAnh,nv.MaPB,pb.TenPB,nv.MaVT,vt.TenVT,TrangThai FROM  NhanVien nv INNER JOIN PhongBan pb ON nv.MaPB = pb.MaPB INNER JOIN VaiTro vt ON nv.MaVT = vt.MaVT WHERE  nv.MaVT = ?";

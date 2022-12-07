@@ -30,9 +30,10 @@ public class TaiKhoanDAO extends AbstractDAO<TaiKhoan> {
             + "VALUES\n"
             + "(?,?,?,?)";
     private final String UPDATE = "UPDATE dbo.TaiKhoan SET MatKhau = ? WHERE MaTaiKhoan = ?";
+    private final String CHANGE_PASS = "UPDATE dbo.TaiKhoan SET MatKhau = ? WHERE TenDangNhap = ?";
     private final String SECLECT_ALL = "SELECT * FROM dbo.TaiKhoan";
     private final String SECLECT_BYID = "SELECT * FROM dbo.TaiKhoan WHERE MaTaiKhoan = ?";
-    private final String SECLECT_TENDANGNHAP = "SELECT MaNhanVien, TenDangNhap, MatKhau, VaiTro FROM dbo.TaiKhoan where TenDangNhap=?";
+    private final String SECLECT_TENDANGNHAP = "SELECT MaTaiKhoan, MaNhanVien, TenDangNhap, MatKhau, VaiTro FROM dbo.TaiKhoan where TenDangNhap=?";
     private final String DELETE = "DELETE FROM dbo.TaiKhoan where TenDangNhap=?";
 
     @Override
@@ -43,7 +44,7 @@ public class TaiKhoanDAO extends AbstractDAO<TaiKhoan> {
 
     @Override
     public boolean update(TaiKhoan entity) {
-        int rs = JDBCHelper.executeUpdate(UPDATE, entity.getMatKhau());
+        int rs = JDBCHelper.executeUpdate(CHANGE_PASS, entity.getMatKhau(), entity.getTenDangNhap());
         return rs > 0;
     }
 
@@ -90,8 +91,8 @@ public class TaiKhoanDAO extends AbstractDAO<TaiKhoan> {
 
     private TaiKhoan readFromResultSet(ResultSet rs) throws SQLException {
         TaiKhoan TaiKhoan = new TaiKhoan();
-        //TaiKhoan.setMaTaiKhoan(rs.getInt("MaTaiKhoan"));
-        //TaiKhoan.setMaNhanVien(rs.getString("MaNhanVien"));
+        TaiKhoan.setMaTaiKhoan(rs.getInt("MaTaiKhoan"));
+        TaiKhoan.setMaNhanVien(rs.getString("MaNhanVien"));
         TaiKhoan.setTenDangNhap(rs.getString("TenDangNhap"));
         TaiKhoan.setMatKhau(rs.getString("MatKhau"));
         TaiKhoan.setVaiTro(rs.getString("VaiTro"));
@@ -104,7 +105,7 @@ public class TaiKhoanDAO extends AbstractDAO<TaiKhoan> {
 
     @Override
     public List<TaiKhoan> select() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return select(SECLECT_ALL);
     }
 
 }

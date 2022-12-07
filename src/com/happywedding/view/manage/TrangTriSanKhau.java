@@ -90,8 +90,6 @@ public class TrangTriSanKhau extends javax.swing.JDialog {
                         fillForm();
                         tinhTien();
                     }
-
-//                isTuyChinhGoiDichVu(true);
                 }
 
             } else {
