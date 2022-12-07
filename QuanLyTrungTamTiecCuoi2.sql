@@ -901,17 +901,17 @@ INSERT HoaDon (MaHD, NgayLap, NgayLapLan2, MaNV, TrangThai, MaNLLan2) VALUES ( N
 INSERT HoaDon (MaHD, NgayLap, NgayLapLan2, MaNV, TrangThai, MaNLLan2) VALUES ( N'HD20221101004', CAST(N'2022-12-01' AS Date), CAST(N'2022-11-11' AS Date), N'NV001', 1, N'NV001')
 
 GO
-INSERT HopDong (MaHD, MaNL, SoLuongBan, Sanh, NgayLap, NgayDuyet, MaND, NgayToChuc, ThoiGianBatDau, ThoiGianKetThuc, TrangThai, The, TienCoc, ChiPhiPhatSinh, TongTien) VALUES (N'HD20221101004', N'NV001', 10, N'SANH01', CAST(N'2022-11-01' AS Date), NULL, NULL, CAST(N'2022-11-10' AS Date), CAST(N'09:00:00' AS Time), CAST(N'16:00:00' AS Time), N'DATHUCHIEN', 10, 30481000, NULL, 60962000)
-INSERT HopDong (MaHD, MaNL, SoLuongBan, Sanh, NgayLap, NgayDuyet, MaND, NgayToChuc, ThoiGianBatDau, ThoiGianKetThuc, TrangThai, The, TienCoc, ChiPhiPhatSinh, TongTien) VALUES (N'HD20221201001', N'NV001', 10, N'SANH01', CAST(N'2022-12-01' AS Date), NULL, NULL, CAST(N'2022-12-31' AS Date), CAST(N'08:00:00' AS Time), CAST(N'15:00:00' AS Time), N'THUCHIEN', 10, 39996000, NULL, 79992000)
-INSERT HopDong (MaHD, MaNL, SoLuongBan, Sanh, NgayLap, NgayDuyet, MaND, NgayToChuc, ThoiGianBatDau, ThoiGianKetThuc, TrangThai, The, TienCoc, ChiPhiPhatSinh, TongTien) VALUES (N'HD20221201002', N'NV001', 20, N'SANH03', CAST(N'2022-12-01' AS Date), NULL, NULL, CAST(N'2022-12-31' AS Date), CAST(N'08:00:00' AS Time), CAST(N'11:00:00' AS Time), N'CHOKYKET', 10, 199985500, NULL, 399971000)
-INSERT HopDong (MaHD, MaNL, SoLuongBan, Sanh, NgayLap, NgayDuyet, MaND, NgayToChuc, ThoiGianBatDau, ThoiGianKetThuc, TrangThai, The, TienCoc, ChiPhiPhatSinh, TongTien) VALUES (N'HD20221201003', N'NV001', 15, N'SANH02', CAST(N'2022-12-01' AS Date), NULL, NULL, CAST(N'2022-12-22' AS Date), CAST(N'08:00:00' AS Time), CAST(N'15:00:00' AS Time), N'DANGLAP', 10, 7438750, NULL, 14877500)
-INSERT HopDong (MaHD, MaNL, SoLuongBan, Sanh, NgayLap, NgayDuyet, MaND, NgayToChuc, ThoiGianBatDau, ThoiGianKetThuc, TrangThai, The, TienCoc, ChiPhiPhatSinh, TongTien) VALUES (N'HD20221201004', N'NV001', 12, N'SANH02', CAST(N'2022-12-01' AS Date), NULL, NULL, CAST(N'2022-12-04' AS Date), CAST(N'08:00:00' AS Time), CAST(N'13:00:00' AS Time), N'CHODUYET', 10, 28968500, NULL, 57937000)
-INSERT HopDong (MaHD, MaNL, SoLuongBan, Sanh, NgayLap, NgayDuyet, MaND, NgayToChuc, ThoiGianBatDau, ThoiGianKetThuc, TrangThai, The, TienCoc, ChiPhiPhatSinh, TongTien) VALUES (N'HD20221201005', N'NV001', 10, N'SANH01', CAST(N'2022-12-01' AS Date), NULL, NULL, CAST(N'2022-12-10' AS Date), CAST(N'07:00:00' AS Time), CAST(N'13:00:00' AS Time), N'XOA', 10, 28066500, NULL, 56133000)
-INSERT HopDong (MaHD, MaNL, SoLuongBan, Sanh, NgayLap, NgayDuyet, MaND, NgayToChuc, ThoiGianBatDau, ThoiGianKetThuc, TrangThai, The, TienCoc, ChiPhiPhatSinh, TongTien) VALUES (N'HD20221201006', N'NV001', 10, N'SANH01', CAST(N'2022-12-01' AS Date), NULL, NULL, CAST(N'2022-12-17' AS Date), CAST(N'08:00:00' AS Time), CAST(N'11:00:00' AS Time), N'CHOKYKET', 10, 49533000, NULL, 24766500)
-INSERT HopDong (MaHD, MaNL, SoLuongBan, Sanh, NgayLap, NgayDuyet, MaND, NgayToChuc, ThoiGianBatDau, ThoiGianKetThuc, TrangThai, The, TienCoc, ChiPhiPhatSinh, TongTien) VALUES (N'HD20221201007', N'NV001', 12, N'SANH05', CAST(N'2022-12-01' AS Date), NULL, NULL, CAST(N'2022-12-25' AS Date), CAST(N'08:00:00' AS Time), CAST(N'16:00:00' AS Time), N'THUCHIEN', 10, 56837000, NULL, 28418500)
-INSERT HopDong (MaHD, MaNL, SoLuongBan, Sanh, NgayLap, NgayDuyet, MaND, NgayToChuc, ThoiGianBatDau, ThoiGianKetThuc, TrangThai, The, TienCoc, ChiPhiPhatSinh, TongTien) VALUES (N'HD20221201008', N'NV001', 10, N'SANH01', CAST(N'2022-12-01' AS Date), NULL, NULL, CAST(N'2022-12-14' AS Date), CAST(N'08:00:00' AS Time), CAST(N'12:10:00' AS Time), N'CHOKYKET', 10, 56144000, NULL, 28072000)
-INSERT HopDong (MaHD, MaNL, SoLuongBan, Sanh, NgayLap, NgayDuyet, MaND, NgayToChuc, ThoiGianBatDau, ThoiGianKetThuc, TrangThai, The, TienCoc, ChiPhiPhatSinh, TongTien) VALUES (N'HD20221201009', N'NV001', 10, N'SANH02', CAST(N'2022-12-01' AS Date), NULL, NULL, CAST(N'2022-12-21' AS Date), CAST(N'08:00:00' AS Time), CAST(N'16:00:00' AS Time), N'CHODUYET', 10, 25239500, NULL, 50479000)
-INSERT HopDong (MaHD, MaNL, SoLuongBan, Sanh, NgayLap, NgayDuyet, MaND, NgayToChuc, ThoiGianBatDau, ThoiGianKetThuc, TrangThai, The, TienCoc, ChiPhiPhatSinh, TongTien) VALUES (N'HD20221201010', N'NV001', 10, N'SANH01', CAST(N'2022-12-01' AS Date), NULL, NULL, CAST(N'2022-12-28' AS Date), CAST(N'08:00:00' AS Time), CAST(N'16:00:00' AS Time), N'DANGLAP', 10, 4400000, NULL, 8800000)
+INSERT HopDong (MaHD, MaNL, SoLuongBan, Sanh, NgayLap, NgayDuyet, MaND, NgayToChuc, ThoiGianBatDau, ThoiGianKetThuc, TrangThai, The, TienCoc, ChiPhiPhatSinh, TongTien) VALUES (N'HD20221101004', N'NV001', 10, N'SANH01', CAST(N'2022-11-01' AS Date), NULL, NULL, CAST(N'2022-11-10' AS Date), CAST(N'09:00:00' AS Time), CAST(N'16:00:00' AS Time), N'DATHUCHIEN', 10, 30481000, 0, 60962000)
+INSERT HopDong (MaHD, MaNL, SoLuongBan, Sanh, NgayLap, NgayDuyet, MaND, NgayToChuc, ThoiGianBatDau, ThoiGianKetThuc, TrangThai, The, TienCoc, ChiPhiPhatSinh, TongTien) VALUES (N'HD20221201001', N'NV001', 10, N'SANH01', CAST(N'2022-12-01' AS Date), NULL, NULL, CAST(N'2022-12-31' AS Date), CAST(N'08:00:00' AS Time), CAST(N'15:00:00' AS Time), N'THUCHIEN', 10, 39996000, 0, 79992000)
+INSERT HopDong (MaHD, MaNL, SoLuongBan, Sanh, NgayLap, NgayDuyet, MaND, NgayToChuc, ThoiGianBatDau, ThoiGianKetThuc, TrangThai, The, TienCoc, ChiPhiPhatSinh, TongTien) VALUES (N'HD20221201002', N'NV001', 20, N'SANH03', CAST(N'2022-12-01' AS Date), NULL, NULL, CAST(N'2022-12-31' AS Date), CAST(N'08:00:00' AS Time), CAST(N'11:00:00' AS Time), N'CHOKYKET', 10, 199985500, 0, 399971000)
+INSERT HopDong (MaHD, MaNL, SoLuongBan, Sanh, NgayLap, NgayDuyet, MaND, NgayToChuc, ThoiGianBatDau, ThoiGianKetThuc, TrangThai, The, TienCoc, ChiPhiPhatSinh, TongTien) VALUES (N'HD20221201003', N'NV001', 15, N'SANH02', CAST(N'2022-12-01' AS Date), NULL, NULL, CAST(N'2022-12-22' AS Date), CAST(N'08:00:00' AS Time), CAST(N'15:00:00' AS Time), N'DANGLAP', 10, 7438750, 0, 14877500)
+INSERT HopDong (MaHD, MaNL, SoLuongBan, Sanh, NgayLap, NgayDuyet, MaND, NgayToChuc, ThoiGianBatDau, ThoiGianKetThuc, TrangThai, The, TienCoc, ChiPhiPhatSinh, TongTien) VALUES (N'HD20221201004', N'NV001', 12, N'SANH02', CAST(N'2022-12-01' AS Date), NULL, NULL, CAST(N'2022-12-04' AS Date), CAST(N'08:00:00' AS Time), CAST(N'13:00:00' AS Time), N'CHODUYET', 10, 28968500, 0, 57937000)
+INSERT HopDong (MaHD, MaNL, SoLuongBan, Sanh, NgayLap, NgayDuyet, MaND, NgayToChuc, ThoiGianBatDau, ThoiGianKetThuc, TrangThai, The, TienCoc, ChiPhiPhatSinh, TongTien) VALUES (N'HD20221201005', N'NV001', 10, N'SANH01', CAST(N'2022-12-01' AS Date), NULL, NULL, CAST(N'2022-12-10' AS Date), CAST(N'07:00:00' AS Time), CAST(N'13:00:00' AS Time), N'XOA', 10, 28066500, 0, 56133000)
+INSERT HopDong (MaHD, MaNL, SoLuongBan, Sanh, NgayLap, NgayDuyet, MaND, NgayToChuc, ThoiGianBatDau, ThoiGianKetThuc, TrangThai, The, TienCoc, ChiPhiPhatSinh, TongTien) VALUES (N'HD20221201006', N'NV001', 10, N'SANH01', CAST(N'2022-12-01' AS Date), NULL, NULL, CAST(N'2022-12-17' AS Date), CAST(N'08:00:00' AS Time), CAST(N'11:00:00' AS Time), N'CHOKYKET', 10, 49533000, 0, 24766500)
+INSERT HopDong (MaHD, MaNL, SoLuongBan, Sanh, NgayLap, NgayDuyet, MaND, NgayToChuc, ThoiGianBatDau, ThoiGianKetThuc, TrangThai, The, TienCoc, ChiPhiPhatSinh, TongTien) VALUES (N'HD20221201007', N'NV001', 12, N'SANH05', CAST(N'2022-12-01' AS Date), NULL, NULL, CAST(N'2022-12-25' AS Date), CAST(N'08:00:00' AS Time), CAST(N'16:00:00' AS Time), N'THUCHIEN', 10, 56837000, 0, 28418500)
+INSERT HopDong (MaHD, MaNL, SoLuongBan, Sanh, NgayLap, NgayDuyet, MaND, NgayToChuc, ThoiGianBatDau, ThoiGianKetThuc, TrangThai, The, TienCoc, ChiPhiPhatSinh, TongTien) VALUES (N'HD20221201008', N'NV001', 10, N'SANH01', CAST(N'2022-12-01' AS Date), NULL, NULL, CAST(N'2022-12-14' AS Date), CAST(N'08:00:00' AS Time), CAST(N'12:10:00' AS Time), N'CHOKYKET', 10, 56144000, 0, 28072000)
+INSERT HopDong (MaHD, MaNL, SoLuongBan, Sanh, NgayLap, NgayDuyet, MaND, NgayToChuc, ThoiGianBatDau, ThoiGianKetThuc, TrangThai, The, TienCoc, ChiPhiPhatSinh, TongTien) VALUES (N'HD20221201009', N'NV001', 10, N'SANH02', CAST(N'2022-12-01' AS Date), NULL, NULL, CAST(N'2022-12-21' AS Date), CAST(N'08:00:00' AS Time), CAST(N'16:00:00' AS Time), N'CHODUYET', 10, 25239500, 0, 50479000)
+INSERT HopDong (MaHD, MaNL, SoLuongBan, Sanh, NgayLap, NgayDuyet, MaND, NgayToChuc, ThoiGianBatDau, ThoiGianKetThuc, TrangThai, The, TienCoc, ChiPhiPhatSinh, TongTien) VALUES (N'HD20221201010', N'NV001', 10, N'SANH01', CAST(N'2022-12-01' AS Date), NULL, NULL, CAST(N'2022-12-28' AS Date), CAST(N'08:00:00' AS Time), CAST(N'16:00:00' AS Time), N'DANGLAP', 10, 4400000, 0, 8800000)
 GO
 INSERT HopDongDichVu (MaHD, MaDV, MaGoi, ChiPhi, GhiChu) VALUES (N'HD20221101004', N'NGHETHUAT', N'NGHETHUAT1', 2000000, N'')
 INSERT HopDongDichVu (MaHD, MaDV, MaGoi, ChiPhi, GhiChu) VALUES (N'HD20221101004', N'TTBANTIEC', N'TTBANTIEC3', 4510000, N'')
@@ -1450,4 +1450,34 @@ BEGIN
 	FROM HopDong hdd INNER JOIN HoaDon hd ON hdd.MaHD = hd.MaHD 
 	GROUP BY  IIF(hd.TrangThai = 0, YEAR(hd.NgayLap),YEAR(NgayLapLan2))
 	ORDER BY Nam ASC
+END
+
+
+
+
+GO
+CREATE PROC thongKeDoanhThuThang @Nam int
+AS
+BEGIN
+	--DECLARE		
+	SELECT SUM(IIF(hd.TrangThai = 0,TienCoc,TongTien )) AS TongDoanhThu ,
+	IIF(hd.TrangThai = 0, MONTH(hd.NgayLap),MONTH(NgayLapLan2)) AS Thang ,
+	MAX (  IIF(hd.TrangThai = 0,TienCoc,TongTien ) ) AS DoanhThuCaoNhat,
+	MIN ( IIF(hd.TrangThai = 0,TienCoc,TongTien ) ) AS DoanhThuThapNhat,
+	COUNT(hd.MaHD) AS SoLuongHopDong
+	FROM HopDong hdd INNER JOIN HoaDon hd ON hdd.MaHD = hd.MaHD 
+	WHERE IIF(hd.TrangThai = 0, YEAR(hd.NgayLap),YEAR(NgayLapLan2)) = @Nam
+	GROUP BY  IIF(hd.TrangThai = 0, MONTH(hd.NgayLap),MONTH(NgayLapLan2))
+	ORDER BY Thang
+	
+END
+
+
+
+GO
+CREATE FUNCTION formatMoney (@Tien bigint)
+RETURNS VARCHAR(255)
+AS
+BEGIN
+RETURN SUBSTRING(FORMAT(@Tien, 'c', 'vi-VN'),0, LEN(FORMAT(@Tien, 'c', 'vi-VN'))-4)
 END

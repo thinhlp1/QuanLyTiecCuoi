@@ -821,24 +821,23 @@ public class LapHopDong extends javax.swing.JPanel {
                 btnXuatHoaDonTam.setVisible(true);
 
                 try {
-
-                    Date date = DateHelper.toDate(DateHelper.toString(hopDong.getNgayToChuc(), "dd/MM/yyyy"), "dd/MM/yyyy");
+                    SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+                    String ngayToChuc = DateHelper.toString(hopDong.getNgayToChuc(), "dd/MM/yyyy");
+                    String thoiGianKetThuc =  hopDong.getThoiGianKetThuc();
+                    
+                    String dateHopDong = ngayToChuc + " " + thoiGianKetThuc ;
+                    Date date = format.parse(dateHopDong);
+                    
                     Date date2 = DateHelper.now();
                     if (date.equals(date2) || date2.after(date)) {
-                        String timeNow = DateHelper.toString(date2, "HH:mm");
-                        String timeEnd = hopDong.getThoiGianKetThuc();
-                        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-                        Date d1 = sdf.parse(timeNow);
-                        Date d2 = sdf.parse(timeEnd);
-                        if (d1.getTime() > d2.getTime()) {
-                            btnComfimHoanThanh.setVisible(true);
-                        } else {
-                            btnComfimHoanThanh.setVisible(false);
-                        }
+                         btnComfimHoanThanh.setVisible(true);
+
                     } else {
                         btnComfimHoanThanh.setVisible(false);
                     }
                 } catch (Exception e) {
+                    
+                    
                 }
 
                 btnHuyHopDong.setVisible(true);
@@ -1213,6 +1212,63 @@ public class LapHopDong extends javax.swing.JPanel {
 //            e.printStackTrace();
         }
         return null;
+    }
+
+    void In() {
+        hopDong = hopDongDAO.findById(maHD);
+        try {
+            Map<String, Object> parameters = new HashMap<String, Object>();
+            Connection con = JDBCHelper.getConnection();
+
+            String maHD = this.maHD;
+            String maTD = datMonDAO.selectThucDonChinh(maHD);
+            String maTDPhu = datMonDAO.selectThucDonPhu(maHD);
+            if (maTDPhu.equals(maTD)) {
+                maTDPhu = "";
+            }
+
+            long ttdv = dichVuDAO.selectDichVu(maHD, "TTCONG").getChiPhi()
+                    + dichVuDAO.selectDichVu(maHD, "TTCONG").getChiPhiPhatSinh()
+                    + dichVuDAO.selectDichVu(maHD, "TTBANTIEC").getChiPhi()
+                    + dichVuDAO.selectDichVu(maHD, "TTBANTIEC").getChiPhiPhatSinh()
+                    + dichVuDAO.selectDichVu(maHD, "TTSANKHAU").getChiPhi()
+                    + dichVuDAO.selectDichVu(maHD, "TTSANKHAU").getChiPhiPhatSinh()
+                    + dichVuDAO.selectDichVu(maHD, "NGHETHUAT").getChiPhi()
+                    + dichVuDAO.selectDichVu(maHD, "NGHETHUAT").getChiPhiPhatSinh()
+                    + datMonDAO.selectDichVuDatMon(maHD, datMonDAO.selectThucDonChinh(maHD)).getChiPhi()
+                    + datMonDAO.selectDichVuDatMon(maHD, datMonDAO.selectThucDonChinh(maHD)).getChiPhiPhatSinh()
+                    + datMonDAO.selectDichVuDatMon(maHD, datMonDAO.selectThucDonPhu(maHD)).getChiPhi()
+                    + datMonDAO.selectDichVuDatMon(maHD, datMonDAO.selectThucDonPhu(maHD)).getChiPhiPhatSinh()
+                    + dichVuDiKemDAO.selectHopDongDichVuDiKem(maHD).getChiPhi()
+                    + dichVuDiKemDAO.selectHopDongDichVuDiKem(maHD).getChiPhiPhatSinh();
+            String tongTienDichVu = ShareHelper.toMoney(ttdv);
+            String thue = ShareHelper.toMoney((long) ((ShareHelper.toMoney(txtChiPhi.getText()) + ShareHelper.toMoney(txtChiPhiPhatSinh.getText())) * (10 / 100.0)));
+            String tongTien = ShareHelper.toMoney(hopDong.getTongTien());
+            String tienCoc = ShareHelper.toMoney(hopDong.getTienCoc());
+            String tienConLai = ShareHelper.toMoney(hopDong.getTongTien() - hopDong.getTienCoc());
+            String thanhChu = EnglishNumberToWords.convert(hopDong.getTongTien());
+            String thanhChu2 = EnglishNumberToWords.convert(ShareHelper.toMoney(tienConLai));
+            net.sf.jasperreports.engine.JasperReport rpt = JasperCompileManager.compileReport("src\\com\\happywedding\\Report\\HoaDon.jrxml");
+            parameters.put("MaHD", maHD);
+            parameters.put("MaTD_Chinh", maTD);
+            parameters.put("MaTD_Phu", maTDPhu);
+            parameters.put("ThanhTien", thanhChu);
+            parameters.put("ThanhTien2", thanhChu2);
+            parameters.put("Thue", thue + " VND");
+            parameters.put("TongTien", tongTien + " VND");
+            parameters.put("TienCoc", tienCoc + " VND");
+            parameters.put("TienConLai", tienConLai + " VND");
+            parameters.put("tongTienDichVu", tongTienDichVu);
+            parameters.put("SUBREPORT_DIR", "src\\com\\happywedding\\Report\\");
+            System.out.println(parameters);
+            JasperPrint p = JasperFillManager.fillReport(rpt, parameters, con);
+            JasperViewer.viewReport(p, false);
+
+        } catch (SQLException ex) {
+            Logger.getLogger(JasperReport.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (JRException ex) {
+            Logger.getLogger(JasperReport.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -2514,8 +2570,7 @@ public class LapHopDong extends javax.swing.JPanel {
             if (maTDPhu.equals(maTD)) {
                 maTDPhu = "";
             }
-           
-            
+
             long ttdv = dichVuDAO.selectDichVu(maHD, "TTCONG").getChiPhi()
                     + dichVuDAO.selectDichVu(maHD, "TTCONG").getChiPhiPhatSinh()
                     + dichVuDAO.selectDichVu(maHD, "TTBANTIEC").getChiPhi()
@@ -2673,16 +2728,17 @@ public class LapHopDong extends javax.swing.JPanel {
     }//GEN-LAST:event_btnPhanCongActionPerformed
 
     private void btnXuatHoaDonTamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXuatHoaDonTamActionPerformed
-        
-          if (hoaDonDAO.selectByID(maHD) != null) {
-           boolean rs = DialogHelper.confirm(this, "Hóa đơn đã được lập. Xuất lại");
-           if (rs){
-               
-               // Xuất hóa đơn
-               return;
-           }
+
+        if (hoaDonDAO.selectByID(maHD) != null) {
+            boolean rs = DialogHelper.confirm(this, "Hóa đơn đã được lập. Xuất lại");
+            if (rs) {
+                In();
+                // Xuất hóa đơn
+                return;
+            }
+            return;
         }
-        
+
         HoaDon hd = new HoaDon();
         hd.setMaHD(maHD);
         hd.setNgayLap(DateHelper.now());
@@ -2690,11 +2746,12 @@ public class LapHopDong extends javax.swing.JPanel {
         hd.setTrangTha(0);
 
         hoaDonDAO.insertHoaDon(hd);
+
         phanQuyen();
-        
-        
+        In();
         // In hóa đơn
     }//GEN-LAST:event_btnXuatHoaDonTamActionPerformed
+
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
 

@@ -31,11 +31,11 @@ public class ChiTietDatMonDAO {
 
     private final String SELECT_THUCDONCHINH = "SELECT Top 1 MaHD,MaTD,ct.MaMA,TenMA,MaPL, ma.GiaTien AS ChiPhi,ct.ChiPhiPhatSinh,ThuTu,ct.SoLuong,GhiChu,HinhAnh FROM ChiTietDatMon ct\n"
             + "		INNER JOIN MonAn ma ON ct.MaMA = ma.MaMA \n"
-            + "		WHERE MaHD = ? ORDER BY SoLuong DESC ";
+            + "		WHERE MaHD = ?   AND ma.MaPL != 'NUOC' ORDER BY  SoLuong DESC ";
 
     private final String SELECT_THUCDONPHU = "SELECT Top 1 MaHD,MaTD,ct.MaMA,TenMA,MaPL, ma.GiaTien AS ChiPhi,ct.ChiPhiPhatSinh,ThuTu,ct.SoLuong,GhiChu,HinhAnh FROM ChiTietDatMon ct\n"
             + "		INNER JOIN MonAn ma ON ct.MaMA = ma.MaMA \n"
-            + "		WHERE MaHD = ? AND SoLuong != -1 ORDER BY SoLuong ASC ";
+            + "		WHERE MaHD = ? AND SoLuong != -1  AND ma.MaPL != 'NUOC' ORDER BY SoLuong ASC ";
 
     private final String INSERT_CHITIETDATMON = "INSERT ChiTietDatMon (MaHD, MaMA,MaTD,ChiPhiPhatSinh ,ThuTu,SoLuong, GhiChu) VALUES (?, ?,?,?, ?,?, ?)";
     private final String SELECT_CHITIETDATMON = "SELECT MaHD,MaTD,ct.MaMA,TenMA,MaPL,ma.GiaTien AS ChiPhi,ct.ChiPhiPhatSinh,ThuTu,SoLuong,GhiChu,HinhAnh FROM ChiTietDatMon ct\n"
@@ -232,7 +232,7 @@ public class ChiTietDatMonDAO {
         ChiTietDatMon ctdm = new ChiTietDatMon();
 
         ctdm.setMaHD(rs.getString("MaHD"));
-        ctdm.setMaTD("MaTD");
+        ctdm.setMaTD(rs.getString("MaTD"));
         ctdm.setMaMA(rs.getString("MaMA"));
         ctdm.setTenMA(rs.getString("TenMA"));
         ctdm.setMaPL(rs.getString("MaPL"));

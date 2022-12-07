@@ -6,23 +6,36 @@
 package com.happywedding.view.manage;
 
 import com.happywedding.dao.ChiTietDatMonDAO;
+import com.happywedding.dao.ChiTietDichVuDAO;
 import com.happywedding.dao.ChiTietDichVuDiKemDAO;
 import com.happywedding.dao.DichVuDiKemDAO;
 import com.happywedding.dao.HoaDonDAO;
+import com.happywedding.dao.HopDongDAO;
 import com.happywedding.helper.AppStatus;
 import com.happywedding.helper.DateHelper;
 import com.happywedding.helper.DialogHelper;
+import com.happywedding.helper.EnglishNumberToWords;
+import com.happywedding.helper.JDBCHelper;
 import com.happywedding.helper.ShareHelper;
 import com.happywedding.model.ChiPhiPhatSinhModel;
 import com.happywedding.model.ChiTietDatMon;
 import com.happywedding.model.ChiTietDichVuDiKem;
+import com.happywedding.model.DichVuDatMon;
 import com.happywedding.model.DichVuDiKemModel;
 import com.happywedding.model.HoaDon;
+import com.happywedding.model.HopDong;
+import com.happywedding.model.HopDongDichVuDiKem;
 import com.ui.swing.Combobox;
 import java.awt.Component;
 import java.awt.event.KeyAdapter;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.AbstractCellEditor;
 import javax.swing.JComponent;
 import javax.swing.JTable;
@@ -32,6 +45,12 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.view.JasperViewer;
 
 /**
  *
@@ -53,6 +72,9 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
     private ChiTietDatMonDAO datMonDAO = new ChiTietDatMonDAO();
     private ChiTietDichVuDiKemDAO diKemDAO = new ChiTietDichVuDiKemDAO();
 
+    private DichVuDatMon dichVuDatMon1 = new DichVuDatMon();
+    private DichVuDatMon dichVuDatMon2 = new DichVuDatMon();
+    private HopDongDichVuDiKem hddvdk = new HopDongDichVuDiKem();
     private HoaDon hoaDon;
 
     static class DichVu {
@@ -866,13 +888,234 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
         if (hoaDonDAO.selectByID(maHD) != null) {
             if (hoaDonDAO.selectByID(maHD).getTrangTha() == 0) {
                 if (insertChiPhiDichVu() && insertChiTietDatMon() && insertChiTietDichVuDiKem()) {
-                    hoaDonDAO.updateHoaDon(maHD, DateHelper.now(), AppStatus.USER.getMaNV());
+                    // DialogHelper.alert(this, "Xuất hóa đơn thành công");
+
+                    String maTD = datMonDAO.selectThucDonChinh(maHD);
+                    String maTDPhu = datMonDAO.selectThucDonPhu(maHD);
+
+                    if (maTD.equals(maTDPhu)) {
+                        maTDPhu = "";
+                    }
+
+                    List<ChiTietDatMon> list1 = datMonDAO.selectChiTietDatMon(maHD, maTD);
+                    List<ChiTietDatMon> list2 = datMonDAO.selectChiTietDatMon(maHD, maTDPhu);
+                    DichVuDatMon dvdm1 = datMonDAO.selectDichVuDatMon(maHD, maTD);
+                    DichVuDatMon dvdm2 = datMonDAO.selectDichVuDatMon(maHD, maTDPhu);
+
+                    long tongChiPhiDatMon1 = 0;
+                    long tongChiPhiDatMon2 = 0;
+
+                    if (dvdm1 != null) {
+                        for (int i = 0; i < tblThucDon.getRowCount(); i++) {
+                            for (int j = 0; j < list1.size(); j++) {
+                                if (list1.get(j).getMaTD().equals(maTD) && list1.get(j).getMaPL().equals("NUOC")) {
+                                    tongChiPhiDatMon1 += list1.get(j).getGia() * (Integer.parseInt(tblThucDon.getValueAt(i, 2) + ""));
+
+                                }
+                            }
+                        };
+
+                        tongChiPhiDatMon1 += dvdm1.getChiPhi();
+                        dvdm1.setChiPhi(tongChiPhiDatMon1);
+                        datMonDAO.updateDichVuDatMon(dvdm1, maTD);
+                    }
+
+                    if (dvdm2 != null) {
+                        for (int i = 0; i < tblThucDon.getRowCount(); i++) {
+                            for (int j = 0; j < list2.size(); j++) {
+                                if (list1.get(j).getMaTD().equals(maTD) && list1.get(j).getMaPL().equals("NUOC")) {
+                                    tongChiPhiDatMon2 += list1.get(j).getGia() * (Integer.parseInt(tblThucDon.getValueAt(i, 2) + ""));
+
+                                }
+                            }
+                        };
+
+                        tongChiPhiDatMon2 += dvdm2.getChiPhi();
+                        dvdm2.setChiPhi(tongChiPhiDatMon2);
+                        datMonDAO.updateDichVuDatMon(dvdm2, maTDPhu);
+                    }
+
+                    if (!hoaDonDAO.updateHoaDon(maHD, DateHelper.now(), AppStatus.USER.getMaNV())) {
+                        DialogHelper.alertError(this, "Không thể cập nhật hóa đơn");
+                        return;
+                    }
                     //btnXuatHoaDon.setVisible(false);
                     isView(false);
-                    // DialogHelper.alert(this, "Xuất thành công");
+
+                    HopDongDAO hopDongDAO = new HopDongDAO();
+                    List<Long> chiPhi = hopDongDAO.tinhToan(maHD);
+                    ChiTietDichVuDAO dichVuDAO = new ChiTietDichVuDAO();
+                    HopDong hopDong = hopDongDAO.findById(maHD);
+                    try {
+                        Map<String, Object> parameters = new HashMap<String, Object>();
+                        Connection con = JDBCHelper.getConnection();
+
+                        String maHD = this.maHD;
+
+                        ChiTietDichVuDiKemDAO dichVuDiKemDAO = new ChiTietDichVuDiKemDAO();
+                        if (maTDPhu.equals(maTD)) {
+                            maTDPhu = "";
+                        }
+
+                        long ttdv = dichVuDAO.selectDichVu(maHD, "TTCONG").getChiPhi()
+                                + dichVuDAO.selectDichVu(maHD, "TTCONG").getChiPhiPhatSinh()
+                                + dichVuDAO.selectDichVu(maHD, "TTBANTIEC").getChiPhi()
+                                + dichVuDAO.selectDichVu(maHD, "TTBANTIEC").getChiPhiPhatSinh()
+                                + dichVuDAO.selectDichVu(maHD, "TTSANKHAU").getChiPhi()
+                                + dichVuDAO.selectDichVu(maHD, "TTSANKHAU").getChiPhiPhatSinh()
+                                + dichVuDAO.selectDichVu(maHD, "NGHETHUAT").getChiPhi()
+                                + dichVuDAO.selectDichVu(maHD, "NGHETHUAT").getChiPhiPhatSinh()
+                                + datMonDAO.selectDichVuDatMon(maHD, datMonDAO.selectThucDonChinh(maHD)).getChiPhi()
+                                + datMonDAO.selectDichVuDatMon(maHD, datMonDAO.selectThucDonChinh(maHD)).getChiPhiPhatSinh()
+                                + datMonDAO.selectDichVuDatMon(maHD, datMonDAO.selectThucDonPhu(maHD)).getChiPhi()
+                                + datMonDAO.selectDichVuDatMon(maHD, datMonDAO.selectThucDonPhu(maHD)).getChiPhiPhatSinh()
+                                + dichVuDiKemDAO.selectHopDongDichVuDiKem(maHD).getChiPhi()
+                                + dichVuDiKemDAO.selectHopDongDichVuDiKem(maHD).getChiPhiPhatSinh();
+                        String tongTienDichVu = ShareHelper.toMoney(ttdv);
+                        String thue = "" + (((chiPhi.get(0) + chiPhi.get(1))) * 10 / 100.0);
+                        String tongTien = ShareHelper.toMoney(hopDong.getTongTien());
+                        String tienCoc = ShareHelper.toMoney(hopDong.getTienCoc());
+                        String tienConLai = ShareHelper.toMoney(hopDong.getTongTien() - hopDong.getTienCoc());
+                        String thanhChu = EnglishNumberToWords.convert(hopDong.getTongTien());
+                        String thanhChu2 = EnglishNumberToWords.convert(ShareHelper.toMoney(tienConLai));
+                        net.sf.jasperreports.engine.JasperReport rpt = JasperCompileManager.compileReport("src\\com\\happywedding\\Report\\HoaDon.jrxml");
+                        parameters.put("MaHD", maHD);
+                        parameters.put("MaTD_Chinh", maTD);
+                        parameters.put("MaTD_Phu", maTDPhu);
+                        parameters.put("ThanhTien", thanhChu);
+                        parameters.put("ThanhTien2", thanhChu2);
+                        parameters.put("Thue", thue + " VND");
+                        parameters.put("TongTien", tongTien + " VND");
+                        parameters.put("TienCoc", tienCoc + " VND");
+                        parameters.put("TienConLai", tienConLai + " VND");
+                        parameters.put("tongTienDichVu", tongTienDichVu);
+                        parameters.put("SUBREPORT_DIR", "src\\com\\happywedding\\Report\\");
+                        System.out.println(parameters);
+                        JasperPrint p = JasperFillManager.fillReport(rpt, parameters, con);
+                        JasperViewer.viewReport(p, false);
+
+                    } catch (SQLException ex) {
+                        Logger.getLogger(JasperReport.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (JRException ex) {
+                        Logger.getLogger(JasperReport.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
                 }
             } else {
-                DialogHelper.alert(this, "Xuất lại hóa đơn");
+                boolean rs = DialogHelper.confirm(this, "Xuất lại hóa đơn");
+                if (rs) {
+
+                           String maTD = datMonDAO.selectThucDonChinh(maHD);
+                    String maTDPhu = datMonDAO.selectThucDonPhu(maHD);
+
+                    if (maTD.equals(maTDPhu)) {
+                        maTDPhu = "";
+                    }
+
+                    List<ChiTietDatMon> list1 = datMonDAO.selectChiTietDatMon(maHD, maTD);
+                    List<ChiTietDatMon> list2 = datMonDAO.selectChiTietDatMon(maHD, maTDPhu);
+                    DichVuDatMon dvdm1 = datMonDAO.selectDichVuDatMon(maHD, maTD);
+                    DichVuDatMon dvdm2 = datMonDAO.selectDichVuDatMon(maHD, maTDPhu);
+
+                    long tongChiPhiDatMon1 = 0;
+                    long tongChiPhiDatMon2 = 0;
+
+                    if (dvdm1 != null) {
+                        for (int i = 0; i < tblThucDon.getRowCount(); i++) {
+                            for (int j = 0; j < list1.size(); j++) {
+                                if (list1.get(j).getMaTD().equals(maTD) && list1.get(j).getMaPL().equals("NUOC")) {
+                                    tongChiPhiDatMon1 += list1.get(j).getGia() * (Integer.parseInt(tblThucDon.getValueAt(i, 2) + ""));
+
+                                }
+                            }
+                        };
+
+                        tongChiPhiDatMon1 += dvdm1.getChiPhi();
+                        dvdm1.setChiPhi(tongChiPhiDatMon1);
+                        datMonDAO.updateDichVuDatMon(dvdm1, maTD);
+                    }
+
+                    if (dvdm2 != null) {
+                        for (int i = 0; i < tblThucDon.getRowCount(); i++) {
+                            for (int j = 0; j < list2.size(); j++) {
+                                if (list1.get(j).getMaTD().equals(maTD) && list1.get(j).getMaPL().equals("NUOC")) {
+                                    tongChiPhiDatMon2 += list1.get(j).getGia() * (Integer.parseInt(tblThucDon.getValueAt(i, 2) + ""));
+
+                                }
+                            }
+                        };
+
+                        tongChiPhiDatMon2 += dvdm2.getChiPhi();
+                        dvdm2.setChiPhi(tongChiPhiDatMon2);
+                        datMonDAO.updateDichVuDatMon(dvdm2, maTDPhu);
+                    }
+
+                    if (!hoaDonDAO.updateHoaDon(maHD, DateHelper.now(), AppStatus.USER.getMaNV())) {
+                        DialogHelper.alertError(this, "Không thể cập nhật hóa đơn");
+                        return;
+                    }
+                    //btnXuatHoaDon.setVisible(false);
+                    isView(false);
+
+                    HopDongDAO hopDongDAO = new HopDongDAO();
+                    List<Long> chiPhi = hopDongDAO.tinhToan(maHD);
+                    ChiTietDichVuDAO dichVuDAO = new ChiTietDichVuDAO();
+                    HopDong hopDong = hopDongDAO.findById(maHD);
+                    try {
+                        Map<String, Object> parameters = new HashMap<String, Object>();
+                        Connection con = JDBCHelper.getConnection();
+
+                        String maHD = this.maHD;
+
+                        ChiTietDichVuDiKemDAO dichVuDiKemDAO = new ChiTietDichVuDiKemDAO();
+                        if (maTDPhu.equals(maTD)) {
+                            maTDPhu = "";
+                        }
+
+                        long ttdv = dichVuDAO.selectDichVu(maHD, "TTCONG").getChiPhi()
+                                + dichVuDAO.selectDichVu(maHD, "TTCONG").getChiPhiPhatSinh()
+                                + dichVuDAO.selectDichVu(maHD, "TTBANTIEC").getChiPhi()
+                                + dichVuDAO.selectDichVu(maHD, "TTBANTIEC").getChiPhiPhatSinh()
+                                + dichVuDAO.selectDichVu(maHD, "TTSANKHAU").getChiPhi()
+                                + dichVuDAO.selectDichVu(maHD, "TTSANKHAU").getChiPhiPhatSinh()
+                                + dichVuDAO.selectDichVu(maHD, "NGHETHUAT").getChiPhi()
+                                + dichVuDAO.selectDichVu(maHD, "NGHETHUAT").getChiPhiPhatSinh()
+                                + datMonDAO.selectDichVuDatMon(maHD, datMonDAO.selectThucDonChinh(maHD)).getChiPhi()
+                                + datMonDAO.selectDichVuDatMon(maHD, datMonDAO.selectThucDonChinh(maHD)).getChiPhiPhatSinh()
+                                + datMonDAO.selectDichVuDatMon(maHD, datMonDAO.selectThucDonPhu(maHD)).getChiPhi()
+                                + datMonDAO.selectDichVuDatMon(maHD, datMonDAO.selectThucDonPhu(maHD)).getChiPhiPhatSinh()
+                                + dichVuDiKemDAO.selectHopDongDichVuDiKem(maHD).getChiPhi()
+                                + dichVuDiKemDAO.selectHopDongDichVuDiKem(maHD).getChiPhiPhatSinh();
+                        String tongTienDichVu = ShareHelper.toMoney(ttdv);
+                        String thue = "" + (((chiPhi.get(0) + chiPhi.get(1))) * 10 / 100.0);
+                        String tongTien = ShareHelper.toMoney(hopDong.getTongTien());
+                        String tienCoc = ShareHelper.toMoney(hopDong.getTienCoc());
+                        String tienConLai = ShareHelper.toMoney(hopDong.getTongTien() - hopDong.getTienCoc());
+                        String thanhChu = EnglishNumberToWords.convert(hopDong.getTongTien());
+                        String thanhChu2 = EnglishNumberToWords.convert(ShareHelper.toMoney(tienConLai));
+                        net.sf.jasperreports.engine.JasperReport rpt = JasperCompileManager.compileReport("src\\com\\happywedding\\Report\\HoaDon.jrxml");
+                        parameters.put("MaHD", maHD);
+                        parameters.put("MaTD_Chinh", maTD);
+                        parameters.put("MaTD_Phu", maTDPhu);
+                        parameters.put("ThanhTien", thanhChu);
+                        parameters.put("ThanhTien2", thanhChu2);
+                        parameters.put("Thue", thue + " VND");
+                        parameters.put("TongTien", tongTien + " VND");
+                        parameters.put("TienCoc", tienCoc + " VND");
+                        parameters.put("TienConLai", tienConLai + " VND");
+                        parameters.put("tongTienDichVu", tongTienDichVu);
+                        parameters.put("SUBREPORT_DIR", "src\\com\\happywedding\\Report\\");
+                        System.out.println(parameters);
+                        JasperPrint p = JasperFillManager.fillReport(rpt, parameters, con);
+                        JasperViewer.viewReport(p, false);
+
+                    } catch (SQLException ex) {
+                        Logger.getLogger(JasperReport.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (JRException ex) {
+                        Logger.getLogger(JasperReport.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
+                }
             }
         }
     }//GEN-LAST:event_btnXuatHoaDonActionPerformed
