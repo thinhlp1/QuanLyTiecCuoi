@@ -26,6 +26,11 @@ public class CoSoVatChat {
 
     public CoSoVatChat() {
     }
+    
+    @Override
+    public String toString() {
+        return  tenCSVC;
+    }
 
     public String getMaDanhMucCon() {
         return maDanhMucCon;
@@ -35,10 +40,10 @@ public class CoSoVatChat {
         this.maDanhMucCon = maDanhMucCon;
     }
 
-    @Override
-    public String toString() {
-       return tenCSVC;
-    }
+//    @Override
+//    public String toString() {
+//       return tenCSVC;
+//    }
     
     
 

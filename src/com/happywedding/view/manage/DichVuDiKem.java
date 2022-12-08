@@ -77,8 +77,10 @@ public class DichVuDiKem extends javax.swing.JDialog {
         ((AbstractTableModel) tblChiTietDichVu.getModel()).fireTableDataChanged();
         tblChiTietDichVu.addKeyListener(new MyTableCellEditor(), 3);
         tblChiTietDichVu.addKeyListener(new MyTableCellEditor(), 4);
+
         // tblThucDonModel.fireTableDataChanged();
         tblChiTietDichVuModel.addTableModelListener(new TableModelListener() {
+
             @Override
             public void tableChanged(TableModelEvent e) {
                 String editingCell = "";
@@ -86,13 +88,25 @@ public class DichVuDiKem extends javax.swing.JDialog {
                 int col = tblChiTietDichVu.getEditingColumn();
                 int row = tblChiTietDichVu.getEditingRow();
 
+//                JTextField a =  (JTextField) tblChiTietDichVu.getEditorComponent();
                 if (col == 5) {
                     return;
                 }
 
                 if (col > -1 && row > -1) {
+                    
+                  
+                    
+                    editingCell = (String) tblChiTietDichVu.getValueAt(row, col);
+                    if (editingCell.equals("CXD")) {
+                        return;
+                    }
+                    if (col == 4 && listChiTietDichVu.get(row).getMaDV().equals(maPhao)) {
+                        tblChiTietDichVu.setValueAt("CXD", row, col);
+
+                        return;
+                    }
                     if (col == 3) {
-                        editingCell = (String) tblChiTietDichVu.getValueAt(row, col);
 
                         if (editingCell.equals("")) {
                             tblChiTietDichVu.setValueAt("0", row, col);
@@ -109,6 +123,23 @@ public class DichVuDiKem extends javax.swing.JDialog {
                             tblChiTietDichVu.setValueAt(ShareHelper.toMoney(ShareHelper.toMoney(editingCell)), row, col);
                         }
 
+                    } else if (col == 4) {
+                        editingCell = (String) tblChiTietDichVu.getValueAt(row, col);
+
+                        if (editingCell.equals("")) {
+                            tblChiTietDichVu.setValueAt("0", row, col);
+                        } else if (Integer.parseInt((String) tblChiTietDichVu.getValueAt(row, col)) < 0) {
+                            tblChiTietDichVu.setValueAt("0", row, col);
+                        } else if (Integer.parseInt((String) tblChiTietDichVu.getValueAt(row, col)) > 1000) {
+                            tblChiTietDichVu.setValueAt("1000", row, col);
+                            
+                        } else {
+                            //tblChiTietDichVu.setValueAt(ShareHelper.toMoney(ShareHelper.toMoney(editingCell)), row, col);
+                        }
+                        if (editingCell.equals(editingCell)) {
+                            tinhTien();
+                            return;
+                        }
                     }
 
                 }
@@ -124,9 +155,20 @@ public class DichVuDiKem extends javax.swing.JDialog {
         fillFomrDichVuDiKem();
         fillTableChiTietDichVu(listChiTietDichVu);
         fillTableDichVuDiKem(listDichVuDiKem);
+        //  disableCell();
         filtedDichVuDiKem();
 
         isView(isCreate);
+    }
+
+    public void disableCell() {
+        for (int i = 0; i < listChiTietDichVu.size(); i++) {
+            if (listChiTietDichVu.get(i).getMaDV().equals(maPhao)) {
+                tblChiTietDichVu.editCellAt(i, 4);
+                System.out.println(i);
+                tblChiTietDichVu.editingCanceled(new ChangeEvent(new Object()));
+            }
+        }
     }
 
     public void isView(boolean isCreate) {
@@ -244,10 +286,11 @@ public class DichVuDiKem extends javax.swing.JDialog {
                 ShareHelper.toMoney(ct.getChiPhi()),
                 ct.getGhiChu(),
                 ShareHelper.toMoney(ct.getChiPhiPhatSinh()),
-                (ct.getSoLuong() == -1) ? "CXD" : ct.getSoLuong()
-            };
+                (ct.getMaDV().equals(maPhao)) ? "CXD" : ct.getSoLuong(),
+                (ct.getMaDV().equals(maPhao)) ? "CXD" : ShareHelper.toMoney(ct.getSoLuong() * ct.getChiPhi()),};
             tblChiTietDichVuModel.addRow(row);
         }
+        tinhTien();
     }
 
     public void fillTableDichVuDiKem(List<DichVuDiKemModel> list) {
@@ -290,14 +333,16 @@ public class DichVuDiKem extends javax.swing.JDialog {
 
         int i = 0;
         for (ChiTietDichVuDiKem ct : listChiTietDichVu) {
-            if (ct.getSoLuong() == -1) {
+            if (ct.getMaDV().equals(maPhao)) {
                 i++;
                 continue;
             }
-            chiPhi += ct.getChiPhi();
-            chiPhiPhatSinh += ct.getChiPhiPhatSinh();
-          //  tblChiTietDichVu.editingCanceled(new ChangeEvent(new Object()));
-           // tblChiTietDichVu.setValueAt(ShareHelper.toMoney(ct.getChiPhi() * ct.getSoLuong() + ct.getChiPhiPhatSinh() * ct.getSoLuong()), i, 5);
+            chiPhi += ct.getChiPhi() * ct.getSoLuong();
+            chiPhiPhatSinh += ct.getChiPhiPhatSinh() * ct.getSoLuong();
+            System.out.println(i + "  " + chiPhi + "   " + ct.getSoLuong() + "  " + ct.getChiPhiPhatSinh() + "   " + (chiPhi + chiPhiPhatSinh));
+            tblChiTietDichVu.editingCanceled(new ChangeEvent(new Object()));
+            tblChiTietDichVu.setValueAt(ShareHelper.toMoney(ct.getChiPhi() * ct.getSoLuong() + ct.getChiPhiPhatSinh() * ct.getSoLuong()), i, 5);
+            i++;
         }
 
         tongChiPhi = (chiPhi + chiPhiPhatSinh);
@@ -324,6 +369,7 @@ public class DichVuDiKem extends javax.swing.JDialog {
         }
 
         public Object getCellEditorValue() {
+
             return ((JTextField) component).getText();
         }
     }
@@ -332,6 +378,7 @@ public class DichVuDiKem extends javax.swing.JDialog {
 
         public void keyTyped(java.awt.event.KeyEvent evt) {
             char testChar = evt.getKeyChar();
+
             if (!((Character.isDigit(testChar)))) {
                 if (testChar == '\n') {
                     lblMaNH8.requestFocus();
@@ -381,14 +428,14 @@ public class DichVuDiKem extends javax.swing.JDialog {
 
         tblChiTietDichVu.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null}
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "Dịch vụ", "Chi phí", "Ghi chú", "Chi phí phát sinh", "Số lượng"
+                "Dịch vụ", "Chi phí", "Ghi chú", "Chi phí phát sinh", "Số lượng", "Tổng tiền"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, true, true, false
+                false, false, true, true, true, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -401,9 +448,14 @@ public class DichVuDiKem extends javax.swing.JDialog {
                 tblChiTietDichVuMouseClicked(evt);
             }
         });
+        tblChiTietDichVu.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                tblChiTietDichVuKeyTyped(evt);
+            }
+        });
         jScrollPane2.setViewportView(tblChiTietDichVu);
 
-        jPanel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 60, 690, 540));
+        jPanel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 60, 870, 540));
 
         lblMaNH8.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         lblMaNH8.setText("Ghi chú");
@@ -413,7 +465,7 @@ public class DichVuDiKem extends javax.swing.JDialog {
         taGhiChu.setRows(5);
         jScrollPane1.setViewportView(taGhiChu);
 
-        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 640, 390, 100));
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 640, 460, 100));
 
         btnSave.setBackground(new java.awt.Color(24, 153, 29));
         btnSave.setForeground(new java.awt.Color(255, 255, 255));
@@ -431,7 +483,7 @@ public class DichVuDiKem extends javax.swing.JDialog {
                 btnSaveActionPerformed(evt);
             }
         });
-        jPanel1.add(btnSave, new org.netbeans.lib.awtextra.AbsoluteConstraints(930, 740, -1, 30));
+        jPanel1.add(btnSave, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 740, -1, 30));
 
         btnReset.setBackground(new java.awt.Color(24, 37, 153));
         btnReset.setForeground(new java.awt.Color(255, 255, 255));
@@ -449,7 +501,7 @@ public class DichVuDiKem extends javax.swing.JDialog {
                 btnResetActionPerformed(evt);
             }
         });
-        jPanel1.add(btnReset, new org.netbeans.lib.awtextra.AbsoluteConstraints(1010, 740, -1, 30));
+        jPanel1.add(btnReset, new org.netbeans.lib.awtextra.AbsoluteConstraints(1150, 740, -1, 30));
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel5.setText("Dịch vụ đi kèm");
@@ -464,7 +516,7 @@ public class DichVuDiKem extends javax.swing.JDialog {
                 lblSearchMouseClicked(evt);
             }
         });
-        jPanel1.add(lblSearch, new org.netbeans.lib.awtextra.AbsoluteConstraints(830, 20, -1, 33));
+        jPanel1.add(lblSearch, new org.netbeans.lib.awtextra.AbsoluteConstraints(1000, 20, -1, 33));
 
         txtSearch.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         txtSearch.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(0, 0, 0)));
@@ -478,7 +530,7 @@ public class DichVuDiKem extends javax.swing.JDialog {
                 txtSearchKeyReleased(evt);
             }
         });
-        jPanel1.add(txtSearch, new org.netbeans.lib.awtextra.AbsoluteConstraints(870, 10, 280, 35));
+        jPanel1.add(txtSearch, new org.netbeans.lib.awtextra.AbsoluteConstraints(1040, 10, 280, 35));
 
         tblDichVuDiKem.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -504,11 +556,11 @@ public class DichVuDiKem extends javax.swing.JDialog {
         });
         jScrollPane3.setViewportView(tblDichVuDiKem);
 
-        jPanel1.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(830, 70, 340, 520));
+        jPanel1.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(1000, 70, 340, 520));
 
         jLabel9.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel9.setText("Tổng chi phí");
-        jPanel1.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 630, 170, -1));
+        jPanel1.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 630, 170, -1));
 
         txtChiPhi.setEditable(false);
         txtChiPhi.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
@@ -518,25 +570,25 @@ public class DichVuDiKem extends javax.swing.JDialog {
                 txtChiPhiActionPerformed(evt);
             }
         });
-        jPanel1.add(txtChiPhi, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 670, 190, 35));
+        jPanel1.add(txtChiPhi, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 670, 190, 35));
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel4.setText("Tổng chi phí phải trả");
-        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(940, 630, 200, -1));
+        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(1080, 630, 200, -1));
 
         txtTongChiPhi.setEditable(false);
         txtTongChiPhi.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         txtTongChiPhi.setText("0");
-        jPanel1.add(txtTongChiPhi, new org.netbeans.lib.awtextra.AbsoluteConstraints(940, 670, 240, 35));
+        jPanel1.add(txtTongChiPhi, new org.netbeans.lib.awtextra.AbsoluteConstraints(1080, 670, 240, 35));
 
         txtTongCPPS.setEditable(false);
         txtTongCPPS.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         txtTongCPPS.setText("0");
-        jPanel1.add(txtTongCPPS, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 670, 220, 35));
+        jPanel1.add(txtTongCPPS, new org.netbeans.lib.awtextra.AbsoluteConstraints(820, 670, 220, 35));
 
         jLabel10.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel10.setText("Tổng chi phí phát sinh");
-        jPanel1.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 630, 210, -1));
+        jPanel1.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(820, 630, 210, -1));
 
         btnBack.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/happywedding/assets/back.png"))); // NOI18N
         btnBack.setFocusPainted(false);
@@ -545,24 +597,24 @@ public class DichVuDiKem extends javax.swing.JDialog {
                 btnBackActionPerformed(evt);
             }
         });
-        jPanel1.add(btnBack, new org.netbeans.lib.awtextra.AbsoluteConstraints(750, 310, 50, 50));
+        jPanel1.add(btnBack, new org.netbeans.lib.awtextra.AbsoluteConstraints(920, 310, 50, 50));
 
         btnNext.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/happywedding/assets/next.png"))); // NOI18N
         btnNext.setFocusPainted(false);
-        jPanel1.add(btnNext, new org.netbeans.lib.awtextra.AbsoluteConstraints(750, 310, -1, -1));
+        jPanel1.add(btnNext, new org.netbeans.lib.awtextra.AbsoluteConstraints(920, 310, -1, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 1230, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1391, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 788, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
-        setSize(new java.awt.Dimension(1248, 835));
+        setSize(new java.awt.Dimension(1409, 835));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -642,6 +694,7 @@ public class DichVuDiKem extends javax.swing.JDialog {
 
     private void tblChiTietDichVuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblChiTietDichVuMouseClicked
         int index = tblChiTietDichVu.getSelectedRow();
+
         if (index >= 0) {
 
             if (evt.getClickCount() == 2) {
@@ -652,6 +705,10 @@ public class DichVuDiKem extends javax.swing.JDialog {
             }
         }
     }//GEN-LAST:event_tblChiTietDichVuMouseClicked
+
+    private void tblChiTietDichVuKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tblChiTietDichVuKeyTyped
+
+    }//GEN-LAST:event_tblChiTietDichVuKeyTyped
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

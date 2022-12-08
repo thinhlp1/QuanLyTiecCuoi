@@ -222,13 +222,14 @@ public class DatMon extends javax.swing.JDialog {
 
         fillTableThucDon(listChiTietDatMon);
         filtedMonAn();
-
+       
         isView(isCreate);
         if (isThucDonPhu) {
             spnSoBanChinh.setValue(soLuongBan - soBanPhu);
             spnSoBanChinh.setEnabled(false);
             lblBanPhu.setText(soBanPhu + "");
         }
+        tinhTien();
 
     }
 
@@ -502,9 +503,9 @@ public class DatMon extends javax.swing.JDialog {
         }
         autoSetSoLuong();
 
-        if (isThucDonPhu) {
+        //if (isThucDonPhu) {
             tinhTien();
-        }
+       // }
     }
 
     public void fillTableMonAn(List<MonAn> list) {
@@ -723,6 +724,7 @@ public class DatMon extends javax.swing.JDialog {
         lblBanPhu = new javax.swing.JLabel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         btnThucDonPhu = new com.ui.swing.HoverButton();
+        jLabel5 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
@@ -985,6 +987,9 @@ public class DatMon extends javax.swing.JDialog {
         });
         jPanel1.add(btnThucDonPhu, new org.netbeans.lib.awtextra.AbsoluteConstraints(890, 790, -1, 30));
 
+        jLabel5.setText("* ( không bao gồm nước uống )");
+        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 630, -1, -1));
+
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1420, 850));
 
         pack();
@@ -1067,14 +1072,14 @@ public class DatMon extends javax.swing.JDialog {
         }
 
         if (!isThucDonPhu) {
-           if (isDispose){
+            if (isDispose) {
                 if (chiTietDatMonDAO.selectThucDonChinh(maHD) == null && chiTietDatMonDAO.selectThucDonPhu(maHD) == null) {
-                if ((Integer.parseInt(lblBanPhu.getText()) != 0)) {
-                    DialogHelper.alertError(this, "Vui lòng chọn thực đơn cho bàn phụ");
-                    return;
+                    if ((Integer.parseInt(lblBanPhu.getText()) != 0)) {
+                        DialogHelper.alertError(this, "Vui lòng chọn thực đơn cho bàn phụ");
+                        return;
+                    }
                 }
             }
-           }
         }
 
         if (isThucDonPhu) {
@@ -1359,6 +1364,7 @@ public class DatMon extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;

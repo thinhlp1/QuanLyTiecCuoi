@@ -1,29 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="subHoaDon_ThucDon" language="groovy" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="bb880c52-9252-4c68-9c0b-555ac16cafcf">
-	<property name="ireport.zoom" value="2.3579476910000086"/>
-	<property name="ireport.x" value="245"/>
+	<property name="ireport.zoom" value="1.9487171000000072"/>
+	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="MaHD" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT DISTINCT td.MaTD,td.TenTD,TenMA, ct.ThuTu,
-		 IIF(ct.SoLuong = -1,'CXD',CAST(ct.SoLuong AS varchar)) AS SoLuong ,
-		(  IIF ( ct.SoLuong * ma.GiaTien < 0, 'CXD',CAST(( ct.SoLuong * ma.GiaTien + ct.ChiPhiPhatSinh ) AS varchar) )  )AS TongChiPhi,
-		( ( SELECT SUM(ChiPhi) FROM DichVuDatMon WHERE MaHD = 'HD20221206001' )  +  ( SELECT SUM(IIF(ChiPhiPhatSinh IS NULL,0,ChiPhiPhatSinh)) FROM DichVuDatMon WHERE MaHD =  $P{MaHD} ) + 
-		  ( SELECT SUM(ChiPhiPhatSinh * SoLuong)  FROM ChiTietDatMon WHERE MaHD =  $P{MaHD} )  ) AS TongPhaiTra
+		<![CDATA[SELECT ROW_NUMBER() OVER ( ORDER BY X.TenMA ASC ) AS STT, * FROM (
+
+		SELECT   TenMA,ma.GiaTien,
+		IIF(SUM ( DISTINCT ct.SoLuong ) <= -1,'CXD',CAST(SUM ( DISTINCT ct.SoLuong ) AS varchar)  ) AS SoLuong ,
+		(IIF( SUM ( DISTINCT ct.SoLuong ) * ma.GiaTien + ct.ChiPhiPhatSinh * SUM ( DISTINCT ct.SoLuong ) <= -1 ,'CXD',CAST(SUM ( DISTINCT ct.SoLuong ) * ma.GiaTien + ct.ChiPhiPhatSinh * SUM ( DISTINCT ct.SoLuong ) AS varchar) )) AS TongChiPhi,
+		( ( SELECT SUM(ChiPhi) FROM DichVuDatMon WHERE MaHD = $P{MaHD} )  +  ( SELECT SUM(IIF(ChiPhiPhatSinh IS NULL,0,ChiPhiPhatSinh)) FROM DichVuDatMon WHERE MaHD = $P{MaHD}  ) + 
+		  ( SELECT SUM(ChiPhiPhatSinh ) * SUM ( DISTINCT ct.SoLuong)   FROM ChiTietDatMon WHERE MaHD = $P{MaHD}  )  ) AS TongPhaiTra
 		FROM ChiTietDatMon ct
 		INNER JOIN MonAn ma ON ct.MaMA = ma.MaMA 
 		INNER JOIN DichVuDatMon dv ON dv.MaTD = ct.MaTD
 		INNER JOIN ThucDon td ON dv.MaTD = td.MaTD
-		WHERE ct.MaHD =  $P{MaHD} 
-		
-		order by td.MaTD,thutu asc]]>
+		WHERE ct.MaHD = $P{MaHD}
+		GROUP BY TenMA,ma.GiaTien, ct.ChiPhiPhatSinh
+) AS X]]>
 	</queryString>
-	<field name="MaTD" class="java.lang.String"/>
-	<field name="TenTD" class="java.lang.String"/>
+	<field name="STT" class="java.lang.Long"/>
 	<field name="TenMA" class="java.lang.String"/>
-	<field name="ThuTu" class="java.lang.Integer"/>
+	<field name="GiaTien" class="java.lang.String"/>
 	<field name="SoLuong" class="java.lang.String"/>
 	<field name="TongChiPhi" class="java.lang.String"/>
 	<field name="TongPhaiTra" class="java.lang.Long"/>
@@ -135,7 +136,7 @@
 					<bottomPen lineWidth="1.0"/>
 					<rightPen lineWidth="1.0"/>
 				</box>
-				<textElement verticalAlignment="Middle">
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{TenMA}]]></textFieldExpression>

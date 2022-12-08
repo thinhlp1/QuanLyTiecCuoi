@@ -24,6 +24,7 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
+import javax.swing.text.TableView;
 
 public class Table extends JTable {
 
@@ -59,6 +60,12 @@ public class Table extends JTable {
                 } else {
                     com.setBackground(Color.WHITE);
                 }
+                  for (int j = 0; j < list.size(); j++) {
+                    if (i == list.get(j)) {
+                        com.setBackground(new Color(230, 255, 204));
+                    }
+                }
+             
 
                 return com;
 
@@ -93,19 +100,14 @@ public class Table extends JTable {
 
                 if (selected) {
                     com.setBackground(new Color(239, 244, 255));
-                } else {
-                    com.setBackground(Color.WHITE);
-                    for (int j = 0; j < list.size(); j++) {
-                        if (i == list.get(j)) {
-                            com.setBackground(new Color(230, 255, 204));
-                        }
-                    }
-                    for (int j = 0; j < list2.size(); j++) {
-                        if (i == list2.get(j)) {
-                            com.setBackground(new Color(234,182,118));
-                        }
+                } 
+                
+                for (int j = 0; j < list.size(); j++) {
+                    if (i == list.get(j)) {
+                        com.setBackground(new Color(230, 255, 204));
                     }
                 }
+             
 
                 this.addKeyListener(keyAction);
                 return com;

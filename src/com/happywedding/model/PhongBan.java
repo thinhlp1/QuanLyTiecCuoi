@@ -13,6 +13,12 @@ public class PhongBan {
         this.tenPB = tenPB;
     }
 
+    @Override
+    public String toString() {
+      return tenPB ;
+    }
+
+    
     public String getMaPB() {
         return maPB;
     }

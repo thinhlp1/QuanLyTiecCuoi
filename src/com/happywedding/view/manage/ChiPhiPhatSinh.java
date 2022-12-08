@@ -47,6 +47,7 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableColumnModel;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -79,6 +80,10 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
     private HopDongDichVuDiKem hddvdk = new HopDongDichVuDiKem();
     private HoaDon hoaDon;
 
+    private long tongChiPhiDatMon = 0;
+    private long tongChiPhiDikem = 0;
+    private long tongChiPhiDichVu = 0;
+
     static class DichVu {
 
         static String TTCONG = "TTCONG";
@@ -107,6 +112,13 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
     public void init() {
         tblChiTietDichVuModel = (DefaultTableModel) tblChiTietDichVu.getModel();
         tblThucDonModel = (DefaultTableModel) tblThucDon.getModel();
+        TableColumnModel columnModel1 = tblThucDon.getColumnModel();
+        columnModel1.getColumn(0).setPreferredWidth(40);
+        columnModel1.getColumn(0).setMaxWidth(40);
+
+        TableColumnModel columnModel2 = tblChiTietDichVu.getColumnModel();
+        columnModel2.getColumn(0).setPreferredWidth(40);
+        columnModel2.getColumn(0).setMaxWidth(40);
         tblChiTietDichVu.fixTable(jScrollPane2);
         tblThucDon.fixTable(jScrollPane3);
         tblThucDon.addKeyListener(new MyTableCellEditor(), 2);
@@ -120,24 +132,21 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
                 int row = tblChiTietDichVu.getEditingRow();
 
                 if (col > -1 && row > -1) {
-                    if (col == 2) {
+                    if (col == 3) {
                         editingCell = (String) tblChiTietDichVu.getValueAt(row, col);
-
-                        if (editingCell.equals(ShareHelper.toMoney(ShareHelper.toMoney(editingCell)))) {
-                            tinhTien();
-                            return;
-                        }
 
                         if (editingCell.equals("")) {
                             tblChiTietDichVu.setValueAt("0", row, col);
-
-                        } else if (ShareHelper.toMoney(editingCell) < 1000 && !editingCell.equals("0")) {
+                        } else if (Integer.parseInt((String) tblChiTietDichVu.getValueAt(row, col)) < 0) {
+                            tblChiTietDichVu.setValueAt("0", row, col);
+                        } else if (Integer.parseInt((String) tblChiTietDichVu.getValueAt(row, col)) > 1000) {
                             tblChiTietDichVu.setValueAt("1000", row, col);
-                            tinhTien();
-
                         } else {
-                            //tblChiTietDichVu.setValueAt(ShareHelper.toMoney(ShareHelper.toMoney(editingCell)), row, col);
-
+                            //tblThucDon.setValueAt(ShareHelper.toMoney(ShareHelper.toMoney(editingCell)), row, col);
+                        }
+                        if (editingCell.equals(editingCell)) {
+                            tinhTien();
+                            return;
                         }
 
                     }
@@ -154,21 +163,23 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
                 int row = tblThucDon.getEditingRow();
 
                 if (col > -1 && row > -1) {
-                    if (col == 2) {
+                    if (col == 3) {
                         editingCell = (String) tblThucDon.getValueAt(row, col);
 
-                        if (editingCell.equals(ShareHelper.toMoney(ShareHelper.toMoney(editingCell)))) {
-                            tinhTien();
-                            return;
-                        }
                         if (editingCell.equals("")) {
                             tblThucDon.setValueAt("0", row, col);
-                        } else if (ShareHelper.toMoney(editingCell) < 1000 && !editingCell.equals("0")) {
+                        } else if (Integer.parseInt((String) tblThucDon.getValueAt(row, col)) < 0) {
+                            tblThucDon.setValueAt("0", row, col);
+                        } else if (Integer.parseInt((String) tblThucDon.getValueAt(row, col)) > 1000) {
                             tblThucDon.setValueAt("1000", row, col);
-                            tinhTien();
                         } else {
                             //tblThucDon.setValueAt(ShareHelper.toMoney(ShareHelper.toMoney(editingCell)), row, col);
                         }
+                        if (editingCell.equals(editingCell)) {
+                            tinhTien();
+                            return;
+                        }
+
                     }
                 }
             }
@@ -210,6 +221,19 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
 
     public void loadChiPhiDatMon() {
         listChiTietDatMon = datMonDAO.selectByMaPhanLoai(maHD, "NUOC");
+        List<String> listMA = new ArrayList<>();
+        List<ChiTietDatMon> listChiTiet = new ArrayList<>();
+        for (int i = 0; i < listChiTietDatMon.size(); i++) {
+            for (int j = i; j < listChiTietDatMon.size(); j++) {
+                if (listChiTietDatMon.get(i).getMaMA().equals(listChiTietDatMon.get(j).getMaMA()) && !listMA.contains(listChiTietDatMon.get(j).getMaMA())) {
+                    listMA.add(listChiTietDatMon.get(i).getMaMA());
+                    listChiTiet.add(listChiTietDatMon.get(i));
+                    break;
+                }
+            }
+
+        }
+        listChiTietDatMon = listChiTiet;
     }
 
     public void loadChiPhiDiKem() {
@@ -256,27 +280,64 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
 
     public void fillTableThucDon(List<ChiTietDatMon> list) {
         tblThucDonModel.setRowCount(0);
+        List<Boolean> listExit = new ArrayList<>();
+//        List<String> listNotDuplicate = new ArrayList<>();
+//        List<String> listDuplicate = new ArrayList<>();
+//        List<String> listMA = new ArrayList<>();
+//        List<String> listChiTietDatMon = new ArrayList<>(); 
+//        for (ChiTietDatMon ct : list) {
+//            listMA.add(ct.getMaMA());
+//            listDuplicate.add(ct.getMaMA());
+//        }
+//       
+//        for (int i = 0; i < list.size(); i++) {
+//            if (!listNotDuplicate.contains(listDuplicate.get(i))) {
+//                listNotDuplicate.add(listDuplicate.get(i));
+//            }
+//
+//        }
+//        
+//       for (ChiTietDatMon ct : list){
+//           
+//       }
+        List<String> listMA = new ArrayList<>();
+        List<ChiTietDatMon> listChiTiet = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            for (int j = i; j < list.size(); j++) {
+                if (list.get(i).getMaMA().equals(list.get(j).getMaMA()) && !listMA.contains(list.get(j).getMaMA())) {
+                    listMA.add(list.get(i).getMaMA());
+                    listChiTiet.add(list.get(i));
+                    break;
+                }
+            }
 
-        for (ChiTietDatMon ct : list) {
+        }
+
+        int i = 1;
+        for (ChiTietDatMon ct : listChiTiet) {
             Object[] row = {
+                i,
                 ct.getTenMA(),
                 ShareHelper.toMoney(ct.getGia()),
                 ct.getSoLuong() == -1 ? "0" : ct.getSoLuong()
             };
-
+            i++;
             tblThucDonModel.addRow(row);
-
         }
+
     }
 
     public void fillTableDichVuDiKem(List<ChiTietDichVuDiKem> list) {
         tblChiTietDichVuModel.setRowCount(0);
+        int i = 1;
         for (ChiTietDichVuDiKem ct : list) {
             Object[] row = {
+                i,
                 ct.getTenDV(),
                 ShareHelper.toMoney(ct.getChiPhi()),
                 (ct.getSoLuong() == -1) ? "0" : ct.getSoLuong()
             };
+            i++;
             tblChiTietDichVuModel.addRow(row);
         }
     }
@@ -295,7 +356,7 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
         for (ChiTietDatMon ct : listChiTietDatMon) {
             chiPhiDatMon += ct.getSoLuong() * ct.getGia();
             tblThucDon.editingCanceled(new ChangeEvent(new Object()));
-            tblThucDon.setValueAt(ShareHelper.toMoney(ct.getGia() * ct.getSoLuong()), i, 3);
+            tblThucDon.setValueAt(ShareHelper.toMoney(ct.getGia() * ct.getSoLuong()), i, 4);
             i++;
         }
 
@@ -304,7 +365,7 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
         for (ChiTietDichVuDiKem ct : listChiTietDichVuDiKem) {
             chiPhiDiKem += ct.getSoLuong() * ct.getChiPhi();
             tblChiTietDichVu.editingCanceled(new ChangeEvent(new Object()));
-            tblChiTietDichVu.setValueAt(ShareHelper.toMoney(ct.getChiPhi() * ct.getSoLuong()), i, 3);
+            tblChiTietDichVu.setValueAt(ShareHelper.toMoney(ct.getChiPhi() * ct.getSoLuong()), i, 4);
             i++;
         }
 
@@ -380,7 +441,7 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
         for (int i = 0; i < size; i++) {
 
             ChiTietDatMon ct = listChiTietDatMon.get(i);
-            ct.setSoLuong(Integer.parseInt(tblThucDon.getValueAt(i, 2).toString()));
+            ct.setSoLuong(Integer.parseInt(tblThucDon.getValueAt(i, 3).toString()));
 
             list.add(ct);
         }
@@ -393,7 +454,7 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
         for (int i = 0; i < size; i++) {
 
             ChiTietDichVuDiKem ct = listChiTietDichVuDiKem.get(i);
-            ct.setSoLuong(Integer.parseInt(tblChiTietDichVu.getValueAt(i, 2).toString()));
+            ct.setSoLuong(Integer.parseInt(tblChiTietDichVu.getValueAt(i, 3).toString()));
 
             list.add(ct);
         }
@@ -404,6 +465,7 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
         listChiPhiPhatSinh = getChiPhiPhatSinh();
         try {
             for (ChiPhiPhatSinhModel ct : listChiPhiPhatSinh) {
+                tongChiPhiDichVu += ct.getChiPhi();
                 hoaDonDAO.insertChiPhiPhatSinh(ct);
 
             }
@@ -420,6 +482,7 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
         List<ChiTietDatMon> list = getChiPhiDatMon();
         try {
             for (ChiTietDatMon ct : list) {
+                tongChiPhiDatMon += ct.getSoLuong() * ct.getGia();
                 datMonDAO.updateChiTietDatMon(ct);
 
             }
@@ -432,16 +495,44 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
 
     }
 
+    public void tinhTienTatCaDichVu() {
+        List<ChiTietDatMon> list = getChiPhiDatMon();
+        for (ChiTietDatMon ct : list) {
+            tongChiPhiDatMon += ct.getSoLuong() * ct.getGia();
+
+        }
+
+        listChiPhiPhatSinh = getChiPhiPhatSinh();
+        for (ChiPhiPhatSinhModel ct : listChiPhiPhatSinh) {
+            tongChiPhiDichVu += ct.getChiPhi();
+
+        }
+
+        List<ChiTietDichVuDiKem> list2 = getChiPhiDiKem();
+        long tongTienDiKem = 0;
+
+        for (ChiTietDichVuDiKem ct : list2) {
+            diKemDAO.updateChiTietDiKem(ct);
+            tongTienDiKem += ct.getChiPhi() * ct.getSoLuong();
+
+        }
+      
+        this.tongChiPhiDikem = tongTienDiKem;
+
+    }
+
     public boolean insertChiTietDichVuDiKem() {
         List<ChiTietDichVuDiKem> list = getChiPhiDiKem();
         long tongTienDiKem = 0;
-        
+
         try {
             for (ChiTietDichVuDiKem ct : list) {
                 diKemDAO.updateChiTietDiKem(ct);
                 tongTienDiKem += ct.getChiPhi() * ct.getSoLuong();
+
             }
             updateHopDongDichVuDiKem(tongTienDiKem);
+            this.tongChiPhiDikem = tongTienDiKem;
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -449,13 +540,13 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
             return false;
         }
     }
-    
-    public void updateHopDongDichVuDiKem(long tongTienDiKem){
+
+    public void updateHopDongDichVuDiKem(long tongTienDiKem) {
         HopDongDichVuDiKem hddv = diKemDAO.selectHopDongDichVuDiKem(maHD);
-        long tongTien = tongTienDiKem + hddv.getChiPhi();
-        hddv.setChiPhi(tongTien );
+        long tongTien = tongTienDiKem + hddv.getChiPhiPhatSinh();
+        hddv.setChiPhiPhatSinh(tongTien);
         diKemDAO.updateHopDongDichVuDiKem(hddv);
-        
+
     }
 
     class CheckNumber extends KeyAdapter {
@@ -582,7 +673,7 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
                 txtLyDoTrangTriCongActionPerformed(evt);
             }
         });
-        pnlChiTiet.add(txtLyDoTrangTriCong, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 80, 360, 35));
+        pnlChiTiet.add(txtLyDoTrangTriCong, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 80, 500, 35));
 
         jLabel8.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel8.setText("Lý do");
@@ -612,7 +703,7 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
                 txtLyDoTTBanTiecActionPerformed(evt);
             }
         });
-        pnlChiTiet.add(txtLyDoTTBanTiec, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 140, 360, 35));
+        pnlChiTiet.add(txtLyDoTTBanTiec, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 140, 500, 35));
 
         lblMaNH27.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         lblMaNH27.setText("Trang trí sân khấu");
@@ -638,7 +729,7 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
                 txtLyDoTTSanKhauActionPerformed(evt);
             }
         });
-        pnlChiTiet.add(txtLyDoTTSanKhau, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 200, 360, 35));
+        pnlChiTiet.add(txtLyDoTTSanKhau, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 200, 500, 35));
 
         lblMaNH28.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         lblMaNH28.setText("Trang trí cổng");
@@ -668,7 +759,7 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
                 txtLyDoDatMonActionPerformed(evt);
             }
         });
-        pnlChiTiet.add(txtLyDoDatMon, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 260, 360, 35));
+        pnlChiTiet.add(txtLyDoDatMon, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 260, 500, 35));
 
         lblMaNH30.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         lblMaNH30.setText("Nghệ thuật");
@@ -694,7 +785,7 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
                 txtLyDoNgheThuatActionPerformed(evt);
             }
         });
-        pnlChiTiet.add(txtLyDoNgheThuat, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 320, 360, 35));
+        pnlChiTiet.add(txtLyDoNgheThuat, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 320, 500, 35));
 
         lblMaNH31.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         lblMaNH31.setText("Đi kèm");
@@ -720,7 +811,7 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
                 txtLyDoDiKemActionPerformed(evt);
             }
         });
-        pnlChiTiet.add(txtLyDoDiKem, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 380, 360, 35));
+        pnlChiTiet.add(txtLyDoDiKem, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 380, 500, 35));
 
         btnXuatHoaDon.setBackground(new java.awt.Color(24, 153, 29));
         btnXuatHoaDon.setForeground(new java.awt.Color(255, 255, 255));
@@ -738,7 +829,7 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
                 btnXuatHoaDonActionPerformed(evt);
             }
         });
-        pnlChiTiet.add(btnXuatHoaDon, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 890, -1, 30));
+        pnlChiTiet.add(btnXuatHoaDon, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 890, -1, 30));
 
         lblMaNH24.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         lblMaNH24.setText("Tổng chi phí");
@@ -755,14 +846,14 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
 
         tblThucDon.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null}
+                {null, null, null, null, null}
             },
             new String [] {
-                "Tên món", "Giá", "Số lượng", "Tổng tiền"
+                "STT", "Tên món", "Giá", "Số lượng", "Tổng tiền"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, true, false
+                false, false, false, true, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -787,7 +878,7 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
         });
         jScrollPane2.setViewportView(tblThucDon);
 
-        pnlChiTiet.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 490, 840, 160));
+        pnlChiTiet.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 490, 970, 160));
 
         jLabel9.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel9.setText("Chi phí phát sinh");
@@ -799,14 +890,14 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
 
         tblChiTietDichVu.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null}
+                {null, null, null, null, null}
             },
             new String [] {
-                "Dịch vụ", "Giá", "Số lượng", "Tổng tiền"
+                "STT", "Dịch vụ", "Giá", "Số lượng", "Tổng tiền"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, true, false
+                false, false, false, true, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -831,15 +922,17 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
         });
         jScrollPane3.setViewportView(tblChiTietDichVu);
 
-        pnlChiTiet.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 700, 840, 160));
+        pnlChiTiet.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 700, 970, 160));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 916, Short.MAX_VALUE)
+            .addGap(0, 1044, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(pnlChiTiet, javax.swing.GroupLayout.DEFAULT_SIZE, 916, Short.MAX_VALUE))
+                .addGroup(layout.createSequentialGroup()
+                    .addComponent(pnlChiTiet, javax.swing.GroupLayout.PREFERRED_SIZE, 1044, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 0, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -902,6 +995,7 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
 
     private void btnXuatHoaDonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXuatHoaDonActionPerformed
 //        boolean rs = DialogHelper.confirm(this, "Xác nhận xuất hóa đơn ? Không thể xuất lại lần 2");
+        HopDong hopDong = new HopDongDAO().findById(maHD);
         if (hoaDonDAO.selectByID(maHD) != null) {
             if (hoaDonDAO.selectByID(maHD).getTrangTha() == 0) {
                 if (insertChiPhiDichVu() && insertChiTietDatMon() && insertChiTietDichVuDiKem()) {
@@ -925,36 +1019,42 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
                     if (dvdm1 != null) {
                         for (int i = 0; i < tblThucDon.getRowCount(); i++) {
                             for (int j = 0; j < list1.size(); j++) {
-                                if (listChiTietDatMon.get(i).getMaTD().equals(maTD) && list1.get(j).getMaPL().equals("NUOC") 
-                                        && listChiTietDatMon.get(i).getMaMA().equals(list1.get(j).getMaMA())  ) {
-                                    tongChiPhiDatMon1 += list1.get(j).getGia() * (Integer.parseInt(tblThucDon.getValueAt(i, 2) + ""));
-                                    
+                                if (listChiTietDatMon.get(i).getMaTD().equals(maTD) && list1.get(j).getMaPL().equals("NUOC")
+                                        && listChiTietDatMon.get(i).getMaMA().equals(list1.get(j).getMaMA())) {
+                                    tongChiPhiDatMon1 += list1.get(j).getGia() * (Integer.parseInt(tblThucDon.getValueAt(i, 3) + ""));
+
                                 }
                             }
                         };
 
-                        tongChiPhiDatMon1 += dvdm1.getChiPhi();
-                        dvdm1.setChiPhi(tongChiPhiDatMon1);
+                        tongChiPhiDatMon1 += dvdm1.getChiPhiPhatSinh();
+                        dvdm1.setChiPhiPhatSinh(tongChiPhiDatMon1);
                         datMonDAO.updateDichVuDatMon(dvdm1, maTD);
                     }
 
                     if (dvdm2 != null) {
                         for (int i = 0; i < tblThucDon.getRowCount(); i++) {
                             for (int j = 0; j < list2.size(); j++) {
-                                if (listChiTietDatMon.get(i).getMaTD().equals(maTDPhu) && list2.get(j).getMaPL().equals("NUOC") 
-                                        && listChiTietDatMon.get(i).getMaMA().equals(list2.get(j).getMaMA())  ) {
-                                    tongChiPhiDatMon2 += list2.get(j).getGia() * (Integer.parseInt(tblThucDon.getValueAt(i, 2) + ""));
-                                    
+                                if (listChiTietDatMon.get(i).getMaTD().equals(maTDPhu) && list2.get(j).getMaPL().equals("NUOC")
+                                        && listChiTietDatMon.get(i).getMaMA().equals(list2.get(j).getMaMA())) {
+                                    tongChiPhiDatMon2 += list2.get(j).getGia() * (Integer.parseInt(tblThucDon.getValueAt(i, 3) + ""));
+
                                 }
                             }
                         };
 
-                        tongChiPhiDatMon2 += dvdm2.getChiPhi();
-                        dvdm2.setChiPhi(tongChiPhiDatMon2);
+                        tongChiPhiDatMon2 += dvdm2.getChiPhiPhatSinh();
+                        dvdm2.setChiPhiPhatSinh(tongChiPhiDatMon2);
                         datMonDAO.updateDichVuDatMon(dvdm2, maTDPhu);
                     }
 
-                    if (!hoaDonDAO.updateHoaDon(maHD, DateHelper.now(), AppStatus.USER.getMaNV())) {
+                    long tongTienPhatSinh = tongChiPhiDatMon + tongChiPhiDichVu + tongChiPhiDikem;
+                    long thuePhatSinh = (long) ((tongTienPhatSinh) * 0.1);
+                    long tongTien = tongTienPhatSinh + hopDong.getTongTien() + thuePhatSinh;
+                    long tongTienPhaiTra = tongTien - hopDong.getTienCoc();
+                    long tienConNo = hopDong.getTongTien() - hopDong.getTienCoc();
+
+                    if (!hoaDonDAO.updateHoaDon(maHD, DateHelper.now(), AppStatus.USER.getMaNV(), tongTienPhaiTra)) {
                         DialogHelper.alertError(this, "Không thể cập nhật hóa đơn");
                         return;
                     }
@@ -964,7 +1064,7 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
                     HopDongDAO hopDongDAO = new HopDongDAO();
                     List<Long> chiPhi = hopDongDAO.tinhToan(maHD);
                     ChiTietDichVuDAO dichVuDAO = new ChiTietDichVuDAO();
-                    HopDong hopDong = hopDongDAO.findById(maHD);
+
                     try {
                         Map<String, Object> parameters = new HashMap<String, Object>();
                         Connection con = JDBCHelper.getConnection();
@@ -998,23 +1098,33 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
                         long giaSanh = (sanh.getGiaBan() * hopDong.getSoLuongBan()) + sanh.getGiaThueSanh();
                         ttdv += giaSanh;
                         String tongTienDichVu = ShareHelper.toMoney(ttdv);
-                        String thue = ShareHelper.toMoney( (long)(((chiPhi.get(0) + chiPhi.get(1))) * 10 / 100.0)); 
-                        String tongTien = ShareHelper.toMoney(hopDong.getTongTien());
+
                         String tienCoc = ShareHelper.toMoney(hopDong.getTienCoc());
-                        String tienConLai = ShareHelper.toMoney(hopDong.getTongTien() - hopDong.getTienCoc());
-                        String thanhChu = EnglishNumberToWords.convert(hopDong.getTongTien());
-                        String thanhChu2 = EnglishNumberToWords.convert(ShareHelper.toMoney(tienConLai));
+                        String tienConNo1 = ShareHelper.toMoney(tienConNo) + " VND";
+
+                        String tongTienPhatSinh1 = ShareHelper.toMoney(tongTienPhatSinh) + " VND";
+                        String thuePhatSinh1 = ShareHelper.toMoney(thuePhatSinh) + " VND";
+                        String tongTienPhaiTra1 = ShareHelper.toMoney(tongTienPhaiTra) + " VND";
+                        String ttdv1 = ShareHelper.toMoney(tongTienPhaiTra) + " VND";
+                        String thanhChu = EnglishNumberToWords.convert(tongChiPhiDatMon1);
+                        
+                        String thanhchu1 = thanhChu.substring(0, 1);
+                        String thanhChu2 = thanhChu.substring(2,thanhChu.length());
+                        thanhChu = thanhchu1.toUpperCase() + thanhChu2;
+                        
+                        
                         net.sf.jasperreports.engine.JasperReport rpt = JasperCompileManager.compileReport("src\\com\\happywedding\\Report\\HoaDonChinhThuc.jrxml");
                         parameters.put("MaHD", maHD);
                         parameters.put("MaTD_Chinh", maTD);
                         parameters.put("MaTD_Phu", maTDPhu);
+                        parameters.put("tienConNo", tienConNo1);
+                        parameters.put("tongTienPhatSinh", tongTienPhatSinh1);
+
                         parameters.put("ThanhTien", thanhChu);
-                        parameters.put("ThanhTien2", thanhChu2);
-                        parameters.put("Thue", thue + "VND");
-                        parameters.put("TongTien", tongTien);
+                        parameters.put("Thue", thuePhatSinh1);
+                        parameters.put("TongTien", tongTienPhaiTra1);
                         parameters.put("TienCoc", tienCoc);
-                        parameters.put("TienConLai", tienConLai);
-                        parameters.put("tongTienDichVu", tongTienDichVu);
+
                         parameters.put("SUBREPORT_DIR", "src\\com\\happywedding\\Report\\");
                         System.out.println(parameters);
                         JasperPrint p = JasperFillManager.fillReport(rpt, parameters, con);
@@ -1025,12 +1135,10 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
                     } catch (JRException ex) {
                         Logger.getLogger(JasperReport.class.getName()).log(Level.SEVERE, null, ex);
                     }
-
                 }
             } else {
                 boolean rs = DialogHelper.confirm(this, "Xuất lại hóa đơn");
                 if (rs) {
-
                     String maTD = datMonDAO.selectThucDonChinh(maHD);
                     String maTDPhu = datMonDAO.selectThucDonPhu(maHD);
 
@@ -1038,17 +1146,19 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
                         maTDPhu = "";
                     }
 
-                    if (!hoaDonDAO.updateHoaDon(maHD, DateHelper.now(), AppStatus.USER.getMaNV())) {
-                        DialogHelper.alertError(this, "Không thể cập nhật hóa đơn");
-                        return;
-                    }
                     //btnXuatHoaDon.setVisible(false);
                     isView(false);
+                    tinhTienTatCaDichVu();
+                    long tongTienPhatSinh = tongChiPhiDatMon + tongChiPhiDichVu + tongChiPhiDikem;
+                    long thuePhatSinh = (long) ((tongTienPhatSinh) * 0.1);
+                    long tongTien = tongTienPhatSinh + hopDong.getTongTien() + thuePhatSinh;
+                    long tongTienPhaiTra = tongTien - hopDong.getTienCoc();
+                    long tienConNo = hopDong.getTongTien() - hopDong.getTienCoc();
 
                     HopDongDAO hopDongDAO = new HopDongDAO();
                     List<Long> chiPhi = hopDongDAO.tinhToan(maHD);
                     ChiTietDichVuDAO dichVuDAO = new ChiTietDichVuDAO();
-                    HopDong hopDong = hopDongDAO.findById(maHD);
+
                     try {
                         Map<String, Object> parameters = new HashMap<String, Object>();
                         Connection con = JDBCHelper.getConnection();
@@ -1082,24 +1192,33 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
                         long giaSanh = (sanh.getGiaBan() * hopDong.getSoLuongBan()) + sanh.getGiaThueSanh();
                         ttdv += giaSanh;
                         String tongTienDichVu = ShareHelper.toMoney(ttdv);
-                     String thue = ShareHelper.toMoney( (long)(((chiPhi.get(0) + chiPhi.get(1))) * 10 / 100.0)); 
-                        String tongTien = ShareHelper.toMoney(hopDong.getTongTien());
+
                         String tienCoc = ShareHelper.toMoney(hopDong.getTienCoc());
-                        String tienConLai = ShareHelper.toMoney(hopDong.getTongTien() - hopDong.getTienCoc());
-                        String thanhChu = EnglishNumberToWords.convert(hopDong.getTongTien());
-                        String thanhChu2 = EnglishNumberToWords.convert(ShareHelper.toMoney(tienConLai));
+                        String tienConNo1 = ShareHelper.toMoney(tienConNo) + " VND";
+
+                        String tongTienPhatSinh1 = ShareHelper.toMoney(tongTienPhatSinh) + " VND";
+                        String thuePhatSinh1 = ShareHelper.toMoney(thuePhatSinh) + " VND";
+                        String tongTienPhaiTra1 = ShareHelper.toMoney(tongTienPhaiTra) + " VND";
+//                        String ttdv1 = ShareHelper.toMoney(tongTienPhaiTra) + " VND";
+                        String thanhChu = EnglishNumberToWords.convert(tongTienPhaiTra);
+                        
+                              String thanhchu1 = thanhChu.substring(0, 1);
+                        String thanhChu2 = thanhChu.substring(1,thanhChu.length());
+                        thanhChu = thanhchu1.toUpperCase() + thanhChu2;
+                        
+                        
                         net.sf.jasperreports.engine.JasperReport rpt = JasperCompileManager.compileReport("src\\com\\happywedding\\Report\\HoaDonChinhThuc.jrxml");
                         parameters.put("MaHD", maHD);
                         parameters.put("MaTD_Chinh", maTD);
                         parameters.put("MaTD_Phu", maTDPhu);
+                        parameters.put("tienConNo", tienConNo1);
+                        parameters.put("tongTienPhatSinh", tongTienPhatSinh1);
+
                         parameters.put("ThanhTien", thanhChu);
-                        parameters.put("ThanhTien2", thanhChu2);
-                        parameters.put("Thue", thue + " VND");
-                        parameters.put("TongTien", tongTien + " VND");
-                        parameters.put("TienCoc", tienCoc + " VND");
-                        parameters.put("TienConLai", tienConLai + " VND");
-                        parameters.put("tongTienDichVu", tongTienDichVu);
-                        
+                        parameters.put("Thue", thuePhatSinh1);
+                        parameters.put("TongTien", tongTienPhaiTra1);
+                        parameters.put("TienCoc", tienCoc);
+
                         parameters.put("SUBREPORT_DIR", "src\\com\\happywedding\\Report\\");
                         System.out.println(parameters);
                         JasperPrint p = JasperFillManager.fillReport(rpt, parameters, con);

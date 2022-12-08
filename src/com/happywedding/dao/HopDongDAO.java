@@ -46,7 +46,9 @@ public class HopDongDAO extends AbstractDAO<HopDong> {
     private final String TINH_TIEN_VOI_SANH = "EXEC tinhTienVoiSanh @MaHD = ? , @MaSanh = ?,@SoLuongBan = ?";
     private final String CHECK_SANH = "SELECT * FROM HopDong hd INNER JOIN Sanh s  ON hd.Sanh = s.MaSanh\n"
             + "WHERE MaSanh = ? AND NgayToChuc = ? AND (  ( CAST(? AS Time)   BETWEEN ThoiGianBatDau AND ThoiGianKetThuc )"
-            + "OR  (  ( CAST(? AS Time)   BETWEEN ThoiGianBatDau AND ThoiGianKetThuc )   )   ) AND MaHD != ?";
+            + "OR  (  ( CAST(? AS Time)   BETWEEN ThoiGianBatDau AND ThoiGianKetThuc )   )  "
+            + "OR (   ThoiGianBatDau  BETWEEN ( CAST(? AS Time)) AND  CAST(? AS Time) )"
+            + " ) AND MaHD != ?";
 
     @Override
     public boolean insert(HopDong entity) {
@@ -97,7 +99,7 @@ public class HopDongDAO extends AbstractDAO<HopDong> {
             ResultSet rs = null;
             HopDong hopDong = new HopDong();
             try {
-                rs = JDBCHelper.executeQuery(CHECK_SANH, maSanh, ngayToChuc, batDau, ketThuc, maHD);
+                rs = JDBCHelper.executeQuery(CHECK_SANH, maSanh, ngayToChuc, batDau, ketThuc,batDau,ketThuc, maHD);
                 while (rs.next()) {
                     hopDong.setMaHD(rs.getString("MaHD"));
                     hopDong.setNgayLap(rs.getDate("NgayLap"));

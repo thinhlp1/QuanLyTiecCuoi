@@ -23,7 +23,7 @@ public class ChiTietDatMonDAO {
 
     private final String INSERT_DICHVUDATMON = "INSERT DichVuDatMon (MaHD,MaTD,ChiPhi, GhiChu) VALUES (?,?,?,?)";
     private final String UPDATE_DICHVUDATMON = "UPDATE DichVuDatMon\n"
-            + "SET MaTD = ?, ChiPhi = ?, GhiChu = ?\n"
+            + "SET MaTD = ?, ChiPhi = ?,ChiPhiPhatSinh = ? ,GhiChu = ?\n"
             + "WHERE MaHD = ? AND MaTD = ?";
     private final String SELECT_DICHVUDATMON = "SELECT MaHD,MaTD,ChiPhi, \n"
             + "( SELECT SUM(ChiPhiPhatSinh * SoLuong)  FROM ChiTietDatMon WHERE MaHD = ? AND  MaTD = ? ) AS ChiPhiPhatSinh,\n"
@@ -67,7 +67,7 @@ public class ChiTietDatMonDAO {
     }
 
     public boolean updateDichVuDatMon(DichVuDatMon dvdm, String maTD) {
-        int rs = JDBCHelper.executeUpdate(UPDATE_DICHVUDATMON, dvdm.getMaTD(), dvdm.getChiPhi(), dvdm.getGhiChu(), dvdm.getMaHD(), dvdm.getMaTD());
+        int rs = JDBCHelper.executeUpdate(UPDATE_DICHVUDATMON, dvdm.getMaTD(), dvdm.getChiPhi(), dvdm.getChiPhiPhatSinh(),dvdm.getGhiChu(), dvdm.getMaHD(), dvdm.getMaTD());
         return rs > 0;
     }
 

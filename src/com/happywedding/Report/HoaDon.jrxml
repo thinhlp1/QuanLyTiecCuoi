@@ -2,7 +2,9 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="511b9514-f766-451c-bf93-51cae47cf750">
 	<property name="ireport.zoom" value="1.2396694214876087"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+
+
+	<property name="ireport.y" value="491"/>
 	<parameter name="MaHD" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
@@ -114,14 +116,6 @@ WHERE
 	<field name="HoaDon_MaNV" class="java.lang.String"/>
 	<field name="HoaDon_TrangThai" class="java.lang.Integer"/>
 	<field name="HoaDon_MaNLLan2" class="java.lang.String"/>
-	<background>
-		<band height="261">
-			<image>
-				<reportElement x="156" y="45" width="225" height="193" uuid="a291f283-824e-4e51-be76-13b4f7b9d45e"/>
-				<imageExpression><![CDATA["src\\com\\happywedding\\assets\\bgReport.jpg"]]></imageExpression>
-			</image>
-		</band>
-	</background>
 	<title>
 		<band height="222" splitType="Stretch">
 			<staticText>

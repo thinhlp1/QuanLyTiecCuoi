@@ -14,6 +14,10 @@ public class DanhMuc {
     public DanhMuc() {
     }
     
+    @Override
+    public String toString() {
+        return    tenDM;
+    }
     
 
     public String getMaDM() {

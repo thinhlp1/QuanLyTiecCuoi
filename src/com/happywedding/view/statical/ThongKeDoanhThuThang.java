@@ -6,6 +6,7 @@
 package com.happywedding.view.statical;
 
 import com.happywedding.dao.ThongKeDAO;
+import com.happywedding.helper.AppStatus;
 import com.happywedding.helper.DialogHelper;
 import com.happywedding.helper.ShareHelper;
 import com.ui.swing.chart.ModelChart;
@@ -33,22 +34,41 @@ public class ThongKeDoanhThuThang extends javax.swing.JPanel {
     private ThongKeDAO thongKeDAO = new ThongKeDAO();
     private boolean isLoad = false;
     private List<Integer> listThang = new ArrayList<>();
-
+    
     /**
      * Creates new form ThongKeDoanhThuNam
      */
     public ThongKeDoanhThuThang() {
         initComponents();
-        init();
+        init(-1);
+    }
+    
+     public ThongKeDoanhThuThang(int year) {
+        initComponents();
+        init(year);
     }
 
-    public void init() {
+    public void init(int year) {
         tblModel = (DefaultTableModel) tblDoanhThu.getModel();
         tblDoanhThu.fixTable(jScrollPane1);
         loadThongKe();
-        loadThongKeThang((int) listThongKe.get(listThongKe.size() - 1)[0]);
+       
         fillCombboxNam();
-
+         if (year == -1){
+            loadThongKeThang((int) listThongKe.get(listThongKe.size() - 1)[0]);
+        }else{
+             loadThongKeThang(year);
+             for (int i = 0; i < cbbNamBatDau.getComponentCount();i++){
+                 if (( (Integer) cbbNamBatDau.getItemAt(i)) == year){
+                     cbbNamBatDau.setSelectedIndex(i);
+                     break;
+                 }
+             }
+        }
+         
+         
+         
+         
         fillTable(listThongKeThang);
         // fillChart(listThongKe);
         isLoad = true;
@@ -237,7 +257,7 @@ public class ThongKeDoanhThuThang extends javax.swing.JPanel {
                 cbbBatDauModel.addElement(i);
             }
 
-            cbbBatDauModel.setSelectedItem(firstYear);
+            cbbBatDauModel.setSelectedItem(currentYear);
 
         } catch (Exception ex) {
             //DialogHelper.alertError(this, "Có lỗi xảy ra. Vui lòng liên hệ hỗ trợ viên");
@@ -408,10 +428,23 @@ public class ThongKeDoanhThuThang extends javax.swing.JPanel {
             new String [] {
                 "Tháng", "Số lượng hợp đồng", "Danh thu thấp nhất", "Danh thu cao nhất", "Tổng danh thu"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tblDoanhThu.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblDoanhThuMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tblDoanhThu);
 
-        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 590, 1630, 330));
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 590, 1520, 330));
         jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 50, -1, -1));
 
         jLabel4.setText("Năm");
@@ -522,6 +555,14 @@ public class ThongKeDoanhThuThang extends javax.swing.JPanel {
     private void cbbNamBatDauActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbbNamBatDauActionPerformed
 
     }//GEN-LAST:event_cbbNamBatDauActionPerformed
+
+    private void tblDoanhThuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblDoanhThuMouseClicked
+       int currentIndex = tblDoanhThu.getSelectedRow();
+       int nam = (int) cbbNamBatDau.getSelectedItem();
+       if (currentIndex > -1){
+           AppStatus.FORMTHONGKE.updateThongKeNgay((int) listFilted.get(currentIndex)[0], nam);
+       }
+    }//GEN-LAST:event_tblDoanhThuMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -24,14 +24,14 @@ import java.util.List;
 public class HoaDonDAO {
 
     private final String INSERT_HOADON = "INSERT HoaDon ( MaHD,NgayLap,MaNV,TrangThai ) VALUES ( ?,?,?, 0 )";
-    private final String UPDATE_HOADOLN = "UPDATE HoaDon SET TrangThai = 1,NgayLapLan2 =?,MaNLLan2 = ? WHERE MaHD = ?";
+    private final String UPDATE_HOADOLN = "UPDATE HoaDon SET TrangThai = 1,NgayLapLan2 =?,MaNLLan2 = ?,TongTien = ? WHERE MaHD = ?";
     private final String SELECT_HOADON = "SELECT MaHoaDon,hd.MaHD,hd.NgayLap,hd.NgayLapLan2,nv.MaNV,HoTen,hdd.TienCoc,hd.MaNLLan2, ( SELECT HoTen FROM NhanVien WHERE MaNV = hd.MaNLLan2 ) AS HoTenNguoiLap2,\n"
-            + "( SELECT SUM(ChiPhi) FROM ChiPhiPhatSinh WHERE hd.MaHD = hdd.MaHD ) AS ChiPhiPhatSinh, hdd.TongTien,hd.TrangThai\n"
+            + "( SELECT SUM(ChiPhi) FROM ChiPhiPhatSinh WHERE hd.MaHD = hdd.MaHD ) AS ChiPhiPhatSinh, hd.TongTien,hd.TrangThai\n"
             + "FROM HoaDon hd INNER JOIN HopDong hdd ON hd.MaHD = hdd.MaHD\n"
             + "INNER JOIN NhanVien nv ON hd.MaNV = nv.MaNV";
 
     private final String SELECT_HOADON_BYID = "SELECT MaHoaDon,hd.MaHD,hd.NgayLap,hd.NgayLapLan2,nv.MaNV,HoTen,hdd.TienCoc,hd.MaNLLan2, ( SELECT HoTen FROM NhanVien WHERE MaNV = hd.MaNLLan2 ) AS HoTenNguoiLap2,\n"
-            + "( SELECT SUM(ChiPhi) FROM ChiPhiPhatSinh WHERE hd.MaHD = hdd.MaHD ) AS ChiPhiPhatSinh, hdd.TongTien,hd.TrangThai\n"
+            + "( SELECT SUM(ChiPhi) FROM ChiPhiPhatSinh WHERE hd.MaHD = hdd.MaHD ) AS ChiPhiPhatSinh, hd.TongTien,hd.TrangThai\n"
             + "FROM HoaDon hd INNER JOIN HopDong hdd ON hd.MaHD = hdd.MaHD\n"
             + "INNER JOIN NhanVien nv ON hd.MaNV = nv.MaNV WHERE hdd.MaHD = ?\n";
 
@@ -44,8 +44,8 @@ public class HoaDonDAO {
         return rs > 0;
     }
 
-    public boolean updateHoaDon(String maHD, Date date, String maNL) {
-        int rs = JDBCHelper.executeUpdate(UPDATE_HOADOLN, date, maNL, maHD);
+    public boolean updateHoaDon(String maHD, Date date, String maNL, long tongTien) {
+        int rs = JDBCHelper.executeUpdate(UPDATE_HOADOLN, date, maNL,tongTien, maHD );
         return rs > 0;
     }
 

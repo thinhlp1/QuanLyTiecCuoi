@@ -15,6 +15,10 @@ public class VaiTro {
     public VaiTro() {
     }
     
+    @Override
+    public String toString() {
+      return tenVT ;
+    }
     
 
     public String getMaVT() {

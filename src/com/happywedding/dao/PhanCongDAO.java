@@ -23,18 +23,34 @@ import java.util.List;
 // chi tiết phân công - insert, update, delete, select, select by id, readform
 public class PhanCongDAO {
 
-
     private final String INSERT_PHANCONG = "INSERT INTO dbo.PhanCong (MaHD,MaNguoiPC)VALUES(?,?)";
     private final String DELETE_PHANCONG = "DELETE dbo.PhanCong WHERE MaPC = ?";
     private final String UPDATE_PHANCONG = "UPDATE dbo.PhanCong SET MaHD = ?, MaNguoiPC = ? WHERE MaPC = ? ";
     private final String SECLECT_ALL_PHANCONG = "SELECT * FROM dbo.PhanCong";
-    private final String SECLECT_BYID_PHANCONG = "SELECT * FROM dbo.PhanCong WHERE MaPC = ?";
+    private final String SECLECT_BYID_PHANCONG = "SELECT * FROM dbo.PhanCong WHERE MaHD = ?";
 
     private final String INSERT_CHITIETPHANCONG = "INSERT INTO dbo.ChiTietPhanCong(MaPC,MaNV,NgayPC,GioBatDau,GioKetThuc)VALUES(?,?,?,?,?)";
-    private final String DELETE_CHITIETPHANCONG = "DELETE dbo.ChiTietPhanCong WHERE MaPC = ?";
-    private final String UPDATE_CHITIETPHANCONG = "UPDATE dbo.ChiTietPhanCong SET MaNV = ?, NgayPC = ?, GioBatDau = ?, GioKetThuc = ? WHERE MaPC = ?";
-    private final String SECLECT_ALL_CHITIETPHANCONG = "SELECT * FROM dbo.ChiTietPhanCong";
-    private final String SECLECT_BYID_CHITIETPHANCONG = "SELECT * FROM dbo.ChiTietPhanCong WHERE MaPC = ?";
+    private final String DELETE_CHITIETPHANCONG = "DELETE dbo.ChiTietPhanCong WHERE MaPC = ? AND MaNV = ?";
+    private final String UPDATE_CHITIETPHANCONG = "UPDATE dbo.ChiTietPhanCong SET  NgayPC = ?, GioBatDau = ?, GioKetThuc = ? WHERE MaPC = ? AND MaNV = ?";
+    private final String SECLECT_ALL_CHITIETPHANCONG = "	SELECT pc.MaPC,hd.MaHD,nv.MaNV,nv.HoTen,TenVT ,NgayPC,GioBatDau,GioKetThuc FROM dbo.ChiTietPhanCong ct\n"
+            + "	INNER JOIN PhanCong pc ON pc.MaPC = ct.MaPC\n"
+            + "	INNER JOIN HopDong hd ON hd.MaHD = pc.MaHD\n"
+            + "	INNER JOIN NhanVien nv ON nv.MaNV = ct.MaNV\n"
+            + "	INNER JOIN VaiTro vt ON vt.MaVT = nv.MaVT\n"
+            + "	WHERE hd.MaHD = ?";
+    private final String SECLECT_BYID_CHITIETPHANCONG = "	SELECT pc.MaPC,hd.MaHD,nv.MaNV,nv.HoTen,TenVT ,NgayPC,GioBatDau,GioKetThuc FROM dbo.ChiTietPhanCong ct\n"
+            + "	INNER JOIN PhanCong pc ON pc.MaPC = ct.MaPC\n"
+            + "	INNER JOIN HopDong hd ON hd.MaHD = pc.MaHD\n"
+            + "	INNER JOIN NhanVien nv ON nv.MaNV = ct.MaNV\n"
+            + "	INNER JOIN VaiTro vt ON vt.MaVT = nv.MaVT\n"
+            + "	WHERE hd.MaHD = ?";
+
+    private final String CHECK_PHANCONG = "SELECT * FROM dbo.PhanCong WHERE MaHD = ? AND MaNguoiPC =?";
+    private final String CHECK_PHANCONG1 = "SELECT * FROM dbo.PhanCong WHERE MaHD = ?";
+
+    private final String SELECT_NHANVIEN_POSSIBLE = "SELECT  nv.MaNV,nv.HoTen,nv.NgaySinh,nv.GioiTinh,nv.SoDienThoai,nv.CCCD_CMND,nv.Email,nv.HinhAnh,nv.MaPB,pb.TenPB,nv.MaVT,vt.TenVT,TrangThai FROM  NhanVien nv\n"
+            + "INNER JOIN PhongBan pb ON nv.MaPB = pb.MaPB INNER JOIN VaiTro vt ON nv.MaVT = vt.MaVT\n"
+            + "WHERE MaNV NOT IN (  SELECT MaNV FROM PhanCong pc INNER JOIN ChiTietPhanCong ct ON ct.MaPC = pc.MaPC WHERE pc.MaHD = ?   ) ";
 
     public boolean insertPhanCong(PhanCongModel pc) {
         int rs = JDBCHelper.executeUpdate(INSERT_PHANCONG, pc.getMaHD(), pc.getMaNguoiPC());
@@ -56,8 +72,17 @@ public class PhanCongDAO {
 
     }
 
+    public List<NhanVien> selectNhanVienPossible(String maHD) {
+        return select2(SELECT_NHANVIEN_POSSIBLE, maHD);
+    }
+
     public PhanCongModel findById(String id) {
         List<PhanCongModel> list = selectPhanCong(SECLECT_BYID_PHANCONG, id);
+        return list.size() > 0 ? list.get(0) : null;
+    }
+
+    public PhanCongModel checkPhanCong(String maHD, String maNV) {
+        List<PhanCongModel> list = selectPhanCong(CHECK_PHANCONG, maHD, maNV);
         return list.size() > 0 ? list.get(0) : null;
     }
 
@@ -72,7 +97,7 @@ public class PhanCongDAO {
                     list.add(phanCong);
                 }
             } finally {
-rs.getStatement().getConnection().close();
+                rs.getStatement().getConnection().close();
             }
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
@@ -96,16 +121,17 @@ rs.getStatement().getConnection().close();
     }
 
     public boolean updateChiTietPhanCong(ChiTietPhanCong entity) {
-        int rs = JDBCHelper.executeUpdate(UPDATE_CHITIETPHANCONG, entity.getMaNV(), entity.getNgayPhanCong(), entity.getThoiGianBatDau(), entity.getThoiGianKetThuc());
+        int rs = JDBCHelper.executeUpdate(UPDATE_CHITIETPHANCONG, entity.getNgayPhanCong(), 
+                entity.getThoiGianBatDau(), entity.getThoiGianKetThuc(),entity.getMaPC(), entity.getMaNV());
         return rs > 0;
     }
 
-    public void deleteChiTietPhanCong(String id) {
-        int rs = JDBCHelper.executeUpdate(DELETE_CHITIETPHANCONG, id);
+    public void deleteChiTietPhanCong(String maPC, String maNV) {
+        int rs = JDBCHelper.executeUpdate(DELETE_CHITIETPHANCONG, maPC, maNV);
     }
 
-    public List<ChiTietPhanCong> selectAllChiTietPhanCong() {
-        return selectChiTietPhanCong(SECLECT_ALL_CHITIETPHANCONG);
+    public List<ChiTietPhanCong> selectAllChiTietPhanCong(String maHD) {
+        return selectChiTietPhanCong(SECLECT_ALL_CHITIETPHANCONG, maHD);
     }
 
     public ChiTietPhanCong findByIdChiTietPhanCong(String id) {
@@ -136,9 +162,51 @@ rs.getStatement().getConnection().close();
         ChiTietPhanCong ChiTietPhanCong = new ChiTietPhanCong();
         ChiTietPhanCong.setMaPC(rs.getInt("MaPC"));
         ChiTietPhanCong.setMaNV(rs.getString("MaNV"));
+        ChiTietPhanCong.setTenNV(rs.getString("HoTen"));
+        ChiTietPhanCong.setTenVT(rs.getString("TenVT"));
         ChiTietPhanCong.setNgayPhanCong(rs.getDate("NgayPC"));
         ChiTietPhanCong.setThoiGianBatDau(rs.getString("GioBatDau"));
         ChiTietPhanCong.setThoiGianKetThuc(rs.getString("GioKetThuc"));
         return ChiTietPhanCong;
     }
+
+    private List select2(String sql, Object... args) {
+        List<NhanVien> list = new ArrayList<>();
+        try {
+            ResultSet rs = null;
+            try {
+                rs = JDBCHelper.executeQuery(sql, args);
+                while (rs.next()) {
+                    NhanVien model = readFromResultSet2(rs);
+
+                    list.add(model);
+                }
+            } finally {
+                rs.getStatement().getConnection().close();
+            }
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
+        return list;
+    }
+
+    private NhanVien readFromResultSet2(ResultSet rs) throws SQLException {
+        //MaNV, HoTen, NgaySinh, GioiTinh, SoDienThoai,Email, CCCD_CMND, HinhAnh, MaPB, MaVT, TrangThai
+        NhanVien model = new NhanVien();
+        model.setMaNV(rs.getString("MaNV"));
+        model.setHoTen(rs.getString("HoTen"));
+        model.setNgaySinh(rs.getDate("NgaySinh"));
+        model.setGioiTinh(rs.getBoolean("GioiTinh"));
+        model.setSoDienThoai(rs.getString("SoDienThoai"));
+        model.setEmail(rs.getString("Email"));
+        model.setCMND_CCCD(rs.getString("CCCD_CMND"));
+        model.setHinhAnh(rs.getString("HinhAnh"));
+        model.setMaPB(rs.getString("MaPB"));
+        model.setMaVT(rs.getString("MaVT"));
+        model.setTenVT(rs.getString("TenVT"));
+        model.setTenPB(rs.getString("TenPB"));
+        model.setTrangThai(rs.getByte("TrangThai"));
+        return model;
+    }
+
 }

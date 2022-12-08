@@ -239,7 +239,8 @@ CREATE TABLE HoaDon(
 	NgayLapLan2 date NULL,
 	MaNV varchar(5) NOT NULL,
 	TrangThai int NOT NULL,
-	MaNLLan2 varchar(5) NULL
+	MaNLLan2 varchar(5) NULL,
+	TongTien bigint NULL,
 
  CONSTRAINT PK_HoaDon PRIMARY KEY CLUSTERED 
 (
@@ -897,8 +898,8 @@ INSERT DichVuDatMon (MaHD, MaTD, ChiPhi, ChiPhiPhatSinh, GhiChu) VALUES (N'HD202
 
 GO
 
-INSERT HoaDon (MaHD, NgayLap, NgayLapLan2, MaNV, TrangThai, MaNLLan2) VALUES ( N'HD20221201001', CAST(N'2022-12-01' AS Date), NULL, N'NV001', 0, NULL)
-INSERT HoaDon (MaHD, NgayLap, NgayLapLan2, MaNV, TrangThai, MaNLLan2) VALUES ( N'HD20221101004', CAST(N'2022-12-01' AS Date), CAST(N'2022-11-11' AS Date), N'NV001', 1, N'NV001')
+INSERT HoaDon (MaHD, NgayLap, NgayLapLan2, MaNV, TrangThai, MaNLLan2,TongTien) VALUES ( N'HD20221201001', CAST(N'2022-12-01' AS Date), NULL, N'NV001', 0, NULL,0)
+INSERT HoaDon (MaHD, NgayLap, NgayLapLan2, MaNV, TrangThai, MaNLLan2,TongTien) VALUES ( N'HD20221101004', CAST(N'2022-12-01' AS Date), CAST(N'2022-11-11' AS Date), N'NV001', 1, N'NV001',0)
 
 GO
 INSERT HopDong (MaHD, MaNL, SoLuongBan, Sanh, NgayLap, NgayDuyet, MaND, NgayToChuc, ThoiGianBatDau, ThoiGianKetThuc, TrangThai, The, TienCoc, ChiPhiPhatSinh, TongTien) VALUES (N'HD20221101004', N'NV001', 10, N'SANH01', CAST(N'2022-11-01' AS Date), NULL, NULL, CAST(N'2022-11-10' AS Date), CAST(N'09:00:00' AS Time), CAST(N'16:00:00' AS Time), N'DATHUCHIEN', 10, 30481000, 0, 60962000)
@@ -1365,10 +1366,10 @@ BEGIN
 	DECLARE @ChiPhi bigint,@ChiPhiPhatSinh bigint;
 	DECLARE @chiPhiHopDongDichVu bigint, @chiPhiDatMon bigint, @chiPhiDiKem bigint,@chiPhiSanh bigint , @chiPhiPSDichVu bigint, @chiPhiPSDatMon bigint, @chiPhiPSDiKem bigint;
 	
-	SELECT @chiPhiHopDongDichVu = ( SELECT  SUM( distinct hddv.ChiPhi) AS ChiPhi  FROM HopDongDichVu hddv WHERE hddv.MaHD =  @MaHD) 
+	SELECT @chiPhiHopDongDichVu = ( SELECT  SUM( distinct hddv.ChiPhi) AS ChiPhi  FROM HopDongDichVu hddv WHERE hddv.MaHD = @MaHD) 
 	SELECT @chiPhiDatMon = ( SELECT SUM(ChiPhi) FROM DichVuDatMon WHERE MaHD = @MaHD)
 	SELECT @chiPhiDiKem = ( SELECT ChiPhi FROM HopDongDichVuDiKem WHERE MaHD =@MaHD )
-	SELECT @chiPhiSanh = ( (SELECT (GiaThueSanh + ( GiaBan * hd.SoLuongBan )) AS ChiPhi FROM Sanh s INNER JOIN HopDong hd ON s.MaSanh = hd.Sanh WHERE MaHD =  @MaHD) )
+	SELECT @chiPhiSanh = ( (SELECT (GiaThueSanh + ( GiaBan * hd.SoLuongBan )) AS ChiPhi FROM Sanh s INNER JOIN HopDong hd ON s.MaSanh = hd.Sanh WHERE MaHD = @MaHD) )
 
 	IF @chiPhiHopDongDichVu IS NULL SET @chiPhiHopDongDichVu = 0
 	IF @chiPhiDatMon IS NULL SET @chiPhiDatMon = 0
@@ -1383,7 +1384,7 @@ BEGIN
 							FROM ( SELECT SUM ( distinct ChiPhiPhatSinh)  AS ChiPhiPhatSinh FROM HopDongDichVu hddv INNER JOIN ChiTietDichVu ct ON hddv.MaHD = ct.MaHD
 							WHERE hddv.MaHD = @MaHD GROUP BY ct.MaCSVC ) a )
 	SELECT @chiPhiPSDatMon = ( SELECT SUM( ChiPhiPhatSinh * SoLuong )  FROM ChiTietDatMon WHERE MaHD = @MaHD )
-	SELECT @chiPhiPSDiKem = ( SELECT SUM(ct.ChiPhiPhatSinh) FROM HopDongDichVuDiKem dv INNER JOIN ChiTietDichVuDiKem ct ON dv.MaHD = ct.MaHD WHERE dv.MaHD = @MaHD )
+	SELECT @chiPhiPSDiKem = ( SELECT SUM(ct.ChiPhiPhatSinh * ct.SoLuong) FROM ChiTietDichVuDiKem ct WHERE ct.MaHD = @MaHD )
 
 	IF @chiPhiPSDichVu IS NULL SET @chiPhiPSDichVu = 0
 	IF @chiPhiPSDatMon IS NULL SET @chiPhiPSDatMon = 0
@@ -1422,7 +1423,7 @@ BEGIN
 							FROM ( SELECT SUM ( distinct ChiPhiPhatSinh)  AS ChiPhiPhatSinh FROM HopDongDichVu hddv INNER JOIN ChiTietDichVu ct ON hddv.MaHD = ct.MaHD
 							WHERE hddv.MaHD = @MaHD GROUP BY ct.MaCSVC ) a )
 	SELECT @chiPhiPSDatMon = ( SELECT SUM( ChiPhiPhatSinh * SoLuong )  FROM ChiTietDatMon WHERE MaHD = @MaHD )
-	SELECT @chiPhiPSDiKem = ( SELECT SUM(ct.ChiPhiPhatSinh) FROM HopDongDichVuDiKem dv INNER JOIN ChiTietDichVuDiKem ct ON dv.MaHD = ct.MaHD WHERE dv.MaHD = @MaHD )
+	SELECT @chiPhiPSDiKem = ( SELECT SUM(ct.ChiPhiPhatSinh * ct.SoLuong) FROM ChiTietDichVuDiKem ct WHERE ct.MaHD = @MaHD )
 
 	IF @chiPhiPSDichVu IS NULL SET @chiPhiPSDichVu = 0
 	IF @chiPhiPSDatMon IS NULL SET @chiPhiPSDatMon = 0
@@ -1441,11 +1442,10 @@ GO
 CREATE PROC thongKeDoanhThuNam 
 AS
 BEGIN
-	--DECLARE		
-	SELECT SUM(IIF(hd.TrangThai = 0,TienCoc,TongTien )) AS TongDoanhThu ,
+	SELECT SUM(IIF(hd.TrangThai = 0,TienCoc,hd.TongTien + hdd.TienCoc )) AS TongDoanhThu ,
 	IIF(hd.TrangThai = 0, YEAR(hd.NgayLap),YEAR(NgayLapLan2)) AS Nam ,
-	MAX (  IIF(hd.TrangThai = 0,TienCoc,TongTien ) ) AS DoanhThuCaoNhat,
-	MIN ( IIF(hd.TrangThai = 0,TienCoc,TongTien ) ) AS DoanhThuThapNhat,
+	MAX (  IIF(hd.TrangThai = 0,TienCoc, hd.TongTien+ hdd.TienCoc )         ) AS DoanhThuCaoNhat,
+	MIN ( IIF(hd.TrangThai = 0,TienCoc,hd.TongTien + hdd.TienCoc) ) AS DoanhThuThapNhat,
 	COUNT(hd.MaHD) AS SoLuongHopDong
 	FROM HopDong hdd INNER JOIN HoaDon hd ON hdd.MaHD = hd.MaHD 
 	GROUP BY  IIF(hd.TrangThai = 0, YEAR(hd.NgayLap),YEAR(NgayLapLan2))
@@ -1472,6 +1472,68 @@ BEGIN
 	
 END
 
+
+CREATE PROC thongKeDoanhThuNgay 
+AS 
+BEGIN
+	SELECT SUM(IIF(hd.TrangThai = 0,TienCoc,hd.TongTien + hdd.TienCoc )) AS TongDoanhThu ,
+	IIF(hd.TrangThai = 0, hd.NgayLap,NgayLapLan2) AS Ngay ,
+	MAX (  IIF(hd.TrangThai = 0,TienCoc, hd.TongTien+ hdd.TienCoc )         ) AS DoanhThuCaoNhat,
+	MIN ( IIF(hd.TrangThai = 0,TienCoc,hd.TongTien + hdd.TienCoc) ) AS DoanhThuThapNhat,
+	COUNT(hd.MaHD) AS SoLuongHopDong
+	FROM HopDong hdd INNER JOIN HoaDon hd ON hdd.MaHD = hd.MaHD 
+	GROUP BY  IIF(hd.TrangThai = 0, hd.NgayLap,NgayLapLan2)
+	ORDER BY Ngay ASC
+END
+
+
+GO
+CREATE PROC thongKeDoanhThuNgayTop @top int, @Nam int 
+AS 
+BEGIN
+	SELECT Top ( @top  )SUM(IIF(hd.TrangThai = 0,TienCoc,hd.TongTien + hdd.TienCoc )) AS TongDoanhThu ,
+	IIF(hd.TrangThai = 0, hd.NgayLap,NgayLapLan2) AS Ngay ,
+	MAX (  IIF(hd.TrangThai = 0,TienCoc, hd.TongTien+ hdd.TienCoc )         ) AS DoanhThuCaoNhat,
+	MIN ( IIF(hd.TrangThai = 0,TienCoc,hd.TongTien + hdd.TienCoc) ) AS DoanhThuThapNhat,
+	COUNT(hd.MaHD) AS SoLuongHopDong
+	FROM HopDong hdd INNER JOIN HoaDon hd ON hdd.MaHD = hd.MaHD 
+		WHERE IIF(hd.TrangThai = 0, YEAR(hd.NgayLap),YEAR(NgayLapLan2)) = @Nam
+	GROUP BY  IIF(hd.TrangThai = 0, hd.NgayLap,NgayLapLan2)
+	ORDER BY TongDoanhThu DESC
+END
+GO
+
+
+CREATE PROC thongKeDoanhThuNgayTopSL @top int, @nam int 
+AS 
+BEGIN
+	SELECT Top ( @top  )SUM(IIF(hd.TrangThai = 0,TienCoc,hd.TongTien + hdd.TienCoc )) AS TongDoanhThu ,
+	IIF(hd.TrangThai = 0, hd.NgayLap,NgayLapLan2) AS Ngay ,
+	MAX (  IIF(hd.TrangThai = 0,TienCoc, hd.TongTien+ hdd.TienCoc )         ) AS DoanhThuCaoNhat,
+	MIN ( IIF(hd.TrangThai = 0,TienCoc,hd.TongTien + hdd.TienCoc) ) AS DoanhThuThapNhat,
+	COUNT(hd.MaHD) AS SoLuongHopDong
+	FROM HopDong hdd INNER JOIN HoaDon hd ON hdd.MaHD = hd.MaHD 
+		WHERE IIF(hd.TrangThai = 0, YEAR(hd.NgayLap),YEAR(NgayLapLan2)) = @Nam
+	GROUP BY  IIF(hd.TrangThai = 0, hd.NgayLap,NgayLapLan2)
+	ORDER BY SoLuongHopDong DESC
+END
+
+
+GO
+
+CREATE PROC thongKeDoanhThuNgayTop @top int, @nam int 
+AS 
+BEGIN
+	SELECT Top ( @top  )SUM(IIF(hd.TrangThai = 0,TienCoc,hd.TongTien + hdd.TienCoc )) AS TongDoanhThu ,
+	IIF(hd.TrangThai = 0, hd.NgayLap,NgayLapLan2) AS Ngay ,
+	MAX (  IIF(hd.TrangThai = 0,TienCoc, hd.TongTien+ hdd.TienCoc )         ) AS DoanhThuCaoNhat,
+	MIN ( IIF(hd.TrangThai = 0,TienCoc,hd.TongTien + hdd.TienCoc) ) AS DoanhThuThapNhat,
+	COUNT(hd.MaHD) AS SoLuongHopDong
+	FROM HopDong hdd INNER JOIN HoaDon hd ON hdd.MaHD = hd.MaHD 
+		WHERE IIF(hd.TrangThai = 0, YEAR(hd.NgayLap),YEAR(NgayLapLan2)) = @Nam
+	GROUP BY  IIF(hd.TrangThai = 0, hd.NgayLap,NgayLapLan2)
+	ORDER BY SoLuongHopDong DESC
+END
 
 
 GO

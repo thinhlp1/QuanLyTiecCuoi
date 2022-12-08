@@ -15,7 +15,7 @@ import com.happywedding.helper.JDBCHelper;
  *
  * @author ADMIN
  */
-public class PhanLoaiSanh {
+public class PhanLoaiSanhDAO {
     private final String SELECT_PhanLoaiSanh = "SELECT MaPL,TenPL FROM dbo.PhanLoaiSanh";
     private final String SELECT_BY_ID = "SELECT * FROM PhanLoaiSanh WHERE  MaPL=?";
     

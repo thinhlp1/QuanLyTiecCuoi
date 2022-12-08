@@ -20,13 +20,12 @@ import java.util.List;
  */
 public class PhongBanDAO {
 
-//    public List<PhongBan> select() {
-//
-//    }
-//
-//    public PhongBan findById(String id) {
-//
-//    }
+private final String SELECT_VaiTroTaiKhoan = "SELECT * FROM PhongBan";
+
+    public List<PhongBan> select() {
+        return select(SELECT_VaiTroTaiKhoan);
+    }
+
     private List select(String sql, Object... args) {
         List<PhongBan> list = new ArrayList<>();
         try {
@@ -34,8 +33,8 @@ public class PhongBanDAO {
             try {
                 rs = JDBCHelper.executeQuery(sql, args);
                 while (rs.next()) {
-                    PhongBan PhongBan = readFromResultSet(rs);
-                    list.add(PhongBan);
+                    PhongBan pb = readFromResultSet(rs);
+                    list.add(pb);
                 }
             } finally {
                 rs.getStatement().getConnection().close();
@@ -47,13 +46,10 @@ public class PhongBanDAO {
     }
 
     private PhongBan readFromResultSet(ResultSet rs) throws SQLException {
-        PhongBan PhongBan = new PhongBan();
-        return PhongBan;
-    }
-    private final String SELECT_VaiTroTaiKhoan = "SELECT * FROM PhongBan";
+        PhongBan pb = new PhongBan();
+        pb.setMaPB(rs.getString("MaPB"));
+        pb.setTenPB(rs.getString("TenPB"));
+        return pb;
 
-    public List<PhongBan> select() {
-        return select(SELECT_VaiTroTaiKhoan);
     }
-
 }
