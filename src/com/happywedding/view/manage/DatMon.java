@@ -1158,7 +1158,7 @@ public class DatMon extends javax.swing.JDialog {
                     DialogHelper.alert(this, "Vui lòng chọn thực đơn trước");
                     return;
                 }
-
+                // list t1
                 MonAn ma = listFilted.get(index);
 
                 ChiTietDatMon ct = new ChiTietDatMon();
@@ -1172,7 +1172,7 @@ public class DatMon extends javax.swing.JDialog {
                 int thuTu = listChiTietDatMon.get(listChiTietDatMon.size() - 1).getThuTu() + 1;
 
                 ct.setThuTu(thuTu);
-
+                // list t2
                 listChiTietDatMon.add(ct);
 
 //                if (isThucDonPhu) {

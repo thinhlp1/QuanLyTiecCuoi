@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="511b9514-f766-451c-bf93-51cae47cf750">
-	<property name="ireport.zoom" value="1.6500000000000066"/>
+	<property name="ireport.zoom" value="1.2396694214876087"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="491"/>
+	<property name="ireport.y" value="0"/>
 	<parameter name="MaHD" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
@@ -114,6 +114,14 @@ WHERE
 	<field name="HoaDon_MaNV" class="java.lang.String"/>
 	<field name="HoaDon_TrangThai" class="java.lang.Integer"/>
 	<field name="HoaDon_MaNLLan2" class="java.lang.String"/>
+	<background>
+		<band height="261">
+			<image>
+				<reportElement x="156" y="45" width="225" height="193" uuid="a291f283-824e-4e51-be76-13b4f7b9d45e"/>
+				<imageExpression><![CDATA["src\\com\\happywedding\\assets\\bgReport.jpg"]]></imageExpression>
+			</image>
+		</band>
+	</background>
 	<title>
 		<band height="222" splitType="Stretch">
 			<staticText>
@@ -202,7 +210,7 @@ WHERE
 				</textElement>
 				<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/yyyy hh:MM:ss").format(new Date())]]></textFieldExpression>
 			</textField>
-			<textField pattern="h.mm a" isBlankWhenNull="false">
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="false">
 				<reportElement mode="Transparent" x="111" y="162" width="444" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="df004acf-c7e3-484b-852b-4b8ddc4ae914"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 					<font fontName="SansSerif" size="14" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
@@ -388,7 +396,7 @@ WHERE
 				<textFieldExpression><![CDATA[$F{HopDong_NgayLap}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,### VND">
-				<reportElement mode="Transparent" x="150" y="113" width="405" height="28" forecolor="#000000" backcolor="#FFFFFF" uuid="4381c0ed-03a9-4f4c-b963-fe13da98621f"/>
+				<reportElement mode="Transparent" x="200" y="113" width="355" height="28" forecolor="#000000" backcolor="#FFFFFF" uuid="4381c0ed-03a9-4f4c-b963-fe13da98621f"/>
 				<box leftPadding="0"/>
 				<textElement textAlignment="Justified" verticalAlignment="Middle" rotation="None" markup="none">
 					<font fontName="Arial" size="20" isBold="true" isItalic="false" isUnderline="true" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
@@ -397,12 +405,12 @@ WHERE
 				<textFieldExpression><![CDATA[$P{TienCoc}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement mode="Transparent" x="1" y="113" width="149" height="28" forecolor="#000000" backcolor="#FFFFFF" uuid="486efdfd-0ebf-4aa5-9cdf-c0cd2a578b2a"/>
+				<reportElement mode="Transparent" x="1" y="113" width="199" height="28" forecolor="#000000" backcolor="#FFFFFF" uuid="486efdfd-0ebf-4aa5-9cdf-c0cd2a578b2a"/>
 				<textElement textAlignment="Justified" verticalAlignment="Middle" rotation="None" markup="none">
 					<font fontName="Arial" size="20" isBold="true" isItalic="false" isUnderline="true" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<text><![CDATA[Đã thanh toán :]]></text>
+				<text><![CDATA[Tiền cần thanh toán :]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="1" y="0" width="69" height="18" uuid="6fcddac2-ee6a-409c-a99d-e6bdc59bc5e0"/>

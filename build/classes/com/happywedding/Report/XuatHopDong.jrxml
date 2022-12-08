@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ed9c872e-f4ed-498f-8556-236e5981dc8b">
 	<property name="ireport.zoom" value="1.4641000000000028"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="1392"/>
+	<property name="ireport.y" value="2527"/>
 	<parameter name="MaHD" class="java.lang.String"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["C:\\Users\\ACER\\Desktop\\QuanLyTiecCuoi\\src\\com\\happywedding\\Report\\"]]></defaultValueExpression>
@@ -214,7 +214,7 @@ WHERE
 				<textElement verticalAlignment="Middle">
 					<font fontName="Arial" size="11"/>
 				</textElement>
-				<text><![CDATA[Hai bên cùng thống nhất thỏa thuận những điều khoảng sau :]]></text>
+				<text><![CDATA[Hai bên cùng thống nhất thỏa thuận những điều khoản sau :]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="277" y="258" width="106" height="18" uuid="ce794ae3-7b73-44e1-a03f-a74dc1e61ef6"/>
@@ -312,7 +312,7 @@ WHERE
 				<textElement verticalAlignment="Middle">
 					<font fontName="Arial" size="12"/>
 				</textElement>
-				<text><![CDATA[Số bàn chính thức :]]></text>
+				<text><![CDATA[Tổng số bàn :]]></text>
 			</staticText>
 			<textField>
 				<reportElement x="67" y="181" width="198" height="20" uuid="7e7026ef-ac23-4801-9974-8a56e2bab5e1"/>
@@ -641,14 +641,14 @@ WHERE
 				<textFieldExpression><![CDATA[$F{HopDong_NgayLap}]]></textFieldExpression>
 			</textField>
 			<textField pattern="">
-				<reportElement x="113" y="130" width="441" height="20" uuid="2b943dae-1267-4b99-b120-9ff3cce0fe6e"/>
+				<reportElement x="133" y="130" width="421" height="20" uuid="2b943dae-1267-4b99-b120-9ff3cce0fe6e"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Arial" size="14"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{ThanhTien}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,### VNĐ">
-				<reportElement x="113" y="92" width="441" height="20" uuid="e289e5c2-600b-44d5-b49b-db63f9644832"/>
+				<reportElement x="133" y="92" width="421" height="20" uuid="e289e5c2-600b-44d5-b49b-db63f9644832"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Arial" size="14"/>
 				</textElement>
@@ -671,7 +671,7 @@ WHERE
 				<textFieldExpression><![CDATA[$P{TienConLai}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,### VNĐ" isBlankWhenNull="false">
-				<reportElement mode="Transparent" x="113" y="108" width="441" height="22" forecolor="#000000" backcolor="#FFFFFF" uuid="3d5ab9d9-cca9-4363-bd0f-8c687e4f5906"/>
+				<reportElement mode="Transparent" x="133" y="108" width="421" height="22" forecolor="#000000" backcolor="#FFFFFF" uuid="3d5ab9d9-cca9-4363-bd0f-8c687e4f5906"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 					<font fontName="Arial" size="14" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
@@ -701,7 +701,7 @@ WHERE
 				</textElement>
 				<text><![CDATA[Tổng tiền dịch vụ :]]></text>
 			</staticText>
-			<textField pattern="#,### VNĐ" isBlankWhenNull="false">
+			<textField pattern="#,### VND" isBlankWhenNull="false">
 				<reportElement mode="Transparent" x="133" y="74" width="421" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="38a888d2-78c5-4f97-82a8-5ba674c3dadc"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 					<font fontName="Arial" size="14" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
@@ -916,6 +916,21 @@ WHERE
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<text><![CDATA[8. GIẢI QUYẾT TRANH CHẤP]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="328" y="276" width="215" height="20" uuid="39694015-7d6d-401a-bf58-44a1ed7e23af"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="false" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{KhachHang_HoTen}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Transparent" x="32" y="276" width="144" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="b10c75db-fb5c-4421-b7ae-ce6fc2b1e745"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Mr.Thinh]]></text>
 			</staticText>
 		</band>
 	</summary>
