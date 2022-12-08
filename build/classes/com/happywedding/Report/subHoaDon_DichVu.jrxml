@@ -7,33 +7,45 @@
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT ROW_NUMBER() over(ORDER BY hd.MaHD asc ) AS STT , hd.MaHD,csvc.MaCSVC,csvc.TenCSVC,dv.TenDV, ( SELECT  SUM(X.A) FROM  (   SELECT SUM((IIF(ct.ChiPhi = 0, csvc.GiaThue * IIF ( csvc.MaDMC = 'AOGHE' OR csvc.MaDMC = 'TRAIBAN',10,1 ) ,ct.ChiPhi )  * IIF(csvc.MaDMC = 'AOGHE' , 10,1) + ct.ChiPhiPhatSinh ))/4 AS A
-FROM HopDongDichVu hddv 
-INNER JOIN ChiTietDichVu ct ON hddv.MaHD = ct.MaHD
-INNER JOIN CoSoVatChat csvc ON csvc.MaCSVC = ct.MaCSVC 
-INNER JOIN DanhMucCon dmc ON dmc.MaDMC = csvc.MaDMC
-INNER JOIN GoiDichVu goi ON hddv.MaGoi = goi.MaGoi
-INNER JOIN HopDong hd ON hd.MaHD = ct.MaHD
-INNER JOIN DichVu dv ON dv.MaDV = ct.MaDV
-WHERE ct.MaHD =  $P{MaHD} 
-GROUP BY hd.MaHD,csvc.MaCSVC,csvc.TenCSVC,IIF(ct.ChiPhi = 0, csvc.GiaThue * hd.SoLuongBan ,ct.ChiPhi ) * IIF(csvc.MaDMC = 'AOGHE' , 10,1 + ct.ChiPhiPhatSinh),dv.TenDV ) AS X ) AS TongChiPhi
-,SUM((IIF(ct.ChiPhi = 0, csvc.GiaThue * IIF ( csvc.MaDMC = 'AOGHE' OR csvc.MaDMC = 'TRAIBAN',10,1 ) ,ct.ChiPhi ) * IIF(csvc.MaDMC = 'AOGHE' , 10,1)) + ct.ChiPhiPhatSinh )/4 AS ChiPhi 
-FROM HopDongDichVu hddv 
-INNER JOIN ChiTietDichVu ct ON hddv.MaHD = ct.MaHD
-INNER JOIN CoSoVatChat csvc ON csvc.MaCSVC = ct.MaCSVC 
-INNER JOIN DanhMucCon dmc ON dmc.MaDMC = csvc.MaDMC
-INNER JOIN GoiDichVu goi ON hddv.MaGoi = goi.MaGoi
-INNER JOIN HopDong hd ON hd.MaHD = ct.MaHD
-INNER JOIN DichVu dv ON dv.MaDV = ct.MaDV
-WHERE ct.MaHD =   $P{MaHD}
-GROUP BY hd.MaHD,csvc.MaCSVC,csvc.TenCSVC,
-IIF(ct.ChiPhi = 0, csvc.GiaThue * IIF ( csvc.MaDMC = 'AOGHE' OR csvc.MaDMC = 'TRAIBAN',10,1 ) ,ct.ChiPhi ) * IIF(csvc.MaDMC = 'AOGHE' , 10,1) + ct.ChiPhiPhatSinh,dv.TenDV]]>
+		<![CDATA[SELECT  ROW_NUMBER() OVER (ORDER BY A.MaCSVC) AS STT, * FROM (
+	SELECT DISTINCT csvc.MaCSVC,csvc.TenCSVC, ( SELECT  SUM(X.A) FROM  
+	(   SELECT SUM((IIF(ct.ChiPhi = 0, csvc.GiaThue * IIF ( csvc.MaDMC = 'AOGHE' OR csvc.MaDMC = 'TRAIBAN',10,1 ) ,ct.ChiPhi ) * IIF(csvc.MaDMC = 'AOGHE' , 10,1) + ct.ChiPhiPhatSinh ))/4 AS A 
+	FROM HopDongDichVu hddv 
+	INNER JOIN ChiTietDichVu ct ON hddv.MaHD = ct.MaHD
+	INNER JOIN CoSoVatChat csvc ON csvc.MaCSVC = ct.MaCSVC 
+	INNER JOIN DanhMucCon dmc ON dmc.MaDMC = csvc.MaDMC
+	INNER JOIN GoiDichVu goi ON hddv.MaGoi = goi.MaGoi
+	INNER JOIN HopDong hd ON hd.MaHD = ct.MaHD
+	INNER JOIN DichVu dv ON dv.MaDV = ct.MaDV
+	WHERE ct.MaHD =   $P{MaHD}
+	GROUP BY hd.MaHD,csvc.MaCSVC,csvc.TenCSVC,IIF(ct.ChiPhi = 0, csvc.GiaThue * hd.SoLuongBan ,ct.ChiPhi ) * IIF(csvc.MaDMC = 'AOGHE' , 10,1 + ct.ChiPhiPhatSinh),dv.TenDV ) AS X ) AS TongChiPhi
+
+
+	,(	SELECT SUM(IIF(ct.ChiPhi = 0, csvc2.GiaThue * IIF ( csvc2.MaDMC = 'AOGHE' OR csvc2.MaDMC = 'TRAIBAN',10,1 ) ,ct.ChiPhi ) * IIF(csvc2.MaDMC = 'AOGHE' , 10,1) + ct.ChiPhiPhatSinh) AS ChiPhi
+	FROM ChiTietDichVu ct  
+	INNER JOIN CoSoVatChat csvc2 ON csvc2.MaCSVC = ct.MaCSVC 
+	INNER JOIN DanhMucCon dmc ON dmc.MaDMC = csvc2.MaDMC
+	WHERE MaHD = $P{MaHD} AND csvc.MaCSVC =  csvc2.MaCSVC 
+	GROUP BY ct.MaCSVC,csvc2.TenCSVC) AS ChiPhi 
+
+
+	FROM HopDongDichVu hddv 
+	INNER JOIN ChiTietDichVu ct ON hddv.MaHD = ct.MaHD
+	INNER JOIN CoSoVatChat csvc ON csvc.MaCSVC = ct.MaCSVC 
+	INNER JOIN DanhMucCon dmc ON dmc.MaDMC = csvc.MaDMC
+	INNER JOIN GoiDichVu goi ON hddv.MaGoi = goi.MaGoi
+	INNER JOIN HopDong hd ON hd.MaHD = ct.MaHD
+	INNER JOIN DichVu dv ON dv.MaDV = ct.MaDV
+	WHERE ct.MaHD = $P{MaHD} 
+	GROUP BY hd.MaHD,csvc.MaCSVC,csvc.TenCSVC,
+	IIF(ct.ChiPhi = 0, csvc.GiaThue * IIF ( csvc.MaDMC = 'AOGHE' OR csvc.MaDMC = 'TRAIBAN',10,1 ) ,ct.ChiPhi ) * IIF(csvc.MaDMC = 'AOGHE' , 10,1) + ct.ChiPhiPhatSinh,dv.TenDV
+
+
+	) AS A]]>
 	</queryString>
 	<field name="STT" class="java.lang.Long"/>
-	<field name="MaHD" class="java.lang.String"/>
 	<field name="MaCSVC" class="java.lang.String"/>
 	<field name="TenCSVC" class="java.lang.String"/>
-	<field name="TenDV" class="java.lang.String"/>
 	<field name="TongChiPhi" class="java.lang.Long"/>
 	<field name="ChiPhi" class="java.lang.Long"/>
 	<background>
@@ -62,20 +74,6 @@ IIF(ct.ChiPhi = 0, csvc.GiaThue * IIF ( csvc.MaDMC = 'AOGHE' OR csvc.MaDMC = 'TR
 				<text><![CDATA[STT]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="71" y="0" width="108" height="20" uuid="8ef0f58c-5fd4-4594-af54-91b6b1c745bf"/>
-				<box>
-					<pen lineWidth="1.0"/>
-					<topPen lineWidth="1.0"/>
-					<leftPen lineWidth="1.0"/>
-					<bottomPen lineWidth="1.0"/>
-					<rightPen lineWidth="1.0"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" size="14" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Tên dịch vụ]]></text>
-			</staticText>
-			<staticText>
 				<reportElement x="370" y="0" width="185" height="20" uuid="a7decdce-0f36-49c8-a0e1-4d4e7cb4c03a"/>
 				<box>
 					<pen lineWidth="1.0"/>
@@ -90,7 +88,7 @@ IIF(ct.ChiPhi = 0, csvc.GiaThue * IIF ( csvc.MaDMC = 'AOGHE' OR csvc.MaDMC = 'TR
 				<text><![CDATA[Chi phí]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Transparent" x="179" y="0" width="191" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="f485c732-0edf-450b-b464-9152d50edc63"/>
+				<reportElement mode="Transparent" x="71" y="0" width="299" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="f485c732-0edf-450b-b464-9152d50edc63"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -123,20 +121,6 @@ IIF(ct.ChiPhi = 0, csvc.GiaThue * IIF ( csvc.MaDMC = 'AOGHE' OR csvc.MaDMC = 'TR
 				<textFieldExpression><![CDATA[$F{STT}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="71" y="0" width="108" height="20" uuid="cad22bed-62dc-43af-a7e0-55efc0eeeaa2"/>
-				<box leftPadding="10">
-					<pen lineWidth="1.0"/>
-					<topPen lineWidth="1.0"/>
-					<leftPen lineWidth="1.0"/>
-					<bottomPen lineWidth="1.0"/>
-					<rightPen lineWidth="1.0"/>
-				</box>
-				<textElement textAlignment="Justified" verticalAlignment="Middle">
-					<font isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{TenDV}]]></textFieldExpression>
-			</textField>
-			<textField>
 				<reportElement x="370" y="0" width="185" height="20" uuid="e5676013-8939-4618-8af2-1be2e35e5925"/>
 				<box rightPadding="0">
 					<pen lineWidth="1.0"/>
@@ -151,7 +135,7 @@ IIF(ct.ChiPhi = 0, csvc.GiaThue * IIF ( csvc.MaDMC = 'AOGHE' OR csvc.MaDMC = 'TR
 				<textFieldExpression><![CDATA[$F{ChiPhi}]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="false">
-				<reportElement mode="Transparent" x="179" y="0" width="191" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="4a5482f4-d9b9-4c77-b6de-5244bc058c71"/>
+				<reportElement mode="Transparent" x="71" y="0" width="299" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="4a5482f4-d9b9-4c77-b6de-5244bc058c71"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>

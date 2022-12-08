@@ -1316,6 +1316,14 @@ public class LapHopDong extends javax.swing.JPanel {
             String tienConLai = ShareHelper.toMoney(hopDong.getTongTien() - hopDong.getTienCoc());
             String thanhChu = EnglishNumberToWords.convert(hopDong.getTongTien());
             String thanhChu2 = EnglishNumberToWords.convert(ShareHelper.toMoney(tienConLai));
+
+            String thanhchu3 = thanhChu.substring(0, 1);
+            String thanhChu4 = thanhChu.substring(1, thanhChu.length());
+            thanhChu = thanhchu3.toUpperCase() + thanhChu4;
+            String thanhchu5 = thanhChu.substring(0, 1);
+            String thanhChu6 = thanhChu.substring(1, thanhChu.length());
+            thanhChu2 = thanhchu5.toUpperCase() + thanhChu6;
+
             net.sf.jasperreports.engine.JasperReport rpt = JasperCompileManager.compileReport("src\\com\\happywedding\\Report\\HoaDon.jrxml");
             parameters.put("MaHD", maHD);
             parameters.put("MaTD_Chinh", maTD);
@@ -2655,7 +2663,7 @@ public class LapHopDong extends javax.swing.JPanel {
             parameters.put("TongTien", tongTien + " VND");
             parameters.put("TienCoc", tienCoc + " VND");
             parameters.put("TienConLai", tienConLai + " VND");
-            parameters.put("tongTienDichVu", tongTienDichVu);
+            parameters.put("tongTienDichVu", tongTienDichVu + " VND");
             parameters.put("SUBREPORT_DIR", "src\\com\\happywedding\\Report\\");
             System.out.println(parameters);
             JasperPrint p = JasperFillManager.fillReport(rpt, parameters, con);
@@ -2780,7 +2788,7 @@ public class LapHopDong extends javax.swing.JPanel {
 
         PhanCong pc = new PhanCong(new JFrame(), (statusHopDong.equals("DATHUCHIEN") || statusHopDong.equals("XOA") ? false : true), maHD);
         pc.setVisible(true);
-    
+
     }//GEN-LAST:event_btnPhanCongActionPerformed
 
     private void btnXuatHoaDonTamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXuatHoaDonTamActionPerformed
