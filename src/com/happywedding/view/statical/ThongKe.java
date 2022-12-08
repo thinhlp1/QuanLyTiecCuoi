@@ -18,31 +18,30 @@ import net.miginfocom.swing.MigLayout;
  */
 public class ThongKe extends javax.swing.JPanel {
 
-    
     static class SUB_STATISTICAL_MANAGER {
-        static int THONG_KE_NAM= 0;
+
+        static int THONG_KE_NAM = 0;
         static int THONG_KE_THANG = 1;
-        static int THONG_KE_DICVH = 2;
-        
+        static int THONG_KE_NGAY = 2;
+        static int THONG_KE_DICVH = 3;
+
     }
-    
+
     private ThongKeDichVu thongKeDichVu;
     private ThongKeDoanhThuNam thongKeNam;
     private ThongKeDoanhThuThang thongKeThang;
-   
- 
-     private MigLayout layout;
-    
+    private ThongKeDoanhThuNgay thongKeNgay;
+
+    private MigLayout layout;
+
     private int index = 0;
-    
-    
+
     /**
      * Creates new form StaticalForm
      */
     public ThongKe() {
         initComponents();
-        
-        
+
         setOpaque(false);
         setLayout(new BorderLayout());
         setBorder(new EmptyBorder(10, 20, 10, 20));
@@ -50,45 +49,77 @@ public class ThongKe extends javax.swing.JPanel {
 
         layout = new MigLayout("fill", "0[]0[100%, fill]0", "0[fill, top]0");
         setLayout(layout);
-        
+
         thongKeNam = new ThongKeDoanhThuNam();
-      
+
         add(tabPane, "h 70!, wrap");
         add(thongKeNam, "w 100%, h 100%");
         btnDoanhThuNam.click();
-       
 
     }
-    
-    
-       public void tabSelected(int index){
-        if (index == SUB_STATISTICAL_MANAGER.THONG_KE_NAM){
-          if (thongKeNam == null){
+
+    public void tabSelected(int index) {
+        System.out.println(index);
+        if (index == SUB_STATISTICAL_MANAGER.THONG_KE_NAM) {
+            if (thongKeNam == null) {
                 thongKeNam = new ThongKeDoanhThuNam();
-          }
+            }
             showForm(thongKeNam);
-        }else if (index == SUB_STATISTICAL_MANAGER.THONG_KE_THANG){
-           if (thongKeThang == null){
+        } else if (index == SUB_STATISTICAL_MANAGER.THONG_KE_THANG) {
+            if (thongKeThang == null) {
                 thongKeThang = new ThongKeDoanhThuThang();
-           }
+            }
             showForm(thongKeThang);
-        }else if (index == SUB_STATISTICAL_MANAGER.THONG_KE_DICVH){
-         if (thongKeDichVu == null){
-               thongKeDichVu = new ThongKeDichVu();
-         }
+        } else if (index == SUB_STATISTICAL_MANAGER.THONG_KE_DICVH) {
+            if (thongKeDichVu == null) {
+                thongKeDichVu = new ThongKeDichVu();
+            }
             showForm(thongKeDichVu);
+        } else if (index == SUB_STATISTICAL_MANAGER.THONG_KE_NGAY) {
+            if (thongKeNgay == null) {
+                thongKeNgay = new ThongKeDoanhThuNgay();
+            }
+            showForm(thongKeNgay);
         }
     }
-       
-       
-     public void showForm(Component form) {
-        remove(getComponentCount()-1);
+
+    public void showForm(Component form) {
+        remove(getComponentCount() - 1);
         add(form, "w 100%, h 100%");
         repaint();
         revalidate();
-    }        
-      
-       
+    }
+    
+    public void clear(){
+        btnDoanhThuNam.clear();
+        btnDoanhThuThang.clear();
+        btnDichVu.clear();
+        btnDoanhThuNgay.clear();
+    
+    }
+    
+    public void updateThongKeThang(int year){
+        btnDoanhThuNam.clear();
+        btnDoanhThuThang.clear();
+        btnDichVu.clear();
+        btnDoanhThuNgay.clear();
+        btnDoanhThuThang.click();
+        
+        ThongKeDoanhThuThang tk = new ThongKeDoanhThuThang(year);
+        showForm(tk);
+    }
+    
+       public void updateThongKeNgay(int month,int year){
+        btnDoanhThuNam.clear();
+        btnDoanhThuThang.clear();
+        btnDichVu.clear();
+        btnDoanhThuNgay.clear();
+        btnDoanhThuNgay.click();
+        
+        ThongKeDoanhThuNgay tk = new ThongKeDoanhThuNgay(month,year);
+        showForm(tk);
+    }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -106,6 +137,8 @@ public class ThongKe extends javax.swing.JPanel {
         jLabel5 = new javax.swing.JLabel();
         btnDichVu = new com.ui.swing.component.Tab();
         jLabel6 = new javax.swing.JLabel();
+        btnDoanhThuNgay = new com.ui.swing.component.Tab();
+        jLabel7 = new javax.swing.JLabel();
 
         tabPane.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -157,6 +190,20 @@ public class ThongKe extends javax.swing.JPanel {
         jLabel6.setText("Dịch vụ");
         btnDichVu.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 0, -1, 40));
 
+        btnDoanhThuNgay.setEnabled(false);
+        btnDoanhThuNgay.setEndColor("#f12711");
+        btnDoanhThuNgay.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnDoanhThuNgayMouseClicked(evt);
+            }
+        });
+        btnDoanhThuNgay.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel7.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel7.setText("Doanh thu ngày");
+        btnDoanhThuNgay.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 0, 130, 40));
+
         javax.swing.GroupLayout tabPaneLayout = new javax.swing.GroupLayout(tabPane);
         tabPane.setLayout(tabPaneLayout);
         tabPaneLayout.setHorizontalGroup(
@@ -166,18 +213,22 @@ public class ThongKe extends javax.swing.JPanel {
                 .addComponent(btnDoanhThuNam, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(82, 82, 82)
                 .addComponent(btnDoanhThuThang, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(59, 59, 59)
+                .addGap(37, 37, 37)
+                .addComponent(btnDoanhThuNgay, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(49, 49, 49)
                 .addComponent(btnDichVu, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(942, Short.MAX_VALUE))
+                .addContainerGap(755, Short.MAX_VALUE))
         );
         tabPaneLayout.setVerticalGroup(
             tabPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(tabPaneLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(tabPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(btnDichVu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnDoanhThuThang, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnDoanhThuNam, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(tabPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnDichVu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(tabPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(btnDoanhThuThang, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnDoanhThuNam, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnDoanhThuNgay, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap(25, Short.MAX_VALUE))
         );
 
@@ -191,23 +242,17 @@ public class ThongKe extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(tabPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 774, Short.MAX_VALUE))
+                .addGap(0, 764, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    
-     
-    
-    
-    
-    
+
     private void btnDoanhThuNamMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnDoanhThuNamMouseClicked
 
         btnDoanhThuNam.clear();
         btnDoanhThuThang.clear();
         btnDichVu.clear();
-     
-
+        btnDoanhThuNgay.clear();
         btnDoanhThuNam.click();
         tabSelected(SUB_STATISTICAL_MANAGER.THONG_KE_NAM);
     }//GEN-LAST:event_btnDoanhThuNamMouseClicked
@@ -217,8 +262,7 @@ public class ThongKe extends javax.swing.JPanel {
         btnDoanhThuNam.clear();
         btnDoanhThuThang.clear();
         btnDichVu.clear();
-       
-
+        btnDoanhThuNgay.clear();
         btnDoanhThuThang.click();
         tabSelected(SUB_STATISTICAL_MANAGER.THONG_KE_THANG);
     }//GEN-LAST:event_btnDoanhThuThangMouseClicked
@@ -228,8 +272,7 @@ public class ThongKe extends javax.swing.JPanel {
         btnDoanhThuNam.clear();
         btnDoanhThuThang.clear();
         btnDichVu.clear();
-       
-
+        btnDoanhThuNgay.clear();
         btnDichVu.click();
         tabSelected(SUB_STATISTICAL_MANAGER.THONG_KE_DICVH);
     }//GEN-LAST:event_btnDichVuMouseClicked
@@ -240,17 +283,29 @@ public class ThongKe extends javax.swing.JPanel {
 
     private void tabPaneMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabPaneMousePressed
 
-       
+
     }//GEN-LAST:event_tabPaneMousePressed
+
+    private void btnDoanhThuNgayMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnDoanhThuNgayMouseClicked
+        btnDoanhThuNam.clear();
+        btnDoanhThuThang.clear();
+        btnDoanhThuNgay.clear();
+        btnDichVu.clear();
+
+        btnDoanhThuNgay.click();
+        tabSelected(SUB_STATISTICAL_MANAGER.THONG_KE_NGAY);
+    }//GEN-LAST:event_btnDoanhThuNgayMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.ui.swing.component.Tab btnDichVu;
     private com.ui.swing.component.Tab btnDoanhThuNam;
+    private com.ui.swing.component.Tab btnDoanhThuNgay;
     private com.ui.swing.component.Tab btnDoanhThuThang;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel tabPane;
     // End of variables declaration//GEN-END:variables
 }

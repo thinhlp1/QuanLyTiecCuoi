@@ -20,7 +20,7 @@ WHERE ct.MaHD = $P{MaHD}]]>
 	<field name="MaDV" class="java.lang.String"/>
 	<field name="TenDV" class="java.lang.String"/>
 	<field name="ChiPhi" class="java.lang.String"/>
-	<field name="GhiChu" class="java.lang.String"/>
+	<field name="GhiChu" class="java.lang.String"/> 
 	<field name="ChiPhiPhatSinh" class="java.lang.Long"/>
 	<field name="SoLuong" class="java.lang.String"/>
 	<field name="TongChiPhi" class="java.lang.Long"/>

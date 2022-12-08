@@ -65,20 +65,25 @@ public class QuanLyHoaDon extends javax.swing.JPanel {
     public void fillToTable(List<HoaDon> listHoaDon) {
         tblModel.setRowCount(0);
         try {
-
+            tblHoaDon.resetRowColor();
+            int i = 0;
             for (HoaDon hd : listHoaDon) {
                 Object[] row = {
                     hd.getMaHD(),
                     hd.getMaHoaDon(),
                     DateHelper.toString(hd.getNgayLap(), "dd/MM/yyyy"),
                     hd.getTenNV(),
-                    DateHelper.toString(hd.getNgayLapLan2(), "dd/MM/yyyy"),
+                    (hd.getNgayLapLan2() != null ? DateHelper.toString(hd.getNgayLapLan2() , "dd/MM/yyyy"):""),
                     hd.getTenNLLan2(),
                     ShareHelper.toMoney(hd.getTienCoc()),
                     ShareHelper.toMoney(hd.getTongTien()),
                     hd.getTrangTha() == 0 ? "Đã trả cọc" : "Đã trả hết"
                 };
                 tblModel.addRow(row);
+                if (  hd.getTrangTha() == 0){
+                    tblHoaDon.addRowColor(i);
+                }
+                i++;
             }
         } catch (Exception e) {
             DialogHelper.alertError(this, "Lỗi truy vấn dữ liệu!");
@@ -143,23 +148,29 @@ public class QuanLyHoaDon extends javax.swing.JPanel {
             } else if (cbbNgay.getSelectedIndex() == 1) {
                 if (txtNgayBatDau.getText().length() != 0 && txtNgayKetThuc.getText().length() == 0) {
 
-                    if (DateHelper.toString(hd.getNgayLapLan2(), "dd/MM/yyyy").equals(txtNgayBatDau.getText())
-                            || hd.getNgayLapLan2().after(DateHelper.toDate(txtNgayBatDau.getText(), "dd/MM/yyyy"))) {
-                        listFilted.add(hd);
-                    }
-
-                } else if (txtNgayBatDau.getText().length() == 0 && txtNgayKetThuc.getText().length() != 0) {
-                    if (DateHelper.toString(hd.getNgayLapLan2(), "dd/MM/yyyy").equals(txtNgayKetThuc.getText())
-                            || hd.getNgayLapLan2().before(DateHelper.toDate(txtNgayKetThuc.getText(), "dd/MM/yyyy"))) {
-                        listFilted.add(hd);
-                    }
-                } else if (txtNgayBatDau.getText().length() != 0 && txtNgayKetThuc.getText().length() != 0) {
-                    if (DateHelper.toString(hd.getNgayLapLan2(), "dd/MM/yyyy").equals(txtNgayKetThuc.getText())
-                            || hd.getNgayLapLan2().before(DateHelper.toDate(txtNgayKetThuc.getText(), "dd/MM/yyyy")
-                            )) {
+                    if (hd.getNgayLapLan2() != null) {
                         if (DateHelper.toString(hd.getNgayLapLan2(), "dd/MM/yyyy").equals(txtNgayBatDau.getText())
                                 || hd.getNgayLapLan2().after(DateHelper.toDate(txtNgayBatDau.getText(), "dd/MM/yyyy"))) {
                             listFilted.add(hd);
+                        }
+                    }
+
+                } else if (txtNgayBatDau.getText().length() == 0 && txtNgayKetThuc.getText().length() != 0) {
+                    if (hd.getNgayLapLan2() != null) {
+                        if (DateHelper.toString(hd.getNgayLapLan2(), "dd/MM/yyyy").equals(txtNgayKetThuc.getText())
+                                || hd.getNgayLapLan2().before(DateHelper.toDate(txtNgayKetThuc.getText(), "dd/MM/yyyy"))) {
+                            listFilted.add(hd);
+                        }
+                    }
+                } else if (txtNgayBatDau.getText().length() != 0 && txtNgayKetThuc.getText().length() != 0) {
+                    if (hd.getNgayLapLan2() != null) {
+                        if (DateHelper.toString(hd.getNgayLapLan2(), "dd/MM/yyyy").equals(txtNgayKetThuc.getText())
+                                || hd.getNgayLapLan2().before(DateHelper.toDate(txtNgayKetThuc.getText(), "dd/MM/yyyy")
+                                )) {
+                            if (DateHelper.toString(hd.getNgayLapLan2(), "dd/MM/yyyy").equals(txtNgayBatDau.getText())
+                                    || hd.getNgayLapLan2().after(DateHelper.toDate(txtNgayBatDau.getText(), "dd/MM/yyyy"))) {
+                                listFilted.add(hd);
+                            }
                         }
                     }
                 } else {
@@ -585,7 +596,7 @@ public class QuanLyHoaDon extends javax.swing.JPanel {
         int currentIndex = tblHoaDon.getSelectedRow();
         if (currentIndex >= 0) {
             String maHD = (String) tblHoaDon.getValueAt(currentIndex, 0);
-            LapHopDong lapHopDong = new LapHopDong(false, maHD,true);
+            LapHopDong lapHopDong = new LapHopDong(false, maHD, true);
             AppStatus.mainApp.showForm(lapHopDong);
             AppStatus.MENU.setSelected(0);
 

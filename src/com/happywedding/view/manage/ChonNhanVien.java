@@ -5,13 +5,21 @@
  */
 package com.happywedding.view.manage;
 
+import com.happywedding.dao.NhanVienDAO;
+import com.happywedding.dao.PhanCongDAO;
+import com.happywedding.dao.PhongBanDAO;
+import com.happywedding.dao.VaiTroDAO;
+import com.happywedding.helper.AppStatus;
 import com.happywedding.helper.ShareHelper;
 import com.happywedding.model.ChiTietDatMon;
 import com.happywedding.model.MonAn;
 import com.happywedding.model.NhanVien;
 import com.happywedding.model.PhanCongModel;
+import com.happywedding.model.PhongBan;
+import com.happywedding.model.VaiTro;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -25,17 +33,46 @@ public class ChonNhanVien extends javax.swing.JDialog {
      */
     private DefaultTableModel tblNhanVienModel;
     private List<NhanVien> listNhanVien = new ArrayList<>();
-    
-    public ChonNhanVien(java.awt.Frame parent, boolean modal) {
+
+    private List<PhongBan> listAllPhongBan;
+    private List<VaiTro> listAllVaiTro;
+
+    private VaiTroDAO vaitroDAO = new VaiTroDAO();
+    private PhongBanDAO phongBanDAO = new PhongBanDAO();
+    private NhanVienDAO nhanVienDAO = new NhanVienDAO();
+    private PhanCongDAO phanCongDAO = new PhanCongDAO();
+    private String maHD ;
+
+    public ChonNhanVien(java.awt.Frame parent, boolean modal, String maHD) {
         super(parent, modal);
         initComponents();
-        this.setVisible(true);
-        jPanel1.setVisible(true);
+        this.maHD = maHD;
+        tblNhanVien.fixTable(jScrollPane1);
+        tblNhanVienModel = (DefaultTableModel) tblNhanVien.getModel();
+
+        loadNhanVien();
+        loadPhongBan();
+        fillTableNhanVien(listNhanVien);
+    }
+
+    public void loadNhanVien() {
+        listNhanVien = phanCongDAO.selectNhanVienPossible(maHD);
+    }
+
+    public void loadPhongBan() {
+        listAllPhongBan = phongBanDAO.select();
+
+        DefaultComboBoxModel cbbModel = (DefaultComboBoxModel) cbbPhongBan.getModel();
+        cbbModel.removeAllElements();
+        for (PhongBan s : listAllPhongBan) {
+            cbbModel.addElement(s);
+        }
+        cbbPhongBan.setSelectedIndex(-1);
     }
 
     public void fillTableNhanVien(List<NhanVien> list) {
         tblNhanVienModel.setRowCount(0);
-        tblNhanVien.resetRowColor();
+
         for (NhanVien nv : list) {
             Object[] row = {nv.getMaNV(), nv.getHoTen(), nv.getTenVT()};
             tblNhanVienModel.addRow(row);
@@ -58,8 +95,15 @@ public class ChonNhanVien extends javax.swing.JDialog {
         cbbPhongBan = new com.ui.swing.Combobox();
         jLabel1 = new javax.swing.JLabel();
         txtTimKiem = new javax.swing.JTextField();
+        jLabel12 = new javax.swing.JLabel();
+        cbbVaiTro = new com.ui.swing.Combobox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -80,9 +124,15 @@ public class ChonNhanVien extends javax.swing.JDialog {
                 return canEdit [columnIndex];
             }
         });
+        tblNhanVien.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        tblNhanVien.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblNhanVienMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tblNhanVien);
 
-        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 180, 370, 560));
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 170, 490, 560));
 
         jLabel11.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         jLabel11.setText("Phòng ban");
@@ -94,10 +144,10 @@ public class ChonNhanVien extends javax.swing.JDialog {
                 cbbPhongBanActionPerformed(evt);
             }
         });
-        jPanel1.add(cbbPhongBan, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 40, 340, -1));
+        jPanel1.add(cbbPhongBan, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 40, 180, -1));
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/happywedding/assets/Search.png"))); // NOI18N
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 110, -1, 40));
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 110, -1, 40));
 
         txtTimKiem.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
         txtTimKiem.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(0, 0, 0)));
@@ -111,15 +161,25 @@ public class ChonNhanVien extends javax.swing.JDialog {
                 txtTimKiemKeyReleased(evt);
             }
         });
-        jPanel1.add(txtTimKiem, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 110, 310, 35));
+        jPanel1.add(txtTimKiem, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 110, 410, 35));
+
+        jLabel12.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        jLabel12.setText("Vai trò");
+        jPanel1.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 20, -1, -1));
+
+        cbbVaiTro.setLabeText("");
+        cbbVaiTro.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbbVaiTroActionPerformed(evt);
+            }
+        });
+        jPanel1.add(cbbVaiTro, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 40, 180, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 428, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 1, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 520, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -144,52 +204,32 @@ public class ChonNhanVien extends javax.swing.JDialog {
 
     }//GEN-LAST:event_txtTimKiemKeyReleased
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ChonNhanVien.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ChonNhanVien.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ChonNhanVien.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(ChonNhanVien.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
 
-        /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                ChonNhanVien dialog = new ChonNhanVien(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
+    }//GEN-LAST:event_formWindowClosing
+
+    private void tblNhanVienMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblNhanVienMouseClicked
+        int currentIndex = tblNhanVien.getSelectedRow();
+        if (currentIndex > -1) {
+            if (evt.getClickCount() >= 2) {
+                AppStatus.PHANCONG.phanCongMoi(listNhanVien.get(currentIndex));
+                this.dispose();
             }
-        });
-    }
+        }
+
+    }//GEN-LAST:event_tblNhanVienMouseClicked
+
+    private void cbbVaiTroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbbVaiTroActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbbVaiTroActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.ui.swing.Combobox cbbPhongBan;
+    private com.ui.swing.Combobox cbbVaiTro;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private com.ui.swing.Table tblNhanVien;

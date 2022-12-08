@@ -18,6 +18,7 @@ public class ChiTietPhanCong {
     private String maNV;
     private String tenNV;
     private String maVT;
+    private String tenVT;
     private Date ngayPhanCong;
     private String thoiGianBatDau;
     private String thoiGianKetThuc;
@@ -38,6 +39,16 @@ public class ChiTietPhanCong {
         this.maXe = maXe;
         this.tenXe = tenXe;
     }
+
+    public String getTenVT() {
+        return tenVT;
+    }
+
+    public void setTenVT(String tenVT) {
+        this.tenVT = tenVT;
+    }
+    
+    
 
     public int getMaPC() {
         return maPC;

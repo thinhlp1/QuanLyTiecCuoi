@@ -184,6 +184,7 @@ public class HappyWeddingApp extends javax.swing.JFrame {
             } else if (index == MAIN_MENU_QL.THONGKE) {
                 if (thongKe == null) {
                     thongKe = new ThongKe();
+                    AppStatus.FORMTHONGKE = thongKe;
                 }
                 showForm(thongKe);
             } else if (index == MAIN_MENU_QL.GIOITHIEU) {
