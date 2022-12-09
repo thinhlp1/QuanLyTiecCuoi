@@ -67,7 +67,6 @@ public class QuanLyNhanVien extends javax.swing.JPanel {
         
         loadPhongBan();
         loadVaiTro();
-
         initSort();
     }
 

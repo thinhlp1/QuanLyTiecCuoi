@@ -42,7 +42,7 @@ import java.util.List;
      * @return danh sách các thực thể
      */
     abstract public List<T> select();
-
+    
     /**
      * Truy vấn thực thể theo mã
      *

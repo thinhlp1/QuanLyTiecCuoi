@@ -7,6 +7,7 @@ package com.happywedding.dao;
 
 import com.happywedding.helper.JDBCHelper;
 import com.happywedding.model.HopDong;
+import com.happywedding.model.NhanVien;
 import com.happywedding.model.TaiKhoan;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -28,10 +29,12 @@ public class TaiKhoanDAO extends AbstractDAO<TaiKhoan> {
             + ")\n"
             + "VALUES\n"
             + "(?,?,?,?)";
-    private final String DELETE = "DELETE dbo.TaiKhoan WHERE MaTaiKhoan = ? ";
-    private final String UPDATE = "UPDATE dbo.TaiKhoan SET MaNhanVien = ?, TenDangNhap = ?, MatKhau = ? , VaiTro = ? WHERE MaTaiKhoan = ?";
+    private final String UPDATE = "UPDATE dbo.TaiKhoan SET MatKhau = ? WHERE MaTaiKhoan = ?";
+    private final String CHANGE_PASS = "UPDATE dbo.TaiKhoan SET MatKhau = ? WHERE TenDangNhap = ?";
     private final String SECLECT_ALL = "SELECT * FROM dbo.TaiKhoan";
     private final String SECLECT_BYID = "SELECT * FROM dbo.TaiKhoan WHERE MaTaiKhoan = ?";
+    private final String SECLECT_TENDANGNHAP = "SELECT MaTaiKhoan, MaNhanVien, TenDangNhap, MatKhau, VaiTro FROM dbo.TaiKhoan where TenDangNhap=?";
+    private final String DELETE = "DELETE FROM dbo.TaiKhoan where TenDangNhap=?";
 
     @Override
     public boolean insert(TaiKhoan entity) {
@@ -41,7 +44,7 @@ public class TaiKhoanDAO extends AbstractDAO<TaiKhoan> {
 
     @Override
     public boolean update(TaiKhoan entity) {
-        int rs = JDBCHelper.executeUpdate(UPDATE, entity.getMaNhanVien(), entity.getMaTaiKhoan(), entity.getMatKhau(), entity.getVaiTro());
+        int rs = JDBCHelper.executeUpdate(CHANGE_PASS, entity.getMatKhau(), entity.getTenDangNhap());
         return rs > 0;
     }
 
@@ -50,9 +53,13 @@ public class TaiKhoanDAO extends AbstractDAO<TaiKhoan> {
         int rs = JDBCHelper.executeUpdate(DELETE, id);
     }
 
-    @Override
-    public List<TaiKhoan> select() {
-        return select(SECLECT_ALL);
+    //@Override
+    //public List<TaiKhoan> select() {
+    //    return select(SECLECT_ALL);
+    //}
+    
+    public List<TaiKhoan> selectTenDangNhap(String tenDangNhap){   
+        return select(SECLECT_TENDANGNHAP, tenDangNhap);
     }
 
     @Override
@@ -68,8 +75,8 @@ public class TaiKhoanDAO extends AbstractDAO<TaiKhoan> {
             try {
                 rs = JDBCHelper.executeQuery(sql, args);
                 while (rs.next()) {
-                    TaiKhoan TaiKhoan = readFromResultSet(rs);
-                    list.add(TaiKhoan);
+                    TaiKhoan taiKhoan = readFromResultSet(rs);
+                    list.add(taiKhoan);
                 }
             } finally {
                 rs.getStatement().getConnection().close();
@@ -79,6 +86,8 @@ public class TaiKhoanDAO extends AbstractDAO<TaiKhoan> {
         }
         return list;
     }
+    
+    
 
     private TaiKhoan readFromResultSet(ResultSet rs) throws SQLException {
         TaiKhoan TaiKhoan = new TaiKhoan();
@@ -93,4 +102,10 @@ public class TaiKhoanDAO extends AbstractDAO<TaiKhoan> {
     public boolean kiemTraTaiKhoan(String username, String pass) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
+
+    @Override
+    public List<TaiKhoan> select() {
+        return select(SECLECT_ALL);
+    }
+
 }
