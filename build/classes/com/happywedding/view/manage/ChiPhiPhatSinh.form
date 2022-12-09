@@ -23,9 +23,12 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <EmptySpace min="0" pref="916" max="32767" attributes="0"/>
+          <EmptySpace min="0" pref="1044" max="32767" attributes="0"/>
           <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
-              <Component id="pnlChiTiet" alignment="0" pref="916" max="32767" attributes="0"/>
+              <Group type="102" alignment="0" attributes="0">
+                  <Component id="pnlChiTiet" min="-2" pref="1044" max="-2" attributes="0"/>
+                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+              </Group>
           </Group>
       </Group>
     </DimensionLayout>
@@ -91,7 +94,7 @@
           </Events>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-              <AbsoluteConstraints x="510" y="80" width="360" height="35"/>
+              <AbsoluteConstraints x="510" y="80" width="500" height="35"/>
             </Constraint>
           </Constraints>
         </Component>
@@ -149,7 +152,7 @@
           </Events>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-              <AbsoluteConstraints x="510" y="140" width="360" height="35"/>
+              <AbsoluteConstraints x="510" y="140" width="500" height="35"/>
             </Constraint>
           </Constraints>
         </Component>
@@ -194,7 +197,7 @@
           </Events>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-              <AbsoluteConstraints x="510" y="200" width="360" height="35"/>
+              <AbsoluteConstraints x="510" y="200" width="500" height="35"/>
             </Constraint>
           </Constraints>
         </Component>
@@ -252,7 +255,7 @@
           </Events>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-              <AbsoluteConstraints x="510" y="260" width="360" height="35"/>
+              <AbsoluteConstraints x="510" y="260" width="500" height="35"/>
             </Constraint>
           </Constraints>
         </Component>
@@ -297,7 +300,7 @@
           </Events>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-              <AbsoluteConstraints x="510" y="320" width="360" height="35"/>
+              <AbsoluteConstraints x="510" y="320" width="500" height="35"/>
             </Constraint>
           </Constraints>
         </Component>
@@ -342,7 +345,7 @@
           </Events>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-              <AbsoluteConstraints x="510" y="380" width="360" height="35"/>
+              <AbsoluteConstraints x="510" y="380" width="500" height="35"/>
             </Constraint>
           </Constraints>
         </Component>
@@ -381,7 +384,7 @@
           </Events>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-              <AbsoluteConstraints x="770" y="890" width="-1" height="30"/>
+              <AbsoluteConstraints x="880" y="890" width="-1" height="30"/>
             </Constraint>
           </Constraints>
         </Component>
@@ -420,7 +423,7 @@
           </AuxValues>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-              <AbsoluteConstraints x="40" y="490" width="840" height="160"/>
+              <AbsoluteConstraints x="40" y="490" width="970" height="160"/>
             </Constraint>
           </Constraints>
 
@@ -429,7 +432,8 @@
             <Component class="com.ui.swing.Table" name="tblThucDon">
               <Properties>
                 <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                  <Table columnCount="4" rowCount="1">
+                  <Table columnCount="5" rowCount="1">
+                    <Column editable="false" title="STT" type="java.lang.Object"/>
                     <Column editable="false" title="T&#xea;n m&#xf3;n" type="java.lang.Object"/>
                     <Column editable="false" title="Gi&#xe1;" type="java.lang.Object"/>
                     <Column editable="true" title="S&#x1ed1; l&#x1b0;&#x1ee3;ng" type="java.lang.Object"/>
@@ -483,7 +487,7 @@
           </AuxValues>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-              <AbsoluteConstraints x="40" y="700" width="840" height="160"/>
+              <AbsoluteConstraints x="40" y="700" width="970" height="160"/>
             </Constraint>
           </Constraints>
 
@@ -492,7 +496,8 @@
             <Component class="com.ui.swing.Table" name="tblChiTietDichVu">
               <Properties>
                 <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                  <Table columnCount="4" rowCount="1">
+                  <Table columnCount="5" rowCount="1">
+                    <Column editable="false" title="STT" type="java.lang.Object"/>
                     <Column editable="false" title="D&#x1ecb;ch v&#x1ee5;" type="java.lang.Object"/>
                     <Column editable="false" title="Gi&#xe1;" type="java.lang.Object"/>
                     <Column editable="true" title="S&#x1ed1; l&#x1b0;&#x1ee3;ng" type="java.lang.Object"/>

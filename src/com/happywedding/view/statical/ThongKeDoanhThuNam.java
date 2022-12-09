@@ -6,6 +6,7 @@
 package com.happywedding.view.statical;
 
 import com.happywedding.dao.ThongKeDAO;
+import com.happywedding.helper.AppStatus;
 import com.happywedding.helper.DialogHelper;
 import com.happywedding.helper.ShareHelper;
 import com.ui.swing.chart.ModelChart;
@@ -404,11 +405,24 @@ public class ThongKeDoanhThuNam extends javax.swing.JPanel {
             new String [] {
                 "Năm", "Số lượng hợp đồng", "Danh thu thấp nhất", "Danh thu cao nhất", "Tổng danh thu"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         tblDoanhThu.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        tblDoanhThu.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblDoanhThuMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tblDoanhThu);
 
-        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 570, 1530, 330));
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 570, 1600, 330));
         jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 50, -1, -1));
 
         jLabel4.setText("Năm");
@@ -544,6 +558,13 @@ public class ThongKeDoanhThuNam extends javax.swing.JPanel {
             filtedThongKe();
         }
     }//GEN-LAST:event_cbbSortByItemStateChanged
+
+    private void tblDoanhThuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblDoanhThuMouseClicked
+      if (evt.getClickCount() == 2){
+          int index = tblDoanhThu.getSelectedRow();
+          AppStatus.FORMTHONGKE.updateThongKeThang((int) listFilted.get(index)[0]);
+      }
+    }//GEN-LAST:event_tblDoanhThuMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

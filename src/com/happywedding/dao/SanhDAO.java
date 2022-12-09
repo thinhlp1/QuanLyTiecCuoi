@@ -10,14 +10,15 @@ import com.happywedding.model.Sanh;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
  *
  * @author ADMIN
  */
-public class SanhDAO extends AbstractDAO<Sanh>{
-    
+public class SanhDAO extends AbstractDAO<Sanh> {
+
     private final String INSERT_SANH = "INSERT INTO Sanh (MaSanh, TenSanh, MaPL, SucChua, GiaThueSanh, GiaBan) VALUES (?, ?, ?, ?, ?, ?)";
 
     private final String UPDATE_SANH = "UPDATE Sanh SET MaSanh=?, TenSanh=?, MaPL=?, SucChua=?, GiaThueSanh=?, GiaBan=? WHERE MaSanh=?";
@@ -25,7 +26,14 @@ public class SanhDAO extends AbstractDAO<Sanh>{
     private final String SELECT_ALL = "SELECT MaSanh, TenSanh, Sanh.MaPL, TenPL, SucChua, GiaThueSanh, GiaBan from Sanh inner join PhanLoaiSanh on Sanh.MaPL = PhanLoaiSanh.MaPL";
     private final String SELECT_BY_ID = "SELECT MaSanh, TenSanh, Sanh.MaPL, TenPL, SucChua, GiaThueSanh, GiaBan from Sanh inner join PhanLoaiSanh on Sanh.MaPL = PhanLoaiSanh.MaPL WHERE MaSanh=?";
     private final String SELECT_BY_NAME = "SELECT MaSanh, TenSanh, Sanh.MaPL, TenPL, SucChua, GiaThueSanh, GiaBan from Sanh inner join PhanLoaiSanh on Sanh.MaPL = PhanLoaiSanh.MaPL WHERE TenSanh=?";
-   
+
+    private final String SELECT_SANH_POSSIBLE = "SELECT MaSanh, TenSanh, s.MaPL, TenPL, SucChua, GiaThueSanh, GiaBan FROM Sanh s\n"
+            + "INNER JOIN PhanLoaiSanh pl ON pl.MaPL = s.MaPL\n"
+            + "WHERE MaSanh NOT IN (  SELECT s.MaSanh  FROM HopDong hd INNER JOIN Sanh s  ON hd.Sanh = s.MaSanh\n"
+            + "WHERE  NgayToChuc = ? AND  (  ( CAST(? AS Time)  BETWEEN ThoiGianBatDau AND ThoiGianKetThuc ) \n"
+            + "OR  (  ( CAST(? AS Time)    BETWEEN ThoiGianBatDau AND ThoiGianKetThuc )   ) \n"
+            + "OR (   ThoiGianBatDau   BETWEEN ( CAST(? AS Time)) AND  CAST(? AS Time) )) )\n"
+            + "";
 
     public boolean insert(Sanh sanh) {
         int rs = JDBCHelper.executeUpdate(INSERT_SANH,
@@ -65,17 +73,20 @@ public class SanhDAO extends AbstractDAO<Sanh>{
         List<Sanh> list = select(SELECT_BY_ID, id);
         return list.size() > 0 ? list.get(0) : null;
     }
-    
-       public Sanh findByName(String id) {
+
+    public Sanh findByName(String id) {
         //System.out.println("Đang thực hiện tìm theo mã");
         List<Sanh> list = select(SELECT_BY_NAME, id);
         return list.size() > 0 ? list.get(0) : null;
     }
 
+    public List<Sanh> selectSanhPossible(Date date, String timeStart, String timeEnd) {
+        return select(SELECT_SANH_POSSIBLE, date, timeStart, timeEnd, timeStart, timeEnd);
+    }
+
     private List select(String sql, Object... args) {
-        
+
         //System.out.println("Đang thực hiện select");
-        
         List<Sanh> list = new ArrayList<>();
         try {
             System.out.println("Gán resultSet = null");
@@ -87,7 +98,8 @@ public class SanhDAO extends AbstractDAO<Sanh>{
                     list.add(sanh);
                 }
             } finally {
-                rs.getStatement().getConnection().close();            }
+                rs.getStatement().getConnection().close();
+            }
 
         } catch (SQLException ex) {
             System.out.println("Lỗi ở select");
@@ -96,16 +108,14 @@ public class SanhDAO extends AbstractDAO<Sanh>{
         return list;
     }
 
-    
     // sửa lại
-    private Sanh readFromResultSet(ResultSet rs){
-        
+    private Sanh readFromResultSet(ResultSet rs) {
+
         //System.out.println("Đang thực hiện readFromResultSet");
-        
         Sanh sanh = new Sanh();
-        
+
         try {
-               
+
             sanh.setMaSanh(rs.getString("MaSanh"));
             sanh.setTenSanh(rs.getString("TenSanh"));
             sanh.setMaPL(rs.getString("MaPL"));
@@ -122,4 +132,3 @@ public class SanhDAO extends AbstractDAO<Sanh>{
 
     }
 }
-    

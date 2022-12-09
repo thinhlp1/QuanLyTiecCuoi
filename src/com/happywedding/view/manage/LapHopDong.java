@@ -197,7 +197,7 @@ public class LapHopDong extends javax.swing.JPanel {
                 } catch (ParseException ex) {
                     Logger.getLogger(LapHopDong.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                checkSanh();
+                //   checkSanh();
 //                String myDayTime = txtNgayToChuc.getText() + " " + ShareHelper.to24Hour(timePickerBatDau.getSelectedTime());
 //                //System.out.println(txtNgayToChuc.getText() +" " + ShareHelper.to24Hour(timePickerBatDau.getSelectedTime()) );
 //                SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm");
@@ -262,7 +262,7 @@ public class LapHopDong extends javax.swing.JPanel {
                 } catch (ParseException ex) {
                     Logger.getLogger(LapHopDong.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                checkSanh();
+                // checkSanh();
             }
 
         });
@@ -818,7 +818,7 @@ public class LapHopDong extends javax.swing.JPanel {
                 btnDanhDauXoa.setVisible(false);
                 btnPhanCong.setVisible(true);
                 btnChiPhiPhatSinh.setVisible(false);
-               // btnComfimHoanThanh.setVisible(true);
+                // btnComfimHoanThanh.setVisible(true);
                 btnXuatHoaDonTam.setVisible(true);
 
                 try {
@@ -1231,6 +1231,33 @@ public class LapHopDong extends javax.swing.JPanel {
         return false;
     }
 
+    public void loadSanhPossible() {
+
+        Date date;
+        String timeStart, timeEnd;
+
+        if (txtNgayToChuc.getText().length() == 0 || txtBatDau.getText().length() == 0) {
+            return;
+        }
+
+        date = DateHelper.toDate(txtNgayToChuc.getText(), "dd/MM/yyyy");
+        timeStart = txtBatDau.getText();
+        timeEnd = txtKetThuc.getText();
+
+        listSanh = sanhDAO.selectSanhPossible(date, timeStart, timeEnd);
+        DefaultComboBoxModel cbbModel = (DefaultComboBoxModel) cbbSanh.getModel();
+
+        cbbModel.removeAllElements();
+        for (Sanh s : listSanh) {
+            s.getTenSanh();
+            s.getSucChua();
+            s.getGiaBan();
+            cbbModel.addElement(s);
+        }
+        cbbSanh.setSelectedIndex(-1);
+
+    }
+
     private static net.sf.jasperreports.engine.JasperReport loadJasperReport(String reportName) {
         try {
             System.out.println(reportName);
@@ -1377,7 +1404,6 @@ public class LapHopDong extends javax.swing.JPanel {
         lblThanhChu = new javax.swing.JLabel();
         lblMaNH24 = new javax.swing.JLabel();
         cbbSanh = new com.ui.swing.Combobox();
-        lblKiemTra = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         taThongBaoSanh = new javax.swing.JTextArea();
         txtThueThanhTien = new javax.swing.JTextField();
@@ -1687,6 +1713,9 @@ public class LapHopDong extends javax.swing.JPanel {
         txtBatDau.setEditable(false);
         txtBatDau.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         txtBatDau.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtBatDauFocusGained(evt);
+            }
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txtBatDauFocusLost(evt);
             }
@@ -1730,6 +1759,14 @@ public class LapHopDong extends javax.swing.JPanel {
 
         txtKetThuc.setEditable(false);
         txtKetThuc.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        txtKetThuc.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtKetThucFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtKetThucFocusLost(evt);
+            }
+        });
         txtKetThuc.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 txtKetThucMouseClicked(evt);
@@ -1831,15 +1868,6 @@ public class LapHopDong extends javax.swing.JPanel {
             }
         });
         jPanel4.add(cbbSanh, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 170, 360, 40));
-
-        lblKiemTra.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
-        lblKiemTra.setText("Kiểm tra");
-        lblKiemTra.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                lblKiemTraMouseClicked(evt);
-            }
-        });
-        jPanel4.add(lblKiemTra, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 240, -1, -1));
 
         jScrollPane2.setBorder(null);
 
@@ -2034,7 +2062,7 @@ public class LapHopDong extends javax.swing.JPanel {
 
         btnKyKet.setBackground(new java.awt.Color(24, 37, 153));
         btnKyKet.setForeground(new java.awt.Color(255, 255, 255));
-        btnKyKet.setText("Ký kết");
+        btnKyKet.setText("Đã ký kết");
         btnKyKet.setBorderColor(new java.awt.Color(24, 37, 153));
         btnKyKet.setColor(new java.awt.Color(24, 37, 153));
         btnKyKet.setColorClick(new java.awt.Color(51, 51, 255));
@@ -2144,7 +2172,7 @@ public class LapHopDong extends javax.swing.JPanel {
         });
         pnlBtn.add(btnHuyDuyet);
 
-        jPanel1.add(pnlBtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 890, 750, 50));
+        jPanel1.add(pnlBtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 890, 790, 50));
 
         pnlInHoaDOn.setBackground(new java.awt.Color(255, 255, 255));
         pnlInHoaDOn.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
@@ -2419,8 +2447,8 @@ public class LapHopDong extends javax.swing.JPanel {
                         reloadHopDongVoiSanh(((Sanh) cbbSanh.getSelectedItem()).getMaSanh(), (Integer.parseInt(txtSLBan.getText())));
 
                     }
-                    checkSanh();
-                    lblKiemTra.requestFocus();
+                    // checkSanh();
+                    // lblKiemTra.requestFocus();
                 }
             } catch (Exception e) {
             }
@@ -2488,7 +2516,7 @@ public class LapHopDong extends javax.swing.JPanel {
                     } else {
                         reloadHopDongVoiSanh(((Sanh) cbbSanh.getSelectedItem()).getMaSanh(), (Integer.parseInt(txtSLBan.getText())));
                     }
-                    lblKiemTra.requestFocus();
+                    //lblKiemTra.requestFocus();
                 }
             } catch (Exception e) {
             }
@@ -2514,37 +2542,6 @@ public class LapHopDong extends javax.swing.JPanel {
     private void txtCMNDFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtCMNDFocusLost
         checkCCCD(null);
     }//GEN-LAST:event_txtCMNDFocusLost
-
-    private void lblKiemTraMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblKiemTraMouseClicked
-
-        if (txtNgayToChuc.getText().length() == 0 || txtBatDau.getText().length() == 0 || txtKetThuc.getText().length() == 0) {
-            DialogHelper.alertError(this, "Nhập đầy đủ thời gian");
-            return;
-        }
-        if (cbbSanh.getSelectedIndex() == -1) {
-            DialogHelper.alertError(this, "Xác định sảnh");
-            return;
-        }
-
-        HopDong hopDong = hopDongDAO.checkSanh(((Sanh) cbbSanh.getSelectedItem()).getMaSanh(), DateHelper.toDate(txtNgayToChuc.getText(), "dd/MM/yyyy"),
-                txtBatDau.getText(), txtKetThuc.getText(), this.maHD);
-        if (hopDong != null) {
-            try {
-                SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-                taThongBaoSanh.setText("Sảnh đã được đặt tại hợp đồng: " + hopDong.getMaHD()
-                        + "\nNgày tổ chức: " + DateHelper.toString(hopDong.getNgayToChuc(), "dd/MM/yyyy")
-                        + "\nGiờ bắt đầu: " + sdf.format(sdf.parse(hopDong.getThoiGianBatDau()))
-                        + "\nGiờ kết thúc: " + sdf.format(sdf.parse(hopDong.getThoiGianKetThuc()))
-                );
-                return;
-            } catch (ParseException ex) {
-                Logger.getLogger(LapHopDong.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        } else {
-            taThongBaoSanh.setText("Sảnh chưa có lịch đặt tiệc");
-            return;
-        }
-    }//GEN-LAST:event_lblKiemTraMouseClicked
 
     private void txtHoTenKhachHangKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtHoTenKhachHangKeyTyped
         checkName(txtHoTenKhachHang, txtSDT, evt);
@@ -2598,7 +2595,7 @@ public class LapHopDong extends javax.swing.JPanel {
                 txtNgayToChuc.requestFocus();
                 dateChooser.showPopup();
             } else {
-                checkSanh();
+                loadSanhPossible();
             }
         }
     }//GEN-LAST:event_txtNgayToChucFocusGained
@@ -2780,7 +2777,10 @@ public class LapHopDong extends javax.swing.JPanel {
     }//GEN-LAST:event_btnKyKetActionPerformed
 
     private void btnPhanCongActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPhanCongActionPerformed
-        new PhanCong(new JFrame(), (statusHopDong.equals("DATHUCHIEN") || statusHopDong.equals("XOA") ? false : true), maHD).setVisible(true);
+
+        PhanCong pc = new PhanCong(new JFrame(), (statusHopDong.equals("DATHUCHIEN") || statusHopDong.equals("XOA") ? false : true), maHD);
+        pc.setVisible(true);
+    
     }//GEN-LAST:event_btnPhanCongActionPerformed
 
     private void btnXuatHoaDonTamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXuatHoaDonTamActionPerformed
@@ -2856,6 +2856,18 @@ public class LapHopDong extends javax.swing.JPanel {
 
     }//GEN-LAST:event_btnSaveActionPerformed
 
+    private void txtKetThucFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtKetThucFocusLost
+
+    }//GEN-LAST:event_txtKetThucFocusLost
+
+    private void txtBatDauFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtBatDauFocusGained
+        loadSanhPossible();
+    }//GEN-LAST:event_txtBatDauFocusGained
+
+    private void txtKetThucFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtKetThucFocusGained
+        loadSanhPossible();
+    }//GEN-LAST:event_txtKetThucFocusGained
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.ui.swing.InkwellButton btnBack;
@@ -2887,7 +2899,6 @@ public class LapHopDong extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JLabel lblKiemTra;
     private javax.swing.JLabel lblMaNH;
     private javax.swing.JLabel lblMaNH1;
     private javax.swing.JLabel lblMaNH10;

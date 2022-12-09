@@ -29,7 +29,7 @@ public class CoSoVatChat {
     
     @Override
     public String toString() {
-        return maCSVC+   tenCSVC;
+        return  tenCSVC;
     }
 
     public String getMaDanhMucCon() {

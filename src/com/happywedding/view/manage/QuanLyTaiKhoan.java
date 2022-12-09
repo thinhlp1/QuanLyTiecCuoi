@@ -20,6 +20,8 @@ import javax.swing.JOptionPane;
 
 import com.happywedding.dao.VaiTroTaiKhoanDAO;
 import com.happywedding.model.VaiTroTaiKhoan;
+import static jdk.nashorn.internal.objects.NativeError.printStackTrace;
+
 /**
  *
  * @author ACER
@@ -28,22 +30,22 @@ public class QuanLyTaiKhoan extends javax.swing.JPanel {
 
     private DefaultTableModel tblModel;
     private int currentIndex = 0;
-    
+
     private List<TaiKhoan> listTaiKhoan = new ArrayList<>();
     private List<TaiKhoan> listFilted = new ArrayList<>();
     private List<VaiTroTaiKhoan> vaiTroTaiKhoan = new ArrayList<>();
-    
+
     private TaiKhoanDAO taiKhoanDAO = new TaiKhoanDAO();
-    
+
     public QuanLyTaiKhoan() {
         initComponents();
         init();
     }
-    
-    public void init(){
-        
+
+    public void init() {
+
         allowEdit(false);
-        
+
         tblTaiKhoan.fixTable(jScrollPane1);
         tblModel = (DefaultTableModel) tblTaiKhoan.getModel();
         tblTaiKhoan.setAutoscrolls(true);
@@ -54,27 +56,36 @@ public class QuanLyTaiKhoan extends javax.swing.JPanel {
         fillToTable(listTaiKhoan);
         loadVaiTro();
     }
-    
-    public void loadTaiKhoan(int currentIndex){
-       
+
+    public void loadTaiKhoan(int currentIndex) {
+
         txtMaNhanVien.setText(String.valueOf(tblTaiKhoan.getValueAt(this.currentIndex, 1)));
         txtTenDangNhap.setText(String.valueOf(tblTaiKhoan.getValueAt(this.currentIndex, 2)));
-        txtMatKhau.setText(String.valueOf(tblTaiKhoan.getValueAt(this.currentIndex, 2)));
-        
+        txtMatKhau.setText(String.valueOf(tblTaiKhoan.getValueAt(this.currentIndex, 3)));
+        if (String.valueOf(tblTaiKhoan.getValueAt(this.currentIndex, 4)).equals("ADMIN")) {
+            cbbVaiTro.setSelectedItem("Admin");
+        } else if (String.valueOf(tblTaiKhoan.getValueAt(this.currentIndex, 4)).equals("KHO")) {
+            cbbVaiTro.setSelectedItem("Quản lý kho");
+        } else if (String.valueOf(tblTaiKhoan.getValueAt(this.currentIndex, 4)).equals("QLCC")) {
+            cbbVaiTro.setSelectedItem("Quản lý cấp cao");
+        } else if (String.valueOf(tblTaiKhoan.getValueAt(this.currentIndex, 4)).equals("TIEPTAN")) {
+            cbbVaiTro.setSelectedItem("Tiếp tân");
+        }
+
     }
-    
-    public void loadVaiTro(){
-    
+
+    public void loadVaiTro() {
+
         VaiTroTaiKhoanDAO vaiTroTaiKhoanDAO = new VaiTroTaiKhoanDAO();
-        
+
         vaiTroTaiKhoan = vaiTroTaiKhoanDAO.select();
         for (int i = 0; i < vaiTroTaiKhoan.size(); i++) {
             String tenVaiTro = vaiTroTaiKhoan.get(i).getTenVT();
             cbbVaiTro.addItem(tenVaiTro);
         }
-        
+
     }
-    
+
     public void fillToTable(List<TaiKhoan> listHopDong) {
         tblModel.setRowCount(0);
         try {
@@ -94,10 +105,11 @@ public class QuanLyTaiKhoan extends javax.swing.JPanel {
         }
 
     }
-    
+
     public static void main(String[] args) {
-       
+
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -115,8 +127,6 @@ public class QuanLyTaiKhoan extends javax.swing.JPanel {
         jLabel25 = new javax.swing.JLabel();
         jLabel27 = new javax.swing.JLabel();
         txtMatKhau = new javax.swing.JPasswordField();
-        jLabel28 = new javax.swing.JLabel();
-        txtXacNhanMatKhau = new javax.swing.JPasswordField();
         jLabel29 = new javax.swing.JLabel();
         cbbVaiTro = new com.ui.swing.Combobox();
         cbbSapXepTangGiam = new com.ui.swing.Combobox();
@@ -193,16 +203,9 @@ public class QuanLyTaiKhoan extends javax.swing.JPanel {
         });
         pnlEmplpyeeManager.add(txtMatKhau, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 330, 340, 35));
 
-        jLabel28.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
-        jLabel28.setText("Xác nhận mật khẩu");
-        pnlEmplpyeeManager.add(jLabel28, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 380, 130, -1));
-
-        txtXacNhanMatKhau.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
-        pnlEmplpyeeManager.add(txtXacNhanMatKhau, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 410, 340, 35));
-
         jLabel29.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
         jLabel29.setText("Vai trò");
-        pnlEmplpyeeManager.add(jLabel29, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 480, 130, -1));
+        pnlEmplpyeeManager.add(jLabel29, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 430, 130, -1));
 
         cbbVaiTro.setLabeText("");
         cbbVaiTro.addActionListener(new java.awt.event.ActionListener() {
@@ -210,7 +213,7 @@ public class QuanLyTaiKhoan extends javax.swing.JPanel {
                 cbbVaiTroActionPerformed(evt);
             }
         });
-        pnlEmplpyeeManager.add(cbbVaiTro, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 510, 340, 35));
+        pnlEmplpyeeManager.add(cbbVaiTro, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 480, 340, 50));
 
         cbbSapXepTangGiam.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tăng dần", "Giảm dần" }));
         cbbSapXepTangGiam.setLabeText("");
@@ -409,33 +412,113 @@ public class QuanLyTaiKhoan extends javax.swing.JPanel {
         txtMaNhanVien.setText("");
         txtTenDangNhap.setText("");
         txtMatKhau.setText("");
+        allowEdit(true);
     }//GEN-LAST:event_btnMoiActionPerformed
 
-    public void them(){
-        TaiKhoanDAO taiKhoanDAO = new TaiKhoanDAO();
-        
-        String maNhanVien = txtMaNhanVien.getText();
-        String tenDangNhap = DangNhap.tenTaiKhoan;
-        String matKhau = String.valueOf(txtMatKhau.getPassword());
-        
-        
-        TaiKhoan tk = new TaiKhoan();
-        tk.setTenDangNhap(tenDangNhap);
-        tk.setMatKhau(mk);
-        if(String.valueOf(txtMatKhauMoi.getPassword()).trim().equals("")){
-            JOptionPane.showMessageDialog(this, "Vui lòng nhập mật khẩu");
+    public boolean check() {
+
+        if (txtMaNhanVien.getText().trim().equals("")) {
+            JOptionPane.showMessageDialog(this, "Mời nhập mã nhân viên");
+            return false;
+        }
+        if (txtTenDangNhap.getText().trim().equals("")) {
+            JOptionPane.showMessageDialog(this, "Mời nhập tên đăng nhập");
+            return false;
+        }
+        if (String.valueOf(txtMatKhau.getPassword()).trim().equals("")) {
+            JOptionPane.showMessageDialog(this, "Mời nhập mật khẩu");
+            return false;
+        }
+
+        return true;
+    }
+
+    public void them() {
+
+        if (check() == false) {
             return;
         }
+
+        TaiKhoanDAO taiKhoanDAO = new TaiKhoanDAO();
+
+        String maNhanVien = txtMaNhanVien.getText();
+        String tenDangNhap = txtTenDangNhap.getText();
+        String matKhau = String.valueOf(txtMatKhau.getPassword());
+
+        String vaiTro;
         
+        if (String.valueOf(cbbVaiTro.getSelectedItem()).equals("Admin")) {
+            vaiTro = "ADMIN";
+        } else if (String.valueOf(cbbVaiTro.getSelectedItem()).equals("Quản lý kho")) {
+            vaiTro = "KHO";
+        } else if (String.valueOf(cbbVaiTro.getSelectedItem()).equals("Quản lý cấp cao")) {
+            vaiTro = "QLCC";
+        } else if (String.valueOf(cbbVaiTro.getSelectedItem()).equals("Tiếp tân")) {
+            vaiTro = "TIEPTAN";
+        } else{
+            JOptionPane.showMessageDialog(this, "Sai vai trò");
+            return;
+        }
+
+        TaiKhoan tk = new TaiKhoan();
+        tk.setMaNhanVien(maNhanVien);
+        tk.setTenDangNhap(tenDangNhap);
+        tk.setMatKhau(matKhau);
+        tk.setVaiTro(vaiTro);
+
         taiKhoanDAO.insert(tk);
+        init();
+        
+        JOptionPane.showMessageDialog(this, "Thêm thành công");
+
     }
     
+    public void sua(){
+    
+        if (check() == false) {
+            return;
+        }
+
+        TaiKhoanDAO taiKhoanDAO = new TaiKhoanDAO();
+
+        String maNhanVien = txtMaNhanVien.getText();
+        String tenDangNhap = txtTenDangNhap.getText();
+        String matKhau = String.valueOf(txtMatKhau.getPassword());
+
+        String vaiTro;
+        
+        if (String.valueOf(cbbVaiTro.getSelectedItem()).equals("Admin")) {
+            vaiTro = "ADMIN";
+        } else if (String.valueOf(cbbVaiTro.getSelectedItem()).equals("Quản lý kho")) {
+            vaiTro = "KHO";
+        } else if (String.valueOf(cbbVaiTro.getSelectedItem()).equals("Quản lý cấp cao")) {
+            vaiTro = "QLCC";
+        } else if (String.valueOf(cbbVaiTro.getSelectedItem()).equals("Tiếp tân")) {
+            vaiTro = "TIEPTAN";
+        } else{
+            JOptionPane.showMessageDialog(this, "Sai vai trò");
+            return;
+        }
+
+        TaiKhoan tk = new TaiKhoan();
+        tk.setTenDangNhap(tenDangNhap);
+        tk.setMatKhau(matKhau);
+        tk.setVaiTro(vaiTro);
+        tk.setMaTaiKhoan( (int) tblTaiKhoan.getValueAt(currentIndex, 0));
+
+        taiKhoanDAO.sua(tk);
+        init();
+        
+        JOptionPane.showMessageDialog(this, "Sửa thành công");
+        
+    }
+
     private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemActionPerformed
         them();
     }//GEN-LAST:event_btnThemActionPerformed
 
     private void btnSuaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuaActionPerformed
-        // TODO add your handling code here:
+        sua();
     }//GEN-LAST:event_btnSuaActionPerformed
 
     private void btnXoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXoaActionPerformed
@@ -450,10 +533,9 @@ public class QuanLyTaiKhoan extends javax.swing.JPanel {
         currentIndex = tblTaiKhoan.rowAtPoint(evt.getPoint());
         if (currentIndex >= 0) {
             if (evt.getClickCount() == 2) {
-                
-                
+
                 allowEdit(true);
-            }else{
+            } else {
                 //String maTaiKhoan = String.valueOf(tblTaiKhoan.getValueAt(this.currentIndex, 0));
                 //System.out.println(maTaiKhoan);
                 allowEdit(false);
@@ -466,11 +548,11 @@ public class QuanLyTaiKhoan extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtMaNhanVienActionPerformed
 
-    public void allowEdit(boolean a){
-        txtTenDangNhap.setEditable(a);
+    public void allowEdit(boolean a) {
+        txtMaNhanVien.setEditable(a);
         txtTenDangNhap.setEditable(a);
         txtMatKhau.setEditable(a);
-        txtXacNhanMatKhau.setEditable(a);
+        cbbVaiTro.setEnabled(a);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -489,7 +571,6 @@ public class QuanLyTaiKhoan extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel25;
     private javax.swing.JLabel jLabel27;
-    private javax.swing.JLabel jLabel28;
     private javax.swing.JLabel jLabel29;
     private javax.swing.JLabel jLabel31;
     private javax.swing.JPanel jPanel1;
@@ -501,6 +582,5 @@ public class QuanLyTaiKhoan extends javax.swing.JPanel {
     private javax.swing.JPasswordField txtMatKhau;
     private javax.swing.JTextField txtTenDangNhap;
     private javax.swing.JTextField txtTimKiem;
-    private javax.swing.JPasswordField txtXacNhanMatKhau;
     // End of variables declaration//GEN-END:variables
 }

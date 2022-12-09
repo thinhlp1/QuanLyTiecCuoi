@@ -31,6 +31,7 @@ public class TaiKhoanDAO extends AbstractDAO<TaiKhoan> {
             + "(?,?,?,?)";
     private final String UPDATE = "UPDATE dbo.TaiKhoan SET MatKhau = ? WHERE MaTaiKhoan = ?";
     private final String CHANGE_PASS = "UPDATE dbo.TaiKhoan SET MatKhau = ? WHERE TenDangNhap = ?";
+    private final String SUA = "UPDATE dbo.TaiKhoan SET TenDangNhap = ?, MatKhau = ?, VaiTro = ? WHERE MaTaiKhoan = ?";
     private final String SECLECT_ALL = "SELECT * FROM dbo.TaiKhoan";
     private final String SECLECT_BYID = "SELECT * FROM dbo.TaiKhoan WHERE MaTaiKhoan = ?";
     private final String SECLECT_TENDANGNHAP = "SELECT MaTaiKhoan, MaNhanVien, TenDangNhap, MatKhau, VaiTro FROM dbo.TaiKhoan where TenDangNhap=?";
@@ -45,6 +46,11 @@ public class TaiKhoanDAO extends AbstractDAO<TaiKhoan> {
     @Override
     public boolean update(TaiKhoan entity) {
         int rs = JDBCHelper.executeUpdate(CHANGE_PASS, entity.getMatKhau(), entity.getTenDangNhap());
+        return rs > 0;
+    }
+    
+    public boolean sua(TaiKhoan entity) {
+        int rs = JDBCHelper.executeUpdate(SUA, entity.getTenDangNhap(), entity.getMatKhau(), entity.getVaiTro(), entity.getMaTaiKhoan());
         return rs > 0;
     }
 
