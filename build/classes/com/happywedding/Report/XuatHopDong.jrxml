@@ -5,7 +5,7 @@
 	<property name="ireport.y" value="2527"/>
 	<parameter name="MaHD" class="java.lang.String"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA["C:\\Users\\ACER\\Desktop\\QuanLyTiecCuoi\\src\\com\\happywedding\\Report\\"]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA["Report\\"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="MaTD_Chinh" class="java.lang.String"/>
 	<parameter name="MaTD_Phu" class="java.lang.String"/>

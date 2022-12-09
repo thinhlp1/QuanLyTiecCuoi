@@ -2653,7 +2653,7 @@ public class LapHopDong extends javax.swing.JPanel {
             String tienConLai = ShareHelper.toMoney(hopDong.getTongTien() - hopDong.getTienCoc());
             String thanhChu = EnglishNumberToWords.convert(hopDong.getTongTien());
             String thanhChu2 = EnglishNumberToWords.convert(ShareHelper.toMoney(tienConLai));
-            net.sf.jasperreports.engine.JasperReport rpt = JasperCompileManager.compileReport("src\\com\\happywedding\\Report\\XuatHopDong.jrxml");
+            net.sf.jasperreports.engine.JasperReport rpt = JasperCompileManager.compileReport("Report\\XuatHopDong.jrxml");
             parameters.put("MaHD", maHD);
             parameters.put("MaTD_Chinh", maTD);
             parameters.put("MaTD_Phu", maTDPhu);

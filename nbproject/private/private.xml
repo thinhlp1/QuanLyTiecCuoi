@@ -3,20 +3,7 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-<<<<<<< HEAD
-            <file>file:/C:/Users/ACER/Desktop/QuanLyTiecCuoi/src/com/happywedding/view/manage/ChiPhiPhatSinh.java</file>
-            <file>file:/C:/Users/ACER/Desktop/QuanLyTiecCuoi/src/com/happywedding/Report/XuatHopDong.jrxml</file>
-            <file>file:/C:/Users/ACER/Desktop/QuanLyTiecCuoi/src/com/happywedding/Report/HoaDonChinhThuc.jrxml</file>
-=======
-            <file>file:/D:/FPT%20Polytechnic/Ki_4/Block2/DuAn1/QuanLyTiecCuoi/src/com/happywedding/dao/TaiKhoanDAO.java</file>
-            <file>file:/D:/FPT%20Polytechnic/Ki_4/Block2/DuAn1/QuanLyTiecCuoi/src/com/happywedding/app/HappyWeddingApp.java</file>
-            <file>file:/D:/FPT%20Polytechnic/Ki_4/Block2/DuAn1/QuanLyTiecCuoi/src/com/happywedding/model/TaiKhoan.java</file>
-            <file>file:/D:/FPT%20Polytechnic/Ki_4/Block2/DuAn1/QuanLyTiecCuoi/src/com/happywedding/dao/VaiTroTaiKhoanDAO.java</file>
-            <file>file:/D:/FPT%20Polytechnic/Ki_4/Block2/DuAn1/QuanLyTiecCuoi/src/com/happywedding/view/manage/QuanLyTaiKhoan.java</file>
-            <file>file:/D:/FPT%20Polytechnic/Ki_4/Block2/DuAn1/QuanLyTiecCuoi/src/com/happywedding/view/manage/QuanLyHopDong.java</file>
-            <file>file:/D:/FPT%20Polytechnic/Ki_4/Block2/DuAn1/QuanLyTiecCuoi/src/com/ui/swing/Table.java</file>
-            <file>file:/D:/FPT%20Polytechnic/Ki_4/Block2/DuAn1/QuanLyTiecCuoi/src/com/happywedding/view/manage/QuenMatKhau.java</file>
->>>>>>> origin/dev_bao
+            <file>file:/C:/Users/ACER/Desktop/QuanLyTiecCuoi/src/com/happywedding/view/manage/LapHopDong.java</file>
         </group>
     </open-files>
 </project-private>
