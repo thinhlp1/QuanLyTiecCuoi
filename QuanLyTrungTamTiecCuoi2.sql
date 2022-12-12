@@ -1,5 +1,5 @@
 ﻿--Tạo CSDL
-CREATE DATABASE QuanLyTrungTamTiecCuoi2
+CREATE DATABASE QuanLyTrungTamTiecCuoi
 --DROP DATABASE QuanLyTrungTamTiecCuoi  SELECT * FROM ChiTietDatMon
 GO
 --Gọi CSDL

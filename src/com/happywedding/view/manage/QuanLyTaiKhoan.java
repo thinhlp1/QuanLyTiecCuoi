@@ -20,12 +20,10 @@ import javax.swing.JOptionPane;
 
 import com.happywedding.dao.VaiTroTaiKhoanDAO;
 import com.happywedding.model.VaiTroTaiKhoan;
-import static jdk.nashorn.internal.objects.NativeError.printStackTrace;
+import com.happywedding.dao.TaiKhoanDAO;
+import com.happywedding.model.NhanVien;
+import java.awt.Rectangle;
 
-/**
- *
- * @author ACER
- */
 public class QuanLyTaiKhoan extends javax.swing.JPanel {
 
     private DefaultTableModel tblModel;
@@ -45,14 +43,17 @@ public class QuanLyTaiKhoan extends javax.swing.JPanel {
     public void init() {
 
         allowEdit(false);
+        currentIndex = -1;
 
         tblTaiKhoan.fixTable(jScrollPane1);
         tblModel = (DefaultTableModel) tblTaiKhoan.getModel();
         tblTaiKhoan.setAutoscrolls(true);
         listTaiKhoan = taiKhoanDAO.select();
+
         for (TaiKhoan tk : listTaiKhoan) {
             listFilted.add(tk);
         }
+
         fillToTable(listTaiKhoan);
         loadVaiTro();
     }
@@ -291,6 +292,11 @@ public class QuanLyTaiKhoan extends javax.swing.JPanel {
         btnPre.setText("<<");
         btnPre.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         btnPre.setPreferredSize(new java.awt.Dimension(45, 27));
+        btnPre.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPreActionPerformed(evt);
+            }
+        });
         pnlEmplpyeeManager.add(btnPre, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 680, 80, 30));
 
         btnNext.setBackground(new java.awt.Color(51, 0, 255));
@@ -298,6 +304,11 @@ public class QuanLyTaiKhoan extends javax.swing.JPanel {
         btnNext.setText(">>");
         btnNext.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         btnNext.setPreferredSize(new java.awt.Dimension(45, 27));
+        btnNext.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNextActionPerformed(evt);
+            }
+        });
         pnlEmplpyeeManager.add(btnNext, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 680, 80, 30));
 
         tblTaiKhoan.setModel(new javax.swing.table.DefaultTableModel(
@@ -415,7 +426,6 @@ public class QuanLyTaiKhoan extends javax.swing.JPanel {
         allowEdit(true);
     }//GEN-LAST:event_btnMoiActionPerformed
 
-<<<<<<< HEAD
     public boolean check() {
 
         if (txtMaNhanVien.getText().trim().equals("")) {
@@ -430,6 +440,10 @@ public class QuanLyTaiKhoan extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, "Mời nhập mật khẩu");
             return false;
         }
+        if (tblTaiKhoan.getValueAt(currentIndex, 4).equals("ADMIN")) {
+            JOptionPane.showMessageDialog(this, "Không được đụng tới admin");
+            return false;
+        }
 
         return true;
     }
@@ -440,31 +454,11 @@ public class QuanLyTaiKhoan extends javax.swing.JPanel {
             return;
         }
 
-        TaiKhoanDAO taiKhoanDAO = new TaiKhoanDAO();
-
         String maNhanVien = txtMaNhanVien.getText();
-        String tenDangNhap = txtTenDangNhap.getText();
         String matKhau = String.valueOf(txtMatKhau.getPassword());
 
         String vaiTro;
-=======
-    public void them(){
-        TaiKhoanDAO taiKhoanDAO = new TaiKhoanDAO();
-        
-        String maNhanVien = txtMaNhanVien.getText();
-        String tenDangNhap = DangNhap.tenTaiKhoan;
-        String matKhau = String.valueOf(txtMatKhau.getPassword());
-        
-        
-        TaiKhoan tk = new TaiKhoan();
-        tk.setTenDangNhap(tenDangNhap);
-//        tk.setMatKhau(mk);
-//        if(String.valueOf(txtMatKhauMoi.getPassword()).trim().equals("")){
-//            JOptionPane.showMessageDialog(this, "Vui lòng nhập mật khẩu");
-//            return;
-//        }
->>>>>>> origin/main
-        
+
         if (String.valueOf(cbbVaiTro.getSelectedItem()).equals("Admin")) {
             vaiTro = "ADMIN";
         } else if (String.valueOf(cbbVaiTro.getSelectedItem()).equals("Quản lý kho")) {
@@ -473,38 +467,35 @@ public class QuanLyTaiKhoan extends javax.swing.JPanel {
             vaiTro = "QLCC";
         } else if (String.valueOf(cbbVaiTro.getSelectedItem()).equals("Tiếp tân")) {
             vaiTro = "TIEPTAN";
-        } else{
+        } else {
             JOptionPane.showMessageDialog(this, "Sai vai trò");
             return;
         }
 
         TaiKhoan tk = new TaiKhoan();
         tk.setMaNhanVien(maNhanVien);
-        tk.setTenDangNhap(tenDangNhap);
+        tk.setTenDangNhap(txtTenDangNhap.getText());
         tk.setMatKhau(matKhau);
         tk.setVaiTro(vaiTro);
 
         taiKhoanDAO.insert(tk);
         init();
-        
+
         JOptionPane.showMessageDialog(this, "Thêm thành công");
 
     }
-    
-    public void sua(){
-    
+
+    public void sua() {
+
         if (check() == false) {
             return;
         }
 
-        TaiKhoanDAO taiKhoanDAO = new TaiKhoanDAO();
-
         String maNhanVien = txtMaNhanVien.getText();
-        String tenDangNhap = txtTenDangNhap.getText();
         String matKhau = String.valueOf(txtMatKhau.getPassword());
 
         String vaiTro;
-        
+
         if (String.valueOf(cbbVaiTro.getSelectedItem()).equals("Admin")) {
             vaiTro = "ADMIN";
         } else if (String.valueOf(cbbVaiTro.getSelectedItem()).equals("Quản lý kho")) {
@@ -513,22 +504,22 @@ public class QuanLyTaiKhoan extends javax.swing.JPanel {
             vaiTro = "QLCC";
         } else if (String.valueOf(cbbVaiTro.getSelectedItem()).equals("Tiếp tân")) {
             vaiTro = "TIEPTAN";
-        } else{
+        } else {
             JOptionPane.showMessageDialog(this, "Sai vai trò");
             return;
         }
 
         TaiKhoan tk = new TaiKhoan();
-        tk.setTenDangNhap(tenDangNhap);
+        tk.setTenDangNhap(txtTenDangNhap.getText());
         tk.setMatKhau(matKhau);
         tk.setVaiTro(vaiTro);
-        tk.setMaTaiKhoan( (int) tblTaiKhoan.getValueAt(currentIndex, 0));
+        tk.setMaTaiKhoan((int) tblTaiKhoan.getValueAt(currentIndex, 0));
 
         taiKhoanDAO.sua(tk);
         init();
-        
+
         JOptionPane.showMessageDialog(this, "Sửa thành công");
-        
+
     }
 
     private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemActionPerformed
@@ -540,7 +531,11 @@ public class QuanLyTaiKhoan extends javax.swing.JPanel {
     }//GEN-LAST:event_btnSuaActionPerformed
 
     private void btnXoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXoaActionPerformed
-        // TODO add your handling code here:
+        if (!check()) {
+            return;
+        }
+        taiKhoanDAO.delete(String.valueOf(tblTaiKhoan.getValueAt(currentIndex, 0)));
+        init();
     }//GEN-LAST:event_btnXoaActionPerformed
 
     private void cbbSapXepTheo1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbbSapXepTheo1ActionPerformed
@@ -565,6 +560,46 @@ public class QuanLyTaiKhoan extends javax.swing.JPanel {
     private void txtMaNhanVienActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtMaNhanVienActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtMaNhanVienActionPerformed
+
+    //Di chuyển
+    public void setTblSelected(int row) {
+        tblTaiKhoan.setRowSelectionInterval(row, row);
+        tblTaiKhoan.scrollRectToVisible(new Rectangle(tblTaiKhoan.getCellRect(row, 0, true)));
+        loadTaiKhoan(currentIndex);
+    }
+
+    //Hiển thị lên textfied
+    void edit() {
+
+        int maTaiKhoan = (int) tblTaiKhoan.getValueAt(this.currentIndex, 0);
+        loadTaiKhoan(currentIndex);
+
+    }
+
+    private void btnNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNextActionPerformed
+        // TODO add your handling code here:
+        
+        if(currentIndex >= listTaiKhoan.size()-1){
+            currentIndex = 0;
+        }else{
+            currentIndex++;
+        }
+        setTblSelected(currentIndex);
+        // isUpdate(false);
+        edit();
+    }//GEN-LAST:event_btnNextActionPerformed
+
+    private void btnPreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPreActionPerformed
+        
+        if(currentIndex <= 0){
+            currentIndex = listTaiKhoan.size()-1;
+        }else{
+            currentIndex--;
+        }
+        setTblSelected(currentIndex);
+        // isUpdate(false);
+        edit();
+    }//GEN-LAST:event_btnPreActionPerformed
 
     public void allowEdit(boolean a) {
         txtMaNhanVien.setEditable(a);
