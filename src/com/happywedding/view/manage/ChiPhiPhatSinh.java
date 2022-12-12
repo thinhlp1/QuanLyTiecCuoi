@@ -5,6 +5,7 @@
  */
 package com.happywedding.view.manage;
 
+import com.happywedding.Report.GetClass;
 import com.happywedding.dao.ChiTietDatMonDAO;
 import com.happywedding.dao.ChiTietDichVuDAO;
 import com.happywedding.dao.ChiTietDichVuDiKemDAO;
@@ -30,6 +31,8 @@ import com.happywedding.model.Sanh;
 import com.ui.swing.Combobox;
 import java.awt.Component;
 import java.awt.event.KeyAdapter;
+import java.io.InputStream;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -53,6 +56,8 @@ import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.design.JasperDesign;
+import net.sf.jasperreports.engine.xml.JRXmlLoader;
 import net.sf.jasperreports.view.JasperViewer;
 
 /**
@@ -516,7 +521,7 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
             tongTienDiKem += ct.getChiPhi() * ct.getSoLuong();
 
         }
-      
+
         this.tongChiPhiDikem = tongTienDiKem;
 
     }
@@ -1107,13 +1112,27 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
                         String tongTienPhaiTra1 = ShareHelper.toMoney(tongTienPhaiTra) + " VND";
                         String ttdv1 = ShareHelper.toMoney(tongTienPhaiTra) + " VND";
                         String thanhChu = EnglishNumberToWords.convert(tongChiPhiDatMon1);
-                        
+
                         String thanhchu1 = thanhChu.substring(0, 1);
-                        String thanhChu2 = thanhChu.substring(2,thanhChu.length());
+                        String thanhChu2 = thanhChu.substring(2, thanhChu.length());
                         thanhChu = thanhchu1.toUpperCase() + thanhChu2;
-                        
-                        
-                        net.sf.jasperreports.engine.JasperReport rpt = JasperCompileManager.compileReport("src\\com\\happywedding\\Report\\HoaDonChinhThuc.jrxml");
+
+                        URL localPackage = this.getClass().getResource("");
+                        URL urlLoader = ChiPhiPhatSinh.class.getProtectionDomain().getCodeSource().getLocation();
+                        //String localDir = localPackage.getPath();
+                        String loaderDir = urlLoader.getPath().toString();
+                        //System.out.printf("loaderDir = %s\n localDir = %s\n", loaderDir, localDir);
+                        String dirPath = loaderDir.substring(0, loaderDir.length() - 15);
+                        String realPath = dirPath + "/Report/";
+                        realPath = realPath.replaceFirst("\\/", "");
+                        realPath = realPath.replaceAll("%20", " ");
+                        realPath = realPath.replaceAll("/", "\\\\");
+                        realPath = realPath.replaceAll("H\\\\", "");
+
+                        InputStream file = new GetClass().getClass().getResourceAsStream("/com/happywedding/Report/HoaDonChinhThuc.jrxml");
+                        JasperDesign desgin = JRXmlLoader.load(file);
+
+                        net.sf.jasperreports.engine.JasperReport rpt = JasperCompileManager.compileReport(desgin);
                         parameters.put("MaHD", maHD);
                         parameters.put("MaTD_Chinh", maTD);
                         parameters.put("MaTD_Phu", maTDPhu);
@@ -1125,7 +1144,7 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
                         parameters.put("TongTien", tongTienPhaiTra1);
                         parameters.put("TienCoc", tienCoc);
 
-                        parameters.put("SUBREPORT_DIR", "src\\com\\happywedding\\Report\\");
+                        parameters.put("SUBREPORT_DIR", realPath);
                         System.out.println(parameters);
                         JasperPrint p = JasperFillManager.fillReport(rpt, parameters, con);
                         JasperViewer.viewReport(p, false);
@@ -1201,13 +1220,27 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
                         String tongTienPhaiTra1 = ShareHelper.toMoney(tongTienPhaiTra) + " VND";
 //                        String ttdv1 = ShareHelper.toMoney(tongTienPhaiTra) + " VND";
                         String thanhChu = EnglishNumberToWords.convert(tongTienPhaiTra);
-                        
-                              String thanhchu1 = thanhChu.substring(0, 1);
-                        String thanhChu2 = thanhChu.substring(1,thanhChu.length());
+
+                        String thanhchu1 = thanhChu.substring(0, 1);
+                        String thanhChu2 = thanhChu.substring(1, thanhChu.length());
                         thanhChu = thanhchu1.toUpperCase() + thanhChu2;
+
+                        URL localPackage = this.getClass().getResource("");
+                        URL urlLoader = ChiPhiPhatSinh.class.getProtectionDomain().getCodeSource().getLocation();
+                        //String localDir = localPackage.getPath();
+                        String loaderDir = urlLoader.getPath().toString();
+                        //System.out.printf("loaderDir = %s\n localDir = %s\n", loaderDir, localDir);
+                        String dirPath = loaderDir.substring(0, loaderDir.length() - 15);
+                        String realPath = dirPath + "/Report/";
+                        realPath = realPath.replaceFirst("\\/", "");
+                        realPath = realPath.replaceAll("%20", " ");
+                        realPath = realPath.replaceAll("/", "\\\\");
+                        realPath = realPath.replaceAll("H\\\\", "");
+
+                        InputStream file = new GetClass().getClass().getResourceAsStream("/com/happywedding/Report/HoaDonChinhThuc.jrxml");
+                        JasperDesign desgin = JRXmlLoader.load(file);
                         
-                        
-                        net.sf.jasperreports.engine.JasperReport rpt = JasperCompileManager.compileReport("src\\com\\happywedding\\Report\\HoaDonChinhThuc.jrxml");
+                        net.sf.jasperreports.engine.JasperReport rpt = JasperCompileManager.compileReport(desgin);
                         parameters.put("MaHD", maHD);
                         parameters.put("MaTD_Chinh", maTD);
                         parameters.put("MaTD_Phu", maTDPhu);
@@ -1219,7 +1252,7 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
                         parameters.put("TongTien", tongTienPhaiTra1);
                         parameters.put("TienCoc", tienCoc);
 
-                        parameters.put("SUBREPORT_DIR", "src\\com\\happywedding\\Report\\");
+                        parameters.put("SUBREPORT_DIR", realPath);
                         System.out.println(parameters);
                         JasperPrint p = JasperFillManager.fillReport(rpt, parameters, con);
                         JasperViewer.viewReport(p, false);

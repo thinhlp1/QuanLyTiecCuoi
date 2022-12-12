@@ -1,5 +1,5 @@
 ﻿--Tạo CSDL
-CREATE DATABASE QuanLyTrungTamTiecCuoi
+CREATE DATABASE QuanLyTrungTamTiecCuoi2
 --DROP DATABASE QuanLyTrungTamTiecCuoi  SELECT * FROM ChiTietDatMon
 GO
 --Gọi CSDL
@@ -1460,10 +1460,10 @@ CREATE PROC thongKeDoanhThuThang @Nam int
 AS
 BEGIN
 	--DECLARE		
-	SELECT SUM(IIF(hd.TrangThai = 0,TienCoc,TongTien )) AS TongDoanhThu ,
+	SELECT SUM(IIF(hd.TrangThai = 0,TienCoc,hd.TongTien + hdd.TienCoc)) AS TongDoanhThu ,
 	IIF(hd.TrangThai = 0, MONTH(hd.NgayLap),MONTH(NgayLapLan2)) AS Thang ,
-	MAX (  IIF(hd.TrangThai = 0,TienCoc,TongTien ) ) AS DoanhThuCaoNhat,
-	MIN ( IIF(hd.TrangThai = 0,TienCoc,TongTien ) ) AS DoanhThuThapNhat,
+	MAX (  IIF(hd.TrangThai = 0,TienCoc,hd.TongTien + hdd.TienCoc ) ) AS DoanhThuCaoNhat,
+	MIN ( IIF(hd.TrangThai = 0,TienCoc,hd.TongTien+ hdd.TienCoc ) ) AS DoanhThuThapNhat,
 	COUNT(hd.MaHD) AS SoLuongHopDong
 	FROM HopDong hdd INNER JOIN HoaDon hd ON hdd.MaHD = hd.MaHD 
 	WHERE IIF(hd.TrangThai = 0, YEAR(hd.NgayLap),YEAR(NgayLapLan2)) = @Nam
@@ -1521,19 +1521,6 @@ END
 
 GO
 
-CREATE PROC thongKeDoanhThuNgayTop @top int, @nam int 
-AS 
-BEGIN
-	SELECT Top ( @top  )SUM(IIF(hd.TrangThai = 0,TienCoc,hd.TongTien + hdd.TienCoc )) AS TongDoanhThu ,
-	IIF(hd.TrangThai = 0, hd.NgayLap,NgayLapLan2) AS Ngay ,
-	MAX (  IIF(hd.TrangThai = 0,TienCoc, hd.TongTien+ hdd.TienCoc )         ) AS DoanhThuCaoNhat,
-	MIN ( IIF(hd.TrangThai = 0,TienCoc,hd.TongTien + hdd.TienCoc) ) AS DoanhThuThapNhat,
-	COUNT(hd.MaHD) AS SoLuongHopDong
-	FROM HopDong hdd INNER JOIN HoaDon hd ON hdd.MaHD = hd.MaHD 
-		WHERE IIF(hd.TrangThai = 0, YEAR(hd.NgayLap),YEAR(NgayLapLan2)) = @Nam
-	GROUP BY  IIF(hd.TrangThai = 0, hd.NgayLap,NgayLapLan2)
-	ORDER BY SoLuongHopDong DESC
-END
 
 
 GO

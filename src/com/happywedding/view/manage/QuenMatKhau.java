@@ -23,7 +23,6 @@ import com.happywedding.dao.TaiKhoanDAO;
 import com.happywedding.helper.AppStatus;
 import com.happywedding.model.NhanVien;
 import com.happywedding.model.TaiKhoan;
-import sun.misc.Signal;
 //import static com.happywedding.view.manage.DangNhap.soTaiKhoan;
 /**
  *

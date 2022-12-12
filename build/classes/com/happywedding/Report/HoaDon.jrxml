@@ -218,10 +218,6 @@ WHERE
 				</textElement>
 				<textFieldExpression><![CDATA[$F{HoaDon_MaHoaDon}]]></textFieldExpression>
 			</textField>
-			<image>
-				<reportElement x="18" y="11" width="137" height="113" uuid="a54e4dbe-484f-43d3-8cdc-2c3aef58da42"/>
-				<imageExpression><![CDATA["src\\com\\happywedding\\Report\\bgReport.jpg"]]></imageExpression>
-			</image>
 		</band>
 	</title>
 	<pageHeader>

@@ -59,7 +59,9 @@ public class PhanCong extends javax.swing.JDialog {
 
             maPC = pc.getMaPC();
             isNguoiPC = true;
+        
         } else {
+            
             this.isCreate = false;
         }
 
@@ -320,9 +322,9 @@ public class PhanCong extends javax.swing.JDialog {
             return;
         }
 
-        txtNgayPhanCong.setEditable(true);
-        txtBatDau.setEditable(true);
-        txtKetThuc.setEditable(true);
+        txtNgayPhanCong.setEditable(false);
+        txtBatDau.setEditable(false);
+        txtKetThuc.setEditable(false);
 
         btnThem.setVisible(true);
         btnSua.setVisible(false);
@@ -531,7 +533,7 @@ public class PhanCong extends javax.swing.JDialog {
         pnlUpdate3.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 30, 1080, 660));
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel1.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+        jPanel1.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 15, 5));
 
         btnThem.setBackground(new java.awt.Color(0, 153, 0));
         btnThem.setForeground(new java.awt.Color(255, 255, 255));

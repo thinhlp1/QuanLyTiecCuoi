@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="subHoaDon_DichVu" language="groovy" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="d4700fdf-b5be-4986-9fc0-1dc182bf1d2c">
+	<property name="ireport.zoom" value="1.9487171000000039"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="MaHD" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT  ROW_NUMBER() OVER (ORDER BY A.MaCSVC) AS STT, * FROM (
+	SELECT DISTINCT csvc.MaCSVC,csvc.TenCSVC, ( SELECT  SUM(X.A) FROM  
+	(   SELECT SUM((IIF(ct.ChiPhi = 0, csvc.GiaThue * IIF ( csvc.MaDMC = 'AOGHE' OR csvc.MaDMC = 'TRAIBAN',10,1 ) ,ct.ChiPhi ) * IIF(csvc.MaDMC = 'AOGHE' , 10,1) + ct.ChiPhiPhatSinh ))/4 AS A 
+	FROM HopDongDichVu hddv 
+	INNER JOIN ChiTietDichVu ct ON hddv.MaHD = ct.MaHD
+	INNER JOIN CoSoVatChat csvc ON csvc.MaCSVC = ct.MaCSVC 
+	INNER JOIN DanhMucCon dmc ON dmc.MaDMC = csvc.MaDMC
+	INNER JOIN GoiDichVu goi ON hddv.MaGoi = goi.MaGoi
+	INNER JOIN HopDong hd ON hd.MaHD = ct.MaHD
+	INNER JOIN DichVu dv ON dv.MaDV = ct.MaDV
+	WHERE ct.MaHD =   $P{MaHD}
+	GROUP BY hd.MaHD,csvc.MaCSVC,csvc.TenCSVC,IIF(ct.ChiPhi = 0, csvc.GiaThue * hd.SoLuongBan ,ct.ChiPhi ) * IIF(csvc.MaDMC = 'AOGHE' , 10,1 + ct.ChiPhiPhatSinh),dv.TenDV ) AS X ) AS TongChiPhi
+
+
+	,(	SELECT SUM(IIF(ct.ChiPhi = 0, csvc2.GiaThue * IIF ( csvc2.MaDMC = 'AOGHE' OR csvc2.MaDMC = 'TRAIBAN',10,1 ) ,ct.ChiPhi ) * IIF(csvc2.MaDMC = 'AOGHE' , 10,1) + ct.ChiPhiPhatSinh) AS ChiPhi
+	FROM ChiTietDichVu ct  
+	INNER JOIN CoSoVatChat csvc2 ON csvc2.MaCSVC = ct.MaCSVC 
+	INNER JOIN DanhMucCon dmc ON dmc.MaDMC = csvc2.MaDMC
+	WHERE MaHD = $P{MaHD} AND csvc.MaCSVC =  csvc2.MaCSVC 
+	GROUP BY ct.MaCSVC,csvc2.TenCSVC) AS ChiPhi 
+
+
+	FROM HopDongDichVu hddv 
+	INNER JOIN ChiTietDichVu ct ON hddv.MaHD = ct.MaHD
+	INNER JOIN CoSoVatChat csvc ON csvc.MaCSVC = ct.MaCSVC 
+	INNER JOIN DanhMucCon dmc ON dmc.MaDMC = csvc.MaDMC
+	INNER JOIN GoiDichVu goi ON hddv.MaGoi = goi.MaGoi
+	INNER JOIN HopDong hd ON hd.MaHD = ct.MaHD
+	INNER JOIN DichVu dv ON dv.MaDV = ct.MaDV
+	WHERE ct.MaHD = $P{MaHD} 
+	GROUP BY hd.MaHD,csvc.MaCSVC,csvc.TenCSVC,
+	IIF(ct.ChiPhi = 0, csvc.GiaThue * IIF ( csvc.MaDMC = 'AOGHE' OR csvc.MaDMC = 'TRAIBAN',10,1 ) ,ct.ChiPhi ) * IIF(csvc.MaDMC = 'AOGHE' , 10,1) + ct.ChiPhiPhatSinh,dv.TenDV
+
+
+	) AS A]]>
+	</queryString>
+	<field name="STT" class="java.lang.Long"/>
+	<field name="MaCSVC" class="java.lang.String"/>
+	<field name="TenCSVC" class="java.lang.String"/>
+	<field name="TongChiPhi" class="java.lang.Long"/>
+	<field name="ChiPhi" class="java.lang.Long"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="71" height="20" uuid="de75ebc5-1c0f-493d-abb8-ecce4ca8c79b"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[STT]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="370" y="0" width="185" height="20" uuid="a7decdce-0f36-49c8-a0e1-4d4e7cb4c03a"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Chi phí]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="71" y="0" width="299" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="f485c732-0edf-450b-b464-9152d50edc63"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="14" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[TenCSVC]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="71" height="20" uuid="bd2774e2-9f03-49a7-88e2-df27269d386d"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{STT}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="370" y="0" width="185" height="20" uuid="e5676013-8939-4618-8af2-1be2e35e5925"/>
+				<box rightPadding="0">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ChiPhi}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="71" y="0" width="299" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="4a5482f4-d9b9-4c77-b6de-5244bc058c71"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="SansSerif" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TenCSVC}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="21" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Transparent" x="0" y="0" width="370" height="21" forecolor="#000000" backcolor="#FFFFFF" uuid="18a64d4c-98c1-4288-8036-b7a263d69ec5"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Tổng chi phí]]></text>
+			</staticText>
+			<textField pattern="#,##0 VND" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="370" y="0" width="185" height="21" forecolor="#000000" backcolor="#FFFFFF" uuid="36616283-c77f-4e3e-8fec-6865d6b13bc4"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="15" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TongChiPhi}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

@@ -14,7 +14,6 @@ import javax.swing.JOptionPane;
  * @author ADMIN
  */
 public class DialogHelper {
-
     /**
      * Hiển thị thông báo cho người dùng
      *
@@ -33,8 +32,6 @@ public class DialogHelper {
                 "Hệ thống quản lý đào tạo", JOptionPane.ERROR_MESSAGE
         );
     }
-     
-     
 
     /**
      * Hiển thị thông báo và yêu cầu người dùng xác nhận
