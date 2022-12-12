@@ -242,7 +242,7 @@ public class ThongKe extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(tabPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 764, Short.MAX_VALUE))
+                .addGap(0, 773, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 

@@ -30,6 +30,7 @@ public class Chart extends javax.swing.JPanel {
                 for (int i = 0; i < legends.size(); i++) {
                     ModelLegend legend = legends.get(i);
                     g2.setColor(legend.getColor());
+                   
                     double seriesValues = chart.getSeriesValuesOf(model.get(index).getValues()[i], size.getHeight());
                     g2.fillRect((int) (size.getX() + x), (int) (size.getY() + size.getHeight() - seriesValues), seriesSize, (int) seriesValues);
                     x += seriesSpace + seriesSize;

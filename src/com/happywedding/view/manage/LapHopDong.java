@@ -46,6 +46,10 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.File;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -1225,7 +1229,7 @@ public class LapHopDong extends javax.swing.JPanel {
 //                Logger.getLogger(LapHopDong.class.getName()).log(Level.SEVERE, null, ex);
 //            }
         } else {
-          //  taThongBaoSanh.setText("Sảnh chưa có lịch đặt tiệc");
+            //  taThongBaoSanh.setText("Sảnh chưa có lịch đặt tiệc");
             return true;
         }
         return false;
@@ -1324,7 +1328,23 @@ public class LapHopDong extends javax.swing.JPanel {
             String thanhChu6 = thanhChu.substring(1, thanhChu.length());
             thanhChu2 = thanhchu5.toUpperCase() + thanhChu6;
 
-            net.sf.jasperreports.engine.JasperReport rpt = JasperCompileManager.compileReport("src\\com\\happywedding\\Report\\HoaDon.jrxml");
+            URL localPackage = this.getClass().getResource("");
+            URL urlLoader = LapHopDong.class.getProtectionDomain().getCodeSource().getLocation();
+            //String localDir = localPackage.getPath();
+            String loaderDir = urlLoader.getPath().toString();
+            //System.out.printf("loaderDir = %s\n localDir = %s\n", loaderDir, localDir);
+            String dirPath = loaderDir.substring(0, loaderDir.length() - 15);
+            String realPath = dirPath + "/src/com/happywedding/Report/HoaDon.jrxml";
+            realPath = realPath.replaceFirst("\\/", "");
+            realPath = realPath.replaceAll("%20", " ");
+            realPath = realPath.replaceAll("/", "\\\\");
+           
+            System.out.println(realPath);
+            File f = new File(realPath);
+            if (f.exists()) {
+                System.out.println("exit file");
+            }
+            net.sf.jasperreports.engine.JasperReport rpt = JasperCompileManager.compileReport(realPath);
             parameters.put("MaHD", maHD);
             parameters.put("MaTD_Chinh", maTD);
             parameters.put("MaTD_Phu", maTDPhu);

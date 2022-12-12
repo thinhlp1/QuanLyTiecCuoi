@@ -300,8 +300,8 @@ public class ThongKeDoanhThuNam extends javax.swing.JPanel {
 
     public List<Object[]> sortByNam(boolean isRevese) {
         List<Object[]> listSorted = listFilted;
-        Object c = listSorted.get(0)[1];
-        Object d = listSorted.get(1)[1];
+        Object c = listSorted.get(0)[0];
+        Object d = listSorted.get(1)[0];
         Collections.sort(listSorted, new Comparator<Object[]>() {
             public int compare(Object[] data1, Object[] data2) {
                 if (Long.parseLong(data1[0].toString()) > Long.parseLong(data2[0].toString())) {
@@ -422,11 +422,11 @@ public class ThongKeDoanhThuNam extends javax.swing.JPanel {
         });
         jScrollPane1.setViewportView(tblDoanhThu);
 
-        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 570, 1600, 330));
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 540, 1600, 330));
         jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 50, -1, -1));
 
         jLabel4.setText("Năm");
-        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 520, -1, -1));
+        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 500, -1, -1));
 
         cbbNamKetThuc.setLabeText("");
         cbbNamKetThuc.addItemListener(new java.awt.event.ItemListener() {
@@ -439,7 +439,7 @@ public class ThongKeDoanhThuNam extends javax.swing.JPanel {
                 cbbNamKetThucActionPerformed(evt);
             }
         });
-        jPanel1.add(cbbNamKetThuc, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 490, 100, 54));
+        jPanel1.add(cbbNamKetThuc, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 470, 100, 54));
 
         lblSort.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/happywedding/assets/sort.png"))); // NOI18N
         lblSort.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -447,7 +447,7 @@ public class ThongKeDoanhThuNam extends javax.swing.JPanel {
                 lblSortMouseClicked(evt);
             }
         });
-        jPanel1.add(lblSort, new org.netbeans.lib.awtextra.AbsoluteConstraints(830, 510, 32, 35));
+        jPanel1.add(lblSort, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 490, 32, 35));
 
         cbbSort.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tăng dần", "Giảm dần" }));
         cbbSort.setLabeText("");
@@ -461,7 +461,7 @@ public class ThongKeDoanhThuNam extends javax.swing.JPanel {
                 cbbSortActionPerformed(evt);
             }
         });
-        jPanel1.add(cbbSort, new org.netbeans.lib.awtextra.AbsoluteConstraints(870, 490, 120, 54));
+        jPanel1.add(cbbSort, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 470, 120, 54));
 
         lblSort1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/happywedding/assets/sort.png"))); // NOI18N
         lblSort1.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -469,7 +469,7 @@ public class ThongKeDoanhThuNam extends javax.swing.JPanel {
                 lblSort1MouseClicked(evt);
             }
         });
-        jPanel1.add(lblSort1, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 510, 32, 35));
+        jPanel1.add(lblSort1, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 490, 32, 35));
 
         cbbSortBy.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Năm", "Số Lượng Họp Đồng", "Doanh Thu Thấp Nhất", "Doanh Thu Cao Nhất", "Tổng Doanh Thu" }));
         cbbSortBy.setSelectedIndex(-1);
@@ -479,7 +479,7 @@ public class ThongKeDoanhThuNam extends javax.swing.JPanel {
                 cbbSortByItemStateChanged(evt);
             }
         });
-        jPanel1.add(cbbSortBy, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 490, 270, 54));
+        jPanel1.add(cbbSortBy, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 470, 270, 54));
 
         cbbNamBatDau.setLabeText("");
         cbbNamBatDau.addItemListener(new java.awt.event.ItemListener() {
@@ -492,14 +492,14 @@ public class ThongKeDoanhThuNam extends javax.swing.JPanel {
                 cbbNamBatDauActionPerformed(evt);
             }
         });
-        jPanel1.add(cbbNamBatDau, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 490, 100, 54));
-        jPanel1.add(chartDoanhThu, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 40, 1500, 450));
+        jPanel1.add(cbbNamBatDau, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 470, 100, 54));
+        jPanel1.add(chartDoanhThu, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 40, 1540, 420));
 
         jLabel1.setText("VNĐ");
         jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 20, -1, -1));
 
         jLabel2.setText("Năm");
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(1580, 430, -1, -1));
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(1590, 430, -1, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -512,7 +512,7 @@ public class ThongKeDoanhThuNam extends javax.swing.JPanel {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 900, Short.MAX_VALUE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents

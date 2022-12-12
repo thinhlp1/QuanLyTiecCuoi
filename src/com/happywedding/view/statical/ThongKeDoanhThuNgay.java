@@ -6,9 +6,11 @@
 package com.happywedding.view.statical;
 
 import com.happywedding.dao.ThongKeDAO;
+import com.happywedding.helper.AppStatus;
 import com.happywedding.helper.DateHelper;
 import com.happywedding.helper.DialogHelper;
 import com.happywedding.helper.ShareHelper;
+import com.ui.swing.chart.Chart;
 import com.ui.swing.chart.ModelChart;
 import com.ui.swing.datechooser.DateChooser;
 import java.awt.Color;
@@ -88,12 +90,12 @@ public class ThongKeDoanhThuNgay extends javax.swing.JPanel {
                     break;
                 }
             }
-             isLoad = true;
-             filtedThongKe();
+            isLoad = true;
+            filtedThongKe();
 
         }
         isLoad = true;
-        
+
         lblSL.setVisible(false);
         txtSL.setVisible(false);
         cbbFiltBy.setVisible(false);
@@ -246,6 +248,9 @@ public class ThongKeDoanhThuNgay extends javax.swing.JPanel {
 
     public void fillChart(List<Object[]> list) {
         if (list.size() == 0) {
+            chartDoanhThu.removeAllData();
+            System.out.println("rết");
+            chartDoanhThu.addData(new ModelChart("", new long[]{0,0,0}));
             return;
         }
         if (!isLoad) {
@@ -532,8 +537,6 @@ public class ThongKeDoanhThuNgay extends javax.swing.JPanel {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        tblDoanhThu = new com.ui.swing.Table();
         jLabel3 = new javax.swing.JLabel();
         lblSort = new javax.swing.JLabel();
         cbbSort = new com.ui.swing.Combobox();
@@ -554,30 +557,11 @@ public class ThongKeDoanhThuNgay extends javax.swing.JPanel {
         cbbNam = new com.ui.swing.Combobox();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblDoanhThu = new com.ui.swing.Table();
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        tblDoanhThu.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "Tháng", "Số lượng hợp đồng", "Danh thu thấp nhất", "Danh thu cao nhất", "Tổng danh thu"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        tblDoanhThu.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
-        jScrollPane1.setViewportView(tblDoanhThu);
-
-        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 590, 1560, 330));
         jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 50, -1, -1));
 
         lblSort.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/happywedding/assets/sort.png"))); // NOI18N
@@ -586,7 +570,7 @@ public class ThongKeDoanhThuNgay extends javax.swing.JPanel {
                 lblSortMouseClicked(evt);
             }
         });
-        jPanel1.add(lblSort, new org.netbeans.lib.awtextra.AbsoluteConstraints(1490, 530, 32, 35));
+        jPanel1.add(lblSort, new org.netbeans.lib.awtextra.AbsoluteConstraints(1450, 480, 32, 35));
 
         cbbSort.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tăng dần", "Giảm dần" }));
         cbbSort.setLabeText("");
@@ -600,7 +584,7 @@ public class ThongKeDoanhThuNgay extends javax.swing.JPanel {
                 cbbSortActionPerformed(evt);
             }
         });
-        jPanel1.add(cbbSort, new org.netbeans.lib.awtextra.AbsoluteConstraints(1530, 510, 100, 54));
+        jPanel1.add(cbbSort, new org.netbeans.lib.awtextra.AbsoluteConstraints(1490, 460, 100, 54));
 
         lblSort1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/happywedding/assets/sort.png"))); // NOI18N
         lblSort1.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -608,7 +592,7 @@ public class ThongKeDoanhThuNgay extends javax.swing.JPanel {
                 lblSort1MouseClicked(evt);
             }
         });
-        jPanel1.add(lblSort1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1260, 530, 32, 35));
+        jPanel1.add(lblSort1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1220, 480, 32, 35));
 
         cbbSortBy.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Năm", "Số Lượng Họp Đồng", "Doanh Thu Thấp Nhất", "Doanh Thu Cao Nhất", "Tổng Doanh Thu" }));
         cbbSortBy.setSelectedIndex(-1);
@@ -618,8 +602,8 @@ public class ThongKeDoanhThuNgay extends javax.swing.JPanel {
                 cbbSortByItemStateChanged(evt);
             }
         });
-        jPanel1.add(cbbSortBy, new org.netbeans.lib.awtextra.AbsoluteConstraints(1310, 510, 170, 54));
-        jPanel1.add(chartDoanhThu, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 40, 1500, 460));
+        jPanel1.add(cbbSortBy, new org.netbeans.lib.awtextra.AbsoluteConstraints(1270, 460, 170, 54));
+        jPanel1.add(chartDoanhThu, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 40, 1540, 420));
 
         jLabel1.setText("VNĐ");
         jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 20, -1, -1));
@@ -640,7 +624,7 @@ public class ThongKeDoanhThuNgay extends javax.swing.JPanel {
                 cbbFiltBy1ActionPerformed(evt);
             }
         });
-        jPanel1.add(cbbFiltBy1, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 510, 190, 54));
+        jPanel1.add(cbbFiltBy1, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 460, 190, 54));
 
         pnlFilt.setBackground(new java.awt.Color(255, 255, 255));
         java.awt.FlowLayout flowLayout1 = new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 15, 5);
@@ -742,7 +726,7 @@ public class ThongKeDoanhThuNgay extends javax.swing.JPanel {
         });
         pnlFilt.add(txtSL);
 
-        jPanel1.add(pnlFilt, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 510, 720, 60));
+        jPanel1.add(pnlFilt, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 460, 720, 60));
 
         cbbNam.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         cbbNam.setLabeText("");
@@ -756,15 +740,41 @@ public class ThongKeDoanhThuNgay extends javax.swing.JPanel {
                 cbbNamActionPerformed(evt);
             }
         });
-        jPanel1.add(cbbNam, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 510, 100, 54));
+        jPanel1.add(cbbNam, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 460, 100, 54));
 
         jLabel6.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         jLabel6.setText("Năm");
-        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 540, -1, -1));
+        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 490, -1, -1));
 
         jLabel7.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         jLabel7.setText("Chọn theo");
-        jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 540, -1, -1));
+        jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 490, -1, -1));
+
+        tblDoanhThu.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Năm", "Số lượng hợp đồng", "Danh thu thấp nhất", "Danh thu cao nhất", "Tổng danh thu"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tblDoanhThu.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        tblDoanhThu.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblDoanhThuMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tblDoanhThu);
+
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 540, 1600, 330));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -776,7 +786,7 @@ public class ThongKeDoanhThuNgay extends javax.swing.JPanel {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 930, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 900, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -811,7 +821,9 @@ public class ThongKeDoanhThuNgay extends javax.swing.JPanel {
     }//GEN-LAST:event_cbbNamActionPerformed
 
     private void cbbFiltByItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbbFiltByItemStateChanged
-        filtedThongKe();
+        if (isLoad) {
+            filtedThongKe();
+        }
     }//GEN-LAST:event_cbbFiltByItemStateChanged
 
     private void cbbFiltByActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbbFiltByActionPerformed
@@ -886,6 +898,13 @@ public class ThongKeDoanhThuNgay extends javax.swing.JPanel {
     private void cbbSoNgayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbbSoNgayActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_cbbSoNgayActionPerformed
+
+    private void tblDoanhThuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblDoanhThuMouseClicked
+//        if (evt.getClickCount() == 2){
+//            int index = tblDoanhThu.getSelectedRow();
+//            AppStatus.FORMTHONGKE.updateThongKeThang((int) listFilted.get(index)[0]);
+//        }
+    }//GEN-LAST:event_tblDoanhThuMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
