@@ -1,31 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="subHoaDonDichVuDiKem" language="groovy" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="eb74d4d1-c80b-4509-885f-9e31b47a7dc9">
-	<property name="ireport.zoom" value="2.3579476910000046"/>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="subHoaDonChinhThuc_ThucDon" language="groovy" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="3d09521c-4d43-4627-88a0-abd1b4f98ab2">
+	<property name="ireport.zoom" value="2.3579476910000023"/>
 	<property name="ireport.x" value="49"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="MaHD" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT ROW_NUMBER() OVER ( ORDER BY ct.MaHD ASC ) AS STT,ct.MaHD,dv.MaDV,dv.TenDV, IIF(ct.SoLuong = -1,'CXD',CAST(Gia AS varchar))  AS ChiPhi,ct.GhiChu,ct.ChiPhiPhatSinh, IIF(ct.SoLuong = -1,'CXD',CAST(ct.SoLuong AS varchar)) AS SoLuong ,
-IIF(ct.SoLuong = -1,'CXD',CAST(Gia * SoLuong AS varchar)) AS TongChiPhi, ( SELECT SUM(ChiPhiPhatSinh)  FROM ChiTietDichVuDiKem WHERE MaHD = $P{MaHD} ) AS TongChiPhiPhatSinh, 
-( hddv.ChiPhi +  (SELECT SUM(ChiPhiPhatSinh)  FROM ChiTietDichVuDiKem WHERE MaHD = $P{MaHD}) + hddv.ChiPhiPhatSinh ) AS TongChiPhiPhaiTra
-FROM ChiTietDichVuDiKem ct
-INNER JOIN DichVuDiKem  dv ON ct.MaDV = dv.MaDV
-INNER JOIN HopDongDichVuDiKem hddv ON hddv.MaHD = ct.MaHD
-WHERE ct.MaHD =$P{MaHD}]]>
+		<![CDATA[SELECT ROW_NUMBER() OVER ( ORDER BY X.TenMA ASC ) AS STT, * FROM (
+
+		SELECT   TenMA,ma.GiaTien,
+		SUM ( DISTINCT ct.SoLuong ) AS SoLuong ,
+		( SUM ( DISTINCT ct.SoLuong ) * ma.GiaTien + ct.ChiPhiPhatSinh * SUM ( DISTINCT ct.SoLuong ) )AS TongChiPhi,
+		(  
+		( SELECT SUM(IIF(ChiPhiPhatSinh IS NULL,0,ChiPhiPhatSinh)) FROM DichVuDatMon WHERE MaHD = $P{MaHD}  ) + 
+		  ( SELECT SUM(ChiPhiPhatSinh ) * SUM ( DISTINCT ct.SoLuong)   FROM ChiTietDatMon WHERE MaHD = $P{MaHD}  )  ) AS TongPhaiTra
+		FROM ChiTietDatMon ct
+		INNER JOIN MonAn ma ON ct.MaMA = ma.MaMA 
+		INNER JOIN DichVuDatMon dv ON dv.MaTD = ct.MaTD
+		INNER JOIN ThucDon td ON dv.MaTD = td.MaTD
+		WHERE ct.MaHD = $P{MaHD} AND ma.MaPL = 'NUOC' AND SoLuong != -1
+		GROUP BY TenMA,ma.GiaTien, ct.ChiPhiPhatSinh
+) AS X]]>
 	</queryString>
 	<field name="STT" class="java.lang.Long"/>
-	<field name="MaHD" class="java.lang.String"/>
-	<field name="MaDV" class="java.lang.String"/>
-	<field name="TenDV" class="java.lang.String"/>
-	<field name="ChiPhi" class="java.lang.String"/>
-	<field name="GhiChu" class="java.lang.String"/>
-	<field name="ChiPhiPhatSinh" class="java.lang.Long"/>
-	<field name="SoLuong" class="java.lang.String"/>
-	<field name="TongChiPhi" class="java.lang.String"/>
-	<field name="TongChiPhiPhatSinh" class="java.lang.Long"/>
-	<field name="TongChiPhiPhaiTra" class="java.lang.Long"/>
+	<field name="TenMA" class="java.lang.String"/>
+	<field name="GiaTien" class="java.lang.String"/>
+	<field name="SoLuong" class="java.lang.Integer"/>
+	<field name="TongChiPhi" class="java.lang.Long"/>
+	<field name="TongPhaiTra" class="java.lang.Long"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -38,7 +41,7 @@ WHERE ct.MaHD =$P{MaHD}]]>
 	<columnHeader>
 		<band height="20" splitType="Stretch">
 			<staticText>
-				<reportElement mode="Transparent" x="0" y="0" width="138" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="8b03564c-c11b-41d1-b59e-53eab1c7ee18"/>
+				<reportElement mode="Transparent" x="0" y="0" width="138" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="05449fca-308e-4966-88c1-f0e04eefeabc"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -53,7 +56,7 @@ WHERE ct.MaHD =$P{MaHD}]]>
 				<text><![CDATA[STT]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Transparent" x="138" y="0" width="138" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="922ea2f8-361c-4574-acc0-f4af8d484089"/>
+				<reportElement mode="Transparent" x="138" y="0" width="138" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="25c40bc4-dd2d-40de-a24c-29114927bf61"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -65,10 +68,10 @@ WHERE ct.MaHD =$P{MaHD}]]>
 					<font fontName="Arial" size="14" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<text><![CDATA[Tên dịch vụ]]></text>
+				<text><![CDATA[Tên món ăn]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Transparent" x="276" y="0" width="138" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="84b80e2c-8a71-4c5c-9a32-c83fe06c4ee8"/>
+				<reportElement mode="Transparent" x="276" y="0" width="141" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="78f1ab63-67e5-4c7b-b5c9-cd40946e75f6"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -83,7 +86,7 @@ WHERE ct.MaHD =$P{MaHD}]]>
 				<text><![CDATA[Số lượng]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Transparent" x="414" y="0" width="141" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="42b9b425-fd75-41d8-8525-9af8aee95d89"/>
+				<reportElement mode="Transparent" x="417" y="0" width="138" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="734e5ddf-2caa-48b3-9535-6eac4d8ad2d4"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -95,14 +98,14 @@ WHERE ct.MaHD =$P{MaHD}]]>
 					<font fontName="Arial" size="14" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<text><![CDATA[Tổng chi phí]]></text>
+				<text><![CDATA[Tổng chi phí ]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
 		<band height="20" splitType="Stretch">
 			<textField pattern="" isBlankWhenNull="false">
-				<reportElement mode="Transparent" x="0" y="0" width="138" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="ec1fa993-d5b7-47f5-a381-2cfbf5568ed9"/>
+				<reportElement mode="Transparent" x="0" y="0" width="138" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="cfed0e42-0c72-40fb-9803-8d0e9c503c62"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -117,7 +120,7 @@ WHERE ct.MaHD =$P{MaHD}]]>
 				<textFieldExpression><![CDATA[$F{STT}]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="false">
-				<reportElement mode="Transparent" x="138" y="0" width="138" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="e2ee4d7c-e785-4dfa-a85a-f0b2ee2ccf69"/>
+				<reportElement mode="Transparent" x="138" y="0" width="138" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="60d3d815-7cd6-45e2-a43f-a078d18a52ad"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -129,10 +132,10 @@ WHERE ct.MaHD =$P{MaHD}]]>
 					<font fontName="SansSerif" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{TenDV}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{TenMA}]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="false">
-				<reportElement mode="Transparent" x="276" y="0" width="138" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="ed88849c-a728-428d-8f36-2265b3d0c11f"/>
+				<reportElement mode="Transparent" x="276" y="0" width="141" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="831f4ee2-06ea-4deb-aa0e-9ede5748bd7b"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -147,7 +150,7 @@ WHERE ct.MaHD =$P{MaHD}]]>
 				<textFieldExpression><![CDATA[$F{SoLuong}]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="false">
-				<reportElement mode="Transparent" x="414" y="0" width="141" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="399d0d58-d18f-451c-9680-3d2c4af830ea"/>
+				<reportElement mode="Transparent" x="417" y="0" width="138" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="0d9a06d6-fbc8-4e65-a97a-37cb36fc9006"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -170,9 +173,9 @@ WHERE ct.MaHD =$P{MaHD}]]>
 		<band splitType="Stretch"/>
 	</pageFooter>
 	<summary>
-		<band height="22" splitType="Stretch">
+		<band height="21" splitType="Stretch">
 			<staticText>
-				<reportElement mode="Transparent" x="0" y="0" width="414" height="21" forecolor="#000000" backcolor="#FFFFFF" uuid="ccd16468-5e21-4d15-8bd8-55e2f3359164"/>
+				<reportElement mode="Transparent" x="0" y="0" width="417" height="21" forecolor="#000000" backcolor="#FFFFFF" uuid="2595133e-ba3b-43c8-b48a-da166c93557d"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -186,8 +189,8 @@ WHERE ct.MaHD =$P{MaHD}]]>
 				</textElement>
 				<text><![CDATA[Tổng chi phí]]></text>
 			</staticText>
-			<textField pattern="#,### VND">
-				<reportElement mode="Transparent" x="414" y="0" width="141" height="21" forecolor="#000000" backcolor="#FFFFFF" uuid="246a6d06-2335-4576-a287-918e7f7f063a"/>
+			<textField pattern="#,### VND" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="417" y="0" width="138" height="21" forecolor="#000000" backcolor="#FFFFFF" uuid="c3cf8ed5-0217-425f-bc0f-0a5a41c77507"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -199,7 +202,7 @@ WHERE ct.MaHD =$P{MaHD}]]>
 					<font fontName="Arial" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{TongChiPhiPhaiTra}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{TongPhaiTra}]]></textFieldExpression>
 			</textField>
 		</band>
 	</summary>

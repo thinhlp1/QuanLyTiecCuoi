@@ -97,13 +97,13 @@ public class HappyWeddingApp extends javax.swing.JFrame {
 
     public HappyWeddingApp() {
 
-        if (!AppStatus.isFirstStart()) {
-            new DangNhap(this, true).setVisible(true);
-            new Loading(this, true).setVisible(true);
-            AppStatus.loadApp();
-        }
-        
-    //    AppStatus.USER = new NhanVienDAO().findById("NV001");
+//        if (!AppStatus.isFirstStart()) {
+//            new DangNhap(this, true).setVisible(true);
+//            new Loading(this, true).setVisible(true);
+//            AppStatus.loadApp();
+//        }
+//        
+        AppStatus.USER = new NhanVienDAO().findById("NV001");
         AppStatus.loadApp();
         initComponents();
         init();
@@ -312,7 +312,7 @@ public class HappyWeddingApp extends javax.swing.JFrame {
         mainPane = new javax.swing.JLayeredPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("HỆ THỐNG QUẢN LÝ ĐÀO TẠO");
+        setTitle("TRUNG TÂM TIỆC TIỆC CƯỚI BRUH");
 
         mainPane.setBackground(new java.awt.Color(245, 245, 245));
         mainPane.setMaximumSize(new java.awt.Dimension(1920, 1080));

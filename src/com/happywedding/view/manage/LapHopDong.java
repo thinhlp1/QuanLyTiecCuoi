@@ -1017,20 +1017,20 @@ public class LapHopDong extends javax.swing.JPanel {
         HopDong hopDong = hopDongDAO.checkSanh(((Sanh) cbbSanh.getSelectedItem()).getMaSanh(), DateHelper.toDate(txtNgayToChuc.getText(), "dd/MM/yyyy"),
                 txtBatDau.getText(), txtKetThuc.getText(), this.maHD);
         if (hopDong != null) {
-            try {
-                SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-                taThongBaoSanh.setText("Sảnh đã được đặt tại hợp đồng: " + hopDong.getMaHD()
-                        + "\nNgày tổ chức: " + DateHelper.toString(hopDong.getNgayToChuc(), "dd/MM/yyyy")
-                        + "\nGiờ bắt đầu: " + sdf.format(sdf.parse(hopDong.getThoiGianBatDau()))
-                        + "\nGiờ kết thúc: " + sdf.format(sdf.parse(hopDong.getThoiGianKetThuc()))
-                );
-                DialogHelper.alertError(this, "Không thể đặt sảnh này");
-                return false;
-            } catch (ParseException ex) {
-                Logger.getLogger(LapHopDong.class.getName()).log(Level.SEVERE, null, ex);
-            }
+//            try {
+//                SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+////                taThongBaoSanh.setText("Sảnh đã được đặt tại hợp đồng: " + hopDong.getMaHD()
+////                        + "\nNgày tổ chức: " + DateHelper.toString(hopDong.getNgayToChuc(), "dd/MM/yyyy")
+////                        + "\nGiờ bắt đầu: " + sdf.format(sdf.parse(hopDong.getThoiGianBatDau()))
+////                        + "\nGiờ kết thúc: " + sdf.format(sdf.parse(hopDong.getThoiGianKetThuc()))
+////                );
+//                DialogHelper.alertError(this, "Không thể đặt sảnh này");
+//                return false;
+//            } catch (ParseException ex) {
+//                Logger.getLogger(LapHopDong.class.getName()).log(Level.SEVERE, null, ex);
+//            }
         } else {
-            taThongBaoSanh.setText("Sảnh chưa có lịch đặt tiệc");
+            //taThongBaoSanh.setText("Sảnh chưa có lịch đặt tiệc");
             return true;
         }
         return false;
@@ -1213,19 +1213,19 @@ public class LapHopDong extends javax.swing.JPanel {
                 txtBatDau.getText(), txtKetThuc.getText(), this.maHD);
 
         if (hopDong != null) {
-            try {
-                SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-                taThongBaoSanh.setText("Sảnh đã được đặt tại hợp đồng: " + hopDong.getMaHD()
-                        + "\nNgày tổ chức: " + DateHelper.toString(hopDong.getNgayToChuc(), "dd/MM/yyyy")
-                        + "\nGiờ bắt đầu: " + sdf.format(sdf.parse(hopDong.getThoiGianBatDau()))
-                        + "\nGiờ kết thúc: " + sdf.format(sdf.parse(hopDong.getThoiGianKetThuc()))
-                );
-                return false;
-            } catch (ParseException ex) {
-                Logger.getLogger(LapHopDong.class.getName()).log(Level.SEVERE, null, ex);
-            }
+//            try {
+//                SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+////                taThongBaoSanh.setText("Sảnh đã được đặt tại hợp đồng: " + hopDong.getMaHD()
+////                        + "\nNgày tổ chức: " + DateHelper.toString(hopDong.getNgayToChuc(), "dd/MM/yyyy")
+////                        + "\nGiờ bắt đầu: " + sdf.format(sdf.parse(hopDong.getThoiGianBatDau()))
+////                        + "\nGiờ kết thúc: " + sdf.format(sdf.parse(hopDong.getThoiGianKetThuc()))
+////                );
+//                return false;
+//            } catch (ParseException ex) {
+//                Logger.getLogger(LapHopDong.class.getName()).log(Level.SEVERE, null, ex);
+//            }
         } else {
-            taThongBaoSanh.setText("Sảnh chưa có lịch đặt tiệc");
+          //  taThongBaoSanh.setText("Sảnh chưa có lịch đặt tiệc");
             return true;
         }
         return false;
@@ -1316,6 +1316,14 @@ public class LapHopDong extends javax.swing.JPanel {
             String tienConLai = ShareHelper.toMoney(hopDong.getTongTien() - hopDong.getTienCoc());
             String thanhChu = EnglishNumberToWords.convert(hopDong.getTongTien());
             String thanhChu2 = EnglishNumberToWords.convert(ShareHelper.toMoney(tienConLai));
+
+            String thanhchu3 = thanhChu.substring(0, 1);
+            String thanhChu4 = thanhChu.substring(1, thanhChu.length());
+            thanhChu = thanhchu3.toUpperCase() + thanhChu4;
+            String thanhchu5 = thanhChu.substring(0, 1);
+            String thanhChu6 = thanhChu.substring(1, thanhChu.length());
+            thanhChu2 = thanhchu5.toUpperCase() + thanhChu6;
+
             net.sf.jasperreports.engine.JasperReport rpt = JasperCompileManager.compileReport("src\\com\\happywedding\\Report\\HoaDon.jrxml");
             parameters.put("MaHD", maHD);
             parameters.put("MaTD_Chinh", maTD);
@@ -1404,8 +1412,6 @@ public class LapHopDong extends javax.swing.JPanel {
         lblThanhChu = new javax.swing.JLabel();
         lblMaNH24 = new javax.swing.JLabel();
         cbbSanh = new com.ui.swing.Combobox();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        taThongBaoSanh = new javax.swing.JTextArea();
         txtThueThanhTien = new javax.swing.JTextField();
         lbldv = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
@@ -1868,18 +1874,6 @@ public class LapHopDong extends javax.swing.JPanel {
             }
         });
         jPanel4.add(cbbSanh, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 170, 360, 40));
-
-        jScrollPane2.setBorder(null);
-
-        taThongBaoSanh.setBackground(new java.awt.Color(248, 248, 248));
-        taThongBaoSanh.setColumns(20);
-        taThongBaoSanh.setFont(new java.awt.Font("Times New Roman", 0, 15)); // NOI18N
-        taThongBaoSanh.setLineWrap(true);
-        taThongBaoSanh.setRows(3);
-        taThongBaoSanh.setBorder(null);
-        jScrollPane2.setViewportView(taThongBaoSanh);
-
-        jPanel4.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 240, 290, 80));
 
         txtThueThanhTien.setEditable(false);
         txtThueThanhTien.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
@@ -2655,7 +2649,7 @@ public class LapHopDong extends javax.swing.JPanel {
             parameters.put("TongTien", tongTien + " VND");
             parameters.put("TienCoc", tienCoc + " VND");
             parameters.put("TienConLai", tienConLai + " VND");
-            parameters.put("tongTienDichVu", tongTienDichVu);
+            parameters.put("tongTienDichVu", tongTienDichVu + " VND");
             parameters.put("SUBREPORT_DIR", "src\\com\\happywedding\\Report\\");
             System.out.println(parameters);
             JasperPrint p = JasperFillManager.fillReport(rpt, parameters, con);
@@ -2780,7 +2774,7 @@ public class LapHopDong extends javax.swing.JPanel {
 
         PhanCong pc = new PhanCong(new JFrame(), (statusHopDong.equals("DATHUCHIEN") || statusHopDong.equals("XOA") ? false : true), maHD);
         pc.setVisible(true);
-    
+
     }//GEN-LAST:event_btnPhanCongActionPerformed
 
     private void btnXuatHoaDonTamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXuatHoaDonTamActionPerformed
@@ -2898,7 +2892,6 @@ public class LapHopDong extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel lblMaNH;
     private javax.swing.JLabel lblMaNH1;
     private javax.swing.JLabel lblMaNH10;
@@ -2929,7 +2922,6 @@ public class LapHopDong extends javax.swing.JPanel {
     private javax.swing.JPanel pnlDichVu;
     private javax.swing.JPanel pnlInHoaDOn;
     private javax.swing.JTextArea taDiaChi;
-    private javax.swing.JTextArea taThongBaoSanh;
     private com.ui.swing.timepicker.TimePicker timePickerBatDau;
     private com.ui.swing.timepicker.TimePicker timePickerKetThuc;
     private javax.swing.JTextField txtBatDau;

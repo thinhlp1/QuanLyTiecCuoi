@@ -415,6 +415,7 @@ public class QuanLyTaiKhoan extends javax.swing.JPanel {
         allowEdit(true);
     }//GEN-LAST:event_btnMoiActionPerformed
 
+<<<<<<< HEAD
     public boolean check() {
 
         if (txtMaNhanVien.getText().trim().equals("")) {
@@ -446,6 +447,23 @@ public class QuanLyTaiKhoan extends javax.swing.JPanel {
         String matKhau = String.valueOf(txtMatKhau.getPassword());
 
         String vaiTro;
+=======
+    public void them(){
+        TaiKhoanDAO taiKhoanDAO = new TaiKhoanDAO();
+        
+        String maNhanVien = txtMaNhanVien.getText();
+        String tenDangNhap = DangNhap.tenTaiKhoan;
+        String matKhau = String.valueOf(txtMatKhau.getPassword());
+        
+        
+        TaiKhoan tk = new TaiKhoan();
+        tk.setTenDangNhap(tenDangNhap);
+//        tk.setMatKhau(mk);
+//        if(String.valueOf(txtMatKhauMoi.getPassword()).trim().equals("")){
+//            JOptionPane.showMessageDialog(this, "Vui lòng nhập mật khẩu");
+//            return;
+//        }
+>>>>>>> origin/main
         
         if (String.valueOf(cbbVaiTro.getSelectedItem()).equals("Admin")) {
             vaiTro = "ADMIN";

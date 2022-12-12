@@ -59,13 +59,12 @@ public class Table extends JTable {
                     com.setBackground(new Color(239, 244, 255));
                 } else {
                     com.setBackground(Color.WHITE);
+//                    for (int j = 0; j < list.size(); j++) {
+//                        if (i == list.get(j)) {
+//                            com.setBackground(new Color(230, 255, 204));
+//                        }
+//                    }
                 }
-                  for (int j = 0; j < list.size(); j++) {
-                    if (i == list.get(j)) {
-                        com.setBackground(new Color(230, 255, 204));
-                    }
-                }
-             
 
                 return com;
 
@@ -100,14 +99,14 @@ public class Table extends JTable {
 
                 if (selected) {
                     com.setBackground(new Color(239, 244, 255));
-                } 
-                
-                for (int j = 0; j < list.size(); j++) {
-                    if (i == list.get(j)) {
-                        com.setBackground(new Color(230, 255, 204));
+                } else {
+                     com.setBackground(Color.WHITE);
+                    for (int j = 0; j < list.size(); j++) {
+                        if (i == list.get(j)) {
+                            com.setBackground(new Color(230, 255, 204));
+                        }
                     }
                 }
-             
 
                 this.addKeyListener(keyAction);
                 return com;

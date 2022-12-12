@@ -495,6 +495,32 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
 
     }
 
+    public void tinhTienTatCaDichVu() {
+        List<ChiTietDatMon> list = getChiPhiDatMon();
+        for (ChiTietDatMon ct : list) {
+            tongChiPhiDatMon += ct.getSoLuong() * ct.getGia();
+
+        }
+
+        listChiPhiPhatSinh = getChiPhiPhatSinh();
+        for (ChiPhiPhatSinhModel ct : listChiPhiPhatSinh) {
+            tongChiPhiDichVu += ct.getChiPhi();
+
+        }
+
+        List<ChiTietDichVuDiKem> list2 = getChiPhiDiKem();
+        long tongTienDiKem = 0;
+
+        for (ChiTietDichVuDiKem ct : list2) {
+            diKemDAO.updateChiTietDiKem(ct);
+            tongTienDiKem += ct.getChiPhi() * ct.getSoLuong();
+
+        }
+      
+        this.tongChiPhiDikem = tongTienDiKem;
+
+    }
+
     public boolean insertChiTietDichVuDiKem() {
         List<ChiTietDichVuDiKem> list = getChiPhiDiKem();
         long tongTienDiKem = 0;
@@ -1026,6 +1052,7 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
                     long thuePhatSinh = (long) ((tongTienPhatSinh) * 0.1);
                     long tongTien = tongTienPhatSinh + hopDong.getTongTien() + thuePhatSinh;
                     long tongTienPhaiTra = tongTien - hopDong.getTienCoc();
+                    long tienConNo = hopDong.getTongTien() - hopDong.getTienCoc();
 
                     if (!hoaDonDAO.updateHoaDon(maHD, DateHelper.now(), AppStatus.USER.getMaNV(), tongTienPhaiTra)) {
                         DialogHelper.alertError(this, "Không thể cập nhật hóa đơn");
@@ -1071,23 +1098,33 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
                         long giaSanh = (sanh.getGiaBan() * hopDong.getSoLuongBan()) + sanh.getGiaThueSanh();
                         ttdv += giaSanh;
                         String tongTienDichVu = ShareHelper.toMoney(ttdv);
-                        String thue = ShareHelper.toMoney((long) (((chiPhi.get(0) + chiPhi.get(1))) * 10 / 100.0));
-                        // String tongTien = ShareHelper.toMoney(hopDong.getTongTien());
+
                         String tienCoc = ShareHelper.toMoney(hopDong.getTienCoc());
-                        String tienConLai = ShareHelper.toMoney(hopDong.getTongTien() - hopDong.getTienCoc());
-                        String thanhChu = EnglishNumberToWords.convert(hopDong.getTongTien());
-                        String thanhChu2 = EnglishNumberToWords.convert(ShareHelper.toMoney(tienConLai));
+                        String tienConNo1 = ShareHelper.toMoney(tienConNo) + " VND";
+
+                        String tongTienPhatSinh1 = ShareHelper.toMoney(tongTienPhatSinh) + " VND";
+                        String thuePhatSinh1 = ShareHelper.toMoney(thuePhatSinh) + " VND";
+                        String tongTienPhaiTra1 = ShareHelper.toMoney(tongTienPhaiTra) + " VND";
+                        String ttdv1 = ShareHelper.toMoney(tongTienPhaiTra) + " VND";
+                        String thanhChu = EnglishNumberToWords.convert(tongChiPhiDatMon1);
+                        
+                        String thanhchu1 = thanhChu.substring(0, 1);
+                        String thanhChu2 = thanhChu.substring(2,thanhChu.length());
+                        thanhChu = thanhchu1.toUpperCase() + thanhChu2;
+                        
+                        
                         net.sf.jasperreports.engine.JasperReport rpt = JasperCompileManager.compileReport("src\\com\\happywedding\\Report\\HoaDonChinhThuc.jrxml");
                         parameters.put("MaHD", maHD);
                         parameters.put("MaTD_Chinh", maTD);
                         parameters.put("MaTD_Phu", maTDPhu);
+                        parameters.put("tienConNo", tienConNo1);
+                        parameters.put("tongTienPhatSinh", tongTienPhatSinh1);
+
                         parameters.put("ThanhTien", thanhChu);
-                        parameters.put("ThanhTien2", thanhChu2);
-                        parameters.put("Thue", thue + "VND");
-                        parameters.put("TongTien", tongTien);
+                        parameters.put("Thue", thuePhatSinh1);
+                        parameters.put("TongTien", tongTienPhaiTra1);
                         parameters.put("TienCoc", tienCoc);
-                        parameters.put("TienConLai", tienConLai);
-                        parameters.put("tongTienDichVu", tongTienDichVu);
+
                         parameters.put("SUBREPORT_DIR", "src\\com\\happywedding\\Report\\");
                         System.out.println(parameters);
                         JasperPrint p = JasperFillManager.fillReport(rpt, parameters, con);
@@ -1111,6 +1148,12 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
 
                     //btnXuatHoaDon.setVisible(false);
                     isView(false);
+                    tinhTienTatCaDichVu();
+                    long tongTienPhatSinh = tongChiPhiDatMon + tongChiPhiDichVu + tongChiPhiDikem;
+                    long thuePhatSinh = (long) ((tongTienPhatSinh) * 0.1);
+                    long tongTien = tongTienPhatSinh + hopDong.getTongTien() + thuePhatSinh;
+                    long tongTienPhaiTra = tongTien - hopDong.getTienCoc();
+                    long tienConNo = hopDong.getTongTien() - hopDong.getTienCoc();
 
                     HopDongDAO hopDongDAO = new HopDongDAO();
                     List<Long> chiPhi = hopDongDAO.tinhToan(maHD);
@@ -1149,23 +1192,32 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
                         long giaSanh = (sanh.getGiaBan() * hopDong.getSoLuongBan()) + sanh.getGiaThueSanh();
                         ttdv += giaSanh;
                         String tongTienDichVu = ShareHelper.toMoney(ttdv);
-                        String thue = ShareHelper.toMoney((long) (((chiPhi.get(0) + chiPhi.get(1))) * 10 / 100.0));
-                        String tongTien = ShareHelper.toMoney(hopDong.getTongTien());
+
                         String tienCoc = ShareHelper.toMoney(hopDong.getTienCoc());
-                        String tienConLai = ShareHelper.toMoney(hopDong.getTongTien() - hopDong.getTienCoc());
-                        String thanhChu = EnglishNumberToWords.convert(hopDong.getTongTien());
-                        String thanhChu2 = EnglishNumberToWords.convert(ShareHelper.toMoney(tienConLai));
+                        String tienConNo1 = ShareHelper.toMoney(tienConNo) + " VND";
+
+                        String tongTienPhatSinh1 = ShareHelper.toMoney(tongTienPhatSinh) + " VND";
+                        String thuePhatSinh1 = ShareHelper.toMoney(thuePhatSinh) + " VND";
+                        String tongTienPhaiTra1 = ShareHelper.toMoney(tongTienPhaiTra) + " VND";
+//                        String ttdv1 = ShareHelper.toMoney(tongTienPhaiTra) + " VND";
+                        String thanhChu = EnglishNumberToWords.convert(tongTienPhaiTra);
+                        
+                              String thanhchu1 = thanhChu.substring(0, 1);
+                        String thanhChu2 = thanhChu.substring(1,thanhChu.length());
+                        thanhChu = thanhchu1.toUpperCase() + thanhChu2;
+                        
+                        
                         net.sf.jasperreports.engine.JasperReport rpt = JasperCompileManager.compileReport("src\\com\\happywedding\\Report\\HoaDonChinhThuc.jrxml");
                         parameters.put("MaHD", maHD);
                         parameters.put("MaTD_Chinh", maTD);
                         parameters.put("MaTD_Phu", maTDPhu);
+                        parameters.put("tienConNo", tienConNo1);
+                        parameters.put("tongTienPhatSinh", tongTienPhatSinh1);
+
                         parameters.put("ThanhTien", thanhChu);
-                        parameters.put("ThanhTien2", thanhChu2);
-                        parameters.put("Thue", thue + " VND");
-                        parameters.put("TongTien", tongTien + " VND");
-                        parameters.put("TienCoc", tienCoc + " VND");
-                        parameters.put("TienConLai", tienConLai + " VND");
-                        parameters.put("tongTienDichVu", tongTienDichVu);
+                        parameters.put("Thue", thuePhatSinh1);
+                        parameters.put("TongTien", tongTienPhaiTra1);
+                        parameters.put("TienCoc", tienCoc);
 
                         parameters.put("SUBREPORT_DIR", "src\\com\\happywedding\\Report\\");
                         System.out.println(parameters);

@@ -33,7 +33,7 @@ public class ChonNhanVien extends javax.swing.JDialog {
      */
     private DefaultTableModel tblNhanVienModel;
     private List<NhanVien> listNhanVien = new ArrayList<>();
-
+    private List<NhanVien> listFilted = new ArrayList<>();
     private List<PhongBan> listAllPhongBan;
     private List<VaiTro> listAllVaiTro;
 
@@ -41,7 +41,11 @@ public class ChonNhanVien extends javax.swing.JDialog {
     private PhongBanDAO phongBanDAO = new PhongBanDAO();
     private NhanVienDAO nhanVienDAO = new NhanVienDAO();
     private PhanCongDAO phanCongDAO = new PhanCongDAO();
-    private String maHD ;
+
+    private boolean isLoad = false;
+    private boolean isFiltedVT = false;
+
+    private String maHD;
 
     public ChonNhanVien(java.awt.Frame parent, boolean modal, String maHD) {
         super(parent, modal);
@@ -52,6 +56,9 @@ public class ChonNhanVien extends javax.swing.JDialog {
 
         loadNhanVien();
         loadPhongBan();
+        loadVaiTro();
+
+        isLoad = true;
         fillTableNhanVien(listNhanVien);
     }
 
@@ -70,6 +77,16 @@ public class ChonNhanVien extends javax.swing.JDialog {
         cbbPhongBan.setSelectedIndex(-1);
     }
 
+    public void loadVaiTro() {
+        listAllVaiTro = vaitroDAO.select();
+        DefaultComboBoxModel cbbModel = (DefaultComboBoxModel) cbbVaiTro.getModel();
+        cbbModel.removeAllElements();
+        for (VaiTro s : listAllVaiTro) {
+            cbbModel.addElement(s);
+        }
+        cbbVaiTro.setSelectedIndex(-1);
+    }
+
     public void fillTableNhanVien(List<NhanVien> list) {
         tblNhanVienModel.setRowCount(0);
 
@@ -77,6 +94,34 @@ public class ChonNhanVien extends javax.swing.JDialog {
             Object[] row = {nv.getMaNV(), nv.getHoTen(), nv.getTenVT()};
             tblNhanVienModel.addRow(row);
         }
+    }
+
+    public void filtNhanVien() {
+        List<NhanVien> list = new ArrayList<>();
+
+        String maPB = ((PhongBan) cbbPhongBan.getSelectedItem()).getMaPB();
+        String maVT = "";
+        if (cbbVaiTro.getSelectedIndex() > -1) {
+            maVT = ((VaiTro) cbbVaiTro.getSelectedItem()).getMaVT();
+        } else {
+
+        }
+
+        for (NhanVien nv : listNhanVien) {
+            if (!maVT.equals("")) {
+                if (nv.getMaPB().equals(maPB) && nv.getMaVT().equals(maVT)) {
+                    list.add(nv);
+                }
+            } else {
+                if (nv.getMaPB().equals(maPB)) {
+                    list.add(nv);
+                }
+            }
+
+        }
+
+        fillTableNhanVien(list);
+
     }
 
     /**
@@ -138,6 +183,7 @@ public class ChonNhanVien extends javax.swing.JDialog {
         jLabel11.setText("Phòng ban");
         jPanel1.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 20, -1, -1));
 
+        cbbPhongBan.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         cbbPhongBan.setLabeText("");
         cbbPhongBan.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -167,6 +213,7 @@ public class ChonNhanVien extends javax.swing.JDialog {
         jLabel12.setText("Vai trò");
         jPanel1.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 20, -1, -1));
 
+        cbbVaiTro.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         cbbVaiTro.setLabeText("");
         cbbVaiTro.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -193,7 +240,27 @@ public class ChonNhanVien extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void cbbPhongBanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbbPhongBanActionPerformed
-        // TODO add your handling code here:
+        if (isLoad) {
+            List<VaiTro> list = new ArrayList<>();
+
+            if (isLoad) {
+                String maPB = ((PhongBan) cbbPhongBan.getSelectedItem()).getMaPB();
+                for (VaiTro vt : listAllVaiTro) {
+                    if (vt.getMaPB().equals(maPB)) {
+                        list.add(vt);
+                    }
+                }
+            }
+            isFiltedVT = false;
+            DefaultComboBoxModel cbbModel = (DefaultComboBoxModel) cbbVaiTro.getModel();
+            cbbModel.removeAllElements();
+            for (VaiTro s : list) {
+                cbbModel.addElement(s);
+            }
+            cbbVaiTro.setSelectedIndex(-1);
+            isFiltedVT = true;
+            filtNhanVien();
+        }
     }//GEN-LAST:event_cbbPhongBanActionPerformed
 
     private void txtTimKiemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTimKiemActionPerformed
@@ -220,7 +287,10 @@ public class ChonNhanVien extends javax.swing.JDialog {
     }//GEN-LAST:event_tblNhanVienMouseClicked
 
     private void cbbVaiTroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbbVaiTroActionPerformed
-        // TODO add your handling code here:
+        if (isLoad && isFiltedVT) {
+            filtNhanVien();
+
+        }
     }//GEN-LAST:event_cbbVaiTroActionPerformed
 
 
