@@ -50,6 +50,9 @@ public class HopDongDAO extends AbstractDAO<HopDong> {
             + "OR (   ThoiGianBatDau  BETWEEN ( CAST(? AS Time)) AND  CAST(? AS Time) )"
             + " ) AND MaHD != ?";
 
+    private final String SELECT_MAHD_IN_NAM = "SELECT hd.MaHD FROM HopDong hd INNER JOIN HoaDon hoadon ON hd.MaHD = hoadon.MaHD \n"
+            + "WHERE IIF(hoadon.TrangThai = 0, YEAR(hd.NgayLap),YEAR(hoadon.NgayLapLan2)) = ?";
+
     @Override
     public boolean insert(HopDong entity) {
         int rs = JDBCHelper.executeUpdate(INSERT, entity.getMaHD(), entity.getMaNL(), entity.getSoLuongBan(), entity.getSanh(), entity.getNgayLap(), entity.getNgayDuyet(), entity.getMaND(), entity.getNgayToChuc(), entity.getThoiGianBatDau(), entity.getThoiGianKetThuc(), entity.getTrangThai(), entity.getThue(), entity.getTienCoc(), entity.getTongTien());
@@ -99,12 +102,12 @@ public class HopDongDAO extends AbstractDAO<HopDong> {
             ResultSet rs = null;
             HopDong hopDong = new HopDong();
             try {
-                rs = JDBCHelper.executeQuery(CHECK_SANH, maSanh, ngayToChuc, batDau, ketThuc,batDau,ketThuc, maHD);
+                rs = JDBCHelper.executeQuery(CHECK_SANH, maSanh, ngayToChuc, batDau, ketThuc, batDau, ketThuc, maHD);
                 while (rs.next()) {
                     hopDong.setMaHD(rs.getString("MaHD"));
                     hopDong.setNgayLap(rs.getDate("NgayLap"));
-                    
-                  //  hopDong.setSdtKhachHang(rs.getString("SoDienThoai"));
+
+                    //  hopDong.setSdtKhachHang(rs.getString("SoDienThoai"));
                     hopDong.setNgayToChuc(rs.getDate("NgayToChuc"));
                     hopDong.setThoiGianBatDau(rs.getString("ThoiGianBatDau"));
                     hopDong.setThoiGianKetThuc(rs.getString("ThoiGianKetThuc"));
@@ -180,6 +183,25 @@ public class HopDongDAO extends AbstractDAO<HopDong> {
                 while (rs.next()) {
                     HopDong hopDong = readFromResultSet(rs);
                     list.add(hopDong);
+                }
+            } finally {
+                rs.getStatement().getConnection().close();
+            }
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
+        return list;
+    }
+    
+     public List selectMaHDInNam(int nam) {
+        List<String> list = new ArrayList<>();
+        try {
+            ResultSet rs = null;
+            try {
+                rs = JDBCHelper.executeQuery(SELECT_MAHD_IN_NAM, nam);
+                while (rs.next()) {
+                    String maHD = rs.getString("MaHD");
+                    list.add(maHD);
                 }
             } finally {
                 rs.getStatement().getConnection().close();

@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="765aa5ba-2f0e-4d12-b60d-212bb4bc325f">
 	<property name="ireport.zoom" value="1.6105100000000043"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="387"/>
+	<property name="ireport.y" value="105"/>
 	<parameter name="MaHD" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
@@ -197,14 +197,6 @@ WHERE
 				</textElement>
 				<textFieldExpression><![CDATA[$F{HopDong_SoLuongBan}]]></textFieldExpression>
 			</textField>
-			<textField pattern="h.mm a" isBlankWhenNull="false">
-				<reportElement mode="Transparent" x="121" y="172" width="433" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="0698bd3f-41f3-4489-8a20-b124ddf8d160"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
-					<font fontName="SansSerif" size="14" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-					<paragraph lineSpacing="Single"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{HoaDon_NgayLap}]]></textFieldExpression>
-			</textField>
 			<textField pattern="dd/MM/yyyy">
 				<reportElement x="121" y="192" width="433" height="18" uuid="d862bc5e-c235-4c9e-b6bf-fdd1ec4455b1"/>
 				<textElement verticalAlignment="Middle">
@@ -218,6 +210,14 @@ WHERE
 					<font size="14"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{NhanVien_HoTen}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="121" y="172" width="432" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="4eef05e7-96b6-4bb0-b34a-efbbc19481d1"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="SansSerif" size="14" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{HoaDon_NgayLapLan2}]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>

@@ -48,8 +48,11 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.File;
+
 import java.io.InputStream;
 import java.net.URL;
+
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -1330,14 +1333,14 @@ public class LapHopDong extends javax.swing.JPanel {
             String thanhChu6 = thanhChu.substring(1, thanhChu.length());
             thanhChu2 = thanhchu5.toUpperCase() + thanhChu6;
 
-            
-            
-             URL localPackage = this.getClass().getResource("");
+
+            URL localPackage = this.getClass().getResource("");
             URL urlLoader = LapHopDong.class.getProtectionDomain().getCodeSource().getLocation();
             //String localDir = localPackage.getPath();
             String loaderDir = urlLoader.getPath().toString();
             //System.out.printf("loaderDir = %s\n localDir = %s\n", loaderDir, localDir);
             String dirPath = loaderDir.substring(0, loaderDir.length() - 15);
+
             String realPath = dirPath + "/Report/";
             realPath = realPath.replaceFirst("\\/", "");
             realPath = realPath.replaceAll("%20", " ");
@@ -1350,6 +1353,7 @@ public class LapHopDong extends javax.swing.JPanel {
             JasperDesign desgin = JRXmlLoader.load(file);
 
             net.sf.jasperreports.engine.JasperReport rpt = JasperCompileManager.compileReport(desgin);
+
             parameters.put("MaHD", maHD);
             parameters.put("MaTD_Chinh", maTD);
             parameters.put("MaTD_Phu", maTDPhu);
