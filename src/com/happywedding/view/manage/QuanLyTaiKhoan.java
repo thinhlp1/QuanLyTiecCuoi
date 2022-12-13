@@ -23,6 +23,10 @@ import com.happywedding.model.VaiTroTaiKhoan;
 import com.happywedding.dao.TaiKhoanDAO;
 import com.happywedding.model.NhanVien;
 import java.awt.Rectangle;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class QuanLyTaiKhoan extends javax.swing.JPanel {
 
@@ -56,8 +60,96 @@ public class QuanLyTaiKhoan extends javax.swing.JPanel {
 
         fillToTable(listTaiKhoan);
         loadVaiTro();
+        initSort();
+    }
+    
+    public List<TaiKhoan> sortByNameKhachHang(boolean isRevese) {
+        List<TaiKhoan> listSorted = listFilted;
+        Collections.sort(listSorted, new Comparator<TaiKhoan>() {
+            public int compare(HopDong hopDong1, HopDong hopDong2) {
+                int result = 0;
+                
+               
+                
+                String[] partNameEmployee1 = hopDong1.getTenKhachHang().split("\\s");
+                String[] partNameEmployee2 = hopDong2.getTenKhachHang().split("\\s");
+                 if (partNameEmployee1.length == 1){
+                     System.out.println("");
+                 }
+
+                int nameLenght1 = partNameEmployee1.length;
+                int nameLenght2 = partNameEmployee2.length;
+
+                if (nameLenght1 == 1 && nameLenght2 == 1) {
+                    return hopDong1.getTenKhachHang().compareToIgnoreCase(hopDong2.getTenKhachHang());
+                }
+                
+                if (nameLenght1 == 1 && nameLenght2 != 1){
+                   return hopDong1.getTenKhachHang().compareToIgnoreCase(partNameEmployee2[nameLenght2-1]);
+                }else if (  nameLenght1 != -1 && nameLenght2 == 1  ) {
+                     return partNameEmployee1[nameLenght1-1].compareToIgnoreCase(hopDong2.getTenKhachHang());
+                }
+
+                int length = ((nameLenght1 > nameLenght2) ? nameLenght2 : nameLenght1);
+                for (int i = 1; i < length; i++) {
+                    result = (partNameEmployee1[nameLenght1 - i]).compareToIgnoreCase(partNameEmployee2[nameLenght2 - i]);
+                    if (result != 0) {
+                        return result;
+                    }
+                }
+                if (nameLenght1 > nameLenght2) {
+                    return 1;
+                } else if (nameLenght1 < nameLenght2) {
+                    return -1;
+                }
+
+                return 0;
+            }
+
+            @Override
+            public int compare(TaiKhoan o1, TaiKhoan o2) {
+                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+            }
+        });
+
+        if (isRevese) {
+            Collections.reverse(listSorted);
+        }
+
+        return listSorted;
     }
 
+    public void initSort() {
+
+        cbbSort.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if (cbbSort.getSelectedIndex() == 0) {
+                    if (cbbSort.getSelectedIndex() == 0) {
+                        // ten tang dan
+                        fillToTable(sortByNameKhachHang(false));
+                    } else if (cbbSort.getSelectedIndex() == 1) {
+                        // ten giam dan
+                        fillToTable(sortByNameKhachHang(true));
+                    }
+                }
+            }
+        });
+
+        cbbSort.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if (cbbSort.getSelectedIndex() == 0) {
+                    if (cbbSort.getSelectedIndex() == 0) {
+                        // ten tang dan
+                        fillToTable(sortByNameKhachHang(false));
+                    } else if (cbbSort.getSelectedIndex() == 1) {
+                        // ten giam dan
+                        fillToTable(sortByNameKhachHang(true));
+                    }
+                } 
+            }
+        });
+    }
+    
     public void loadTaiKhoan(int currentIndex) {
 
         txtMaNhanVien.setText(String.valueOf(tblTaiKhoan.getValueAt(this.currentIndex, 1)));
@@ -144,7 +236,7 @@ public class QuanLyTaiKhoan extends javax.swing.JPanel {
         tblTaiKhoan = new com.ui.swing.Table();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        cbbSapXepTheo1 = new com.ui.swing.Combobox();
+        cbbSort = new com.ui.swing.Combobox();
         txtMaNhanVien = new javax.swing.JTextField();
 
         setPreferredSize(new java.awt.Dimension(1650, 950));
@@ -342,15 +434,15 @@ public class QuanLyTaiKhoan extends javax.swing.JPanel {
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/happywedding/assets/filt.png"))); // NOI18N
         pnlEmplpyeeManager.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(890, 10, 40, 40));
 
-        cbbSapXepTheo1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Họ và Tên" }));
-        cbbSapXepTheo1.setSelectedIndex(-1);
-        cbbSapXepTheo1.setLabeText("Sort by");
-        cbbSapXepTheo1.addActionListener(new java.awt.event.ActionListener() {
+        cbbSort.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Họ và Tên" }));
+        cbbSort.setSelectedIndex(-1);
+        cbbSort.setLabeText("Sort by");
+        cbbSort.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbbSapXepTheo1ActionPerformed(evt);
+                cbbSortActionPerformed(evt);
             }
         });
-        pnlEmplpyeeManager.add(cbbSapXepTheo1, new org.netbeans.lib.awtextra.AbsoluteConstraints(940, 0, 270, 54));
+        pnlEmplpyeeManager.add(cbbSort, new org.netbeans.lib.awtextra.AbsoluteConstraints(940, 0, 270, 54));
 
         txtMaNhanVien.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
         txtMaNhanVien.addActionListener(new java.awt.event.ActionListener() {
@@ -538,9 +630,13 @@ public class QuanLyTaiKhoan extends javax.swing.JPanel {
         init();
     }//GEN-LAST:event_btnXoaActionPerformed
 
-    private void cbbSapXepTheo1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbbSapXepTheo1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cbbSapXepTheo1ActionPerformed
+    private void cbbSortActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbbSortActionPerformed
+    
+        int oldIndex = cbbSort.getSelectedIndex();
+        cbbSort.setSelectedIndex(0);
+        cbbSort.setSelectedIndex(oldIndex);
+        
+    }//GEN-LAST:event_cbbSortActionPerformed
 
     private void tblTaiKhoanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblTaiKhoanMouseClicked
         currentIndex = tblTaiKhoan.rowAtPoint(evt.getPoint());
@@ -618,7 +714,7 @@ public class QuanLyTaiKhoan extends javax.swing.JPanel {
     private com.ui.swing.InkwellButton btnThem;
     private com.ui.swing.InkwellButton btnXoa;
     private com.ui.swing.Combobox cbbSapXepTangGiam;
-    private com.ui.swing.Combobox cbbSapXepTheo1;
+    private com.ui.swing.Combobox cbbSort;
     private com.ui.swing.Combobox cbbVaiTro;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

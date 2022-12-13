@@ -166,6 +166,8 @@ public class DangNhap extends javax.swing.JDialog {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    
+    
     private void btnQuenMatKhauMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnQuenMatKhauMouseClicked
         
         if(txtTenDangNhap.getText().trim().equals("")){
@@ -174,11 +176,11 @@ public class DangNhap extends javax.swing.JDialog {
         }
         
         boolean coTenDangNhap = quenMatKhau(txtTenDangNhap.getText());
-        if(!coTenDangNhap){
-            tenTaiKhoan = txtTenDangNhap.getText();
+        if(coTenDangNhap == false){           
             JOptionPane.showMessageDialog(this, "Tên đăng nhập không tồn tại");
             return;
         }else{
+            tenTaiKhoan = txtTenDangNhap.getText();
             this.dispose();
             new QuenMatKhau(new JFrame(), true).setVisible(true);
         }  
@@ -217,14 +219,16 @@ public class DangNhap extends javax.swing.JDialog {
         
         List<TaiKhoan> soTaiKhoan;
         soTaiKhoan = taiKhoanDAO.selectTenDangNhap(username.trim());
-        tenTaiKhoan = soTaiKhoan.get(0).getTenDangNhap();
-        
-        email = String.valueOf(new NhanVienDAO().findById(soTaiKhoan.get(0).getMaNhanVien()).getEmail());
-        System.out.println("Email: "+ email);
         
         if(soTaiKhoan.size() == 0){
             return false;
         }
+        
+        tenTaiKhoan = soTaiKhoan.get(0).getTenDangNhap();
+        email = String.valueOf(new NhanVienDAO().findById(soTaiKhoan.get(0).getMaNhanVien()).getEmail());
+        System.out.println("Email: "+ email);
+        
+        
         return true;
     }
     
@@ -233,6 +237,11 @@ public class DangNhap extends javax.swing.JDialog {
         TaiKhoanDAO taiKhoanDAO = new TaiKhoanDAO();
         List<TaiKhoan> soTaiKhoan;
         soTaiKhoan = taiKhoanDAO.selectTenDangNhap(username.trim());
+        
+        if(soTaiKhoan.size() == 0){
+            return false;
+        }
+        
         tenTaiKhoan = soTaiKhoan.get(0).getTenDangNhap();
         
         if(soTaiKhoan.size() == 0){

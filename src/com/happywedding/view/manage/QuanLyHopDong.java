@@ -572,6 +572,11 @@ public class QuanLyHopDong extends javax.swing.JPanel {
         cbbSortBy.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Họ Tên  Khách Hàng", "Ngày Tổ Chức", "Ngày Lập" }));
         cbbSortBy.setSelectedIndex(-1);
         cbbSortBy.setLabeText("Sort by");
+        cbbSortBy.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbbSortByActionPerformed(evt);
+            }
+        });
         pnlQuanLyHopDong.add(cbbSortBy, new org.netbeans.lib.awtextra.AbsoluteConstraints(1110, 90, 270, 54));
 
         btnChiTiet.setBackground(new java.awt.Color(77, 76, 125));
@@ -834,6 +839,10 @@ public class QuanLyHopDong extends javax.swing.JPanel {
     private void cbbNgayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbbNgayActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_cbbNgayActionPerformed
+
+    private void cbbSortByActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbbSortByActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbbSortByActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
