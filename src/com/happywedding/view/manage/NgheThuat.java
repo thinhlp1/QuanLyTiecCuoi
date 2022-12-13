@@ -337,6 +337,12 @@ public class NgheThuat extends javax.swing.JDialog {
         btnReset.setVisible(isCreate);
        // btnEdit.setVisible(isCreate);
         taGhiChu.setEnabled(isCreate);
+        
+        if (AppStatus.ROLE.equals("TIEPTAN")) {
+            txtCPPSAmNhac.setEditable(false);
+            txtCPPSAmNhac.setEditable(false);
+        }
+
     }
 
     public void isTuyChinhGoiDichVu(boolean is) {

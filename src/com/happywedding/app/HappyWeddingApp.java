@@ -1,9 +1,8 @@
-
-    package com.happywedding.app;
-
+package com.happywedding.app;
 
 import com.happywedding.dao.NhanVienDAO;
 import com.happywedding.helper.AppStatus;
+import com.happywedding.helper.ShareHelper;
 
 import com.happywedding.view.manage.*;
 
@@ -36,6 +35,7 @@ public class HappyWeddingApp extends javax.swing.JFrame {
 
     private int menuIndex;
     private int subMenuIndex;
+    private boolean isFirstStart = true;
 
     static class Role {
 
@@ -104,7 +104,9 @@ public class HappyWeddingApp extends javax.swing.JFrame {
 //        }
 //        
         AppStatus.USER = new NhanVienDAO().findById("NV001");
+        AppStatus.ROLE = "QLCC";
         AppStatus.loadApp();
+        setIconImage(ShareHelper.APP_ICON);
         initComponents();
         init();
 
@@ -155,6 +157,12 @@ public class HappyWeddingApp extends javax.swing.JFrame {
 
                 }
                 showForm(quanlyHopDong);
+//                if (AppStatus.ROLE.equals(Role.QUANLY)) {
+//                    if (AppStatus.isThongBao) {
+//                        AppStatus.QLHOPDONG.thongBaoHopDong();
+//                        AppStatus.isThongBao = false;
+//                    }
+//                }
             } else if (index == MAIN_MENU_QL.QLHOADON) {
                 if (quanLyHoaDon == null) {
                     quanLyHoaDon = new QuanLyHoaDon();
@@ -286,15 +294,14 @@ public class HappyWeddingApp extends javax.swing.JFrame {
         repaint();
         revalidate();
     }
-    
-    public void showQuanLyHopDong(){
+
+    public void showQuanLyHopDong() {
         quanlyHopDong.reload();
         showForm(quanlyHopDong);
-        
+
     }
-    
-    
-     public void showQuanLyHoaDon(){
+
+    public void showQuanLyHoaDon() {
         showForm(quanLyHoaDon);
     }
 

@@ -180,6 +180,9 @@
                   <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
                 </Property>
               </Properties>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new com.ui.swing.Table(&quot;HoaDon&quot;)"/>
+              </AuxValues>
             </Component>
           </SubComponents>
         </Container>

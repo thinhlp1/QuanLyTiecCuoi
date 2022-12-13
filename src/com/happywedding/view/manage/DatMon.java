@@ -222,7 +222,7 @@ public class DatMon extends javax.swing.JDialog {
 
         fillTableThucDon(listChiTietDatMon);
         filtedMonAn();
-       
+
         isView(isCreate);
         if (isThucDonPhu) {
             spnSoBanChinh.setValue(soLuongBan - soBanPhu);
@@ -502,10 +502,11 @@ public class DatMon extends javax.swing.JDialog {
 
         }
         autoSetSoLuong();
+        autoSetThuTu();
 
         //if (isThucDonPhu) {
-            tinhTien();
-       // }
+        tinhTien();
+        // }
     }
 
     public void fillTableMonAn(List<MonAn> list) {
@@ -601,6 +602,46 @@ public class DatMon extends javax.swing.JDialog {
 //        fillTableThucDon(listChiTietDatMon);
     }
 
+    public void sortThuTuMonAn() {
+        List<ChiTietDatMon> listKhaiVi = new ArrayList<>();
+        List<ChiTietDatMon> listMonChinh = new ArrayList<>();
+        List<ChiTietDatMon> listMonPhu = new ArrayList<>();
+        List<ChiTietDatMon> listTrangMieng = new ArrayList<>();
+        List<ChiTietDatMon> listNuoc = new ArrayList<>();
+
+        for (ChiTietDatMon ct : listChiTietDatMon) {
+            if (ct.getMaPL().equals("KHAIVI")) {
+                listKhaiVi.add(ct);
+            } else if (ct.getMaPL().equals("MONCHINH")) {
+                listMonChinh.add(ct);
+            } else if (ct.getMaPL().equals("MONPHU")) {
+                listMonPhu.add(ct);
+            } else if (ct.getMaPL().equals("TRANGMIENG")) {
+                listTrangMieng.add(ct);
+            } else if (ct.getMaPL().equals("NUOC")) {
+                listNuoc.add(ct);
+            }
+        }
+
+        listChiTietDatMon.clear();
+        for (ChiTietDatMon ct : listKhaiVi) {
+            listChiTietDatMon.add(ct);
+        }
+        for (ChiTietDatMon ct : listMonChinh) {
+            listChiTietDatMon.add(ct);
+        }
+        for (ChiTietDatMon ct : listMonPhu) {
+            listChiTietDatMon.add(ct);
+        }
+        for (ChiTietDatMon ct : listTrangMieng) {
+            listChiTietDatMon.add(ct);
+        }
+        for (ChiTietDatMon ct : listNuoc) {
+            listChiTietDatMon.add(ct);
+        }
+
+    }
+
     public void autoSetSoLuong() {
         int soLuongCoBan = soLuongBan;
         int soBanChinh = Integer.parseInt(spnSoBanChinh.getValue().toString());
@@ -643,7 +684,8 @@ public class DatMon extends javax.swing.JDialog {
     public void autoSetThuTu() {
         int size = tblThucDon.getRowCount();
         for (int i = 0; i < size; i++) {
-            tblThucDon.setValueAt(i, i, 0);
+
+            tblThucDon.setValueAt(i + 1, i, 0);
         }
     }
 
@@ -1193,6 +1235,7 @@ public class DatMon extends javax.swing.JDialog {
 
                 tinhTien();
                 listChiTietDatMon = getChiTietDatMon();
+                sortThuTuMonAn();
                 fillTableThucDon(listChiTietDatMon);
             }
         }
@@ -1214,6 +1257,7 @@ public class DatMon extends javax.swing.JDialog {
                 autoSetThuTu();
                 tinhTien();
                 listChiTietDatMon = getChiTietDatMon();
+                sortThuTuMonAn();
                 fillTableThucDon(listChiTietDatMon);
             }
 //            else if (SwingUtilities.isRightMouseButton(evt)) {

@@ -787,6 +787,7 @@ public class LapHopDong extends javax.swing.JPanel {
                 btnComfimHoanThanh.setVisible(false);
                 btnHuyHopDong.setVisible(false);
                 btnHuyDuyet.setVisible(false);
+                btnXuatHoaDon.setVisible(false);
             } else if (statusHopDong.equals(StatusHopDong.CHODUYET)) {
                 isEdit();
                 btnSave.setVisible(true);
@@ -800,6 +801,14 @@ public class LapHopDong extends javax.swing.JPanel {
                 btnComfimHoanThanh.setVisible(false);
                 btnHuyHopDong.setVisible(false);
                 btnHuyDuyet.setVisible(false);
+                btnXuatHoaDon.setVisible(false);
+
+//                if (hopDong.getNgayToChuc().getTime() - DateHelper.now().getTime() < 24 * 3600000) {
+//                    DialogHelper.alert(this, "Ngày tổ chức không còn hợp lệ do chưa được duyệt.\n Vui lòng điều chỉnh lại ngày tổ chức");
+//                    btnDuyet.setVisible(false);
+//                    txtNgayToChuc.setText("");
+//                }
+
             } else if (statusHopDong.equals(StatusHopDong.CHOKYKET)) {
                 isView();
                 btnSave.setVisible(false);
@@ -813,6 +822,14 @@ public class LapHopDong extends javax.swing.JPanel {
                 btnComfimHoanThanh.setVisible(false);
                 btnHuyHopDong.setVisible(false);
                 btnHuyDuyet.setVisible(true);
+                btnXuatHoaDon.setVisible(false);
+
+                if (hopDong.getNgayToChuc().getTime() - DateHelper.now().getTime() < 24 * 3600000) {
+                    DialogHelper.alert(this, "Ngày tổ chức không còn hợp lệ do chưa được duyệt.\n Vui lòng điều chỉnh lại ngày tổ chức");
+                    btnKyKet.setVisible(false);
+                    txtNgayToChuc.setText("");
+                }
+
             } else if (statusHopDong.equals(StatusHopDong.THUCHIEN)) {
                 isView();
                 btnSave.setVisible(false);
@@ -846,6 +863,7 @@ public class LapHopDong extends javax.swing.JPanel {
 
                 btnHuyHopDong.setVisible(true);
                 btnHuyDuyet.setVisible(false);
+                btnXuatHoaDon.setVisible(false);
             } else if (statusHopDong.equals(StatusHopDong.DATHUCHIEN)) {
                 isView();
                 btnSave.setVisible(false);
@@ -860,6 +878,18 @@ public class LapHopDong extends javax.swing.JPanel {
                 btnHuyDuyet.setVisible(false);
                 btnInHopDong.setVisible(false);
 
+                boolean isEdit = false;
+                if (hoaDonDAO.selectByID(maHD) != null) {
+                    if (hoaDonDAO.selectByID(maHD).getTrangTha() == 0 && !hopDong.getTrangThai().equals(StatusHopDong.XOA)) {
+
+                        isEdit = true;
+                        btnXuatHoaDon.setVisible(false);
+                    } else {
+                        btnXuatHoaDon.setVisible(true);
+                    }
+                }
+                AppStatus.CHIPHIPHATSINH = new ChiPhiPhatSinh(maHD, isEdit);
+
             } else if (statusHopDong.equals(StatusHopDong.XOA)) {
                 isView();
                 btnSave.setVisible(false);
@@ -873,6 +903,7 @@ public class LapHopDong extends javax.swing.JPanel {
                 btnHuyHopDong.setVisible(false);
                 btnHuyDuyet.setVisible(false);
                 btnInHopDong.setVisible(false);
+                btnXuatHoaDon.setVisible(false);
             }
 
         } else if (AppStatus.ROLE.equals(Role.TIEPTAN)) {
@@ -890,6 +921,7 @@ public class LapHopDong extends javax.swing.JPanel {
                 btnComfimHoanThanh.setVisible(false);
                 btnHuyHopDong.setVisible(false);
                 btnHuyDuyet.setVisible(false);
+                btnXuatHoaDon.setVisible(false);
             } else if (statusHopDong.equals(StatusHopDong.CHODUYET)) {
                 isView();
                 btnSave.setVisible(false);
@@ -903,11 +935,13 @@ public class LapHopDong extends javax.swing.JPanel {
                 btnHuyHopDong.setVisible(false);
                 btnHuyDuyet.setVisible(false);
                 btnInHopDong.setVisible(false);
-
+                btnXuatHoaDon.setVisible(false);
+                
+                
             } else if (statusHopDong.equals(StatusHopDong.CHOKYKET)) {
                 isView();
                 btnSave.setVisible(false);
-                btnKyKet.setVisible(true);
+                btnKyKet.setVisible(false);
                 btnDuyet.setVisible(false);
                 btnDanhDauXoa.setVisible(false);
                 btnPhanCong.setVisible(false);
@@ -917,6 +951,7 @@ public class LapHopDong extends javax.swing.JPanel {
                 btnHuyHopDong.setVisible(false);
                 btnHuyDuyet.setVisible(false);
                 btnInHopDong.setVisible(true);
+                btnXuatHoaDon.setVisible(false);
             } else if (statusHopDong.equals(StatusHopDong.THUCHIEN)) {
                 isView();
                 btnSave.setVisible(false);
@@ -926,11 +961,12 @@ public class LapHopDong extends javax.swing.JPanel {
                 btnPhanCong.setVisible(false);
                 btnChiPhiPhatSinh.setVisible(false);
                 btnXuatHoaDonTam.setVisible(true);
-                btnChiPhiPhatSinh.setVisible(true);
+                btnChiPhiPhatSinh.setVisible(false);
                 btnComfimHoanThanh.setVisible(false);
                 btnHuyHopDong.setVisible(false);
                 btnHuyDuyet.setVisible(false);
                 btnInHopDong.setVisible(true);
+                btnXuatHoaDon.setVisible(false);
 
             } else if (statusHopDong.equals(StatusHopDong.DATHUCHIEN)) {
                 isView();
@@ -945,6 +981,22 @@ public class LapHopDong extends javax.swing.JPanel {
                 btnHuyHopDong.setVisible(false);
                 btnHuyDuyet.setVisible(false);
                 btnInHopDong.setVisible(false);
+
+                boolean isEdit = false;
+                if (hoaDonDAO.selectByID(maHD) != null) {
+                    if (hoaDonDAO.selectByID(maHD).getTrangTha() == 0 && !hopDong.getTrangThai().equals(StatusHopDong.XOA)) {
+
+                        isEdit = true;
+
+                    }
+                    if (hoaDonDAO.selectByID(maHD).getTrangTha() == 0) {
+                        btnXuatHoaDon.setVisible(false);
+                    } else {
+                        btnXuatHoaDon.setVisible(true);
+                    }
+                }
+                AppStatus.CHIPHIPHATSINH = new ChiPhiPhatSinh(maHD, isEdit);
+
             } else if (statusHopDong.equals(StatusHopDong.XOA)) {
                 isView();
                 btnSave.setVisible(false);
@@ -958,6 +1010,7 @@ public class LapHopDong extends javax.swing.JPanel {
                 btnHuyHopDong.setVisible(false);
                 btnHuyDuyet.setVisible(false);
                 btnInHopDong.setVisible(false);
+                btnXuatHoaDon.setVisible(false);
             }
         }
 
@@ -1338,7 +1391,7 @@ public class LapHopDong extends javax.swing.JPanel {
             realPath = realPath.replaceFirst("\\/", "");
             realPath = realPath.replaceAll("%20", " ");
             realPath = realPath.replaceAll("/", "\\\\");
-           
+
             System.out.println(realPath);
             File f = new File(realPath);
             if (f.exists()) {
@@ -1458,6 +1511,7 @@ public class LapHopDong extends javax.swing.JPanel {
         btnXuatHoaDonTam = new com.ui.swing.HoverButton();
         btnPhanCong = new com.ui.swing.HoverButton();
         btnChiPhiPhatSinh = new com.ui.swing.HoverButton();
+        btnXuatHoaDon = new com.ui.swing.HoverButton();
 
         timePickerBatDau.setForeground(new java.awt.Color(255, 102, 102));
 
@@ -2268,7 +2322,26 @@ public class LapHopDong extends javax.swing.JPanel {
         });
         pnlInHoaDOn.add(btnChiPhiPhatSinh);
 
-        jPanel1.add(pnlInHoaDOn, new org.netbeans.lib.awtextra.AbsoluteConstraints(1060, 880, 550, 50));
+        btnXuatHoaDon.setBackground(new java.awt.Color(77, 76, 125));
+        btnXuatHoaDon.setForeground(new java.awt.Color(255, 255, 255));
+        btnXuatHoaDon.setText("Xuất hóa đơn");
+        btnXuatHoaDon.setBorderColor(new java.awt.Color(77, 76, 125));
+        btnXuatHoaDon.setColor(new java.awt.Color(77, 76, 125));
+        btnXuatHoaDon.setColorClick(new java.awt.Color(77, 0, 196));
+        btnXuatHoaDon.setColorOver(new java.awt.Color(77, 0, 196));
+        btnXuatHoaDon.setFocusPainted(false);
+        btnXuatHoaDon.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        btnXuatHoaDon.setLabelColor(java.awt.Color.white);
+        btnXuatHoaDon.setLableColorClick(java.awt.Color.white);
+        btnXuatHoaDon.setRadius(15);
+        btnXuatHoaDon.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnXuatHoaDonActionPerformed(evt);
+            }
+        });
+        pnlInHoaDOn.add(btnXuatHoaDon);
+
+        jPanel1.add(pnlInHoaDOn, new org.netbeans.lib.awtextra.AbsoluteConstraints(920, 880, 690, 50));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -2882,6 +2955,10 @@ public class LapHopDong extends javax.swing.JPanel {
         loadSanhPossible();
     }//GEN-LAST:event_txtKetThucFocusGained
 
+    private void btnXuatHoaDonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXuatHoaDonActionPerformed
+        AppStatus.CHIPHIPHATSINH.xuatHoaDon();
+    }//GEN-LAST:event_btnXuatHoaDonActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.ui.swing.InkwellButton btnBack;
@@ -2902,6 +2979,7 @@ public class LapHopDong extends javax.swing.JPanel {
     private com.ui.swing.HoverButton btnTTBan;
     private com.ui.swing.HoverButton btnTTSanKhau;
     private com.ui.swing.HoverButton btnTrangTriCong;
+    private com.ui.swing.HoverButton btnXuatHoaDon;
     private com.ui.swing.HoverButton btnXuatHoaDonTam;
     private com.ui.swing.Combobox cbbSanh;
     private javax.swing.JLabel jLabel2;

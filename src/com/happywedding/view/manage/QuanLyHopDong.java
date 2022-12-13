@@ -51,12 +51,23 @@ public class QuanLyHopDong extends javax.swing.JPanel {
 
     private boolean isLoad = false;
 
+    static class StatusHopDong {
+
+        static String DANGLAP = "DANGLAP";
+        static String CHODUYET = "CHODUYET";
+        static String CHOKYKET = "CHOKYKET";
+        static String THUCHIEN = "THUCHIEN";
+        static String DATHUCHIEN = "DATHUCHIEN";
+        static String XOA = "XOA";
+    }
+
     /**
      * Creates new form QuanLyHopDong
      */
     public QuanLyHopDong() {
         initComponents();
         init();
+
     }
 
     public void init() {
@@ -79,13 +90,19 @@ public class QuanLyHopDong extends javax.swing.JPanel {
         }
         fillToTable(listHopDong);
         initSort();
+        cbbSortBy.setSelectedIndex(3);
+       cbbSortBy.setSelectedIndex(-1);
+        AppStatus.QLHOPDONG = this;
 
     }
 
     public void fillToTable(List<HopDong> listHopDong) {
         tblModel.setRowCount(0);
+        tblHopDong.resetRowChoDuyetColor();
+        tblHopDong.resetRowSapHetHanColor();
+        tblHopDong.resetRowChoKyKetColor();
         try {
-
+            int i = 0;
             for (HopDong hd : listHopDong) {
                 Object[] row = {
                     hd.getMaHD(),
@@ -100,6 +117,18 @@ public class QuanLyHopDong extends javax.swing.JPanel {
                     hd.getTenTrangThai()
                 };
                 tblModel.addRow(row);
+                if (hd.getTrangThai().equals(StatusHopDong.CHODUYET)) {
+                    tblHopDong.addRowChoDuyetColor(i);
+                    if ((hd.getNgayToChuc().getTime() - new Date().getTime() < 3 * 24 * 3600000) && (hd.getNgayToChuc().getTime() - new Date().getTime()) > 0) {
+                        tblHopDong.addRowSapHetHanColor(i);
+                    }
+                } else if (hd.getTrangThai().equals(StatusHopDong.CHOKYKET)) {
+                    tblHopDong.addRowChoKyKettColor(i);
+                    if ((hd.getNgayToChuc().getTime() - new Date().getTime() < 3 * 24 * 3600000) && (hd.getNgayToChuc().getTime() - new Date().getTime()) > 0) {
+                        tblHopDong.addRowSapHetHanColor(i);
+                    }
+                }
+                i++;
             }
         } catch (Exception e) {
             DialogHelper.alertError(this, "Có lỗi xảy ra khi load dữ liệu.!");
@@ -126,10 +155,11 @@ public class QuanLyHopDong extends javax.swing.JPanel {
         for (TrangThaiHopDong ss : listTrangThai) {
             cbbModel.addElement(ss);
         }
+     
         cbbSanh.setSelectedIndex(0);
     }
-    
-    public void reload(){
+
+    public void reload() {
         listHopDong = hopDongDAO.select();
         filtedHopDong();
     }
@@ -139,7 +169,7 @@ public class QuanLyHopDong extends javax.swing.JPanel {
         List<HopDong> list2 = new ArrayList<>();
         List<HopDong> list3 = new ArrayList<>();
         listFilted.clear();
-        String search = txtSearch.getText().trim();
+        String search = txtSearch.getText().trim().replaceAll("\\s+", " ");
         for (HopDong hd : listHopDong) {
             if (hd.getInfoSearch().toUpperCase().contains(search.toUpperCase())) {
                 list.add(hd);
@@ -224,6 +254,9 @@ public class QuanLyHopDong extends javax.swing.JPanel {
         }
         fillToTable(listFilted);
         int oldIndex = cbbSortBy.getSelectedIndex();
+        if (oldIndex == 3){
+            oldIndex = -1;
+        }
         cbbSortBy.setSelectedIndex(-1);
         cbbSortBy.setSelectedIndex(oldIndex);
     }
@@ -266,6 +299,8 @@ public class QuanLyHopDong extends javax.swing.JPanel {
                     } else {
                         cbbSortBy.setSelectedIndex(0);
                     }
+                }else if (cbbSortBy.getSelectedIndex() == 3) {
+                    sortTheoCapDo();
                 }
             }
         });
@@ -298,9 +333,56 @@ public class QuanLyHopDong extends javax.swing.JPanel {
                     } else {
                         cbbSortBy.setSelectedIndex(0);
                     }
+                }else if (cbbSortBy.getSelectedIndex() == 3) {
+                    sortTheoCapDo();
                 }
             }
         });
+    }
+
+    public void sortTheoCapDo() {
+        List<HopDong> listDangChoDuyet = new ArrayList<>();
+        List<HopDong> listDangChoKyKet = new ArrayList<>();
+        List<HopDong> listDangSapHetHan = new ArrayList<>();
+        List<HopDong> listConLai = new ArrayList<>();
+        listFilted.clear();
+        for (HopDong hd : listHopDong) {
+            if (hd.getTrangThai().equals(StatusHopDong.CHODUYET)) {
+
+                if ((hd.getNgayToChuc().getTime() - new Date().getTime() < 3 * 24 * 3600000) && (hd.getNgayToChuc().getTime() - new Date().getTime()) > 0) {
+                    listDangSapHetHan.add(hd);
+                    continue;
+                }
+                listDangChoDuyet.add(hd);
+            } else if (hd.getTrangThai().equals(StatusHopDong.CHOKYKET)) {
+               
+                if ((hd.getNgayToChuc().getTime() - new Date().getTime() < 3 * 24 * 3600000) && (hd.getNgayToChuc().getTime() - new Date().getTime()) > 0) {
+                    listDangSapHetHan.add(hd);
+                    continue;
+                }
+                 listDangChoKyKet.add(hd);
+            } else {
+                listConLai.add(hd);
+            }
+        }
+
+        for (HopDong hd : listDangSapHetHan) {
+            listFilted.add(hd);
+        }
+
+        for (HopDong hd : listDangChoKyKet) {
+            listFilted.add(hd);
+        }
+        for (HopDong hd : listDangChoDuyet) {
+            listFilted.add(hd);
+        }
+
+        for (HopDong hd : listConLai) {
+            listFilted.add(hd);
+        }
+
+        fillToTable(listFilted);
+
     }
 
     public List<HopDong> sortByNameKhachHang(boolean isRevese) {
@@ -308,14 +390,12 @@ public class QuanLyHopDong extends javax.swing.JPanel {
         Collections.sort(listSorted, new Comparator<HopDong>() {
             public int compare(HopDong hopDong1, HopDong hopDong2) {
                 int result = 0;
-                
-               
-                
+
                 String[] partNameEmployee1 = hopDong1.getTenKhachHang().split("\\s");
                 String[] partNameEmployee2 = hopDong2.getTenKhachHang().split("\\s");
-                 if (partNameEmployee1.length == 1){
-                     System.out.println("");
-                 }
+                if (partNameEmployee1.length == 1) {
+                    System.out.println("");
+                }
 
                 int nameLenght1 = partNameEmployee1.length;
                 int nameLenght2 = partNameEmployee2.length;
@@ -323,11 +403,11 @@ public class QuanLyHopDong extends javax.swing.JPanel {
                 if (nameLenght1 == 1 && nameLenght2 == 1) {
                     return hopDong1.getTenKhachHang().compareToIgnoreCase(hopDong2.getTenKhachHang());
                 }
-                
-                if (nameLenght1 == 1 && nameLenght2 != 1){
-                   return hopDong1.getTenKhachHang().compareToIgnoreCase(partNameEmployee2[nameLenght2-1]);
-                }else if (  nameLenght1 != -1 && nameLenght2 == 1  ) {
-                     return partNameEmployee1[nameLenght1-1].compareToIgnoreCase(hopDong2.getTenKhachHang());
+
+                if (nameLenght1 == 1 && nameLenght2 != 1) {
+                    return hopDong1.getTenKhachHang().compareToIgnoreCase(partNameEmployee2[nameLenght2 - 1]);
+                } else if (nameLenght1 != -1 && nameLenght2 == 1) {
+                    return partNameEmployee1[nameLenght1 - 1].compareToIgnoreCase(hopDong2.getTenKhachHang());
                 }
 
                 int length = ((nameLenght1 > nameLenght2) ? nameLenght2 : nameLenght1);
@@ -370,6 +450,45 @@ public class QuanLyHopDong extends javax.swing.JPanel {
         return listSorted;
     }
 
+    public void thongBaoHopDong() {
+        List<HopDong> listHopDongChoDuyet = new ArrayList<>();
+        String hopDong = "";
+        for (HopDong hd : listHopDong) {
+            if (hd.getTrangThai().equals("CHODUYET")) {
+                listHopDongChoDuyet.add(hd);
+                hopDong = hopDong + ", " + hd.getMaHD();
+
+            }
+        }
+
+        Date today = DateHelper.now();
+        for (HopDong hd : listHopDongChoDuyet) {
+            if (hd.getNgayLap().getTime() - today.getTime() < 3 * 24 * 3600000) {
+                boolean rs = DialogHelper.confirm(this, "Hợp đồng " + hd.getMaHD() + " chưa được duyệt."
+                        + " \n Xem chi tiết hợp đồng");
+                if (rs) {
+                    LapHopDong lapHopDong = new LapHopDong(false, hd.getMaHD(), false);
+                    AppStatus.mainApp.showForm(lapHopDong);
+                    return;
+                } else {
+                    return;
+                }
+            }
+        }
+
+        boolean rs = DialogHelper.confirm(this, "Có " + listHopDongChoDuyet.size() + " hợp đồng đang chờ duyệt:\n" + hopDong + "\n" + "Xem danh sách");
+        if (rs) {
+            for (int i = 0; i < listTrangThai.size(); i++) {
+                if (listTrangThai.get(i).getMaTT().equals("CHODUYET")) {
+                    cbbTrangThai.setSelectedIndex(i + 1);
+                    return;
+                }
+            }
+        } else {
+
+        }
+    }
+
     public List<HopDong> sortByNgayLap(boolean isRevese) {
         List<HopDong> listSorted = listFilted;
         Collections.sort(listSorted, new Comparator<HopDong>() {
@@ -385,7 +504,7 @@ public class QuanLyHopDong extends javax.swing.JPanel {
 
         return listSorted;
     }
-    
+
 //     public List<HopDong> sortByMaHD(boolean isRevese) {
 //        List<HopDong> listSorted = listFilted;
 //        Collections.sort(listSorted, new Comparator<HopDong>() {
@@ -401,8 +520,6 @@ public class QuanLyHopDong extends javax.swing.JPanel {
 //
 //        return listSorted;
 //    }
-
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -420,7 +537,7 @@ public class QuanLyHopDong extends javax.swing.JPanel {
         cbbSort = new com.ui.swing.Combobox();
         lblSort1 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        tblHopDong = new com.ui.swing.Table();
+        tblHopDong = new com.ui.swing.Table("HopDongChoDuyet");
         jLabel1 = new javax.swing.JLabel();
         lblHuyLoc = new javax.swing.JLabel();
         txtNgayBatDau = new javax.swing.JTextField();
@@ -432,6 +549,12 @@ public class QuanLyHopDong extends javax.swing.JPanel {
         cbbTrangThai = new com.ui.swing.Combobox();
         txtNgayKetThuc = new javax.swing.JTextField();
         cbbNgay = new com.ui.swing.Combobox();
+        jPanel1 = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel3 = new javax.swing.JLabel();
+        jPanel3 = new javax.swing.JPanel();
+        jLabel5 = new javax.swing.JLabel();
 
         setPreferredSize(new java.awt.Dimension(1620, 990));
 
@@ -458,6 +581,11 @@ public class QuanLyHopDong extends javax.swing.JPanel {
         lblSearch.setForeground(new java.awt.Color(102, 0, 255));
         lblSearch.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/happywedding/assets/Search.png"))); // NOI18N
         lblSearch.setAutoscrolls(true);
+        lblSearch.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                lblSearchFocusGained(evt);
+            }
+        });
         lblSearch.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 lblSearchMouseClicked(evt);
@@ -474,6 +602,7 @@ public class QuanLyHopDong extends javax.swing.JPanel {
         pnlQuanLyHopDong.add(lblSort, new org.netbeans.lib.awtextra.AbsoluteConstraints(1440, 110, 32, 35));
 
         cbbSort.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tăng dần", "Giảm dần" }));
+        cbbSort.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         cbbSort.setLabeText("");
         cbbSort.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -569,8 +698,9 @@ public class QuanLyHopDong extends javax.swing.JPanel {
         });
         pnlQuanLyHopDong.add(cbbSanh, new org.netbeans.lib.awtextra.AbsoluteConstraints(780, 20, 140, 54));
 
-        cbbSortBy.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Họ Tên  Khách Hàng", "Ngày Tổ Chức", "Ngày Lập" }));
+        cbbSortBy.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Họ Tên  Khách Hàng", "Ngày Tổ Chức", "Ngày Lập", "Cấp độ hợp đồng" }));
         cbbSortBy.setSelectedIndex(-1);
+        cbbSortBy.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         cbbSortBy.setLabeText("Sort by");
         pnlQuanLyHopDong.add(cbbSortBy, new org.netbeans.lib.awtextra.AbsoluteConstraints(1110, 90, 270, 54));
 
@@ -581,6 +711,7 @@ public class QuanLyHopDong extends javax.swing.JPanel {
         btnChiTiet.setColor(new java.awt.Color(77, 76, 125));
         btnChiTiet.setColorClick(new java.awt.Color(77, 0, 196));
         btnChiTiet.setColorOver(new java.awt.Color(77, 0, 196));
+        btnChiTiet.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         btnChiTiet.setLabelColor(java.awt.Color.white);
         btnChiTiet.setLableColorClick(java.awt.Color.white);
         btnChiTiet.setRadius(15);
@@ -589,7 +720,7 @@ public class QuanLyHopDong extends javax.swing.JPanel {
                 btnChiTietActionPerformed(evt);
             }
         });
-        pnlQuanLyHopDong.add(btnChiTiet, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 890, 80, 30));
+        pnlQuanLyHopDong.add(btnChiTiet, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 900, 80, 30));
 
         btnLapHopDong.setBackground(new java.awt.Color(77, 76, 125));
         btnLapHopDong.setForeground(new java.awt.Color(255, 255, 255));
@@ -598,6 +729,7 @@ public class QuanLyHopDong extends javax.swing.JPanel {
         btnLapHopDong.setColor(new java.awt.Color(77, 76, 125));
         btnLapHopDong.setColorClick(new java.awt.Color(77, 0, 196));
         btnLapHopDong.setColorOver(new java.awt.Color(77, 0, 196));
+        btnLapHopDong.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         btnLapHopDong.setLabelColor(java.awt.Color.white);
         btnLapHopDong.setLableColorClick(java.awt.Color.white);
         btnLapHopDong.setRadius(15);
@@ -606,7 +738,7 @@ public class QuanLyHopDong extends javax.swing.JPanel {
                 btnLapHopDongActionPerformed(evt);
             }
         });
-        pnlQuanLyHopDong.add(btnLapHopDong, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 890, 110, 30));
+        pnlQuanLyHopDong.add(btnLapHopDong, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 900, 130, 30));
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 1, 15)); // NOI18N
         jLabel4.setText("Trạng thái");
@@ -664,6 +796,60 @@ public class QuanLyHopDong extends javax.swing.JPanel {
             }
         });
         pnlQuanLyHopDong.add(cbbNgay, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 34, 190, 40));
+
+        jPanel1.setBackground(new java.awt.Color(255, 102, 102));
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 30, Short.MAX_VALUE)
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 30, Short.MAX_VALUE)
+        );
+
+        pnlQuanLyHopDong.add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 900, 30, 30));
+
+        jLabel2.setText("Chưa được xử lý");
+        pnlQuanLyHopDong.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 900, -1, 30));
+
+        jPanel2.setBackground(new java.awt.Color(153, 255, 255));
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 30, Short.MAX_VALUE)
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 30, Short.MAX_VALUE)
+        );
+
+        pnlQuanLyHopDong.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(830, 900, -1, -1));
+
+        jLabel3.setText("Đang chờ ký kết");
+        pnlQuanLyHopDong.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(1050, 900, -1, 30));
+
+        jPanel3.setBackground(new java.awt.Color(153, 255, 153));
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 30, Short.MAX_VALUE)
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 30, Short.MAX_VALUE)
+        );
+
+        pnlQuanLyHopDong.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(1000, 900, -1, -1));
+
+        jLabel5.setText("Đang chờ duyệt");
+        pnlQuanLyHopDong.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(870, 900, -1, 30));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -737,7 +923,7 @@ public class QuanLyHopDong extends javax.swing.JPanel {
 
         maHD = "HD" + partDate[2] + partDate[1] + partDate[0] + thuTu;
 
-        AppStatus.mainApp.showForm(new LapHopDong(true, maHD,false));
+        AppStatus.mainApp.showForm(new LapHopDong(true, maHD, false));
     }//GEN-LAST:event_btnLapHopDongActionPerformed
 
     private void txtNgayBatDauActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNgayBatDauActionPerformed
@@ -748,7 +934,7 @@ public class QuanLyHopDong extends javax.swing.JPanel {
         currentIndex = tblHopDong.getSelectedRow();
         if (currentIndex >= 0) {
             String maHD = (String) tblHopDong.getValueAt(this.currentIndex, 0);
-            LapHopDong lapHopDong = new LapHopDong(false, maHD,false);
+            LapHopDong lapHopDong = new LapHopDong(false, maHD, false);
             AppStatus.mainApp.showForm(lapHopDong);
 
         } else {
@@ -769,7 +955,7 @@ public class QuanLyHopDong extends javax.swing.JPanel {
         if (currentIndex >= 0) {
             if (evt.getClickCount() == 2) {
                 String maHD = (String) tblHopDong.getValueAt(this.currentIndex, 0);
-                LapHopDong lapHopDong = new LapHopDong(false, maHD,false);
+                LapHopDong lapHopDong = new LapHopDong(false, maHD, false);
                 AppStatus.mainApp.showForm(lapHopDong);
             }
         }
@@ -835,6 +1021,10 @@ public class QuanLyHopDong extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_cbbNgayActionPerformed
 
+    private void lblSearchFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_lblSearchFocusGained
+        // TODO add your handling code here:
+    }//GEN-LAST:event_lblSearchFocusGained
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.ui.swing.HoverButton btnChiTiet;
@@ -846,7 +1036,13 @@ public class QuanLyHopDong extends javax.swing.JPanel {
     private com.ui.swing.Combobox cbbSortBy;
     private com.ui.swing.Combobox cbbTrangThai;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel lblHuyLoc;
     private javax.swing.JLabel lblSearch;
