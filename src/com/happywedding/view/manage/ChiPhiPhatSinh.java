@@ -106,11 +106,13 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
         this.maHD = maHD;
         this.isCreate = isCreate;
         initComponents();
-
+        
         hoaDon = hoaDonDAO.selectByID(maHD);
 //        if (hoaDon != null && hoaDon.getTrangTha() == 1) {
 //            btnXuatHoaDon.setVisible(false);
 //        }
+
+        
         init();
     }
 
@@ -206,6 +208,12 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
 //                isView(false);
 //        }
         isView(isCreate);
+        if (AppStatus.ROLE.equals("TIEPTAN")){
+            isView(false);
+            if (hoaDonDAO.selectByID(maHD).getTrangTha() == 0){
+                btnXuatHoaDon.setVisible(false);
+            }
+        }
 
     }
 
@@ -607,6 +615,10 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
         public Object getCellEditorValue() {
             return ((JTextField) component).getText();
         }
+    }
+    
+    public void xuatHoaDon(){
+        btnXuatHoaDon.doClick();
     }
 
     /**
@@ -1111,8 +1123,9 @@ public class ChiPhiPhatSinh extends javax.swing.JFrame {
                         String thuePhatSinh1 = ShareHelper.toMoney(thuePhatSinh) + " VND";
                         String tongTienPhaiTra1 = ShareHelper.toMoney(tongTienPhaiTra) + " VND";
                         String ttdv1 = ShareHelper.toMoney(tongTienPhaiTra) + " VND";
-                        String thanhChu = EnglishNumberToWords.convert(tongChiPhiDatMon1);
 
+                        String thanhChu = EnglishNumberToWords.convert(tongTienPhaiTra);
+                        
                         String thanhchu1 = thanhChu.substring(0, 1);
                         String thanhChu2 = thanhChu.substring(2, thanhChu.length());
                         thanhChu = thanhchu1.toUpperCase() + thanhChu2;

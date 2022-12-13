@@ -8,18 +8,22 @@ package com.happywedding.view.manage;
 import com.happywedding.dao.ChiTietDichVuDAO;
 import com.happywedding.dao.CoSoVatChatDAO;
 import com.happywedding.dao.GoiDichVuDAO;
+import com.happywedding.dao.HopDongDAO;
 import com.happywedding.helper.AppStatus;
 import com.happywedding.helper.DialogHelper;
 import com.happywedding.helper.ShareHelper;
 import com.happywedding.model.ChiTietDichVu;
 import com.happywedding.model.CoSoVatChat;
 import com.happywedding.model.GoiDichVu;
+import com.happywedding.model.HopDong;
 import com.happywedding.model.HopDongDichVu;
 import com.ui.swing.Combobox;
 import com.ui.swing.SlideshowImage;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.KeyAdapter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFrame;
@@ -43,8 +47,9 @@ public class TrangTriSanKhau extends javax.swing.JDialog {
     private List<CoSoVatChat> listHoaChuDao = new ArrayList<>();
     private List<CoSoVatChat> listHoaPhu = new ArrayList<>();
     private List<GoiDichVu> listGoiDichVu = new ArrayList<>();
-
+    private HopDongDAO hopDongDAO = new HopDongDAO();
     HopDongDichVu ttCong;
+    private Date ngayToChuc;
 
     private final String maDV = "TTSANKHAU";
     private boolean isLoad = false;
@@ -75,7 +80,8 @@ public class TrangTriSanKhau extends javax.swing.JDialog {
         loadGoiDichVu();
         loadCoSoVatChat();
         setCheckNumber();
-
+        HopDong hd = hopDongDAO.findById(maHD);
+        ngayToChuc = hd.getNgayToChuc();
         ttCong = chiTietDVDAO.selectDichVu(maHD, maDV);
 
         isView(isCreate);
@@ -96,7 +102,7 @@ public class TrangTriSanKhau extends javax.swing.JDialog {
                 cbbGoiDV.setSelectedIndex(-1);
                 lblViewSlideShow.setVisible(false);
                 fillForm();
-                 tinhTien();
+                tinhTien();
             }
 
         }
@@ -323,6 +329,22 @@ public class TrangTriSanKhau extends javax.swing.JDialog {
 //            txtGhiChu.setText("");
 //            txtPhatSinh.setText("0");
             tinhTien();
+            kiemTraSoLuongSuDung((CoSoVatChat) cbb.getSelectedItem(), cbb);
+        }
+    }
+
+    public void kiemTraSoLuongSuDung(CoSoVatChat csvc, Combobox cbb) {
+
+        int slsd = csvcDAO.selectSLSDKhac(csvc.getMaCSVC(), ngayToChuc, maHD);
+        int canSuDung = 1;
+        if (csvc.getSoLuong() - slsd < canSuDung) {
+            cbb.setForeground(Color.red);
+            cbb.setToolTipText("<html>Số lượng sử dụng: " + slsd
+                    + "<br>Số lượng trong kho: " + csvc.getSoLuong()
+                    + "<br>Số lượng còn lại: " + (csvc.getSoLuong() - slsd < 0 ? 0 : csvc.getSoLuong() - slsd)
+                    + "<br>Số lượng cần: " + canSuDung + "</html>");
+        } else {
+            cbb.setForeground(Color.black);
         }
     }
 
@@ -387,7 +409,7 @@ public class TrangTriSanKhau extends javax.swing.JDialog {
 
     public void isView(boolean isCreate) {
         for (Component cp : pnlTTSanKhau.getComponents()) {
-              if (cp instanceof JTextField) {
+            if (cp instanceof JTextField) {
                 cp.setEnabled(isCreate);
             } else if (cp instanceof Combobox) {
                 cp.setEnabled(false);
@@ -399,6 +421,15 @@ public class TrangTriSanKhau extends javax.swing.JDialog {
         btnReset.setVisible(isCreate);
         //btnEdit.setVisible(isCreate);
         taGhiChu.setEnabled(isCreate);
+
+        if (AppStatus.ROLE.equals("TIEPTAN")) {
+            txtCPHoaChuDao.setEditable(false);
+            txtCPHoaPhu.setEditable(false);
+            txtCPPSTham.setEditable(false);
+            txtCPPSHoaPhu.setEditable(false);
+            txtCPPSHoaChuDao.setEditable(false);
+            txtCPPSBangTen.setEditable(false);
+        }
 
     }
 

@@ -27,7 +27,7 @@ public class Menu extends javax.swing.JPanel {
        static class Role{
         static String QUANLY = "QLCC";
         static String TIEPTAN = "TIEPTAN";
-        static String QLKHO = "QLKHO";
+        static String QLKHO = "KHO";
         static String ADMIN = "ADMIN";
     }
 

@@ -32,6 +32,11 @@ public class Table extends JTable {
     private List<Integer> list = new ArrayList<>();
     private List<Integer> list2 = new ArrayList<>();
 
+    private List<Integer> listHoaDon = new ArrayList<>();
+    private List<Integer> listHopDongChoDuyet = new ArrayList<>();
+    private List<Integer> listHopDongChoKyKet = new ArrayList<>();
+    private List<Integer> listHopDongSapHetHan = new ArrayList<>();
+
     public Table() {
         setShowHorizontalLines(true);
         setGridColor(new Color(230, 230, 230));
@@ -73,6 +78,66 @@ public class Table extends JTable {
 
     }
 
+    public Table(String type) {
+        setShowHorizontalLines(true);
+        setGridColor(new Color(230, 230, 230));
+        setRowHeight(40);
+        getTableHeader().setReorderingAllowed(false);
+        getTableHeader().setDefaultRenderer(new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable jtable, Object o, boolean bln, boolean bln1, int i, int i1) {
+                TableHeader header = new TableHeader(o + "");
+//                if (i1 == 4) {
+//                    header.setHorizontalAlignment(JLabel.CENTER);
+//                }
+                return header;
+            }
+        });
+        setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable jtable, Object o, boolean selected, boolean focus, int i, int i1) {
+
+                Component com = super.getTableCellRendererComponent(jtable, o, selected, focus, i, i1);
+                setBorder(noFocusBorder);
+                com.setForeground(new Color(102, 102, 102));
+
+                if (selected) {
+                    com.setBackground(new Color(239, 244, 255));
+                } else {
+                    com.setBackground(Color.WHITE);
+                    if (type.equals("HoaDon")) {
+                        for (int j = 0; j < listHoaDon.size(); j++) {
+                            if (i == listHoaDon.get(j)) {
+                                com.setBackground(new Color(230, 255, 204));
+                            }
+                        }
+                    } else if (type.equals("HopDongChoDuyet")) {
+                        for (int j = 0; j < listHopDongChoDuyet.size(); j++) {
+                            if (i == listHopDongChoDuyet.get(j)) {
+                                com.setBackground(Color.decode("#99FFFF"));
+                            }
+                        }
+                        for (int j = 0; j < listHopDongChoKyKet.size(); j++) {
+                            if (i == listHopDongChoKyKet.get(j)) {
+                                com.setBackground(Color.decode("#99FF99"));
+                            }
+                        }
+                        for (int j = 0; j < listHopDongSapHetHan.size(); j++) {
+                            if (i == listHopDongSapHetHan.get(j)) {
+                                com.setBackground(Color.decode("#FF6666"));
+                                com.setForeground(Color.WHITE);
+                            }
+                        }
+                    }
+                }
+
+                return com;
+
+            }
+        });
+
+    }
+
     public Table(KeyAdapter keyAction) {
         this.keyAction = keyAction;
         setShowHorizontalLines(true);
@@ -100,7 +165,7 @@ public class Table extends JTable {
                 if (selected) {
                     com.setBackground(new Color(239, 244, 255));
                 } else {
-                     com.setBackground(Color.WHITE);
+                    com.setBackground(Color.WHITE);
                     for (int j = 0; j < list.size(); j++) {
                         if (i == list.get(j)) {
                             com.setBackground(new Color(230, 255, 204));
@@ -132,21 +197,46 @@ public class Table extends JTable {
         revalidate();
     }
 
-    public void addRowColor2(int row) {
-        list.add(row);
+    public void addRowHoaDonColor(int row) {
+        listHoaDon.add(row);
         repaint();
         revalidate();
     }
 
-    public void resetRowColor2() {
-        list.clear();
+    public void resetRowHoaDonColor() {
+        listHoaDon.clear();
     }
 
-    public void removeRowColor2(int row) {
-        list.remove((Integer) row);
+    public void addRowChoDuyetColor(int row) {
+        listHopDongChoDuyet.add(row);
         repaint();
         revalidate();
     }
+
+    public void resetRowChoDuyetColor() {
+        listHopDongChoDuyet.clear();
+    }
+
+    public void resetRowChoKyKetColor() {
+        listHopDongChoKyKet.clear();
+    }
+
+    public void addRowChoKyKettColor(int row) {
+        listHopDongChoKyKet.add((Integer) row);
+        repaint();
+        revalidate();
+    }
+    
+     public void resetRowSapHetHanColor() {
+        listHopDongSapHetHan.clear();
+    }
+
+    public void addRowSapHetHanColor(int row) {
+        listHopDongSapHetHan.add((Integer) row);
+        repaint();
+        revalidate();
+    }
+
 
     public void centerCollum(int... cols) {
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();

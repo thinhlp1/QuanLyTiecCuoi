@@ -8,20 +8,24 @@ package com.happywedding.view.manage;
 import com.happywedding.dao.ChiTietDichVuDAO;
 import com.happywedding.dao.CoSoVatChatDAO;
 import com.happywedding.dao.GoiDichVuDAO;
+import com.happywedding.dao.HopDongDAO;
 import com.happywedding.helper.AppStatus;
 import com.happywedding.helper.DialogHelper;
 import com.happywedding.helper.ShareHelper;
 import com.happywedding.model.ChiTietDichVu;
 import com.happywedding.model.CoSoVatChat;
 import com.happywedding.model.GoiDichVu;
+import com.happywedding.model.HopDong;
 import com.happywedding.model.HopDongDichVu;
 import com.happywedding.model.Sanh;
 import com.ui.swing.Combobox;
 import com.ui.swing.SlideshowImage;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.KeyAdapter;
 import java.sql.Array;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 //import javafx.scene.control.ComboBox;
 import javax.swing.DefaultComboBoxModel;
@@ -39,8 +43,9 @@ public class TrangTriBanTiec extends javax.swing.JDialog {
     private ChiTietDichVuDAO chiTietDVDAO = new ChiTietDichVuDAO();
     private CoSoVatChatDAO csvcDAO = new CoSoVatChatDAO();
     private GoiDichVuDAO goiDichVuDAO = new GoiDichVuDAO();
-
+      private HopDongDAO hopDongDAO = new HopDongDAO();
     private boolean isCreate;
+    private Date ngayToChuc;
 
     private List<CoSoVatChat> listTraiBan = new ArrayList<>();
     private List<CoSoVatChat> listAoGhe = new ArrayList<>();
@@ -78,7 +83,9 @@ public class TrangTriBanTiec extends javax.swing.JDialog {
         loadGoiDichVu();
         loadCoSoVatChat();
         setCheckNumber();
-
+          HopDong hd = hopDongDAO.findById(maHD);
+        ngayToChuc = hd.getNgayToChuc();
+        soLuongBan = (int) hd.getSoLuongBan();
         ttBanTiec = chiTietDVDAO.selectDichVu(maHD, maDV);
 
         isView(isCreate);
@@ -305,6 +312,7 @@ public class TrangTriBanTiec extends javax.swing.JDialog {
 //            txtGhiChu.setText("");
 //            txtPhatSinh.setText("0");
             tinhTien();
+            kiemTraSoLuongSuDung((CoSoVatChat) cbb.getSelectedItem(), cbb);
         }
     }
 
@@ -372,6 +380,16 @@ public class TrangTriBanTiec extends javax.swing.JDialog {
         btnReset.setVisible(isCreate);
         //btnEdit.setVisible(isCreate);
         taGhiChu.setEnabled(isCreate);
+
+        if (AppStatus.ROLE.equals("TIEPTAN")) {
+            txtCPHoaTT.setEditable(false);
+
+            txtCPPSTham.setEditable(false);
+            txtCPPSHoaTT.setEditable(false);
+            txtCPPSAoGhe.setEditable(false);
+
+        }
+
     }
 
     public void isTuyChinhGoiDichVu(boolean is) {
@@ -415,6 +433,47 @@ public class TrangTriBanTiec extends javax.swing.JDialog {
         txtCPPSHoaTT.addKeyListener(new CheckNumber());
         txtCPPSAoGhe.addKeyListener(new CheckNumber());
         txtCPPSTham.addKeyListener(new CheckNumber());
+    }
+    
+      public void kiemTraSoLuongSuDung(CoSoVatChat csvc, Combobox cbb) {
+        if (csvc.getMaDanhMucCon().equals("AOGHE")) {
+            int slsd = csvcDAO.selectSLSDAoGhe(csvc.getMaCSVC(), ngayToChuc, maHD);
+            int canSuDung = soLuongBan * 10;
+            if (csvc.getSoLuong() - slsd < canSuDung) {
+                cbb.setForeground(Color.red);
+                cbb.setToolTipText("<html>Số lượng sử dụng: " + slsd
+                        + "<br>Số lượng trong kho: " + csvc.getSoLuong()
+                        + "<br>Số lượng còn lại: " + (csvc.getSoLuong() - slsd < 0 ? 0 : csvc.getSoLuong() - slsd)
+                        + "<br>Số lượng cần: " + canSuDung + "</html>");
+            } else {
+                cbb.setForeground(Color.black);
+            }
+        } else if (csvc.getMaDanhMucCon().equals("TRAIBAN")) {
+            int slsd = csvcDAO.selectSLSDTraiBan(csvc.getMaCSVC(), ngayToChuc, maHD);
+            int canSuDung = soLuongBan;
+            if (csvc.getSoLuong() - slsd < canSuDung) {
+                cbb.setForeground(Color.red);
+                cbb.setToolTipText("<html>Số lượng sử dụng: " + slsd
+                        + "<br>Số lượng trong kho: " + csvc.getSoLuong()
+                        + "<br>Số lượng còn lại: " + (csvc.getSoLuong() - slsd < 0 ? 0 : csvc.getSoLuong() - slsd)
+                        + "<br>Số lượng cần: " + canSuDung + "</html>");
+            } else {
+                cbb.setForeground(Color.black);
+            }
+        } else {
+            int slsd = csvcDAO.selectSLSDKhac(csvc.getMaCSVC(), ngayToChuc, maHD);
+            int canSuDung = 1;
+            if (csvc.getSoLuong() - slsd < canSuDung) {
+                cbb.setForeground(Color.red);
+                 cbb.setToolTipText("<html>Số lượng sử dụng: " + slsd
+                        + "<br>Số lượng trong kho: " + csvc.getSoLuong()
+                        + "<br>Số lượng còn lại: " + (csvc.getSoLuong() - slsd < 0 ? 0 : csvc.getSoLuong() - slsd)
+                        + "<br>Số lượng cần: " + canSuDung + "</html>");
+            } else {
+                cbb.setForeground(Color.black);
+            }
+        }
+
     }
 
     /**

@@ -3,7 +3,18 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+<<<<<<< HEAD
             <file>file:/C:/Users/ACER/Desktop/QuanLyTiecCuoi/src/com/happywedding/view/manage/LapHopDong.java</file>
+=======
+            <file>file:/D:/FPT%20POLYTECHNIC/KY%20IIII/Du%20An%201/Project/HappyWedding/src/com/happywedding/app/HappyWeddingApp.java</file>
+            <file>file:/D:/FPT%20POLYTECHNIC/KY%20IIII/Du%20An%201/Project/HappyWedding/src/com/happywedding/view/manage/TrangTriSanKhau.java</file>
+            <file>file:/D:/FPT%20POLYTECHNIC/KY%20IIII/Du%20An%201/Project/HappyWedding/src/com/happywedding/view/manage/TrangTriBanTiec.java</file>
+            <file>file:/D:/FPT%20POLYTECHNIC/KY%20IIII/Du%20An%201/Project/HappyWedding/src/com/happywedding/view/manage/LapHopDong.java</file>
+            <file>file:/D:/FPT%20POLYTECHNIC/KY%20IIII/Du%20An%201/Project/HappyWedding/src/com/happywedding/view/manage/NgheThuat.java</file>
+            <file>file:/D:/FPT%20POLYTECHNIC/KY%20IIII/Du%20An%201/Project/HappyWedding/src/com/happywedding/view/manage/TrangTriCong.java</file>
+            <file>file:/D:/FPT%20POLYTECHNIC/KY%20IIII/Du%20An%201/Project/HappyWedding/src/com/happywedding/helper/AppStatus.java</file>
+            <file>file:/D:/FPT%20POLYTECHNIC/KY%20IIII/Du%20An%201/Project/HappyWedding/src/com/happywedding/dao/CoSoVatChatDAO.java</file>
+>>>>>>> origin/main
         </group>
     </open-files>
 </project-private>
