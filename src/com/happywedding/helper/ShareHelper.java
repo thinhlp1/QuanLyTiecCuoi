@@ -81,7 +81,7 @@ public class ShareHelper {
             money = money.replaceFirst(".", "");
         }
 
-        return money + " ngàn đồng";
+        return money ;
     }
 
     public static long toMoney(String moneyy) {
