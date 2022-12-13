@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
  */
 package com.happywedding.view.manage;
+
 import com.happywedding.app.HappyWeddingApp;
 import com.happywedding.dao.NhanVienDAO;
 import java.awt.Color;
@@ -21,17 +22,16 @@ import javax.swing.JOptionPane;
  */
 public class DangNhap extends javax.swing.JDialog {
 
-    
     //public static List<TaiKhoan> soTaiKhoan;
     public static String tenTaiKhoan;
     public static String email;
-    
+
     public DangNhap(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         txtTenDangNhap.setBorder(BorderFactory.createCompoundBorder(txtTenDangNhap.getBorder(), BorderFactory.createEmptyBorder(0, 5, 0, 0)));
         txtMatKhau.setBorder(BorderFactory.createCompoundBorder(txtMatKhau.getBorder(), BorderFactory.createEmptyBorder(0, 5, 0, 0)));
-       
+
         lblHidePassword.setVisible(false);
     }
 
@@ -166,123 +166,129 @@ public class DangNhap extends javax.swing.JDialog {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+
     private void btnQuenMatKhauMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnQuenMatKhauMouseClicked
-        
-        if(txtTenDangNhap.getText().trim().equals("")){
+
+        if (txtTenDangNhap.getText().trim().equals("")) {
             JOptionPane.showMessageDialog(this, "Mời nhập tên đăng nhập");
             return;
         }
-        
+
         boolean coTenDangNhap = quenMatKhau(txtTenDangNhap.getText());
-        if(!coTenDangNhap){
-            tenTaiKhoan = txtTenDangNhap.getText();
+        if (coTenDangNhap == false) {
             JOptionPane.showMessageDialog(this, "Tên đăng nhập không tồn tại");
             return;
-        }else{
+        } else {
+            tenTaiKhoan = txtTenDangNhap.getText();
             this.dispose();
             new QuenMatKhau(new JFrame(), true).setVisible(true);
-        }  
-        
+        }
+
     }//GEN-LAST:event_btnQuenMatKhauMouseClicked
 
     private void btnDangNhapMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnDangNhapMouseClicked
         login();
     }//GEN-LAST:event_btnDangNhapMouseClicked
 
-    public void showPassword(boolean a){
-        
-        if(a){
-            txtMatKhau.setEchoChar((char)0);
-        }else{
+    public void showPassword(boolean a) {
+
+        if (a) {
+            txtMatKhau.setEchoChar((char) 0);
+        } else {
             txtMatKhau.setEchoChar('*');
         }
-        
-        
+
         lblShowPassword.setVisible(!a);
         lblHidePassword.setVisible(a);
-        
+
     }
-    
+
     private void lblShowPasswordMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblShowPasswordMouseClicked
-        showPassword(true);   
+        showPassword(true);
     }//GEN-LAST:event_lblShowPasswordMouseClicked
-    
+
     private void lblHidePasswordMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblHidePasswordMouseClicked
         showPassword(false);
     }//GEN-LAST:event_lblHidePasswordMouseClicked
-    
-    public boolean quenMatKhau(String username){
-        
+
+    public boolean quenMatKhau(String username) {
+
         TaiKhoanDAO taiKhoanDAO = new TaiKhoanDAO();
-        
+
         List<TaiKhoan> soTaiKhoan;
         soTaiKhoan = taiKhoanDAO.selectTenDangNhap(username.trim());
-        tenTaiKhoan = soTaiKhoan.get(0).getTenDangNhap();
-        
-        email = String.valueOf(new NhanVienDAO().findById(soTaiKhoan.get(0).getMaNhanVien()).getEmail());
-        System.out.println("Email: "+ email);
-        
-        if(soTaiKhoan.size() == 0){
+
+        if (soTaiKhoan.size() == 0) {
             return false;
         }
+
+        tenTaiKhoan = soTaiKhoan.get(0).getTenDangNhap();
+        email = String.valueOf(new NhanVienDAO().findById(soTaiKhoan.get(0).getMaNhanVien()).getEmail());
+        System.out.println("Email: " + email);
+
         return true;
     }
-    
-    public boolean hasUser(String username){
-        
+
+    public boolean hasUser(String username) {
+
         TaiKhoanDAO taiKhoanDAO = new TaiKhoanDAO();
         List<TaiKhoan> soTaiKhoan;
         soTaiKhoan = taiKhoanDAO.selectTenDangNhap(username.trim());
-        tenTaiKhoan = soTaiKhoan.get(0).getTenDangNhap();
-        
-        if(soTaiKhoan.size() == 0){
+
+        if (soTaiKhoan.size() == 0) {
             return false;
-        }else{
+        }
+
+        tenTaiKhoan = soTaiKhoan.get(0).getTenDangNhap();
+
+        if (soTaiKhoan.size() == 0) {
+            return false;
+        } else {
             boolean matKhauDung = kiemTraMatKhau(soTaiKhoan.get(0).getMatKhau());
-            if(!matKhauDung){
+            if (!matKhauDung) {
                 //JOptionPane.showMessageDialog(this, "Tài khoản hoặc mật khẩu không đúng");
                 return false;
-            }else{
+            } else {
                 NhanVien nv = new NhanVienDAO().findById(soTaiKhoan.get(0).getMaNhanVien());
                 AppStatus.USER = nv;
                 AppStatus.ROLE = soTaiKhoan.get(0).getVaiTro();
-                
+
                 System.out.println(soTaiKhoan.get(0).getTenDangNhap());
                 System.out.println(soTaiKhoan.get(0).getMatKhau());
                 System.out.println(soTaiKhoan.get(0).getVaiTro());
-                
+
                 return true;
             }
-        }  
- 
+        }
+
     }
-    
-    public boolean kiemTraMatKhau(String matKhau){
-        
+
+    public boolean kiemTraMatKhau(String matKhau) {
+
         matKhau = matKhau.trim();
-        if(String.valueOf(txtMatKhau.getPassword()).equals(matKhau)){
+        if (String.valueOf(txtMatKhau.getPassword()).equals(matKhau)) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
-    
-    public void login(){
+
+    public void login() {
         //
         boolean coTenDangNhap = hasUser(txtTenDangNhap.getText());
-        if(!coTenDangNhap){
+        if (!coTenDangNhap) {
             JOptionPane.showMessageDialog(this, "Tài khoản hoặc mật khẩu không đúng");
-        }else{
+        } else {
             JOptionPane.showMessageDialog(this, "Đăng nhập thành công");
             JOptionPane.showMessageDialog(this, "Xin chào " + txtTenDangNhap.getText());
-            
+            new Loading(null, true).setVisible(true);
             //new HappyWeddingApp().setVisible(true);
             this.dispose();
         }
-        
-        
+
         //this.dispose();
     }
+
     /**
      * @param args the command line arguments
      */

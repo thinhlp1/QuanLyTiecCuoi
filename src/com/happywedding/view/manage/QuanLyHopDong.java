@@ -702,6 +702,11 @@ public class QuanLyHopDong extends javax.swing.JPanel {
         cbbSortBy.setSelectedIndex(-1);
         cbbSortBy.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         cbbSortBy.setLabeText("Sort by");
+        cbbSortBy.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbbSortByActionPerformed(evt);
+            }
+        });
         pnlQuanLyHopDong.add(cbbSortBy, new org.netbeans.lib.awtextra.AbsoluteConstraints(1110, 90, 270, 54));
 
         btnChiTiet.setBackground(new java.awt.Color(77, 76, 125));
@@ -1024,6 +1029,9 @@ public class QuanLyHopDong extends javax.swing.JPanel {
     private void lblSearchFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_lblSearchFocusGained
         // TODO add your handling code here:
     }//GEN-LAST:event_lblSearchFocusGained
+    private void cbbSortByActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbbSortByActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbbSortByActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

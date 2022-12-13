@@ -59,7 +59,7 @@ public class AppStatus {
     }
 //    
     public static boolean isFirstStart(){
-        return STATUS == 0;
+        return STATUS == 1;
     }
 
 }

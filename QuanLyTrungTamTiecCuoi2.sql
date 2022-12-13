@@ -1,6 +1,10 @@
 ﻿--Tạo CSDL
 CREATE DATABASE QuanLyTrungTamTiecCuoi
+<<<<<<< HEAD
 --DROP DATABASE QuanLyTrungTamTiecCuoi2  SELECT * FROM ChiTietDatMon
+=======
+--DROP DATABASE QuanLyTrungTamTiecCuoi  SELECT * FROM ChiTietDatMon
+>>>>>>> origin/dev_bao
 GO
 --Gọi CSDL
 USE QuanLyTrungTamTiecCuoi
