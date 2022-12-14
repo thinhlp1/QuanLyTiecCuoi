@@ -14,11 +14,40 @@ import java.text.DecimalFormat;
 
 public class EnglishNumberToWords {
 
-    private static final String[] tensNames = {""," mười"," hai mươi"," ba mươi"," bốn mươi"," năm mươi"," sáu mươi"," bảy mươi"," tám mươi"," chín mươi"
+    private static final String[] tensNames = {
+        "",
+        " mười",
+        " hai mươi",
+        " ba mươi",
+        " bốn mươi",
+        " năm mươi",
+        " sáu mươi",
+        " bảy mươi",
+        " tám mươi",
+        " chín mươi"
     };
 
     private static final String[] numNames = {
-        ""," một", " hai", " ba", " bốn"," năm", " sáu"," bảy"," tám"," chín"," mười"," mười một"," mười hai"," mười ba"," mười bốn"," mười lăm"," mười sáu"," mười bảy"," mười tám"," mười chín"
+        "",
+        " một",
+        " hai",
+        " ba",
+        " bốn",
+        " năm",
+        " sáu",
+        " bảy",
+        " tám",
+        " chín",
+        " mười",
+        " mười một",
+        " mười hai",
+        " mười ba",
+        " mười bốn",
+        " mười lăm",
+        " mười sáu",
+        " mười bảy",
+        " mười tám",
+        " mười chín"
     };
 
     private EnglishNumberToWords() {
@@ -48,11 +77,14 @@ public class EnglishNumberToWords {
         if (number == 0) {
             return "không";
         }
+
         String snumber = Long.toString(number);
+
         // pad with "0"
         String mask = "000000000000";
         DecimalFormat df = new DecimalFormat(mask);
         snumber = df.format(number);
+
         // XXXnnnnnnnnn
         int billions = Integer.parseInt(snumber.substring(0, 3));
         // nnnXXXnnnnnn
@@ -111,7 +143,7 @@ public class EnglishNumberToWords {
         result = result + tradThousand;
 
         // remove extra spaces!
-        return result.replaceAll("^\\s+", "").replaceAll("\\b\\s{2,}\\b", " ");
+        return result.replaceAll("^\\s+", "").replaceAll("\\b\\s{2,}\\b", " ") + " ngàn đồng";
     }
 
     /**

@@ -60,6 +60,11 @@ public class DangNhap extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Đăng nhập");
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         lblShowPassword.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/happywedding/assets/ShowPassword.png"))); // NOI18N
@@ -211,8 +216,13 @@ public class DangNhap extends javax.swing.JDialog {
         showPassword(false);
     }//GEN-LAST:event_lblHidePasswordMouseClicked
 
-    public boolean quenMatKhau(String username) {
 
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+       System.exit(1);
+    }//GEN-LAST:event_formWindowClosing
+    
+    public boolean quenMatKhau(String username){
+       
         TaiKhoanDAO taiKhoanDAO = new TaiKhoanDAO();
 
         List<TaiKhoan> soTaiKhoan;
