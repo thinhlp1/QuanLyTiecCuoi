@@ -103,6 +103,9 @@
           </Constraints>
         </Component>
         <Component class="javax.swing.JTextField" name="txtMaNhanVien">
+          <Events>
+            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtMaNhanVienFocusLost"/>
+          </Events>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
               <AbsoluteConstraints x="20" y="220" width="340" height="35"/>
@@ -187,8 +190,8 @@
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
               <StringArray count="2">
-                <StringItem index="0" value="M&#xe3; Nh&#xe2;n Vi&#xea;n"/>
-                <StringItem index="1" value="T&#xea;n Nh&#xe2;n Vi&#xea;n"/>
+                <StringItem index="0" value="T&#xea;n Nh&#xe2;n Vi&#xea;n"/>
+                <StringItem index="1" value="M&#xe3; Nh&#xe2;n Vi&#xea;n"/>
               </StringArray>
             </Property>
             <Property name="selectedIndex" type="int" value="-1"/>
@@ -248,18 +251,19 @@
               <Properties>
                 <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                   <Table columnCount="10" rowCount="0">
-                    <Column editable="true" title="M&#xe3; nh&#xe2;n vi&#xea;n" type="java.lang.Object"/>
-                    <Column editable="true" title="H&#x1ecd; t&#xea;n nh&#xe2;n vi&#xea;n" type="java.lang.Object"/>
-                    <Column editable="true" title="Ng&#xe0;y sinh" type="java.lang.Object"/>
-                    <Column editable="true" title="Gi&#x1edb;i t&#xed;nh" type="java.lang.Object"/>
-                    <Column editable="true" title="S&#x1ed1; &#x111;i&#x1ec7;n tho&#x1ea1;i" type="java.lang.Object"/>
-                    <Column editable="true" title="Email" type="java.lang.Object"/>
-                    <Column editable="true" title="CCCD/CMND" type="java.lang.Object"/>
-                    <Column editable="true" title="H&#xec;nh &#x1ea3;nh" type="java.lang.Object"/>
-                    <Column editable="true" title="Ph&#xf2;ng ban" type="java.lang.Object"/>
-                    <Column editable="true" title="Vai tr&#xf2;" type="java.lang.Object"/>
+                    <Column editable="false" title="M&#xe3; nh&#xe2;n vi&#xea;n" type="java.lang.Object"/>
+                    <Column editable="false" title="H&#x1ecd; t&#xea;n nh&#xe2;n vi&#xea;n" type="java.lang.Object"/>
+                    <Column editable="false" title="Ng&#xe0;y sinh" type="java.lang.Object"/>
+                    <Column editable="false" title="Gi&#x1edb;i t&#xed;nh" type="java.lang.Object"/>
+                    <Column editable="false" title="S&#x1ed1; &#x111;i&#x1ec7;n tho&#x1ea1;i" type="java.lang.Object"/>
+                    <Column editable="false" title="Email" type="java.lang.Object"/>
+                    <Column editable="false" title="CCCD/CMND" type="java.lang.Object"/>
+                    <Column editable="false" title="H&#xec;nh &#x1ea3;nh" type="java.lang.Object"/>
+                    <Column editable="false" title="Ph&#xf2;ng ban" type="java.lang.Object"/>
+                    <Column editable="false" title="Vai tr&#xf2;" type="java.lang.Object"/>
                   </Table>
                 </Property>
+                <Property name="autoResizeMode" type="int" value="4"/>
                 <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
                   <TableColumnModel selectionModel="0">
                     <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
@@ -315,6 +319,7 @@
               </Properties>
               <Events>
                 <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="tblNhanVienMouseClicked"/>
+                <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="tblNhanVienKeyReleased"/>
               </Events>
             </Component>
           </SubComponents>
@@ -531,7 +536,7 @@
           </Events>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-              <AbsoluteConstraints x="30" y="840" width="80" height="-1"/>
+              <AbsoluteConstraints x="20" y="840" width="80" height="-1"/>
             </Constraint>
           </Constraints>
         </Component>
@@ -557,7 +562,7 @@
           </Events>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-              <AbsoluteConstraints x="20" y="700" width="340" height="-1"/>
+              <AbsoluteConstraints x="20" y="700" width="340" height="40"/>
             </Constraint>
           </Constraints>
         </Component>

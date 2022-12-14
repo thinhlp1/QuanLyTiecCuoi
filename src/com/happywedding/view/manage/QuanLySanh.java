@@ -37,40 +37,33 @@ public class QuanLySanh extends javax.swing.JPanel {
     /**
      * Creates new form QuanLySanh
      */
-    
-      private int currentIndex = 0;
+    private int currentIndex = 0;
     private SanhDAO dao = new SanhDAO();
     private DefaultTableModel tblModel;
     private List<Sanh> listAllSanh;
     private List<PhanLoaiSanh> listAllPhanLoaiSanh;
 
-
-
     private PhanLoaiSanhDAO daoSanhPL = new PhanLoaiSanhDAO();
     private DateChooser dtChooser1 = new DateChooser();
-    
+
     public QuanLySanh() {
         initComponents();
         init();
     }
-    
-    public void init(){
+
+    public void init() {
         tblSanh.fixTable(jScrollPane1);
         tblSanh.setAutoscrolls(true);
-        
-         
-    
 
         tblModel = (DefaultTableModel) tblSanh.getModel();
         loadSanh();
         fillTable(listAllSanh);
-        
-        loadPhanLoaiSanh();
-      
 
-      //  initSort();
+        loadPhanLoaiSanh();
+
+        //  initSort();
     }
-    
+
     void loadSanh() {
         listAllSanh = dao.select();
     }
@@ -101,7 +94,8 @@ public class QuanLySanh extends javax.swing.JPanel {
         Sanh model = new Sanh();
         model.setMaSanh(txtMaSanh.getText());
         model.setTenSanh(txtTenSanh.getText());
-        model.setTenSanh(((PhanLoaiSanh) cbbLoaiSanh.getSelectedItem() ).getTenPL());
+        model.setMaPL(((PhanLoaiSanh) cbbLoaiSanh.getSelectedItem()).getMaPL());
+        
         model.setSucChua(Integer.valueOf(txtSoLuongNguoi.getText()));
         model.setGiaThueSanh(Integer.valueOf(txtGiaThue.getText()));
         model.setGiaBan(Integer.valueOf(txtGia1Ban.getText()));
@@ -132,7 +126,7 @@ public class QuanLySanh extends javax.swing.JPanel {
         } else if (txtTenSanh.getText().equals("")) {
             listError.add("Tên không được để trống");
             return listError;
-        } 
+        }
 
         //check xong hết
         return listError;
@@ -148,8 +142,6 @@ public class QuanLySanh extends javax.swing.JPanel {
         }
         cbbLoaiSanh.setSelectedIndex(-1);
     }
-    
-   
 
     //Hiển thị lên textfied
     void edit() {
@@ -171,8 +163,8 @@ public class QuanLySanh extends javax.swing.JPanel {
         txtTenSanh.setText("");
         txtSoLuongNguoi.setText("");
         txtGia1Ban.setText("");
-         txtGia1Ban.setText("");
-        cbbLoaiSanh.setVisible(false);
+        txtGia1Ban.setText("");
+       // cbbLoaiSanh.setVisible(false);
 
     }
 
@@ -257,81 +249,142 @@ public class QuanLySanh extends javax.swing.JPanel {
         }
     }
 
-    //Tăng giảm
-//    public void initSort() {
-//
-//        cbbSortBy.addItemListener(new ItemListener() {
-//            public void itemStateChanged(ItemEvent e) {
-//                if (cbbSortBy.getSelectedIndex() == 0) {
-//                    if (cbbSort.getSelectedIndex() == 0) {
-//                        // ten tang dan
-//                        fillTable(sortByName(false));
-//                    } else if (cbbSort.getSelectedIndex() == 1) {
-//                        // ten giam dan
-//                        fillTable(sortByName(true));
-//                    }
-//                } else {
-//                    cbbSortBy.setSelectedIndex(0);
-//                }
-//            }
-//        });
-//
-//        cbbSort.addItemListener(new ItemListener() {
-//            public void itemStateChanged(ItemEvent e) {
-//                if (cbbSort.getSelectedIndex() == 0) {
-//                    if (cbbSort.getSelectedIndex() == 0) {
-//                        // ten tang dan
-//                        fillTable(sortByName(false));
-//                    } else if (cbbSort.getSelectedIndex() == 1) {
-//                        // ten giam dan
-//                        fillTable(sortByName(true));
-//                    }
-//                } else {
-//                    cbbSortBy.setSelectedIndex(0);
-//                }
-//            }
-//        });
-//    }
-//
-//    public List<NhanVien> sortByName(boolean isRevese) {
-//        List<NhanVien> listSorted = listAllEmployee;
-//        Collections.sort(listSorted, new Comparator<NhanVien>() {
-//            public int compare(NhanVien employee1, NhanVien employee2) {
-//                int result = 0;
-//                String[] partNameEmployee1 = employee1.getHoTen().split("\\s");
-//                String[] partNameEmployee2 = employee2.getHoTen().split("\\s");
-//
-//                int nameLenght1 = partNameEmployee1.length;
-//                int nameLenght2 = partNameEmployee2.length;
-//
-//                if (nameLenght1 == 1 && nameLenght2 == 1) {
-//                    return employee1.getHoTen().compareToIgnoreCase(employee2.getHoTen());
-//                }
-//
-//                int length = ((nameLenght1 > nameLenght2) ? nameLenght2 : nameLenght1);
-//                for (int i = 1; i < length; i++) {
-//                    result = (partNameEmployee1[nameLenght1 - i]).compareToIgnoreCase(partNameEmployee2[nameLenght2 - i]);
-//                    if (result != 0) {
-//                        return result;
-//                    }
-//                }
-//                if (nameLenght1 > nameLenght2) {
-//                    return 1;
-//                } else if (nameLenght1 < nameLenght2) {
-//                    return -1;
-//                }
-//
-//                return 0;
-//            }
-//        });
-//
-//        if (isRevese) {
-//            Collections.reverse(listSorted);
-//        }
-//
-//        return listSorted;
-//    }
-    
+    public void initSort() {
+
+        cbbSortBy.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                switch (cbbSortBy.getSelectedIndex()) {
+                    case 0:
+                        if (cbbSort.getSelectedIndex() == 0) {
+                            // ten tang dan
+                            fillTable(sortByGiaThue(false));
+                        } else if (cbbSort.getSelectedIndex() == 1) {
+                            // ten giam dan
+                            fillTable(sortByGiaThue(true));
+                        }
+                        break;
+                    case 1:
+                        if (cbbSort.getSelectedIndex() == 0) {
+                            // ten tang dan
+                            fillTable(sortBySoLuong(false));
+                        } else if (cbbSort.getSelectedIndex() == 1) {
+                            // ten giam dan
+                            fillTable(sortBySoLuong(true));
+                        }
+                        break;
+                    case 2:
+                        if (cbbSort.getSelectedIndex() == 0) {
+                            // ten tang dan
+                            fillTable(sortByMaCSVC(false));
+                        } else if (cbbSort.getSelectedIndex() == 1) {
+                            // ten giam dan
+                            fillTable(sortByMaCSVC(true));
+                        } else {
+                            cbbSortBy.setSelectedIndex(0);
+                        }
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+        });
+
+        cbbSort.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                switch (cbbSortBy.getSelectedIndex()) {
+                    case 0:
+                        if (cbbSort.getSelectedIndex() == 0) {
+                            // ten tang dan
+                            fillTable(sortByGiaThue(false));
+                        } else if (cbbSort.getSelectedIndex() == 1) {
+                            // ten giam dan
+                            fillTable(sortByGiaThue(true));
+                        }
+                        break;
+                    case 1:
+                        if (cbbSort.getSelectedIndex() == 0) {
+                            // ten tang dan
+                            fillTable(sortBySoLuong(false));
+                        } else if (cbbSort.getSelectedIndex() == 1) {
+                            // ten giam dan
+                            fillTable(sortBySoLuong(true));
+                        }
+                        break;
+                    case 2:
+                        if (cbbSort.getSelectedIndex() == 0) {
+                            // ten tang dan
+                            fillTable(sortByMaCSVC(false));
+                        } else if (cbbSort.getSelectedIndex() == 1) {
+                            // ten giam dan
+                            fillTable(sortByMaCSVC(true));
+                        } else {
+                            cbbSortBy.setSelectedIndex(0);
+                        }
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+        });
+    }
+
+    public List<Sanh> sortByMaCSVC(boolean isRevese) {
+        List<Sanh> listSorted = listAllSanh;
+        Collections.sort(listSorted, new Comparator<Sanh>() {
+            public int compare(Sanh hoaDolon1, Sanh hoaDolon2) {
+                return (hoaDolon1.getMaSanh().compareTo(hoaDolon2.getMaSanh()));
+
+            }
+        });
+
+        if (isRevese) {
+            Collections.reverse(listSorted);
+        }
+
+        return listSorted;
+    }
+
+    public List<Sanh> sortByGiaThue(boolean isRevese) {
+        List<Sanh> listSorted = listAllSanh;
+        Collections.sort(listSorted, new Comparator<Sanh>() {
+            public int compare(Sanh hoaDon1, Sanh hoaDon2) {
+                if (hoaDon1.getGiaThueSanh() > hoaDon2.getGiaThueSanh()) {
+                    return 1;
+                } else if (hoaDon1.getGiaThueSanh() < hoaDon2.getGiaThueSanh()) {
+                    return -1;
+                } else {
+                    return 0;
+                }
+            }
+        });
+
+        if (isRevese) {
+            Collections.reverse(listSorted);
+        }
+        return listSorted;
+    }
+
+    public List<Sanh> sortBySoLuong(boolean isRevese) {
+        List<Sanh> listSorted = listAllSanh;
+        Collections.sort(listSorted, new Comparator<Sanh>() {
+            public int compare(Sanh hoaDon1, Sanh hoaDon2) {
+                if (hoaDon1.getSucChua() > hoaDon2.getSucChua()) {
+                    return 1;
+                } else if (hoaDon1.getSucChua() < hoaDon2.getSucChua()) {
+                    return -1;
+                } else {
+                    return 0;
+                }
+            }
+        });
+
+        if (isRevese) {
+            Collections.reverse(listSorted);
+        }
+        return listSorted;
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -350,7 +403,7 @@ public class QuanLySanh extends javax.swing.JPanel {
         jLabel27 = new javax.swing.JLabel();
         jLabel28 = new javax.swing.JLabel();
         cbbLoaiSanh = new com.ui.swing.Combobox();
-        cbbSapXepTangGiam = new com.ui.swing.Combobox();
+        cbbSort = new com.ui.swing.Combobox();
         jLabel31 = new javax.swing.JLabel();
         btnMoi = new com.ui.swing.InkwellButton();
         btnFirst = new com.ui.swing.InkwellButton();
@@ -364,7 +417,7 @@ public class QuanLySanh extends javax.swing.JPanel {
         tblSanh = new com.ui.swing.Table();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        cbbSapXepTheo1 = new com.ui.swing.Combobox();
+        cbbSortBy = new com.ui.swing.Combobox();
         jLabel30 = new javax.swing.JLabel();
         jLabel32 = new javax.swing.JLabel();
         txtMaSanh = new javax.swing.JTextField();
@@ -405,16 +458,16 @@ public class QuanLySanh extends javax.swing.JPanel {
                 txtGia1BanActionPerformed(evt);
             }
         });
-        pnlEmplpyeeManager.add(txtGia1Ban, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 570, 340, 35));
+        pnlEmplpyeeManager.add(txtGia1Ban, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 600, 340, 35));
 
         jLabel25.setText("Mã sảnh");
         pnlEmplpyeeManager.add(jLabel25, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 150, 92, -1));
 
         jLabel27.setText("Loại sảnh");
-        pnlEmplpyeeManager.add(jLabel27, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 300, 130, -1));
+        pnlEmplpyeeManager.add(jLabel27, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 310, 130, -1));
 
         jLabel28.setText("Số lượng người");
-        pnlEmplpyeeManager.add(jLabel28, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 380, 130, -1));
+        pnlEmplpyeeManager.add(jLabel28, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 390, 130, -1));
 
         cbbLoaiSanh.setLabeText("");
         cbbLoaiSanh.addActionListener(new java.awt.event.ActionListener() {
@@ -422,16 +475,16 @@ public class QuanLySanh extends javax.swing.JPanel {
                 cbbLoaiSanhActionPerformed(evt);
             }
         });
-        pnlEmplpyeeManager.add(cbbLoaiSanh, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 330, 340, 35));
+        pnlEmplpyeeManager.add(cbbLoaiSanh, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 340, 340, 40));
 
-        cbbSapXepTangGiam.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tăng dần", "Giảm dần" }));
-        cbbSapXepTangGiam.setLabeText("");
-        cbbSapXepTangGiam.addActionListener(new java.awt.event.ActionListener() {
+        cbbSort.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tăng dần", "Giảm dần" }));
+        cbbSort.setLabeText("");
+        cbbSort.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbbSapXepTangGiamActionPerformed(evt);
+                cbbSortActionPerformed(evt);
             }
         });
-        pnlEmplpyeeManager.add(cbbSapXepTangGiam, new org.netbeans.lib.awtextra.AbsoluteConstraints(1240, 0, 120, 54));
+        pnlEmplpyeeManager.add(cbbSort, new org.netbeans.lib.awtextra.AbsoluteConstraints(1240, 0, 120, 54));
 
         jLabel31.setText("Tên sảnh");
         pnlEmplpyeeManager.add(jLabel31, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 230, 130, -1));
@@ -452,6 +505,11 @@ public class QuanLySanh extends javax.swing.JPanel {
         btnFirst.setText(">|");
         btnFirst.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         btnFirst.setPreferredSize(new java.awt.Dimension(45, 27));
+        btnFirst.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFirstActionPerformed(evt);
+            }
+        });
         pnlEmplpyeeManager.add(btnFirst, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 790, 70, 30));
 
         btnThem.setBackground(new java.awt.Color(0, 153, 0));
@@ -492,6 +550,11 @@ public class QuanLySanh extends javax.swing.JPanel {
         btnLast.setText("|<");
         btnLast.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         btnLast.setPreferredSize(new java.awt.Dimension(45, 27));
+        btnLast.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLastActionPerformed(evt);
+            }
+        });
         pnlEmplpyeeManager.add(btnLast, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 790, 70, 30));
 
         btnPre.setBackground(new java.awt.Color(51, 0, 255));
@@ -499,6 +562,11 @@ public class QuanLySanh extends javax.swing.JPanel {
         btnPre.setText("<<");
         btnPre.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         btnPre.setPreferredSize(new java.awt.Dimension(45, 27));
+        btnPre.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPreActionPerformed(evt);
+            }
+        });
         pnlEmplpyeeManager.add(btnPre, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 790, 80, 30));
 
         btnNext.setBackground(new java.awt.Color(51, 0, 255));
@@ -506,6 +574,11 @@ public class QuanLySanh extends javax.swing.JPanel {
         btnNext.setText(">>");
         btnNext.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         btnNext.setPreferredSize(new java.awt.Dimension(45, 27));
+        btnNext.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNextActionPerformed(evt);
+            }
+        });
         pnlEmplpyeeManager.add(btnNext, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 790, 80, 30));
 
         tblSanh.setModel(new javax.swing.table.DefaultTableModel(
@@ -539,21 +612,21 @@ public class QuanLySanh extends javax.swing.JPanel {
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/happywedding/assets/filt.png"))); // NOI18N
         pnlEmplpyeeManager.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(890, 10, 40, 40));
 
-        cbbSapXepTheo1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Họ và Tên" }));
-        cbbSapXepTheo1.setSelectedIndex(-1);
-        cbbSapXepTheo1.setLabeText("Sort by");
-        cbbSapXepTheo1.addActionListener(new java.awt.event.ActionListener() {
+        cbbSortBy.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Giá Thuê", "Sức Chứa", "Mã Sảnh", " ", " " }));
+        cbbSortBy.setSelectedIndex(-1);
+        cbbSortBy.setLabeText("Sort by");
+        cbbSortBy.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbbSapXepTheo1ActionPerformed(evt);
+                cbbSortByActionPerformed(evt);
             }
         });
-        pnlEmplpyeeManager.add(cbbSapXepTheo1, new org.netbeans.lib.awtextra.AbsoluteConstraints(940, 0, 270, 54));
+        pnlEmplpyeeManager.add(cbbSortBy, new org.netbeans.lib.awtextra.AbsoluteConstraints(940, 0, 270, 54));
 
         jLabel30.setText("Giá thuê");
-        pnlEmplpyeeManager.add(jLabel30, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 460, 130, -1));
+        pnlEmplpyeeManager.add(jLabel30, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 470, 130, -1));
 
         jLabel32.setText("Giá 1 bàn");
-        pnlEmplpyeeManager.add(jLabel32, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 540, 130, -1));
+        pnlEmplpyeeManager.add(jLabel32, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 560, 130, -1));
 
         txtMaSanh.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -574,14 +647,14 @@ public class QuanLySanh extends javax.swing.JPanel {
                 txtSoLuongNguoiActionPerformed(evt);
             }
         });
-        pnlEmplpyeeManager.add(txtSoLuongNguoi, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 410, 340, 35));
+        pnlEmplpyeeManager.add(txtSoLuongNguoi, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 420, 340, 35));
 
         txtGiaThue.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtGiaThueActionPerformed(evt);
             }
         });
-        pnlEmplpyeeManager.add(txtGiaThue, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 490, 340, 35));
+        pnlEmplpyeeManager.add(txtGiaThue, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 510, 340, 35));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -600,7 +673,7 @@ public class QuanLySanh extends javax.swing.JPanel {
     }//GEN-LAST:event_txtTimKiemActionPerformed
 
     private void txtTimKiemKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTimKiemKeyReleased
-
+        filtEmployee(txtTimKiem.getText());
     }//GEN-LAST:event_txtTimKiemKeyReleased
 
     private void lblSearchMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblSearchMouseClicked
@@ -615,13 +688,13 @@ public class QuanLySanh extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_cbbLoaiSanhActionPerformed
 
-    private void cbbSapXepTangGiamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbbSapXepTangGiamActionPerformed
+    private void cbbSortActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbbSortActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_cbbSapXepTangGiamActionPerformed
+    }//GEN-LAST:event_cbbSortActionPerformed
 
     private void btnMoiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMoiActionPerformed
         // TODO add your handling code here:
-            clear();
+        clear();
     }//GEN-LAST:event_btnMoiActionPerformed
 
     private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemActionPerformed
@@ -639,9 +712,9 @@ public class QuanLySanh extends javax.swing.JPanel {
         delete();
     }//GEN-LAST:event_btnXoaActionPerformed
 
-    private void cbbSapXepTheo1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbbSapXepTheo1ActionPerformed
+    private void cbbSortByActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbbSortByActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_cbbSapXepTheo1ActionPerformed
+    }//GEN-LAST:event_cbbSortByActionPerformed
 
     private void txtMaSanhActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtMaSanhActionPerformed
         // TODO add your handling code here:
@@ -672,6 +745,36 @@ public class QuanLySanh extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_tblSanhMouseClicked
 
+    private void btnLastActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLastActionPerformed
+        // TODO add your handling code here:
+        currentIndex = 0;
+        setTblSelected(currentIndex);
+        //isUpdate(false);
+        edit();
+    }//GEN-LAST:event_btnLastActionPerformed
+
+    private void btnPreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPreActionPerformed
+        currentIndex--;
+        setTblSelected(currentIndex);
+        //isUpdate(false);
+        edit();        // TODO add your handling code here:
+    }//GEN-LAST:event_btnPreActionPerformed
+
+    private void btnNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNextActionPerformed
+        currentIndex++;
+        setTblSelected(currentIndex);
+        // isUpdate(false);
+        edit();        // TODO add your handling code here:
+    }//GEN-LAST:event_btnNextActionPerformed
+
+    private void btnFirstActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFirstActionPerformed
+        // TODO add your handling code here:
+        currentIndex = tblSanh.getRowCount() - 1;
+        setTblSelected(currentIndex);
+        //isUpdate(false);
+        edit();
+    }//GEN-LAST:event_btnFirstActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.ui.swing.InkwellButton btnFirst;
@@ -683,8 +786,8 @@ public class QuanLySanh extends javax.swing.JPanel {
     private com.ui.swing.InkwellButton btnThem;
     private com.ui.swing.InkwellButton btnXoa;
     private com.ui.swing.Combobox cbbLoaiSanh;
-    private com.ui.swing.Combobox cbbSapXepTangGiam;
-    private com.ui.swing.Combobox cbbSapXepTheo1;
+    private com.ui.swing.Combobox cbbSort;
+    private com.ui.swing.Combobox cbbSortBy;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel25;
