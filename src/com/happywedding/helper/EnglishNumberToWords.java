@@ -143,7 +143,7 @@ public class EnglishNumberToWords {
         result = result + tradThousand;
 
         // remove extra spaces!
-        return result.replaceAll("^\\s+", "").replaceAll("\\b\\s{2,}\\b", " ") + " ngàn đồng";
+        return result.replaceAll("^\\s+", "").replaceAll("\\b\\s{2,}\\b", " ") + " đồng";
     }
 
     /**

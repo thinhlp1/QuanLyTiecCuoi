@@ -47,6 +47,7 @@ public class PhanCong extends javax.swing.JDialog {
     private String maVT = "";
     private boolean isNguoiPC = false;
     private int maPC = -1;
+    private boolean isEdit = false;
 
     /**
      * Creates new form PhanCong
@@ -57,12 +58,16 @@ public class PhanCong extends javax.swing.JDialog {
         PhanCongModel pc = phanCongDAO.checkPhanCong(maHD, AppStatus.USER.getMaNV());
         if (pc != null) {
 
-            maPC = pc.getMaPC();
-            isNguoiPC = true;
-        
+            if (pc.getMaNguoiPC().equals(AppStatus.USER.getMaNV())) {
+                maPC = pc.getMaPC();
+                isNguoiPC = true;
+            } else {
+
+                this.isCreate = false;
+            }
+
         } else {
-            
-            this.isCreate = false;
+            isNguoiPC = true;
         }
 
         this.maHD = maHD;
@@ -247,7 +252,7 @@ public class PhanCong extends javax.swing.JDialog {
 
     public void insertPhanCong() {
 
-        if (isNguoiPC) {
+        if (!isNguoiPC) {
             return;
         }
 
@@ -257,6 +262,8 @@ public class PhanCong extends javax.swing.JDialog {
 
         try {
             phanCongDAO.insertPhanCong(pc);
+            maPC = phanCongDAO.checkPhanCong(maHD, AppStatus.USER.getMaNV()).getMaPC();
+
         } catch (Exception e) {
             DialogHelper.alertError(this, "Phân công không thành công");
         }
@@ -273,6 +280,7 @@ public class PhanCong extends javax.swing.JDialog {
             clear();
             isInsert();
         } catch (Exception e) {
+            e.printStackTrace();
             DialogHelper.alertError(this, "Phân công không thành công");
         }
     }
@@ -319,9 +327,11 @@ public class PhanCong extends javax.swing.JDialog {
 
     public void isInsert() {
         if (!isCreate) {
+            isEdit = false;
             return;
         }
-
+        isEdit = true;
+        txtMaNV.setEnabled(true);
         txtNgayPhanCong.setEditable(false);
         txtBatDau.setEditable(false);
         txtKetThuc.setEditable(false);
@@ -335,9 +345,11 @@ public class PhanCong extends javax.swing.JDialog {
     public void isEdit() {
 
         if (!isCreate) {
+            isEdit = false;
             return;
         }
-
+        isEdit = true;
+        txtMaNV.setEnabled(true);
         txtNgayPhanCong.setEditable(false);
         txtBatDau.setEditable(false);
         txtKetThuc.setEditable(false);
@@ -353,6 +365,10 @@ public class PhanCong extends javax.swing.JDialog {
 //        txtBatDau.setEditable(isCreate);
 //        txtNgayPhanCong.setEditable(isCreate);
 //        txtKetThuc.setEditable(isCreate);
+
+        txtNgayPhanCong.setEnabled(isCreate);
+        txtBatDau.setEnabled(isCreate);
+        txtKetThuc.setEnabled(isCreate);
         btnThem.setVisible(isCreate);
         btnSua.setVisible(isCreate);
         btnXoa.setVisible(isCreate);
@@ -600,12 +616,16 @@ public class PhanCong extends javax.swing.JDialog {
     }//GEN-LAST:event_lblSearchMouseClicked
 
     private void txtMaNVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtMaNVActionPerformed
-        new ChonNhanVien(new JFrame(), true,maHD).setVisible(true);
-        isInsert();
+        if (isEdit) {
+            new ChonNhanVien(new JFrame(), true, maHD).setVisible(true);
+            isInsert();
+        }
     }//GEN-LAST:event_txtMaNVActionPerformed
 
     private void txtMaNVMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtMaNVMouseClicked
-       new ChonNhanVien(new JFrame(), true,maHD).setVisible(true);
+        if (isEdit) {
+            new ChonNhanVien(new JFrame(), true, maHD).setVisible(true);
+        }
     }//GEN-LAST:event_txtMaNVMouseClicked
 
     private void txtBatDauActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBatDauActionPerformed
@@ -657,15 +677,21 @@ public class PhanCong extends javax.swing.JDialog {
     }//GEN-LAST:event_formWindowClosing
 
     private void txtNgayPhanCongMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtNgayPhanCongMouseClicked
-        dtChooser.showPopup();
+       if (isEdit){
+            dtChooser.showPopup();
+       }
     }//GEN-LAST:event_txtNgayPhanCongMouseClicked
 
     private void txtBatDauMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtBatDauMouseClicked
-        timePickerBatDau.showPopup(this, 200, 200);
+       if (isEdit){
+              timePickerBatDau.showPopup(this, 200, 200);
+       }
     }//GEN-LAST:event_txtBatDauMouseClicked
 
     private void txtKetThucMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtKetThucMouseClicked
-        timePickerKetThuc.showPopup(this, 300, 200);
+    if (isEdit){
+            timePickerKetThuc.showPopup(this, 300, 200);
+    }
     }//GEN-LAST:event_txtKetThucMouseClicked
 
 

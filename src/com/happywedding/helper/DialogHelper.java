@@ -22,14 +22,14 @@ public class DialogHelper {
      */
     public static void alert(Component parent, String message) {
         JOptionPane.showMessageDialog(null, message,
-                "Hệ thống quản lý đào tạo", JOptionPane.INFORMATION_MESSAGE
+                "Trung tâm tiệc cưới", JOptionPane.INFORMATION_MESSAGE
         );
     }
     
      public static void alertError(Component parent, String message) {
          
         JOptionPane.showMessageDialog(null, message,
-                "Hệ thống quản lý đào tạo", JOptionPane.ERROR_MESSAGE
+                "Trung tâm tiệc cưới", JOptionPane.ERROR_MESSAGE
         );
     }
 
@@ -42,7 +42,7 @@ public class DialogHelper {
      */
     public static boolean confirm(Component parent, String message) {
         int result = JOptionPane.showConfirmDialog(null, message,
-                "Hệ thống quản lý đào tạo",
+                "Trung tâm tiệc cưới",
                 JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
         return result == JOptionPane.YES_OPTION;
     }
@@ -56,7 +56,7 @@ public class DialogHelper {
      */
     public static String prompt(Component parent, String message) {
         return JOptionPane.showInputDialog(null, message,
-                "Hệ thống quản lý đào tạo", JOptionPane.INFORMATION_MESSAGE);
+                "Trung tâm tiệc cưới", JOptionPane.INFORMATION_MESSAGE);
     }
 
 }

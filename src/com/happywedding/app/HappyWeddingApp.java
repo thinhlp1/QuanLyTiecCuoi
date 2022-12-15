@@ -32,6 +32,7 @@ public class HappyWeddingApp extends javax.swing.JFrame {
     private QuanLyKho quanLyKho;
     private QuanLySanh quanLySanh;
     private QuanLyTaiKhoan quanLyTaiKhoan;
+    private LichDatTiec lichDatTiec;
     private ThongKe thongKe;
 
     private int menuIndex;
@@ -50,16 +51,14 @@ public class HappyWeddingApp extends javax.swing.JFrame {
 
         static int QLHOPDONG = 0;
         static int QLHOADON = 1;
-        static int QLNHANVIEN = 2;
-        static int QLKHO = 3;
-        static int QLSANH = 4;
-        static int THONGKE = 5;
+        static int XEMLICH = 2;
+        static int QLNHANVIEN = 3;
+        static int QLKHO = 4;
+        static int QLSANH = 5;
+        static int THONGKE = 6;
 
-        static int GIOITHIEU = 7;
-        static int HUONGDAN = 8;
-        static int DOIMATKHAU = 10;
-        static int DANGXUAT = 11;
-        static int EXIT = 12;
+        static int DANGXUAT = 8;
+        static int EXIT = 9;
 
     }
 
@@ -67,12 +66,10 @@ public class HappyWeddingApp extends javax.swing.JFrame {
 
         static int QLHOPDONG = 0;
         static int QLHOADON = 1;
+        static int XEMLICH = 2;
 
-        static int GIOITHIEU = 3;
-        static int HUONGDAN = 4;
-        static int DOIMATKHAU = 6;
-        static int DANGXUAT = 7;
-        static int EXIT = 8;
+        static int DANGXUAT = 4;
+        static int EXIT = 5;
 
     }
 
@@ -80,11 +77,8 @@ public class HappyWeddingApp extends javax.swing.JFrame {
 
         static int QLKHO = 0;
 
-        static int GIOITHIEU = 2;
-        static int HUONGDAN = 3;
-        static int DOIMATKHAU = 5;
-        static int DANGXUAT = 6;
-        static int EXIT = 7;
+        static int DANGXUAT = 2;
+        static int EXIT = 3;
 
     }
 
@@ -98,13 +92,12 @@ public class HappyWeddingApp extends javax.swing.JFrame {
 
     public HappyWeddingApp() {
 
-        if (!AppStatus.isFirstStart()) {
-            new DangNhap(this, true).setVisible(true);
-            AppStatus.loadApp();
-        }
-
-//        AppStatus.USER = new NhanVienDAO().findById("NV001");
-//        AppStatus.ROLE = "QLCC";
+//        if (!AppStatus.isFirstStart()) {
+//            new DangNhap(this, true).setVisible(true);
+//            AppStatus.loadApp();
+//        }
+        AppStatus.USER = new NhanVienDAO().findById("NV003");
+        AppStatus.ROLE = "TIEPTAN";
         AppStatus.loadApp();
         setIconImage(ShareHelper.APP_ICON);
         initComponents();
@@ -196,21 +189,21 @@ public class HappyWeddingApp extends javax.swing.JFrame {
                     AppStatus.FORMTHONGKE = thongKe;
                 }
                 showForm(thongKe);
-            } else if (index == MAIN_MENU_QL.GIOITHIEU) {
-
-            } else if (index == MAIN_MENU_QL.HUONGDAN) {
-
-            } else if (index == MAIN_MENU_QL.DOIMATKHAU) {
+            } else if (index == MAIN_MENU_QL.DANGXUAT) {
                 boolean yn = DialogHelper.confirm(null, "Bạn có muốn đăng xuất không?");
                 if (yn) {
                     AppStatus.mainApp.dispose();
-                    new QuenMatKhau(new JFrame(), true).setVisible(true);
+                    new DangNhap(new JFrame(), true).setVisible(true);
                 }
-            } else if (index == MAIN_MENU_QL.DANGXUAT) {
 
             } else if (index == MAIN_MENU_QL.EXIT) {
                 System.exit(1);
 
+            } else if (index == MAIN_MENU_QL.XEMLICH) {
+               if (lichDatTiec == null){
+                    lichDatTiec = new LichDatTiec();
+               }
+               showForm(new LichDatTiec());
             }
         }
     }
@@ -231,17 +224,21 @@ public class HappyWeddingApp extends javax.swing.JFrame {
                 }
                 showForm(quanLyHoaDon);
 
-            } else if (index == MAIN_MENU_QL.GIOITHIEU) {
-
-            } else if (index == MAIN_MENU_QL.HUONGDAN) {
-
-            } else if (index == MAIN_MENU_QL.DOIMATKHAU) {
-
             } else if (index == MAIN_MENU_QL.DANGXUAT) {
+                boolean yn = DialogHelper.confirm(null, "Bạn có muốn đăng xuất không?");
+                if (yn) {
+                    AppStatus.mainApp.dispose();
+                    new DangNhap(new JFrame(), true).setVisible(true);
+                }
 
             } else if (index == MAIN_MENU_QL.EXIT) {
                 System.exit(1);
 
+            }else if (index == MAIN_MENU_QL.XEMLICH) {
+                 if (lichDatTiec == null){
+                    lichDatTiec = new LichDatTiec();
+               }
+               showForm(new LichDatTiec());
             }
         }
     }
@@ -255,15 +252,15 @@ public class HappyWeddingApp extends javax.swing.JFrame {
                     quanLyKho = new QuanLyKho();
                 }
                 showForm(quanLyKho);
-            } else if (index == MAIN_MENU_QLKHO.GIOITHIEU) {
+            } else if (index == MAIN_MENU_QL.DANGXUAT) {
+                boolean yn = DialogHelper.confirm(null, "Bạn có muốn đăng xuất không?");
+                if (yn) {
+                    AppStatus.mainApp.dispose();
+                    new DangNhap(new JFrame(), true).setVisible(true);
+                }
 
-            } else if (index == MAIN_MENU_QLKHO.HUONGDAN) {
-
-            } else if (index == MAIN_MENU_QLKHO.DOIMATKHAU) {
-
-            } else if (index == MAIN_MENU_QLKHO.DANGXUAT) {
-
-            } else if (index == MAIN_MENU_QLKHO.EXIT) {
+            } else if (index == MAIN_MENU_QL.EXIT) {
+                System.exit(1);
 
             }
         }
@@ -286,7 +283,7 @@ public class HappyWeddingApp extends javax.swing.JFrame {
                 }
                 showForm(quanLySanh);
             } else if (index == MAIN_MENU_ADMIN.EXIT) {
-
+                System.exit(0);
             }
         }
     }
@@ -303,6 +300,13 @@ public class HappyWeddingApp extends javax.swing.JFrame {
 
         quanlyHopDong.reload();
         showForm(quanlyHopDong);
+
+    }
+    
+    public void showLichDatTiec() {
+
+      
+        showForm(lichDatTiec);
 
     }
 

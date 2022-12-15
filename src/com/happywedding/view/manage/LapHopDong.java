@@ -52,7 +52,6 @@ import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
 
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -130,6 +129,9 @@ public class LapHopDong extends javax.swing.JPanel {
     private boolean isValid = true;
     private List<Boolean> checkedDichVu = new ArrayList<Boolean>(Collections.nCopies(6, false));
     //private List<Boolean> checkIsValid = new ArrayList<>();
+    
+    
+    public boolean backToXemLich = false;
 
     private List<Sanh> listSanh = new ArrayList<>();
     private List<TrangThaiHopDong> listTrangThai = new ArrayList<>();
@@ -897,6 +899,7 @@ public class LapHopDong extends javax.swing.JPanel {
 
             } else if (statusHopDong.equals(StatusHopDong.XOA)) {
                 isView();
+                AppStatus.CHIPHIPHATSINH = new ChiPhiPhatSinh(maHD, false);
                 btnSave.setVisible(false);
                 btnKyKet.setVisible(false);
                 btnDuyet.setVisible(false);
@@ -908,7 +911,7 @@ public class LapHopDong extends javax.swing.JPanel {
                 btnHuyHopDong.setVisible(false);
                 btnHuyDuyet.setVisible(false);
                 btnInHopDong.setVisible(false);
-                btnXuatHoaDon.setVisible(false);
+                btnXuatHoaDon.setVisible(true);
             }
 
         } else if (AppStatus.ROLE.equals(Role.TIEPTAN)) {
@@ -941,8 +944,7 @@ public class LapHopDong extends javax.swing.JPanel {
                 btnHuyDuyet.setVisible(false);
                 btnInHopDong.setVisible(false);
                 btnXuatHoaDon.setVisible(false);
-                
-                
+
             } else if (statusHopDong.equals(StatusHopDong.CHOKYKET)) {
                 isView();
                 btnSave.setVisible(false);
@@ -986,7 +988,7 @@ public class LapHopDong extends javax.swing.JPanel {
                 btnHuyHopDong.setVisible(false);
                 btnHuyDuyet.setVisible(false);
                 btnInHopDong.setVisible(false);
-
+                
                 boolean isEdit = false;
                 if (hoaDonDAO.selectByID(maHD) != null) {
                     if (hoaDonDAO.selectByID(maHD).getTrangTha() == 0 && !hopDong.getTrangThai().equals(StatusHopDong.XOA)) {
@@ -1004,6 +1006,7 @@ public class LapHopDong extends javax.swing.JPanel {
 
             } else if (statusHopDong.equals(StatusHopDong.XOA)) {
                 isView();
+                 AppStatus.CHIPHIPHATSINH = new ChiPhiPhatSinh(maHD, false);
                 btnSave.setVisible(false);
                 btnKyKet.setVisible(false);
                 btnDuyet.setVisible(false);
@@ -1015,7 +1018,7 @@ public class LapHopDong extends javax.swing.JPanel {
                 btnHuyHopDong.setVisible(false);
                 btnHuyDuyet.setVisible(false);
                 btnInHopDong.setVisible(false);
-                btnXuatHoaDon.setVisible(false);
+                btnXuatHoaDon.setVisible(true);
             }
         }
 
@@ -1386,7 +1389,6 @@ public class LapHopDong extends javax.swing.JPanel {
             String thanhChu6 = thanhChu.substring(1, thanhChu.length());
             thanhChu2 = thanhchu5.toUpperCase() + thanhChu6;
 
-
             URL localPackage = this.getClass().getResource("");
             URL urlLoader = LapHopDong.class.getProtectionDomain().getCodeSource().getLocation();
             //String localDir = localPackage.getPath();
@@ -1399,9 +1401,7 @@ public class LapHopDong extends javax.swing.JPanel {
             realPath = realPath.replaceAll("%20", " ");
             realPath = realPath.replaceAll("/", "\\\\");
             realPath = realPath.replaceAll("H\\\\", "");
-            
-            
-            
+
             InputStream file = new GetClass().getClass().getResourceAsStream("/com/happywedding/Report/HoaDon.jrxml");
             JasperDesign desgin = JRXmlLoader.load(file);
 
@@ -2401,6 +2401,12 @@ public class LapHopDong extends javax.swing.JPanel {
     }//GEN-LAST:event_txtTrangThaiActionPerformed
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
+        
+        if (backToXemLich){
+            AppStatus.mainApp.showLichDatTiec();
+            return;
+        }
+        
         if (!isHoaDon) {
             AppStatus.mainApp.showQuanLyHopDong();
         } else {
@@ -2774,10 +2780,10 @@ public class LapHopDong extends javax.swing.JPanel {
             JasperViewer.viewReport(p, false);
 
         } catch (SQLException ex) {
-            DialogHelper.alert(this,ex.getMessage());
+            DialogHelper.alert(this, ex.getMessage());
             Logger.getLogger(JasperReport.class.getName()).log(Level.SEVERE, null, ex);
         } catch (JRException ex) {
-                DialogHelper.alert(this,ex.getMessage());
+            DialogHelper.alert(this, ex.getMessage());
             Logger.getLogger(JasperReport.class.getName()).log(Level.SEVERE, null, ex);
         }
 
@@ -2807,7 +2813,19 @@ public class LapHopDong extends javax.swing.JPanel {
     }//GEN-LAST:event_btnHuyDuyetActionPerformed
 
     private void btnHuyHopDongActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHuyHopDongActionPerformed
-        boolean rs = DialogHelper.confirm(this, "Đánh dấu xóa? Không thể quay lại sau thao tác này ?");
+        boolean rs = DialogHelper.confirm(this, "Hủy hợp đồng? Không thể quay lại sau thao tác này ?");
+
+        if (hopDong.getNgayToChuc().getTime() - DateHelper.now().getTime() < 3 * 24 * 3600000) {
+            DialogHelper.alert(this, "Hủy hợp đồng trước 3 ngày cần xác định chi phí phát sinh");
+            boolean isEdit = false;
+            if (hoaDonDAO.selectByID(maHD) != null) {
+                if (hoaDonDAO.selectByID(maHD).getTrangTha() == 0 && !hopDong.getTrangThai().equals(StatusHopDong.XOA)) {
+                    isEdit = true;
+                }
+            }
+            new ChiPhiPhatSinh(maHD, isEdit).setVisible(true);
+
+        }
 
         if (rs) {
 

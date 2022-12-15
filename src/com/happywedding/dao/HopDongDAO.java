@@ -52,7 +52,16 @@ public class HopDongDAO extends AbstractDAO<HopDong> {
 
     private final String SELECT_MAHD_IN_NAM = "SELECT hd.MaHD FROM HopDong hd INNER JOIN HoaDon hoadon ON hd.MaHD = hoadon.MaHD \n"
             + "WHERE IIF(hoadon.TrangThai = 0, YEAR(hd.NgayLap),YEAR(hoadon.NgayLapLan2)) = ?";
-
+    
+    
+    private final String SECLECT_BY_DATE = "SELECT hd.MaHD,hd.MaNL,hd.MaND,nv.HoTen AS NguoiLap,SoLuongBan,s.TenSanh,hd.NgayLap,hd.NgayDuyet,kh.MaKH,kh.HoTen,kh.SoDienThoai,hd.NgayToChuc,hd.ThoiGianBatDau,hd.ThoiGianKetThuc,tt.MaTT,tt.TenTT \n"
+            + ",hd.The,hd.TienCoc,hd.TongTien,\n"
+            + "( SELECT HoTen FROM NhanVien WHERE MaNV = hd.MaND ) AS NguoiDuyet\n"
+            + "FROM HopDong hd INNER JOIN KhachHang kh ON hd.MaHD = kh.MaHD\n"
+            + "INNER JOIN TrangThaiHopDong tt ON hd.TrangThai = tt.MaTT\n"
+            + "INNER JOIN NhanVien nv ON nv.MaNV = hd.MaNL\n"
+            + "INNER JOIN Sanh s ON s.MaSanh = hd.Sanh WHERE hd.NgayToChuc = ? AND hd.TrangThai != 'XOA'"
+            + "ORDER BY hd.MaHD ";
     @Override
     public boolean insert(HopDong entity) {
         int rs = JDBCHelper.executeUpdate(INSERT, entity.getMaHD(), entity.getMaNL(), entity.getSoLuongBan(), entity.getSanh(), entity.getNgayLap(), entity.getNgayDuyet(), entity.getMaND(), entity.getNgayToChuc(), entity.getThoiGianBatDau(), entity.getThoiGianKetThuc(), entity.getTrangThai(), entity.getThue(), entity.getTienCoc(), entity.getTongTien());
@@ -168,6 +177,10 @@ public class HopDongDAO extends AbstractDAO<HopDong> {
             throw new RuntimeException(ex);
         }
         return list;
+    }
+    
+    public List selectHopDongByDate(Date date) {
+      return select(SECLECT_BY_DATE, date);
     }
 
     public void updateChiPhi(long tienCoc, long tongTien, String maHD) {

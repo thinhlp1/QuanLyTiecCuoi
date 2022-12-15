@@ -46,6 +46,8 @@ public class QuanLyHopDong extends javax.swing.JPanel {
     private List<HopDong> listFilted = new ArrayList<>();
     private HopDongDAO hopDongDAO = new HopDongDAO();
     private SanhDAO sanhDAO = new SanhDAO();
+    private boolean iSFiltedDate = false;
+    private boolean isFiltedByCapDo = true;
 
     private List<TrangThaiHopDong> listTrangThai = new ArrayList<>();
 
@@ -91,7 +93,7 @@ public class QuanLyHopDong extends javax.swing.JPanel {
         fillToTable(listHopDong);
         initSort();
         cbbSortBy.setSelectedIndex(3);
-       cbbSortBy.setSelectedIndex(-1);
+        cbbSortBy.setSelectedIndex(-1);
         AppStatus.QLHOPDONG = this;
 
     }
@@ -155,13 +157,16 @@ public class QuanLyHopDong extends javax.swing.JPanel {
         for (TrangThaiHopDong ss : listTrangThai) {
             cbbModel.addElement(ss);
         }
-     
+
         cbbSanh.setSelectedIndex(0);
     }
 
     public void reload() {
         listHopDong = hopDongDAO.select();
         filtedHopDong();
+        if (isFiltedByCapDo) {
+            sortTheoCapDo();
+        }
     }
 
     public void filtedHopDong() {
@@ -208,11 +213,20 @@ public class QuanLyHopDong extends javax.swing.JPanel {
                     }
 
                 } else if (txtNgayBatDau.getText().length() == 0 && txtNgayKetThuc.getText().length() != 0) {
+
                     if (DateHelper.toString(hd.getNgayToChuc(), "dd/MM/yyyy").equals(txtNgayKetThuc.getText())
                             || hd.getNgayToChuc().before(DateHelper.toDate(txtNgayKetThuc.getText(), "dd/MM/yyyy"))) {
                         listFilted.add(hd);
                     }
                 } else if (txtNgayBatDau.getText().length() != 0 && txtNgayKetThuc.getText().length() != 0) {
+                    if (DateHelper.toDate(txtNgayBatDau.getText(), "dd/MM/yyyy").after(DateHelper.toDate(txtNgayKetThuc.getText(), "dd/MM/yyyy"))) {
+                        if (DateHelper.toDate(txtNgayBatDau.getText(), "dd/MM/yyyy").getTime() - DateHelper.toDate(txtNgayKetThuc.getText(), "dd/MM/yyyy").getTime() < 0) {
+                            txtNgayBatDau.setText(txtNgayKetThuc.getText());
+                        } else {
+                            txtNgayKetThuc.setText(txtNgayBatDau.getText());
+                        }
+                    }
+
                     if (DateHelper.toString(hd.getNgayToChuc(), "dd/MM/yyyy").equals(txtNgayKetThuc.getText())
                             || hd.getNgayToChuc().before(DateHelper.toDate(txtNgayKetThuc.getText(), "dd/MM/yyyy")
                             )) {
@@ -238,6 +252,14 @@ public class QuanLyHopDong extends javax.swing.JPanel {
                         listFilted.add(hd);
                     }
                 } else if (txtNgayBatDau.getText().length() != 0 && txtNgayKetThuc.getText().length() != 0) {
+                    if (DateHelper.toDate(txtNgayBatDau.getText(), "dd/MM/yyyy").after(DateHelper.toDate(txtNgayKetThuc.getText(), "dd/MM/yyyy"))) {
+                        if (DateHelper.toDate(txtNgayBatDau.getText(), "dd/MM/yyyy").getTime() - DateHelper.toDate(txtNgayKetThuc.getText(), "dd/MM/yyyy").getTime() < 0) {
+                            txtNgayBatDau.setText(txtNgayKetThuc.getText());
+                        } else {
+                            txtNgayKetThuc.setText(txtNgayBatDau.getText());
+                        }
+                    }
+
                     if (DateHelper.toString(hd.getNgayLap(), "dd/MM/yyyy").equals(txtNgayKetThuc.getText())
                             || hd.getNgayLap().before(DateHelper.toDate(txtNgayKetThuc.getText(), "dd/MM/yyyy")
                             )) {
@@ -254,7 +276,7 @@ public class QuanLyHopDong extends javax.swing.JPanel {
         }
         fillToTable(listFilted);
         int oldIndex = cbbSortBy.getSelectedIndex();
-        if (oldIndex == 3){
+        if (oldIndex == 3) {
             oldIndex = -1;
         }
         cbbSortBy.setSelectedIndex(-1);
@@ -273,6 +295,7 @@ public class QuanLyHopDong extends javax.swing.JPanel {
 
         cbbSortBy.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
+                isFiltedByCapDo = false;
                 if (cbbSortBy.getSelectedIndex() == 0) {
                     if (cbbSort.getSelectedIndex() == 0) {
                         // ten tang dan
@@ -299,14 +322,16 @@ public class QuanLyHopDong extends javax.swing.JPanel {
                     } else {
                         cbbSortBy.setSelectedIndex(0);
                     }
-                }else if (cbbSortBy.getSelectedIndex() == 3) {
+                } else if (cbbSortBy.getSelectedIndex() == 3) {
                     sortTheoCapDo();
+                    isFiltedByCapDo = true;
                 }
             }
         });
 
         cbbSort.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
+                isFiltedByCapDo = false;
                 if (cbbSortBy.getSelectedIndex() == 0) {
                     if (cbbSort.getSelectedIndex() == 0) {
                         // ten tang dan
@@ -333,8 +358,9 @@ public class QuanLyHopDong extends javax.swing.JPanel {
                     } else {
                         cbbSortBy.setSelectedIndex(0);
                     }
-                }else if (cbbSortBy.getSelectedIndex() == 3) {
+                } else if (cbbSortBy.getSelectedIndex() == 3) {
                     sortTheoCapDo();
+                    isFiltedByCapDo = true;
                 }
             }
         });
@@ -345,8 +371,10 @@ public class QuanLyHopDong extends javax.swing.JPanel {
         List<HopDong> listDangChoKyKet = new ArrayList<>();
         List<HopDong> listDangSapHetHan = new ArrayList<>();
         List<HopDong> listConLai = new ArrayList<>();
-        listFilted.clear();
-        for (HopDong hd : listHopDong) {
+
+        filtedHopDong();
+
+        for (HopDong hd : listFilted) {
             if (hd.getTrangThai().equals(StatusHopDong.CHODUYET)) {
 
                 if ((hd.getNgayToChuc().getTime() - new Date().getTime() < 3 * 24 * 3600000) && (hd.getNgayToChuc().getTime() - new Date().getTime()) > 0) {
@@ -355,16 +383,18 @@ public class QuanLyHopDong extends javax.swing.JPanel {
                 }
                 listDangChoDuyet.add(hd);
             } else if (hd.getTrangThai().equals(StatusHopDong.CHOKYKET)) {
-               
+
                 if ((hd.getNgayToChuc().getTime() - new Date().getTime() < 3 * 24 * 3600000) && (hd.getNgayToChuc().getTime() - new Date().getTime()) > 0) {
                     listDangSapHetHan.add(hd);
                     continue;
                 }
-                 listDangChoKyKet.add(hd);
+                listDangChoKyKet.add(hd);
             } else {
                 listConLai.add(hd);
             }
         }
+
+        listFilted.clear();
 
         for (HopDong hd : listDangSapHetHan) {
             listFilted.add(hd);
@@ -381,6 +411,7 @@ public class QuanLyHopDong extends javax.swing.JPanel {
             listFilted.add(hd);
         }
 
+        isFiltedByCapDo = true;
         fillToTable(listFilted);
 
     }
@@ -696,7 +727,7 @@ public class QuanLyHopDong extends javax.swing.JPanel {
                 cbbSanhActionPerformed(evt);
             }
         });
-        pnlQuanLyHopDong.add(cbbSanh, new org.netbeans.lib.awtextra.AbsoluteConstraints(780, 20, 140, 54));
+        pnlQuanLyHopDong.add(cbbSanh, new org.netbeans.lib.awtextra.AbsoluteConstraints(780, 20, 200, 54));
 
         cbbSortBy.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Họ Tên  Khách Hàng", "Ngày Tổ Chức", "Ngày Lập", "Cấp độ hợp đồng" }));
         cbbSortBy.setSelectedIndex(-1);

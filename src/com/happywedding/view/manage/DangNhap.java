@@ -291,9 +291,10 @@ public class DangNhap extends javax.swing.JDialog {
         } else {
             JOptionPane.showMessageDialog(this, "Đăng nhập thành công");
             JOptionPane.showMessageDialog(this, "Xin chào " + txtTenDangNhap.getText());
-            new Loading(null, true).setVisible(true);
+            
             //new HappyWeddingApp().setVisible(true);
             this.dispose();
+            new Loading(null, true).setVisible(true);
         }
 
         //this.dispose();

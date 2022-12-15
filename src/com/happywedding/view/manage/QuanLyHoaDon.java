@@ -77,7 +77,8 @@ public class QuanLyHoaDon extends javax.swing.JPanel {
                     (hd.getNgayLapLan2() != null ? DateHelper.toString(hd.getNgayLapLan2() , "dd/MM/yyyy"):""),
                     hd.getTenNLLan2(),
                     ShareHelper.toMoney(hd.getTienCoc()),
-                    ShareHelper.toMoney(hd.getTongTien()),
+                      hd.getTrangTha() == 0 ? "Chưa trả" :ShareHelper.toMoney(hd.getTongTien() ),
+                       hd.getTrangTha() == 0 ? "Chưa trả" : ShareHelper.toMoney(hd.getTongTien() + hd.getTienCoc()),
                     hd.getTrangTha() == 0 ? "Đã trả cọc" : "Đã trả hết"
                 };
                 tblModel.addRow(row);
@@ -135,6 +136,14 @@ public class QuanLyHoaDon extends javax.swing.JPanel {
                         listFilted.add(hd);
                     }
                 } else if (txtNgayBatDau.getText().length() != 0 && txtNgayKetThuc.getText().length() != 0) {
+                      if (DateHelper.toDate(txtNgayBatDau.getText(), "dd/MM/yyyy").after(DateHelper.toDate(txtNgayKetThuc.getText(), "dd/MM/yyyy"))) {
+                        if (DateHelper.toDate(txtNgayBatDau.getText(), "dd/MM/yyyy").getTime() - DateHelper.toDate(txtNgayKetThuc.getText(), "dd/MM/yyyy").getTime() < 0) {
+                            txtNgayBatDau.setText(txtNgayKetThuc.getText());
+                        } else {
+                            txtNgayKetThuc.setText(txtNgayBatDau.getText());
+                        }
+                    }
+                      
                     if (DateHelper.toString(hd.getNgayLap(), "dd/MM/yyyy").equals(txtNgayKetThuc.getText())
                             || hd.getNgayLap().before(DateHelper.toDate(txtNgayKetThuc.getText(), "dd/MM/yyyy")
                             )) {
@@ -164,6 +173,14 @@ public class QuanLyHoaDon extends javax.swing.JPanel {
                         }
                     }
                 } else if (txtNgayBatDau.getText().length() != 0 && txtNgayKetThuc.getText().length() != 0) {
+                      if (DateHelper.toDate(txtNgayBatDau.getText(), "dd/MM/yyyy").after(DateHelper.toDate(txtNgayKetThuc.getText(), "dd/MM/yyyy"))) {
+                        if (DateHelper.toDate(txtNgayBatDau.getText(), "dd/MM/yyyy").getTime() - DateHelper.toDate(txtNgayKetThuc.getText(), "dd/MM/yyyy").getTime() < 0) {
+                            txtNgayBatDau.setText(txtNgayKetThuc.getText());
+                        } else {
+                            txtNgayKetThuc.setText(txtNgayBatDau.getText());
+                        }
+                    }
+                      
                     if (hd.getNgayLapLan2() != null) {
                         if (DateHelper.toString(hd.getNgayLapLan2(), "dd/MM/yyyy").equals(txtNgayKetThuc.getText())
                                 || hd.getNgayLapLan2().before(DateHelper.toDate(txtNgayKetThuc.getText(), "dd/MM/yyyy")
@@ -426,11 +443,11 @@ public class QuanLyHoaDon extends javax.swing.JPanel {
 
             },
             new String [] {
-                "Mã hợp đồng", "Mã hóa đơn", "Ngày lập", "Người lập", "Ngày lập lần 2", "Người lập lần 2", "Tiền cọc", "Tổng tiền", "Trạng thái"
+                "Mã hợp đồng", "Mã hóa đơn", "Ngày lập", "Người lập", "Ngày lập lần 2", "Người lập lần 2", "Tiền cọc", "Trả lần 2", "Tổng tiền", "Trạng thái"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {

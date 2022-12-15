@@ -35,6 +35,22 @@ public class DateHelper {
             throw new RuntimeException(ex);
         }
     }
+    
+    
+    public static Date toTime(String date, String... pattern) {
+        try {
+            if (pattern.length > 0) {
+                TIME_FORMATER.applyPattern(pattern[0]);
+            }
+            if (date == null) {
+                return DateHelper.now();
+            }
+            return TIME_FORMATER.parse(date);
+        } catch (ParseException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+    
     /**
      * Chuyển đổi từ Date sang String
      *
@@ -51,6 +67,18 @@ public class DateHelper {
         }
         return DATE_FORMATER.format(date);
     }
+    
+    
+     public static String toTime(Date date, String... pattern) {
+        if (pattern.length > 0) {
+            TIME_FORMATER.applyPattern(pattern[0]);
+        }
+        if (date == null) {
+            date = DateHelper.now();
+        }
+        return TIME_FORMATER.format(date);
+    }
+
 
     /**
      * Lấy thời gian hiện tại

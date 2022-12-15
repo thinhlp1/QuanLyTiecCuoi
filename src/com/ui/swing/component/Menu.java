@@ -23,8 +23,9 @@ public class Menu extends javax.swing.JPanel {
         this.event = event;
         listMenu1.addEventMenuSelected(event);
     }
-    
-       static class Role{
+
+    static class Role {
+
         static String QUANLY = "QLCC";
         static String TIEPTAN = "TIEPTAN";
         static String QLKHO = "KHO";
@@ -36,65 +37,62 @@ public class Menu extends javax.swing.JPanel {
         setOpaque(false);
         listMenu1.setOpaque(false);
         init();
-        
+
     }
-    
-    public List<MenuItem> getListMenu(){
+
+    public List<MenuItem> getListMenu() {
         return listMenu1.getListMenuItem();
     }
-    
-    public void setSelected(int index){
+
+    public void setSelected(int index) {
         listMenu1.setSelected(index);
     }
-    
+
     private void init() {
-        
-       String role = AppStatus.ROLE;
-       if (role.equals(Role.QUANLY)){
-       
-        listMenu1.addItem(new Model_Menu("/com/happywedding/assets/hopdong.png", "Quản lý hợp đồng", Model_Menu.MenuType.MENU));
-        listMenu1.addItem(new Model_Menu("/com/happywedding/assets/hoadon.png", "Quản lý hóa đơn", Model_Menu.MenuType.MENU));
-        listMenu1.addItem(new Model_Menu("/com/happywedding/assets/employee.png", "Quản lý nhân viên", Model_Menu.MenuType.MENU));
-        listMenu1.addItem(new Model_Menu("/com/happywedding/assets/kho.png", "Quản lý kho", Model_Menu.MenuType.MENU));
-        listMenu1.addItem(new Model_Menu("/com/happywedding/assets/sanh.png", "Quản lý sảnh", Model_Menu.MenuType.MENU));
-        listMenu1.addItem(new Model_Menu("/com/happywedding/assets/chart.png", "Thống kê", Model_Menu.MenuType.MENU));
-        listMenu1.addItem(new Model_Menu("", "", Model_Menu.MenuType.EMPTY));
-     
-      
-       }
-       else if (role.equals(Role.TIEPTAN)){
-     
-        listMenu1.addItem(new Model_Menu("/com/happywedding/assets/hopdong.png", "Quản lý hợp đồng", Model_Menu.MenuType.MENU));
-         listMenu1.addItem(new Model_Menu("/com/happywedding/assets/hoadon.png", "Quản lý hóa đơn", Model_Menu.MenuType.MENU));
-        listMenu1.addItem(new Model_Menu("", "", Model_Menu.MenuType.EMPTY));
-       
-       
-       }else if (role.equals(Role.QLKHO)){
-        
-        listMenu1.addItem(new Model_Menu("/com/happywedding/assets/kho.png", "Quản lý kho", Model_Menu.MenuType.MENU));
 
-        listMenu1.addItem(new Model_Menu("", "", Model_Menu.MenuType.EMPTY));
-       
+        String role = AppStatus.ROLE;
+        if (role.equals(Role.QUANLY)) {
 
-        
-       }else if (role.equals(Role.ADMIN)){
-        
-        listMenu1.addItem(new Model_Menu("/com/happywedding/assets/account.png", "Quản lý tài khoản", Model_Menu.MenuType.MENU));
-        listMenu1.addItem(new Model_Menu("/com/happywedding/assets/sanh.png", "Quản lý sảnh", Model_Menu.MenuType.MENU));
-        listMenu1.addItem(new Model_Menu("", "", Model_Menu.MenuType.EMPTY));
-        listMenu1.addItem(new Model_Menu("/com/happywedding/assets/Exit.png", "Thoát", Model_Menu.MenuType.MENU));
-        listMenu1.addItem(new Model_Menu("", "", Model_Menu.MenuType.EMPTY));
-        return;
-       
-       }
+            listMenu1.addItem(new Model_Menu("/com/happywedding/assets/hopdong.png", "Quản lý hợp đồng", Model_Menu.MenuType.MENU));
+            listMenu1.addItem(new Model_Menu("/com/happywedding/assets/hoadon.png", "Quản lý hóa đơn", Model_Menu.MenuType.MENU));
+            listMenu1.addItem(new Model_Menu("/com/happywedding/assets/calendarMenu.png", "Xem lịch đặt", Model_Menu.MenuType.MENU));
+            listMenu1.addItem(new Model_Menu("/com/happywedding/assets/employee.png", "Quản lý nhân viên", Model_Menu.MenuType.MENU));
+            listMenu1.addItem(new Model_Menu("/com/happywedding/assets/kho.png", "Quản lý kho", Model_Menu.MenuType.MENU));
+            listMenu1.addItem(new Model_Menu("/com/happywedding/assets/sanh.png", "Quản lý sảnh", Model_Menu.MenuType.MENU));
+            listMenu1.addItem(new Model_Menu("/com/happywedding/assets/chart.png", "Thống kê", Model_Menu.MenuType.MENU));
+
+            listMenu1.addItem(new Model_Menu("", "", Model_Menu.MenuType.EMPTY));
+
+        } else if (role.equals(Role.TIEPTAN)) {
+
+            listMenu1.addItem(new Model_Menu("/com/happywedding/assets/hopdong.png", "Quản lý hợp đồng", Model_Menu.MenuType.MENU));
+            listMenu1.addItem(new Model_Menu("/com/happywedding/assets/hoadon.png", "Quản lý hóa đơn", Model_Menu.MenuType.MENU));
+            listMenu1.addItem(new Model_Menu("/com/happywedding/assets/calendarMenu.png", "Xem lịch đặt", Model_Menu.MenuType.MENU));
+            listMenu1.addItem(new Model_Menu("", "", Model_Menu.MenuType.EMPTY));
+
+        } else if (role.equals(Role.QLKHO)) {
+
+            listMenu1.addItem(new Model_Menu("/com/happywedding/assets/kho.png", "Quản lý kho", Model_Menu.MenuType.MENU));
+
+            listMenu1.addItem(new Model_Menu("", "", Model_Menu.MenuType.EMPTY));
+
+        } else if (role.equals(Role.ADMIN)) {
+
+            listMenu1.addItem(new Model_Menu("/com/happywedding/assets/account.png", "Quản lý tài khoản", Model_Menu.MenuType.MENU));
+            listMenu1.addItem(new Model_Menu("/com/happywedding/assets/sanh.png", "Quản lý sảnh", Model_Menu.MenuType.MENU));
+            listMenu1.addItem(new Model_Menu("", "", Model_Menu.MenuType.EMPTY));
+            listMenu1.addItem(new Model_Menu("/com/happywedding/assets/Exit.png", "Thoát", Model_Menu.MenuType.MENU));
+            listMenu1.addItem(new Model_Menu("", "", Model_Menu.MenuType.EMPTY));
+            return;
+
+        }
 //       listMenu1.addItem(new Model_Menu("/com/happywedding/assets/info.png", "Giới thiệu", Model_Menu.MenuType.MENU));
 //       listMenu1.addItem(new Model_Menu("/com/happywedding/assets/guide.png", "Hướng dẫn", Model_Menu.MenuType.MENU));
 //       listMenu1.addItem(new Model_Menu("", "", Model_Menu.MenuType.EMPTY));
 //       listMenu1.addItem(new Model_Menu("/com/happywedding/assets/change.png", "Đổi mật khẩu", Model_Menu.MenuType.MENU));
-       listMenu1.addItem(new Model_Menu("/com/happywedding/assets/logout.png", "Đăng xuất", Model_Menu.MenuType.MENU));
-       listMenu1.addItem(new Model_Menu("/com/happywedding/assets/Exit.png", "Thoát", Model_Menu.MenuType.MENU));
-     
-       
+        listMenu1.addItem(new Model_Menu("/com/happywedding/assets/logout.png", "Đăng xuất", Model_Menu.MenuType.MENU));
+        listMenu1.addItem(new Model_Menu("/com/happywedding/assets/Exit.png", "Thoát", Model_Menu.MenuType.MENU));
+
     }
 
     @SuppressWarnings("unchecked")

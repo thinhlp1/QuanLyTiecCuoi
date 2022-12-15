@@ -45,7 +45,7 @@ public class PhanCongDAO {
             + "	INNER JOIN VaiTro vt ON vt.MaVT = nv.MaVT\n"
             + "	WHERE hd.MaHD = ?";
 
-    private final String CHECK_PHANCONG = "SELECT * FROM dbo.PhanCong WHERE MaHD = ? AND MaNguoiPC =?";
+    private final String CHECK_PHANCONG = "SELECT * FROM dbo.PhanCong WHERE MaHD = ? ";
     private final String CHECK_PHANCONG1 = "SELECT * FROM dbo.PhanCong WHERE MaHD = ?";
 
     private final String SELECT_NHANVIEN_POSSIBLE = "SELECT  nv.MaNV,nv.HoTen,nv.NgaySinh,nv.GioiTinh,nv.SoDienThoai,nv.CCCD_CMND,nv.Email,nv.HinhAnh,nv.MaPB,pb.TenPB,nv.MaVT,vt.TenVT,TrangThai FROM  NhanVien nv\n"
@@ -82,7 +82,7 @@ public class PhanCongDAO {
     }
 
     public PhanCongModel checkPhanCong(String maHD, String maNV) {
-        List<PhanCongModel> list = selectPhanCong(CHECK_PHANCONG, maHD, maNV);
+        List<PhanCongModel> list = selectPhanCong(CHECK_PHANCONG, maHD);
         return list.size() > 0 ? list.get(0) : null;
     }
 

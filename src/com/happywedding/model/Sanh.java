@@ -35,15 +35,15 @@ public class Sanh {
     }
     
 //    @Override
-//    public String toString(){
-//        return tenSanh + " - " + sucChua / 10 + " bàn" ;
-//    }
-//
-    @Override
-    public String toString() {
-        return tenSanh ;
+    public String toString(){
+        return tenSanh + " - " + sucChua / 10 + " bàn" ;
     }
-    
+//
+//    @Override
+//    public String toString() {
+//        return tenSanh ;
+//    }
+//    
     
     
     
