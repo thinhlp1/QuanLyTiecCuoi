@@ -213,7 +213,7 @@ public class QuenMatKhau extends javax.swing.JDialog implements Runnable{
 //            return;
 //        }
 
-        if(!txtEmail.getText().equals("baomqpc03196@fpt.edu.vn")){
+        if(!txtEmail.getText().toLowerCase().equals("baomqpc03196@fpt.edu.vn")){
             JOptionPane.showMessageDialog(this, "Sai email");      
             return;
         }
@@ -327,8 +327,14 @@ public class QuenMatKhau extends javax.swing.JDialog implements Runnable{
     @Override
     public void run(){
         goiMail();
-        btnGuiMaXacNhan.setEnabled(false);
+        //btnGuiMaXacNhan.setEnabled(false);
         int giaTri = 61;
+        
+        if(Integer.valueOf(txtMaXacNhan.getText()) == randomNumber){
+            btnXacNhan.setVisible(true);
+        }else{
+            btnXacNhan.setVisible(false);
+        }
         btnXacNhan.setEnabled(true);
         while(true){
             try {
