@@ -87,10 +87,10 @@ public class Menu extends javax.swing.JPanel {
         return;
        
        }
-       listMenu1.addItem(new Model_Menu("/com/happywedding/assets/info.png", "Giới thiệu", Model_Menu.MenuType.MENU));
-       listMenu1.addItem(new Model_Menu("/com/happywedding/assets/guide.png", "Hướng dẫn", Model_Menu.MenuType.MENU));
-       listMenu1.addItem(new Model_Menu("", "", Model_Menu.MenuType.EMPTY));
-       listMenu1.addItem(new Model_Menu("/com/happywedding/assets/change.png", "Đổi mật khẩu", Model_Menu.MenuType.MENU));
+//       listMenu1.addItem(new Model_Menu("/com/happywedding/assets/info.png", "Giới thiệu", Model_Menu.MenuType.MENU));
+//       listMenu1.addItem(new Model_Menu("/com/happywedding/assets/guide.png", "Hướng dẫn", Model_Menu.MenuType.MENU));
+//       listMenu1.addItem(new Model_Menu("", "", Model_Menu.MenuType.EMPTY));
+//       listMenu1.addItem(new Model_Menu("/com/happywedding/assets/change.png", "Đổi mật khẩu", Model_Menu.MenuType.MENU));
        listMenu1.addItem(new Model_Menu("/com/happywedding/assets/logout.png", "Đăng xuất", Model_Menu.MenuType.MENU));
        listMenu1.addItem(new Model_Menu("/com/happywedding/assets/Exit.png", "Thoát", Model_Menu.MenuType.MENU));
      

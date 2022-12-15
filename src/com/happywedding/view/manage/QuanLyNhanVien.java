@@ -7,6 +7,7 @@ package com.happywedding.view.manage;
 import com.happywedding.dao.NhanVienDAO;
 import com.happywedding.dao.PhongBanDAO;
 import com.happywedding.dao.VaiTroDAO;
+import com.happywedding.helper.AppStatus;
 import com.happywedding.model.NhanVien;
 import com.happywedding.model.PhongBan;
 import com.happywedding.model.VaiTro;
@@ -27,8 +28,14 @@ import java.util.List;
 import javax.swing.table.DefaultTableModel;
 
 import com.ui.swing.datechooser.DateChooser;
+import java.awt.event.KeyEvent;
+import java.io.File;
+import java.util.regex.Pattern;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
+import javax.swing.JComponent;
+import javax.swing.JFileChooser;
+import javax.swing.JTextField;
 
 /**
  *
@@ -53,6 +60,8 @@ public class QuanLyNhanVien extends javax.swing.JPanel {
     public QuanLyNhanVien() {
         initComponents();
         init();
+
+        isView(true);
     }
 
     public void init() {
@@ -64,7 +73,7 @@ public class QuanLyNhanVien extends javax.swing.JPanel {
         tblModel = (DefaultTableModel) tblNhanVien.getModel();
         loadEmployee();
         fillTable(listAllEmployee);
-        
+
         loadPhongBan();
         loadVaiTro();
         initSort();
@@ -109,9 +118,9 @@ public class QuanLyNhanVien extends javax.swing.JPanel {
         model.setSoDienThoai(txtSoDienThoai.getText());
         model.setEmail(txtEmail.getText());
         model.setCMND_CCCD(txtCCCD.getText());
-        model.setMaPB(((PhongBan) cbbPhongBan.getSelectedItem() ).getMaPB());
-        model.setMaVT(((VaiTro) cbbVaiTro.getSelectedItem() ).getMaVT());
-        model.setHinhAnh("");
+        model.setMaPB(((PhongBan) cbbPhongBan.getSelectedItem()).getMaPB());
+        model.setMaVT(((VaiTro) cbbVaiTro.getSelectedItem()).getMaVT());
+        model.setHinhAnh(lblHinhAnh.getToolTipText());
         return model;
     }
 
@@ -121,7 +130,7 @@ public class QuanLyNhanVien extends javax.swing.JPanel {
         txtNgaySinh.setText(model.getNgaySinh() != null ? DateHelper.toString(model.getNgaySinh()) : "");
         rdoNam.setSelected(model.isGioiTinh());
         rdoNu.setSelected(!model.isGioiTinh());
-        
+
         txtSoDienThoai.setText(model.getSoDienThoai());
         txtEmail.setText(model.getEmail());
         txtCCCD.setText(model.getCMND_CCCD());
@@ -135,31 +144,167 @@ public class QuanLyNhanVien extends javax.swing.JPanel {
                 cbbVaiTro.setSelectedIndex(i);
             }
         }
-//        lblHinhAnh.setToolTipText(model.getHinhAnh());
-//        if (model.getHinhAnh() != null) {
-//            ImageIcon icon = ShareHelper.readLogo(model.getHinhAnh());
-//            lblHinhAnh.setIcon(icon);
-//        }
-        
+        lblHinhAnh.setToolTipText(model.getHinhAnh());
+        if (model.getHinhAnh() != null) {
+            ImageIcon icon = ShareHelper.readLogo(model.getHinhAnh());
+            lblHinhAnh.setIcon(icon);
+        }
+
+    }
+
+    public boolean checkName(JTextField txtHoTen, JComponent nextFocus, KeyEvent evt) {
+
+        String name = txtHoTen.getText().trim().replaceAll("\\s+", " ");
+        if (evt == null) {
+            txtHoTen.setText(name);
+            return true;
+        }
+        char testChar = evt.getKeyChar();
+        if (name.length() > 50 && testChar != '\n') {
+            evt.consume();
+            return false;
+        }
+        if (((Character.isAlphabetic(testChar))) || Character.isWhitespace(testChar)) {
+            if (testChar == '\n') {
+                if (name.length() == 0) {
+                    nextFocus.requestFocus();
+                    return true;
+                }
+                txtHoTen.setText(name);
+                nextFocus.requestFocus();
+            }
+        } else {
+            evt.consume();
+        }
+        return false;
+    }
+
+    public boolean checkCCCD(KeyEvent evt) {
+
+        String cccd = txtCCCD.getText();
+
+        if (evt == null) {
+            if (cccd.length() != 9 && cccd.length() != 12 && cccd.length() != 0) {
+                DialogHelper.alertError(this, "Số Căn cước/Chứng minh không đúng định dạng");
+                txtCCCD.requestFocus();
+                return false;
+            } else {
+                return true;
+            }
+        }
+
+        char testChar = evt.getKeyChar();
+        if (txtCCCD.getText().length() >= 12 && testChar != '\n') {
+            evt.consume();
+            return true;
+        }
+
+        if (!((Character.isDigit(testChar)))) {
+            if (testChar == '\n') {
+
+                if (cccd.length() != 9 && cccd.length() != 12 && cccd.length() != 0) {
+                    DialogHelper.alertError(this, "Số Căn cước/Chứng minh không đúng định dạng");
+                    txtCCCD.requestFocus();
+                } else {
+                    txtHoTen.requestFocus();
+                }
+            } else {
+                evt.consume();
+            }
+        }
+        return false;
+    }
+
+    public boolean checkSDT(KeyEvent evt) {
+
+        String sdt = txtSoDienThoai.getText();
+        String numberPhone = "^(0|\\+84)(\\s|\\.)?((3[2-9])|(5[689])|(7[06-9])|(8[1-689])|(9[0-46-9]))(\\d)(\\s|\\.)?(\\d{3})(\\s|\\.)?(\\d{3})$";
+
+        if (evt == null) {
+            if (!sdt.matches(numberPhone) && sdt.length() != 0) {
+                DialogHelper.alertError(this, "Số điện thoại không đúng định dạng");
+                txtSoDienThoai.requestFocus();
+                return false;
+            } else {
+
+                return true;
+            }
+        }
+        char testChar = evt.getKeyChar();
+        if (txtSoDienThoai.getText().length() >= 10 && testChar != '\n') {
+            evt.consume();
+            return true;
+        }
+        if (!((Character.isDigit(testChar)))) {
+            if (testChar == '\n') {
+
+                if (!sdt.matches(numberPhone) && sdt.length() != 0) {
+                    DialogHelper.alertError(this, "Số điện thoại không đúng định dạng");
+                    txtSoDienThoai.requestFocus();
+                    return false;
+                } else {
+                    txtCCCD.requestFocus();
+                    return true;
+                }
+
+            } else {
+                evt.consume();
+            }
+        }
+        return false;
     }
 
     public List<String> validation() {
-
+        String name = txtHoTen.getText().trim().replaceAll("\\s+", " ");
         List<String> listError = new ArrayList<>();
 
+        Pattern pattern;
+        String EMAIL_REGEX = "^[a-zA-Z][\\w-]+@([\\w]+\\.[\\w]+|[\\w]+\\.[\\w]{2,}\\.[\\w]{2,})$";
+        String NumberPhone = "^(0|\\+84)(\\s|\\.)?((3[2-9])|(5[689])|(7[06-9])|(8[1-689])|(9[0-46-9]))(\\d)(\\s|\\.)?(\\d{3})(\\s|\\.)?(\\d{3})$";
+        pattern = Pattern.compile(EMAIL_REGEX);
+
+        // check null
         if (txtMaNhanVien.getText().equals("")) {
-            listError.add("Mã nhân viên không được bỏ trống");
+            listError.add("Mã người học không được để trống");
             return listError;
         } else if (txtHoTen.getText().equals("")) {
-            listError.add("Họ tên không được để trống");
+            listError.add("Họ tên không được trống");
             return listError;
-        } else if (txtCCCD.getText().equals("")) {
-            listError.add("CMND không được để trống");
+        } else if (txtNgaySinh.getText().equals("")) {
+            listError.add("Ngày sinh không được bỏ trống");
+            return listError;
+        } else if (txtEmail.getText().equals("")) {
+            listError.add("Email không được bỏ trống");
+            return listError;
+        } else if (txtSoDienThoai.getText().equals("")) {
+            listError.add("Số số điện thoại không được bỏ trống");
+        } else if (cbbPhongBan.getSelectedIndex() == -1) {
+            listError.add("Chưa chọn phòng ban");
+            return listError;
+        } else if (cbbVaiTro.getSelectedIndex() == -1) {
+            listError.add("Chưa chọn Vai Trò");
+            return listError;
+        }
+        if (txtCCCD.getText().length() != 9 && txtCCCD.getText().length() != 12 && txtCCCD.getText().length() != 0) {
+            DialogHelper.alertError(this, "Số Căn cước/Chứng minh không đúng định dạng");
+            txtCCCD.requestFocus();
+            return listError;
+        }
+
+        // check email
+        if (!txtEmail.getText().matches(EMAIL_REGEX)) {
+            listError.add("Email không đúng định dạng");
+            return listError;
+        }
+        // check sdt
+        if (!txtSoDienThoai.getText().matches(NumberPhone)) {
+            listError.add("Số điện thoại không đúng định dạng");
             return listError;
         }
 
         //check xong hết
         return listError;
+
     }
 
     // các hàm lấy dữ liệu từ cơ sở dữ liệu
@@ -172,7 +317,7 @@ public class QuanLyNhanVien extends javax.swing.JPanel {
         }
         cbbPhongBan.setSelectedIndex(-1);
     }
-    
+
     public void loadVaiTro() {
         listAllVaiTro = daoVT.select();
         DefaultComboBoxModel cbbModel = (DefaultComboBoxModel) cbbVaiTro.getModel();
@@ -190,7 +335,7 @@ public class QuanLyNhanVien extends javax.swing.JPanel {
             NhanVien model = dao.findById(manv);
             if (model != null) {
                 this.setModel(model);
-                //isView(true);
+                isView(true);
             }
         } catch (Exception e) {
             DialogHelper.alertError(this, "Lỗi truy vấn dữ liệu!");
@@ -204,11 +349,13 @@ public class QuanLyNhanVien extends javax.swing.JPanel {
         txtNgaySinh.setText("");
         txtSoDienThoai.setText("");
         txtEmail.setText("");
-        rdoNam.setVisible(false);
-        rdoNu.setVisible(false);
+//        rdoNam.setVisible(false);
+//        rdoNu.setVisible(false);
         txtCCCD.setText("");
-        cbbPhongBan.setVisible(false);
-        cbbVaiTro.setVisible(false);
+//        cbbPhongBan.setVisible(false);
+//        cbbVaiTro.setVisible(false);
+
+        isView(true);
     }
 
     //Add
@@ -296,55 +443,110 @@ public class QuanLyNhanVien extends javax.swing.JPanel {
         }
     }
 
-    //Tăng giảm
     public void initSort() {
 
         cbbSortBy.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
-                if (cbbSortBy.getSelectedIndex() == 0) {
-                    if (cbbSort.getSelectedIndex() == 0) {
-                        // ten tang dan
-                        fillTable(sortByName(false));
-                    } else if (cbbSort.getSelectedIndex() == 1) {
-                        // ten giam dan
-                        fillTable(sortByName(true));
-                    }
-                } else {
-                    cbbSortBy.setSelectedIndex(0);
+                switch (cbbSortBy.getSelectedIndex()) {
+
+                    case 0:
+                        if (cbbSort.getSelectedIndex() == 0) {
+                            // ten tang dan
+                            fillTable(sortByNameKhachHang(false));
+                        } else if (cbbSort.getSelectedIndex() == 1) {
+                            // ten giam dan
+                            fillTable(sortByNameKhachHang(true));
+                        }
+                        break;
+                    case 1:
+                        if (cbbSort.getSelectedIndex() == 0) {
+                            // ten tang dan
+                            fillTable(sortByMaNV(false));
+                        } else if (cbbSort.getSelectedIndex() == 1) {
+                            // ten giam dan
+                            fillTable(sortByMaNV(true));
+                        } else {
+                            cbbSortBy.setSelectedIndex(0);
+                        }
+                        break;
+
+                    default:
+                        break;
                 }
             }
         });
 
         cbbSort.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
-                if (cbbSort.getSelectedIndex() == 0) {
-                    if (cbbSort.getSelectedIndex() == 0) {
-                        // ten tang dan
-                        fillTable(sortByName(false));
-                    } else if (cbbSort.getSelectedIndex() == 1) {
-                        // ten giam dan
-                        fillTable(sortByName(true));
-                    }
-                } else {
-                    cbbSortBy.setSelectedIndex(0);
+                switch (cbbSortBy.getSelectedIndex()) {
+
+                    case 0:
+                        if (cbbSort.getSelectedIndex() == 0) {
+                            // ten tang dan
+                            fillTable(sortByNameKhachHang(false));
+                        } else if (cbbSort.getSelectedIndex() == 1) {
+                            // ten giam dan
+                            fillTable(sortByNameKhachHang(true));
+                        }
+                        break;
+                    case 1:
+                        if (cbbSort.getSelectedIndex() == 0) {
+                            // ten tang dan
+                            fillTable(sortByMaNV(false));
+                        } else if (cbbSort.getSelectedIndex() == 1) {
+                            // ten giam dan
+                            fillTable(sortByMaNV(true));
+                        } else {
+                            cbbSortBy.setSelectedIndex(0);
+                        }
+                        break;
+
+                    default:
+                        break;
                 }
             }
         });
     }
 
-    public List<NhanVien> sortByName(boolean isRevese) {
+    public List<NhanVien> sortByMaNV(boolean isRevese) {
         List<NhanVien> listSorted = listAllEmployee;
         Collections.sort(listSorted, new Comparator<NhanVien>() {
-            public int compare(NhanVien employee1, NhanVien employee2) {
+            public int compare(NhanVien hoaDolon1, NhanVien hoaDolon2) {
+                return (hoaDolon1.getMaNV().compareTo(hoaDolon2.getMaNV()));
+
+            }
+        });
+
+        if (isRevese) {
+            Collections.reverse(listSorted);
+        }
+
+        return listSorted;
+    }
+
+    public List<NhanVien> sortByNameKhachHang(boolean isRevese) {
+        List<NhanVien> listSorted = listAllEmployee;
+        Collections.sort(listSorted, new Comparator<NhanVien>() {
+            public int compare(NhanVien hopDong1, NhanVien hopDong2) {
                 int result = 0;
-                String[] partNameEmployee1 = employee1.getHoTen().split("\\s");
-                String[] partNameEmployee2 = employee2.getHoTen().split("\\s");
+
+                String[] partNameEmployee1 = hopDong1.getHoTen().split("\\s");
+                String[] partNameEmployee2 = hopDong2.getHoTen().split("\\s");
+                if (partNameEmployee1.length == 1) {
+                    System.out.println("");
+                }
 
                 int nameLenght1 = partNameEmployee1.length;
                 int nameLenght2 = partNameEmployee2.length;
 
                 if (nameLenght1 == 1 && nameLenght2 == 1) {
-                    return employee1.getHoTen().compareToIgnoreCase(employee2.getHoTen());
+                    return hopDong1.getHoTen().compareToIgnoreCase(hopDong2.getHoTen());
+                }
+
+                if (nameLenght1 == 1 && nameLenght2 != 1) {
+                    return hopDong1.getHoTen().compareToIgnoreCase(partNameEmployee2[nameLenght2 - 1]);
+                } else if (nameLenght1 != -1 && nameLenght2 == 1) {
+                    return partNameEmployee1[nameLenght1 - 1].compareToIgnoreCase(hopDong2.getHoTen());
                 }
 
                 int length = ((nameLenght1 > nameLenght2) ? nameLenght2 : nameLenght1);
@@ -369,6 +571,92 @@ public class QuanLyNhanVien extends javax.swing.JPanel {
         }
 
         return listSorted;
+    }
+
+//     public List<NhanVien> sortByNgaySinh(boolean isRevese) {
+//        List<NhanVien> listSorted = listAllEmployee;
+//        Collections.sort(listSorted, new Comparator<NhanVien>() {
+//            public int compare(NhanVien hopDong1, NhanVien hopDong2) {
+//                return (hopDong1.getNgaySinh().compareTo(hopDong2.getNgaySinh()));
+//
+//            }
+//        });
+//
+//        if (isRevese) {
+//            Collections.reverse(listSorted);
+//        }
+//
+//        return listSorted;
+//    }
+    void selectImage() {
+        JFileChooser fileChooser = new JFileChooser();
+        if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+
+            File file = fileChooser.getSelectedFile();
+
+            if (ShareHelper.saveLogo(file)) {
+                // Hiển thị hình lên form
+                lblHinhAnh.setIcon(ShareHelper.readLogo(file.getName()));
+                lblHinhAnh.setToolTipText(file.getName());
+            } else {
+                DialogHelper.alertError(this, "Vui lòng chọn file hình ảnh");
+            }
+        }
+    }
+
+    void isView(boolean is) {
+        txtMaNhanVien.setEditable(false);
+        txtHoTen.setEditable(false);
+        txtNgaySinh.setEnabled(false);
+        txtSoDienThoai.setEditable(false);
+        txtEmail.setEditable(false);
+        txtCCCD.setEditable(false);
+
+//  
+//        btnThem.setEnabled(false);
+//        //btnThem.setVisible(false);
+//        btnSua.setEnabled(false);
+//     //   btnSua.setVisible(false);
+//        btnXoa.setVisible(false);
+        boolean first = this.currentIndex > 0;
+        boolean last = this.currentIndex < tblNhanVien.getRowCount() - 1;
+        btnFirst.setEnabled(true && first);
+        btnPre.setEnabled(true && first);
+        btnLast.setEnabled(true && last);
+        btnNext.setEnabled(true && last);
+    }
+
+    void isUpdate(boolean is) {
+        txtMaNhanVien.setEditable(is);
+        txtHoTen.setEditable(is);
+        txtNgaySinh.setEnabled(is);
+        txtSoDienThoai.setEditable(is);
+        txtEmail.setEditable(is);
+        txtCCCD.setEditable(is);
+
+        btnSua.setVisible(is);
+        if (AppStatus.USER.isGioiTinh()) {
+            btnXoa.setVisible(true);
+        }
+
+    }
+
+    void isInsert(boolean is) {
+        txtMaNhanVien.setEditable(is);
+        txtHoTen.setEditable(is);
+        txtNgaySinh.setEnabled(is);
+        txtSoDienThoai.setEditable(is);
+        txtEmail.setEditable(is);
+        txtCCCD.setEditable(is);
+
+        btnThem.setVisible(true);
+        btnSua.setVisible(false);
+        btnXoa.setVisible(false);
+
+        btnFirst.setEnabled(false);
+        btnPre.setEnabled(false);
+        btnLast.setEnabled(false);
+        btnNext.setEnabled(false);
     }
 
     /**
@@ -454,6 +742,12 @@ public class QuanLyNhanVien extends javax.swing.JPanel {
         jLabel4.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         jLabel4.setText("Mã nhân viên");
         pnlUpdate3.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 200, -1, -1));
+
+        txtMaNhanVien.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtMaNhanVienFocusLost(evt);
+            }
+        });
         pnlUpdate3.add(txtMaNhanVien, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 220, 340, 35));
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
@@ -487,7 +781,7 @@ public class QuanLyNhanVien extends javax.swing.JPanel {
         });
         pnlUpdate3.add(lblHinhAnh, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 20, 130, 160));
 
-        cbbSortBy.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Mã Nhân Viên", "Tên Nhân Viên" }));
+        cbbSortBy.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tên Nhân Viên", "Mã Nhân Viên" }));
         cbbSortBy.setSelectedIndex(-1);
         cbbSortBy.setLabeText("Sort by");
         cbbSortBy.addActionListener(new java.awt.event.ActionListener() {
@@ -520,10 +814,24 @@ public class QuanLyNhanVien extends javax.swing.JPanel {
             new String [] {
                 "Mã nhân viên", "Họ tên nhân viên", "Ngày sinh", "Giới tính", "Số điện thoại", "Email", "CCCD/CMND", "Hình ảnh", "Phòng ban", "Vai trò"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tblNhanVien.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
         tblNhanVien.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tblNhanVienMouseClicked(evt);
+            }
+        });
+        tblNhanVien.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                tblNhanVienKeyReleased(evt);
             }
         });
         jScrollPane1.setViewportView(tblNhanVien);
@@ -612,7 +920,7 @@ public class QuanLyNhanVien extends javax.swing.JPanel {
                 btnThemActionPerformed(evt);
             }
         });
-        pnlUpdate3.add(btnThem, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 840, 80, -1));
+        pnlUpdate3.add(btnThem, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 840, 80, -1));
 
         cbbVaiTro.setLabeText("");
         cbbVaiTro.addActionListener(new java.awt.event.ActionListener() {
@@ -628,7 +936,7 @@ public class QuanLyNhanVien extends javax.swing.JPanel {
                 cbbPhongBanActionPerformed(evt);
             }
         });
-        pnlUpdate3.add(cbbPhongBan, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 700, 340, -1));
+        pnlUpdate3.add(cbbPhongBan, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 700, 340, 40));
 
         jLabel12.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         jLabel12.setText("Email");
@@ -720,7 +1028,11 @@ public class QuanLyNhanVien extends javax.swing.JPanel {
     }//GEN-LAST:event_txtHoTenActionPerformed
 
     private void lblHinhAnhMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblHinhAnhMouseClicked
+        if (!btnXoa.isVisible() && !btnThem.isVisible()) {
+            return;
+        }
 
+        selectImage();
     }//GEN-LAST:event_lblHinhAnhMouseClicked
 
     private void cbbSortByActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbbSortByActionPerformed
@@ -741,7 +1053,9 @@ public class QuanLyNhanVien extends javax.swing.JPanel {
 
     private void btnMoiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMoiActionPerformed
         // TODO add your handling code here:
+        //  clear();
         clear();
+        isInsert(true);
     }//GEN-LAST:event_btnMoiActionPerformed
 
     private void btnXoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXoaActionPerformed
@@ -750,10 +1064,9 @@ public class QuanLyNhanVien extends javax.swing.JPanel {
     }//GEN-LAST:event_btnXoaActionPerformed
 
     private void btnSuaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuaActionPerformed
-        // TODO add your handling code here:
-        // isUpdate(true);
+        isUpdate(true);
         update();
-        //  isView(true);
+        isView(true);;
     }//GEN-LAST:event_btnSuaActionPerformed
 
     private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemActionPerformed
@@ -782,13 +1095,12 @@ public class QuanLyNhanVien extends javax.swing.JPanel {
     }//GEN-LAST:event_jLabel2MouseClicked
 
     private void tblNhanVienMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblNhanVienMouseClicked
-        // TODO add your handling code here:
         currentIndex = tblNhanVien.rowAtPoint(evt.getPoint());
 
         if (this.currentIndex >= 0) {
             this.edit();
             if (evt.getClickCount() == 2) {
-                // isUpdate(true);
+                isUpdate(true);
 
             }
         }
@@ -800,6 +1112,8 @@ public class QuanLyNhanVien extends javax.swing.JPanel {
         setTblSelected(currentIndex);
         //isUpdate(false);
         edit();
+//    this.index = 0;
+//        this.edit();
     }//GEN-LAST:event_btnLastActionPerformed
 
     private void btnPreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPreActionPerformed
@@ -817,6 +1131,19 @@ public class QuanLyNhanVien extends javax.swing.JPanel {
         // isUpdate(false);
         edit();
     }//GEN-LAST:event_btnNextActionPerformed
+
+    private void tblNhanVienKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tblNhanVienKeyReleased
+        currentIndex = tblNhanVien.getSelectedRow();
+        if (this.currentIndex >= 0) {
+            this.edit();
+
+        }
+    }//GEN-LAST:event_tblNhanVienKeyReleased
+
+    private void txtMaNhanVienFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtMaNhanVienFocusLost
+        // TODO add your handling code here:
+        checkName(txtHoTen, txtMaNhanVien, null);
+    }//GEN-LAST:event_txtMaNhanVienFocusLost
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

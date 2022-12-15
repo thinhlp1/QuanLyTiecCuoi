@@ -4,6 +4,8 @@
  */
 package com.happywedding.model;
 
+import groovy.transform.ToString;
+
 /**
  *
  * @author Hades
@@ -32,10 +34,17 @@ public class Sanh {
         
     }
     
+//    @Override
+//    public String toString(){
+//        return tenSanh + " - " + sucChua / 10 + " bàn" ;
+//    }
+//
     @Override
-    public String toString(){
-        return tenSanh + " - " + sucChua / 10 + " bàn" ;
+    public String toString() {
+        return tenSanh ;
     }
+    
+    
     
     
     public String getMaSanh() {

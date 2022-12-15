@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ed9c872e-f4ed-498f-8556-236e5981dc8b">
 	<property name="ireport.zoom" value="1.4641000000000028"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="2527"/>
+	<property name="ireport.y" value="0"/>
 	<parameter name="MaHD" class="java.lang.String"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
@@ -391,6 +391,14 @@ WHERE
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{Sanh_TenSanh}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Transparent" x="241" y="85" width="110" height="18" forecolor="#000000" backcolor="#FFFFFF" uuid="d58459ed-bb24-4c7d-9f28-c08d1ccf79be"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="11" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{HopDong_MaHD}]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>

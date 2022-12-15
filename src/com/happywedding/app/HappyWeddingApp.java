@@ -2,6 +2,7 @@ package com.happywedding.app;
 
 import com.happywedding.dao.NhanVienDAO;
 import com.happywedding.helper.AppStatus;
+import com.happywedding.helper.DialogHelper;
 import com.happywedding.helper.ShareHelper;
 
 import com.happywedding.view.manage.*;
@@ -99,10 +100,9 @@ public class HappyWeddingApp extends javax.swing.JFrame {
 
         if (!AppStatus.isFirstStart()) {
             new DangNhap(this, true).setVisible(true);
-            new Loading(this, true).setVisible(true);
             AppStatus.loadApp();
         }
-        
+
 //        AppStatus.USER = new NhanVienDAO().findById("NV001");
 //        AppStatus.ROLE = "QLCC";
         AppStatus.loadApp();
@@ -201,7 +201,11 @@ public class HappyWeddingApp extends javax.swing.JFrame {
             } else if (index == MAIN_MENU_QL.HUONGDAN) {
 
             } else if (index == MAIN_MENU_QL.DOIMATKHAU) {
-
+                boolean yn = DialogHelper.confirm(null, "Bạn có muốn đăng xuất không?");
+                if (yn) {
+                    AppStatus.mainApp.dispose();
+                    new QuenMatKhau(new JFrame(), true).setVisible(true);
+                }
             } else if (index == MAIN_MENU_QL.DANGXUAT) {
 
             } else if (index == MAIN_MENU_QL.EXIT) {

@@ -1,10 +1,7 @@
 package com.happywedding.model;
 
-
-
-
-
 public class CoSoVatChat {
+
     private String maCSVC;
     private String tenCSVC;
     private String maDanhMuc;
@@ -26,10 +23,11 @@ public class CoSoVatChat {
 
     public CoSoVatChat() {
     }
-    
+
     @Override
     public String toString() {
-        return  tenCSVC;
+        return tenCSVC;
+
     }
 
     public String getMaDanhMucCon() {
@@ -44,11 +42,6 @@ public class CoSoVatChat {
 //    public String toString() {
 //       return tenCSVC;
 //    }
-    
-    
-
-    
-        
     public long getGiaThue() {
         return giaThue;
     }
@@ -56,9 +49,6 @@ public class CoSoVatChat {
     public void setGiaThue(long giaThue) {
         this.giaThue = giaThue;
     }
-
-  
-    
 
     public String getMaDanhMuc() {
         return maDanhMuc;
@@ -76,8 +66,6 @@ public class CoSoVatChat {
         this.tenDanhMuc = tenDanhMuc;
     }
 
-    
-    
     public String getMaCSVC() {
         return maCSVC;
     }
@@ -93,8 +81,6 @@ public class CoSoVatChat {
     public void setTenCSVC(String tenCSVC) {
         this.tenCSVC = tenCSVC;
     }
-
- 
 
     public long getSoLuong() {
         return soLuong;
@@ -112,6 +98,4 @@ public class CoSoVatChat {
         this.ghiChu = ghiChu;
     }
 
-    
-    
 }

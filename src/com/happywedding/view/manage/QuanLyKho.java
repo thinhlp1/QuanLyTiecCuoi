@@ -12,6 +12,7 @@ import com.happywedding.dao.DanhMucDAO;
 import com.ui.swing.datechooser.DateChooser;
 import com.happywedding.helper.DateHelper;
 import com.happywedding.helper.DialogHelper;
+import com.happywedding.helper.ShareHelper;
 import com.happywedding.model.CoSoVatChat;
 import com.happywedding.model.DanhMuc;
 import com.happywedding.model.DanhMucCon;
@@ -27,7 +28,10 @@ import java.util.List;
 import javax.swing.table.DefaultTableModel;
 
 import com.ui.swing.datechooser.DateChooser;
+import java.io.File;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
 
 /**
  *
@@ -138,6 +142,11 @@ public class QuanLyKho extends javax.swing.JPanel {
         txtSoLuong.setText(String.valueOf(model.getSoLuong()));
         txtGiaThue.setText(String.valueOf(model.getGiaThue()));
         txtGhiChu.setText(model.getGhiChu());
+//        lblHinhAnh.setToolTipText(model.getHinhAnh());
+//        if (model.getHinhAnh() != null) {
+//            ImageIcon icon = ShareHelper.readLogo(model.getHinhAnh());
+//            lblHinhAnh.setIcon(icon);
+//        }
     }
 
     public List<String> validation() {
@@ -199,8 +208,8 @@ public class QuanLyKho extends javax.swing.JPanel {
     //Clear
     void clear() {
         
-        cbbDanhMuc.setVisible(false);
-        cbbDanhMucCon.setVisible(false);
+        //cbbDanhMuc.setVisible(false);
+        //cbbDanhMucCon.setVisible(false);
         txtMaCSVC.setText("");
         txtTenCSVC.setText("");
         txtSoLuong.setText("");
@@ -296,71 +305,113 @@ public class QuanLyKho extends javax.swing.JPanel {
         }
     }
 
-    //Tăng giảm
+
+    
+    //Su ly hinh anh
+//    void selectImage() {
+//        JFileChooser fileChooser = new JFileChooser();
+//        if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+//
+//            File file = fileChooser.getSelectedFile();
+//
+//            if (ShareHelper.saveLogo(file)) {
+//                // Hiển thị hình lên form
+//                lblHinhAnh.setIcon(ShareHelper.readLogo(file.getName()));
+//                lblHinhAnh.setToolTipText(file.getName());
+//            }else {
+//                DialogHelper.alertError(this, "Vui lòng chọn file hình ảnh");
+//            }
+//        }
+//    }
+    
+    
     public void initSort() {
 
         cbbSortBy.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
-                if (cbbSortBy.getSelectedIndex() == 0) {
-                    if (cbbSort.getSelectedIndex() == 0) {
-                        // ten tang dan
-                        fillTable(sortByName(false));
-                    } else if (cbbSort.getSelectedIndex() == 1) {
-                        // ten giam dan
-                        fillTable(sortByName(true));
-                    }
-                } else {
-                    cbbSortBy.setSelectedIndex(0);
+                switch (cbbSortBy.getSelectedIndex()) {
+                    case 0:
+                        if (cbbSort.getSelectedIndex() == 0) {
+                            // ten tang dan
+                            fillTable(sortByGiaThue(false));
+                        } else if (cbbSort.getSelectedIndex() == 1) {
+                            // ten giam dan
+                            fillTable(sortByGiaThue(true));
+                        }
+                        break;
+                    case 1:
+                        if (cbbSort.getSelectedIndex() == 0) {
+                            // ten tang dan
+                            fillTable(sortBySoLuong(false));
+                        } else if (cbbSort.getSelectedIndex() == 1) {
+                            // ten giam dan
+                            fillTable(sortBySoLuong(true));
+                        }
+                        break;
+                    case 2:
+                        if (cbbSort.getSelectedIndex() == 0) {
+                            // ten tang dan
+                            fillTable(sortByMaCSVC(false));
+                        } else if (cbbSort.getSelectedIndex() == 1) {
+                            // ten giam dan
+                            fillTable(sortByMaCSVC(true));
+                        } else {
+                            cbbSortBy.setSelectedIndex(0);
+                        }
+                        break;
+                    
+                    default:
+                        break;
                 }
             }
         });
 
         cbbSort.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
-                if (cbbSort.getSelectedIndex() == 0) {
-                    if (cbbSort.getSelectedIndex() == 0) {
-                        // ten tang dan
-                        fillTable(sortByName(false));
-                    } else if (cbbSort.getSelectedIndex() == 1) {
-                        // ten giam dan
-                        fillTable(sortByName(true));
-                    }
-                } else {
-                    cbbSortBy.setSelectedIndex(0);
+                switch (cbbSortBy.getSelectedIndex()) {
+                    case 0:
+                        if (cbbSort.getSelectedIndex() == 0) {
+                            // ten tang dan
+                            fillTable(sortByGiaThue(false));
+                        } else if (cbbSort.getSelectedIndex() == 1) {
+                            // ten giam dan
+                            fillTable(sortByGiaThue(true));
+                        }
+                        break;
+                    case 1:
+                        if (cbbSort.getSelectedIndex() == 0) {
+                            // ten tang dan
+                            fillTable(sortBySoLuong(false));
+                        } else if (cbbSort.getSelectedIndex() == 1) {
+                            // ten giam dan
+                            fillTable(sortBySoLuong(true));
+                        }
+                        break;
+                    case 2:
+                        if (cbbSort.getSelectedIndex() == 0) {
+                            // ten tang dan
+                            fillTable(sortByMaCSVC(false));
+                        } else if (cbbSort.getSelectedIndex() == 1) {
+                            // ten giam dan
+                            fillTable(sortByMaCSVC(true));
+                        } else {
+                            cbbSortBy.setSelectedIndex(0);
+                        }
+                        break;
+                    
+                    default:
+                        break;
                 }
             }
         });
     }
 
-    public List<CoSoVatChat> sortByName(boolean isRevese) {
+    public List<CoSoVatChat> sortByMaCSVC(boolean isRevese) {
         List<CoSoVatChat> listSorted = listAllCSVC;
         Collections.sort(listSorted, new Comparator<CoSoVatChat>() {
-            public int compare(CoSoVatChat employee1, CoSoVatChat employee2) {
-                int result = 0;
-                String[] partNameEmployee1 = employee1.getTenCSVC().split("\\s");
-                String[] partNameEmployee2 = employee2.getTenCSVC().split("\\s");
+            public int compare(CoSoVatChat hoaDolon1, CoSoVatChat hoaDolon2) {
+                return (hoaDolon1.getMaCSVC().compareTo(hoaDolon2.getMaCSVC()));
 
-                int nameLenght1 = partNameEmployee1.length;
-                int nameLenght2 = partNameEmployee2.length;
-
-                if (nameLenght1 == 1 && nameLenght2 == 1) {
-                    return employee1.getTenCSVC().compareToIgnoreCase(employee2.getTenCSVC());
-                }
-
-                int length = ((nameLenght1 > nameLenght2) ? nameLenght2 : nameLenght1);
-                for (int i = 1; i < length; i++) {
-                    result = (partNameEmployee1[nameLenght1 - i]).compareToIgnoreCase(partNameEmployee2[nameLenght2 - i]);
-                    if (result != 0) {
-                        return result;
-                    }
-                }
-                if (nameLenght1 > nameLenght2) {
-                    return 1;
-                } else if (nameLenght1 < nameLenght2) {
-                    return -1;
-                }
-
-                return 0;
             }
         });
 
@@ -370,6 +421,50 @@ public class QuanLyKho extends javax.swing.JPanel {
 
         return listSorted;
     }
+
+
+    public List<CoSoVatChat> sortByGiaThue(boolean isRevese) {
+        List<CoSoVatChat> listSorted = listAllCSVC;
+        Collections.sort(listSorted, new Comparator<CoSoVatChat>() {
+            public int compare(CoSoVatChat hoaDon1, CoSoVatChat hoaDon2) {
+                if (hoaDon1.getGiaThue() > hoaDon2.getGiaThue()) {
+                    return 1;
+                } else if (hoaDon1.getGiaThue() < hoaDon2.getGiaThue()) {
+                    return -1;
+                } else {
+                    return 0;
+                }
+            }
+        });
+
+        if (isRevese) {
+            Collections.reverse(listSorted);
+        }
+        return listSorted;
+    }
+
+    public List<CoSoVatChat> sortBySoLuong(boolean isRevese) {
+        List<CoSoVatChat> listSorted = listAllCSVC;
+        Collections.sort(listSorted, new Comparator<CoSoVatChat>() {
+            public int compare(CoSoVatChat hoaDon1, CoSoVatChat hoaDon2) {
+                if (hoaDon1.getSoLuong() > hoaDon2.getSoLuong()) {
+                    return 1;
+                } else if (hoaDon1.getSoLuong() < hoaDon2.getSoLuong()) {
+                    return -1;
+                } else {
+                    return 0;
+                }
+            }
+        });
+
+        if (isRevese) {
+            Collections.reverse(listSorted);
+        }
+        return listSorted;
+    }
+    
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -411,11 +506,11 @@ public class QuanLyKho extends javax.swing.JPanel {
         txtGhiChu = new javax.swing.JTextArea();
         cbbSapXepDanhMuc = new com.ui.swing.Combobox();
         cbbDanhMuc = new com.ui.swing.Combobox();
-        lblHinhAnh = new javax.swing.JLabel();
         jLabel32 = new javax.swing.JLabel();
         txtGiaThue = new javax.swing.JTextField();
         txtSoLuong = new javax.swing.JTextField();
         txtTenCSVC = new javax.swing.JTextField();
+        pictureBox1 = new com.ui.swing.PictureBox();
 
         pnlEmplpyeeManager.setBackground(new java.awt.Color(255, 255, 255));
         pnlEmplpyeeManager.setMinimumSize(new java.awt.Dimension(1600, 838));
@@ -433,26 +528,26 @@ public class QuanLyKho extends javax.swing.JPanel {
         pnlEmplpyeeManager.add(lblSearch, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 20, -1, 35));
 
         jLabel25.setText("Danh mục");
-        pnlEmplpyeeManager.add(jLabel25, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 310, 92, -1));
+        pnlEmplpyeeManager.add(jLabel25, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 160, 92, -1));
 
         jLabel27.setText("Mã cơ sở vật chất");
-        pnlEmplpyeeManager.add(jLabel27, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 450, 130, -1));
+        pnlEmplpyeeManager.add(jLabel27, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 340, 130, -1));
 
         jLabel28.setText("Tên cơ sở vật chất");
-        pnlEmplpyeeManager.add(jLabel28, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 530, 130, -1));
+        pnlEmplpyeeManager.add(jLabel28, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 420, 130, -1));
 
         jLabel30.setText("Số lượng");
-        pnlEmplpyeeManager.add(jLabel30, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 610, 130, -1));
+        pnlEmplpyeeManager.add(jLabel30, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 520, 130, -1));
 
         txtMaCSVC.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtMaCSVCActionPerformed(evt);
             }
         });
-        pnlEmplpyeeManager.add(txtMaCSVC, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 480, 340, 35));
+        pnlEmplpyeeManager.add(txtMaCSVC, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 370, 340, 35));
 
         jLabel29.setText("Ghi chú");
-        pnlEmplpyeeManager.add(jLabel29, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 750, 60, -1));
+        pnlEmplpyeeManager.add(jLabel29, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 710, 60, -1));
 
         cbbDanhMucCon.setLabeText("");
         cbbDanhMucCon.addActionListener(new java.awt.event.ActionListener() {
@@ -460,10 +555,10 @@ public class QuanLyKho extends javax.swing.JPanel {
                 cbbDanhMucConActionPerformed(evt);
             }
         });
-        pnlEmplpyeeManager.add(cbbDanhMucCon, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 410, 340, 35));
+        pnlEmplpyeeManager.add(cbbDanhMucCon, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 280, 340, 40));
 
         jLabel31.setText("Danh mục con");
-        pnlEmplpyeeManager.add(jLabel31, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 390, 130, -1));
+        pnlEmplpyeeManager.add(jLabel31, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 240, 130, -1));
 
         btnMoi.setBackground(new java.awt.Color(81, 194, 225));
         btnMoi.setForeground(new java.awt.Color(255, 255, 255));
@@ -474,7 +569,7 @@ public class QuanLyKho extends javax.swing.JPanel {
                 btnMoiActionPerformed(evt);
             }
         });
-        pnlEmplpyeeManager.add(btnMoi, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 870, 80, -1));
+        pnlEmplpyeeManager.add(btnMoi, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 840, 80, -1));
 
         btnFirst.setBackground(new java.awt.Color(51, 0, 255));
         btnFirst.setForeground(new java.awt.Color(255, 255, 255));
@@ -486,7 +581,7 @@ public class QuanLyKho extends javax.swing.JPanel {
                 btnFirstActionPerformed(evt);
             }
         });
-        pnlEmplpyeeManager.add(btnFirst, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 930, 70, 30));
+        pnlEmplpyeeManager.add(btnFirst, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 880, 70, 30));
 
         btnThem.setBackground(new java.awt.Color(0, 153, 0));
         btnThem.setForeground(new java.awt.Color(255, 255, 255));
@@ -497,7 +592,7 @@ public class QuanLyKho extends javax.swing.JPanel {
                 btnThemActionPerformed(evt);
             }
         });
-        pnlEmplpyeeManager.add(btnThem, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 870, 80, -1));
+        pnlEmplpyeeManager.add(btnThem, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 840, 80, -1));
 
         btnSua.setBackground(new java.awt.Color(0, 153, 0));
         btnSua.setForeground(new java.awt.Color(255, 255, 255));
@@ -508,7 +603,7 @@ public class QuanLyKho extends javax.swing.JPanel {
                 btnSuaActionPerformed(evt);
             }
         });
-        pnlEmplpyeeManager.add(btnSua, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 870, 80, -1));
+        pnlEmplpyeeManager.add(btnSua, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 840, 80, -1));
 
         btnXoa.setBackground(new java.awt.Color(153, 24, 24));
         btnXoa.setForeground(new java.awt.Color(255, 255, 255));
@@ -519,7 +614,7 @@ public class QuanLyKho extends javax.swing.JPanel {
                 btnXoaActionPerformed(evt);
             }
         });
-        pnlEmplpyeeManager.add(btnXoa, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 870, 80, -1));
+        pnlEmplpyeeManager.add(btnXoa, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 840, 80, -1));
 
         btnLast.setBackground(new java.awt.Color(51, 0, 255));
         btnLast.setForeground(new java.awt.Color(255, 255, 255));
@@ -531,7 +626,7 @@ public class QuanLyKho extends javax.swing.JPanel {
                 btnLastActionPerformed(evt);
             }
         });
-        pnlEmplpyeeManager.add(btnLast, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 930, 70, 30));
+        pnlEmplpyeeManager.add(btnLast, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 880, 70, 30));
 
         btnPre.setBackground(new java.awt.Color(51, 0, 255));
         btnPre.setForeground(new java.awt.Color(255, 255, 255));
@@ -543,7 +638,7 @@ public class QuanLyKho extends javax.swing.JPanel {
                 btnPreActionPerformed(evt);
             }
         });
-        pnlEmplpyeeManager.add(btnPre, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 930, 80, 30));
+        pnlEmplpyeeManager.add(btnPre, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 880, 80, 30));
 
         btnNext.setBackground(new java.awt.Color(51, 0, 255));
         btnNext.setForeground(new java.awt.Color(255, 255, 255));
@@ -555,7 +650,7 @@ public class QuanLyKho extends javax.swing.JPanel {
                 btnNextActionPerformed(evt);
             }
         });
-        pnlEmplpyeeManager.add(btnNext, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 930, 80, 30));
+        pnlEmplpyeeManager.add(btnNext, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 880, 80, 30));
 
         tblCoSoVatChat.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -626,6 +721,8 @@ public class QuanLyKho extends javax.swing.JPanel {
         });
         pnlEmplpyeeManager.add(cbbSort, new org.netbeans.lib.awtextra.AbsoluteConstraints(1400, 90, 120, 54));
 
+        cbbSortBy.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Giá Thuê", "Số Lượng", "Mã CSVC" }));
+        cbbSortBy.setSelectedIndex(-1);
         cbbSortBy.setLabeText("Sắp xếp");
         cbbSortBy.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -644,7 +741,7 @@ public class QuanLyKho extends javax.swing.JPanel {
         txtGhiChu.setRows(5);
         jScrollPane2.setViewportView(txtGhiChu);
 
-        pnlEmplpyeeManager.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 780, 340, 70));
+        pnlEmplpyeeManager.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 750, 340, 70));
 
         cbbSapXepDanhMuc.setLabeText("Danh mục");
         cbbSapXepDanhMuc.addActionListener(new java.awt.event.ActionListener() {
@@ -660,43 +757,34 @@ public class QuanLyKho extends javax.swing.JPanel {
                 cbbDanhMucActionPerformed(evt);
             }
         });
-        pnlEmplpyeeManager.add(cbbDanhMuc, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 340, 340, 35));
-
-        lblHinhAnh.setBackground(new java.awt.Color(255, 255, 255));
-        lblHinhAnh.setForeground(new java.awt.Color(255, 255, 255));
-        lblHinhAnh.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        lblHinhAnh.setDoubleBuffered(true);
-        lblHinhAnh.setOpaque(true);
-        lblHinhAnh.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                lblHinhAnhMouseClicked(evt);
-            }
-        });
-        pnlEmplpyeeManager.add(lblHinhAnh, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 90, 180, 190));
+        pnlEmplpyeeManager.add(cbbDanhMuc, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 180, 340, 40));
 
         jLabel32.setText("Giá thuê");
-        pnlEmplpyeeManager.add(jLabel32, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 680, 130, -1));
+        pnlEmplpyeeManager.add(jLabel32, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 620, 130, -1));
 
         txtGiaThue.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtGiaThueActionPerformed(evt);
             }
         });
-        pnlEmplpyeeManager.add(txtGiaThue, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 710, 340, 35));
+        pnlEmplpyeeManager.add(txtGiaThue, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 650, 340, 35));
 
         txtSoLuong.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtSoLuongActionPerformed(evt);
             }
         });
-        pnlEmplpyeeManager.add(txtSoLuong, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 640, 340, 35));
+        pnlEmplpyeeManager.add(txtSoLuong, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 560, 340, 35));
 
         txtTenCSVC.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtTenCSVCActionPerformed(evt);
             }
         });
-        pnlEmplpyeeManager.add(txtTenCSVC, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 560, 340, 35));
+        pnlEmplpyeeManager.add(txtTenCSVC, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 460, 340, 35));
+
+        pictureBox1.setImage(new javax.swing.ImageIcon(getClass().getResource("/com/happywedding/assets/HappyWedding.png"))); // NOI18N
+        pnlEmplpyeeManager.add(pictureBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -782,10 +870,6 @@ public class QuanLyKho extends javax.swing.JPanel {
         edit();
     }//GEN-LAST:event_btnFirstActionPerformed
 
-    private void lblHinhAnhMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblHinhAnhMouseClicked
-
-    }//GEN-LAST:event_lblHinhAnhMouseClicked
-
     private void txtGiaThueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtGiaThueActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtGiaThueActionPerformed
@@ -868,8 +952,8 @@ public class QuanLyKho extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JLabel lblHinhAnh;
     private javax.swing.JLabel lblSearch;
+    private com.ui.swing.PictureBox pictureBox1;
     private javax.swing.JPanel pnlEmplpyeeManager;
     private com.ui.swing.Table tblCoSoVatChat;
     private javax.swing.JTextArea txtGhiChu;

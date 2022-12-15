@@ -117,7 +117,7 @@ WHERE
 	<title>
 		<band height="222" splitType="Stretch">
 			<staticText>
-				<reportElement x="200" y="69" width="157" height="71" uuid="625f01b3-37f4-4a10-946e-f47df1c3c3eb"/>
+				<reportElement x="200" y="69" width="157" height="47" uuid="625f01b3-37f4-4a10-946e-f47df1c3c3eb"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial" size="18" isBold="true"/>
 				</textElement>
@@ -125,9 +125,10 @@ WHERE
 (tạm)]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="140" width="109" height="20" uuid="b965719a-66d4-4920-9cd4-7240fede5845"/>
-				<textElement verticalAlignment="Middle">
-					<font size="14"/>
+				<reportElement mode="Transparent" x="0" y="140" width="109" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="b965719a-66d4-4920-9cd4-7240fede5845"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="11" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<text><![CDATA[Mã số hóa đơn :]]></text>
 			</staticText>

@@ -74,7 +74,7 @@ public class CoSoVatChatDAO extends AbstractDAO<CoSoVatChat> {
 
     @Override
     public void delete(String id) {
-
+        int rs = JDBCHelper.executeUpdate(DELELTE_CSVC, id);
     }
 
     @Override

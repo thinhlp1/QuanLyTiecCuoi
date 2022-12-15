@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.happywedding.helper;
 
 import java.sql.Connection;
@@ -18,10 +13,7 @@ public class JDBCHelper {
     private static String username = "sa";
     private static String password = "sa";
 
-    /*
- /*
- * Nạp driver
-     */
+ // Nạp driver
     static {
         try {
             Class.forName(driver);
@@ -30,11 +22,11 @@ public class JDBCHelper {
             throw new RuntimeException(ex);
         }
     }
-    
-    public static Connection getConnection() throws SQLException{
+
+    public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(dburl, username, password);
     }
-    
+
     /**
      * Xây dựng PreparedStatement
      *

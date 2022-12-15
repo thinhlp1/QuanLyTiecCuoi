@@ -31,6 +31,7 @@ import com.happywedding.model.TaiKhoan;
 public class QuenMatKhau extends javax.swing.JDialog implements Runnable{
     
     private final String UPDATE = "UPDATE dbo.TaiKhoan SET MatKhau = ? WHERE MaTaiKhoan = ?";
+  
     
     public QuenMatKhau(java.awt.Frame parent, boolean modal) {
         

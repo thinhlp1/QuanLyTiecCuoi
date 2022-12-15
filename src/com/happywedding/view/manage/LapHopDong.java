@@ -808,11 +808,11 @@ public class LapHopDong extends javax.swing.JPanel {
                 btnHuyDuyet.setVisible(false);
                 btnXuatHoaDon.setVisible(false);
 
-//                if (hopDong.getNgayToChuc().getTime() - DateHelper.now().getTime() < 24 * 3600000) {
-//                    DialogHelper.alert(this, "Ngày tổ chức không còn hợp lệ do chưa được duyệt.\n Vui lòng điều chỉnh lại ngày tổ chức");
-//                    btnDuyet.setVisible(false);
-//                    txtNgayToChuc.setText("");
-//                }
+                if (hopDong.getNgayToChuc().getTime() - DateHelper.now().getTime() < 0) {
+                    DialogHelper.alert(this, "Ngày tổ chức không còn hợp lệ do chưa được duyệt.\n Vui lòng điều chỉnh lại ngày tổ chức");
+                    btnDuyet.setVisible(false);
+                    txtNgayToChuc.setText("");
+                }
 
             } else if (statusHopDong.equals(StatusHopDong.CHOKYKET)) {
                 isView();
@@ -829,7 +829,7 @@ public class LapHopDong extends javax.swing.JPanel {
                 btnHuyDuyet.setVisible(true);
                 btnXuatHoaDon.setVisible(false);
 
-                if (hopDong.getNgayToChuc().getTime() - DateHelper.now().getTime() < 24 * 3600000) {
+                if (hopDong.getNgayToChuc().getTime() - DateHelper.now().getTime() < 0) {
                     DialogHelper.alert(this, "Ngày tổ chức không còn hợp lệ do chưa được duyệt.\n Vui lòng điều chỉnh lại ngày tổ chức");
                     btnKyKet.setVisible(false);
                     txtNgayToChuc.setText("");

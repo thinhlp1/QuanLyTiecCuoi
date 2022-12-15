@@ -24,7 +24,7 @@ public class NhanVien {
 
     @Override
     public String toString() {
-        return maNV+   hoTen;
+        return maNV +   hoTen + ngaySinh;
     }
     
     
