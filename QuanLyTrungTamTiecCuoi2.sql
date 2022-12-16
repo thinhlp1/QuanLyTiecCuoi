@@ -1,6 +1,10 @@
 ﻿--Tạo CSDL
 CREATE DATABASE QuanLyTrungTamTiecCuoi
+<<<<<<< HEAD
 --DROP DATABASE QuanLyTrungTamTiecCuoi  SELECT * FROM ChiTietDatMon
+=======
+--DROP DATABASE QuanLyTrungTamTiecCuoi2  SELECT * FROM ChiTietDatMon
+>>>>>>> origin/main
 GO
 --Gọi CSDL
 USE QuanLyTrungTamTiecCuoi
@@ -1396,6 +1400,8 @@ BEGIN
 
 	SELECT @ChiPhi AS ChiPhi,@ChiPhiPhatSinh AS ChiPhiPhatSinh
 END
+GO
+
 
 GO
 CREATE PROCEDURE tinhTienVoiSanh( @MaHD varchar(50), @MaSanh varchar(50) ,@SoLuongBan int)
@@ -1435,10 +1441,11 @@ BEGIN
 
 	SELECT @ChiPhi AS ChiPhi,@ChiPhiPhatSinh AS ChiPhiPhatSinh
 END
-
-
 GO
+
+
 -- thống kê doanh thu theo năm
+GO
 CREATE PROC thongKeDoanhThuNam 
 AS
 BEGIN
@@ -1451,7 +1458,7 @@ BEGIN
 	GROUP BY  IIF(hd.TrangThai = 0, YEAR(hd.NgayLap),YEAR(NgayLapLan2))
 	ORDER BY Nam ASC
 END
-
+GO
 
 
 
@@ -1471,8 +1478,9 @@ BEGIN
 	ORDER BY Thang
 	
 END
+GO
 
-
+GO
 CREATE PROC thongKeDoanhThuNgay 
 AS 
 BEGIN
@@ -1485,7 +1493,7 @@ BEGIN
 	GROUP BY  IIF(hd.TrangThai = 0, hd.NgayLap,NgayLapLan2)
 	ORDER BY Ngay ASC
 END
-
+GO
 
 GO
 CREATE PROC thongKeDoanhThuNgayTop @top int, @Nam int 

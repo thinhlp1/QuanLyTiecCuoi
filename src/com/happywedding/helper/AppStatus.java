@@ -12,8 +12,10 @@ import com.happywedding.model.PhanLoaiMonAn;
 import com.happywedding.model.PhanLoaiSanh;
 import com.happywedding.model.PhongBan;
 import com.happywedding.model.VaiTro;
+import com.happywedding.view.manage.ChiPhiPhatSinh;
 import com.happywedding.view.manage.LapHopDong;
 import com.happywedding.view.manage.PhanCong;
+import com.happywedding.view.manage.QuanLyHopDong;
 import com.happywedding.view.statical.ThongKe;
 import com.ui.swing.component.Menu;
 import java.awt.Robot;
@@ -32,7 +34,7 @@ public class AppStatus {
 //     */
     public static NhanVien USER = null;
     public static int STATUS = 0;
-    public static String ROLE = "QLCC" ;
+    public static String ROLE = "" ;
 
    
     public static HappyWeddingApp mainApp = null;
@@ -40,6 +42,9 @@ public class AppStatus {
     public static Menu MENU = null;
     public static ThongKe FORMTHONGKE = null;
     public static PhanCong PHANCONG = null;
+    public static QuanLyHopDong QLHOPDONG = null;
+    public static ChiPhiPhatSinh CHIPHIPHATSINH = null;
+    public static boolean isThongBao = true;
    
     
     //0 is not load

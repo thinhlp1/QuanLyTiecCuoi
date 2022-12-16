@@ -65,7 +65,8 @@ public class QuanLyHoaDon extends javax.swing.JPanel {
     public void fillToTable(List<HoaDon> listHoaDon) {
         tblModel.setRowCount(0);
         try {
-            tblHoaDon.resetRowColor();
+            tblHoaDon.resetRowHoaDonColor();
+            tblHoaDon.resetRowHoaDonColor();
             int i = 0;
             for (HoaDon hd : listHoaDon) {
                 Object[] row = {
@@ -81,7 +82,7 @@ public class QuanLyHoaDon extends javax.swing.JPanel {
                 };
                 tblModel.addRow(row);
                 if (  hd.getTrangTha() == 0){
-                    tblHoaDon.addRowColor(i);
+                    tblHoaDon.addRowHoaDonColor(i);
                 }
                 i++;
             }
@@ -379,7 +380,7 @@ public class QuanLyHoaDon extends javax.swing.JPanel {
         lblSearch = new javax.swing.JLabel();
         btnChiTiet = new com.ui.swing.InkwellButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tblHoaDon = new com.ui.swing.Table();
+        tblHoaDon = new com.ui.swing.Table("HoaDon");
         jLabel1 = new javax.swing.JLabel();
         txtSearch = new javax.swing.JTextField();
         cbbSort = new com.ui.swing.Combobox();

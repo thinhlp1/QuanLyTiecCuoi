@@ -30,9 +30,9 @@ public class ShareHelper {
 
     static {
         // Tải biểu tượng ứng dụng
-        String file = "/com/happywedding/assets/logoWedding.png";
+        String file = "/com/happywedding/assets/app_icon.png";
         APP_ICON = new ImageIcon(ShareHelper.class.getResource(file)).getImage();
-     
+
     }
 
     public static boolean saveLogo(File file) {
@@ -54,8 +54,10 @@ public class ShareHelper {
         }
     }
 
+ 
+
     /**
-     * Đọc hình ảnh logo chuyên đề
+     * Đọc hình ảnh logo
      *
      * @param fileName là tên file logo
      * @return ảnh đọc được
@@ -79,7 +81,7 @@ public class ShareHelper {
             money = money.replaceFirst(".", "");
         }
 
-        return money;
+        return money ;
     }
 
     public static long toMoney(String moneyy) {
@@ -92,14 +94,14 @@ public class ShareHelper {
         Date date;
         try {
             date = parseFormat.parse(time);
-            
+
             System.out.println(displayFormat.format(date));
             return displayFormat.format(date);
         } catch (ParseException ex) {
             Logger.getLogger(ShareHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
         return time;
-        
+
     }
 
 }
