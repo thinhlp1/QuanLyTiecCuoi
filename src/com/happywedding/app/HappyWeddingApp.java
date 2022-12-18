@@ -212,29 +212,29 @@ public class HappyWeddingApp extends javax.swing.JFrame {
 
         @Override
         public void selected(int index) {
-            if (index == MAIN_MENU_QL.QLHOPDONG) {
+            if (index == MAIN_MENU_TIEPTAN.QLHOPDONG) {
                 if (quanlyHopDong == null) {
                     quanlyHopDong = new QuanLyHopDong();
 
                 }
                 showForm(quanlyHopDong);
-            } else if (index == MAIN_MENU_QL.QLHOADON) {
+            } else if (index == MAIN_MENU_TIEPTAN.QLHOADON) {
                 if (quanLyHoaDon == null) {
                     quanLyHoaDon = new QuanLyHoaDon();
                 }
                 showForm(quanLyHoaDon);
 
-            } else if (index == MAIN_MENU_QL.DANGXUAT) {
+            } else if (index == MAIN_MENU_TIEPTAN.DANGXUAT) {
                 boolean yn = DialogHelper.confirm(null, "Bạn có muốn đăng xuất không?");
                 if (yn) {
                     AppStatus.mainApp.dispose();
                     new DangNhap(new JFrame(), true).setVisible(true);
                 }
 
-            } else if (index == MAIN_MENU_QL.EXIT) {
+            } else if (index == MAIN_MENU_TIEPTAN.EXIT) {
                 System.exit(1);
 
-            }else if (index == MAIN_MENU_QL.XEMLICH) {
+            }else if (index == MAIN_MENU_TIEPTAN.XEMLICH) {
                  if (lichDatTiec == null){
                     lichDatTiec = new LichDatTiec();
                }
@@ -252,14 +252,14 @@ public class HappyWeddingApp extends javax.swing.JFrame {
                     quanLyKho = new QuanLyKho();
                 }
                 showForm(quanLyKho);
-            } else if (index == MAIN_MENU_QL.DANGXUAT) {
+            } else if (index == MAIN_MENU_QLKHO.DANGXUAT) {
                 boolean yn = DialogHelper.confirm(null, "Bạn có muốn đăng xuất không?");
                 if (yn) {
                     AppStatus.mainApp.dispose();
                     new DangNhap(new JFrame(), true).setVisible(true);
                 }
 
-            } else if (index == MAIN_MENU_QL.EXIT) {
+            } else if (index == MAIN_MENU_QLKHO.EXIT) {
                 System.exit(1);
 
             }

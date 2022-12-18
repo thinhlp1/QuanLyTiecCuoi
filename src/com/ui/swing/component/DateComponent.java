@@ -333,7 +333,7 @@ public class DateComponent extends javax.swing.JPanel {
 
         setBackground(new java.awt.Color(255, 255, 255));
         setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 153, 153)));
-        setPreferredSize(new java.awt.Dimension(158, 215));
+        setPreferredSize(new java.awt.Dimension(158, 201));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
         add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 120, 80, -1));
 
