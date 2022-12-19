@@ -103,12 +103,9 @@ public class HappyWeddingApp extends javax.swing.JFrame {
             AppStatus.loadApp();
         }
         
-<<<<<<< HEAD
         //AppStatus.USER = new NhanVienDAO().findById("NV001");
-=======
 //        AppStatus.USER = new NhanVienDAO().findById("NV001");
 //        AppStatus.ROLE = "QLCC";
->>>>>>> origin/main
         AppStatus.loadApp();
         setIconImage(ShareHelper.APP_ICON);
         initComponents();
@@ -298,25 +295,14 @@ public class HappyWeddingApp extends javax.swing.JFrame {
         repaint();
         revalidate();
     }
-<<<<<<< HEAD
-    
-    public void showQuanLyHopDong(){
-        
-=======
 
     public void showQuanLyHopDong() {
->>>>>>> origin/main
         quanlyHopDong.reload();
         showForm(quanlyHopDong);
 
     }
-<<<<<<< HEAD
-    
-     public void showQuanLyHoaDon(){
-=======
 
     public void showQuanLyHoaDon() {
->>>>>>> origin/main
         showForm(quanLyHoaDon);
     }
 

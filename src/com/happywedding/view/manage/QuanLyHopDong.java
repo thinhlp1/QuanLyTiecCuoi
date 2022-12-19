@@ -1026,15 +1026,14 @@ public class QuanLyHopDong extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_cbbNgayActionPerformed
 
-<<<<<<< HEAD
     private void cbbSortByActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbbSortByActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_cbbSortByActionPerformed
-=======
+
     private void lblSearchFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_lblSearchFocusGained
         // TODO add your handling code here:
     }//GEN-LAST:event_lblSearchFocusGained
->>>>>>> origin/main
+
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
