@@ -2743,7 +2743,7 @@ public class LapHopDong extends javax.swing.JPanel {
             parameters.put("TienCoc", tienCoc + " VND");
             parameters.put("TienConLai", tienConLai + " VND");
             parameters.put("tongTienDichVu", tongTienDichVu + " VND");
-            parameters.put("SUBREPORT_DIR", "src\\com\\happywedding\\Report\\");
+            parameters.put("sgd", "src\\com\\happywedding\\Report\\");
             System.out.println(parameters);
             JasperPrint p = JasperFillManager.fillReport(rpt, parameters, con);
             JasperViewer.viewReport(p, false);
@@ -2781,9 +2781,13 @@ public class LapHopDong extends javax.swing.JPanel {
 
     private void btnHuyHopDongActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHuyHopDongActionPerformed
         boolean rs = DialogHelper.confirm(this, "Đánh dấu xóa? Không thể quay lại sau thao tác này ?");
-
+        
+        
+        
         if (rs) {
-
+            
+            
+            
             updateTrangThaiHopDong(StatusHopDong.DATHUCHIEN);
             if (hopDongDAO.updateTrangThai(maHD, statusHopDong)) {
                 phanQuyen();

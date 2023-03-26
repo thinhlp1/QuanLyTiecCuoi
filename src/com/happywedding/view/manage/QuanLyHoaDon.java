@@ -74,14 +74,14 @@ public class QuanLyHoaDon extends javax.swing.JPanel {
                     hd.getMaHoaDon(),
                     DateHelper.toString(hd.getNgayLap(), "dd/MM/yyyy"),
                     hd.getTenNV(),
-                    (hd.getNgayLapLan2() != null ? DateHelper.toString(hd.getNgayLapLan2() , "dd/MM/yyyy"):""),
+                    (hd.getNgayLapLan2() != null ? DateHelper.toString(hd.getNgayLapLan2(), "dd/MM/yyyy") : ""),
                     hd.getTenNLLan2(),
                     ShareHelper.toMoney(hd.getTienCoc()),
                     ShareHelper.toMoney(hd.getTongTien()),
                     hd.getTrangTha() == 0 ? "Đã trả cọc" : "Đã trả hết"
                 };
                 tblModel.addRow(row);
-                if (  hd.getTrangTha() == 0){
+                if (hd.getTrangTha() == 0) {
                     tblHoaDon.addRowHoaDonColor(i);
                 }
                 i++;
